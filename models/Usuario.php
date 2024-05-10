@@ -67,6 +67,51 @@
             }
         }
 
+        public function get_usuarios_status_passwords(){
+            /**
+             * return array de las password de los usuarios dando informacion de que parametros de robustes se cumplen
+             * @autor: Nelson Navarro
+             */
+
+            $conectar = parent::conexion();
+            parent::set_names();
+            $sql = "SELECT usu_nom,usu_ape,usu_correo,usu_pass,DATEDIFF(NOW(), fecha_crea) DIV 30 AS meses_creado, DATEDIFF(NOW(), fecha_modi) DIV 30 AS meses_modificado  FROM tm_usuario WHERE fecha_elim IS NULL";
+            $sql = $conectar->prepare($sql);
+            $sql->execute();
+            $userAll = $sql ->fetchAll();
+
+            $resultado = array();
+            $meses = 3; //son la cantidad de meses para decirq ue debe cambiarse
+            foreach ($userAll as $user) {
+                $pass = $user["usu_pass"];
+
+                if ($user["meses_modificado"]) {
+                    $fecha = $user["meses_modificado"];
+                } else {
+                    $fecha = $user["meses_creado"];
+                }
+                
+                $ArrayPassUser = array(
+                    "nombre" =>   $user["usu_nom"], 
+                    "apellido" => $user["usu_ape"],
+                    "correo" =>   $user["usu_correo"],
+                    "mayuscula" =>  (bool) preg_match('@[A-Z]@', $pass),
+                    "minuscula" =>  (bool) preg_match('@[a-z]@', $pass),
+                    "numero" =>     (bool) preg_match('@[0-9]@', $pass),
+                    "especiales"=>  (bool) preg_match('@[^\w]@', $pass),
+                    "largo" =>      strlen($pass) > 7,
+                    "fecha" =>     ($fecha < $meses)
+                );
+
+                $resultado[] = $ArrayPassUser;
+            } 
+            if(is_array($resultado) and count($resultado) > 0){
+                return $resultado;
+            }else {
+                ?> <script>console.log("No se encontraron Eventos")</script><?php
+                return 0;
+            }
+        }
         //add_categoria (Insert categoria)
         public function add_usuario($usu_nom,$usu_ape,$usu_correo,$usu_name,$usu_pass,$fecha_crea,$estado,$usu_tipo) {
             try {
