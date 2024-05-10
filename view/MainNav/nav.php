@@ -112,7 +112,10 @@
                         <span class="glyphicon glyphicon-asterisk"></span>
                         <span class="lbl"> Intituciones de Emergencia</span>
                     </a>
-
+                    <a class="" href="../SeguridadPassword/">
+                        <span class="glyphicon glyphicon-asterisk"></span>
+                        <span class="lbl"> Seguridad contrase&ntilde;a</span>
+                    </a>
                 </div>
             </div>
         </li>
