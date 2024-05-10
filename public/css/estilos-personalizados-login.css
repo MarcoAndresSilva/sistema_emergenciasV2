@@ -1,0 +1,137 @@
+.container-login{
+    width: 100vw;
+}
+
+
+.box-login{
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+}
+
+.bg-illustration {
+    /* position: relative; */
+    height: 100vh;
+    width: 50vw;
+    /* background: url("https://i.ibb.co/RhMZprS/jony-Image2-1.png") no-repeat center center scroll; */
+    /* background-size: cover; */
+    float: left;
+    -webkit-animation: bgslide 2.3s forwards;
+            animation: bgslide 2.3s forwards;
+            background: #C9FFBF;  /* fallback for old browsers */
+            background: -webkit-linear-gradient(to bottom, #FFAFBD, #C9FFBF);  /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to bottom, #FFAFBD, #C9FFBF); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+            
+  }
+  .bg-illustration img {
+    width: 350px;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+    height: auto;
+    margin: 0 auto;
+    display: flex;
+  justify-content: center;
+  flex-direction: column;
+
+  }
+  
+  @-webkit-keyframes bgslide {
+    from {
+      left: -100%;
+      width: 0;
+      opacity: 0;
+    }
+    to {
+      left: 0;
+      width: 1194px;
+      opacity: 1;
+    }
+  }
+  
+  @keyframes bgslide {
+    from {
+      left: -100%;
+      width: 0;
+      opacity: 0;
+    }
+    to {
+      left: 0;
+      width: 1194px;
+      opacity: 1;
+    }   
+  }
+  
+  .login-form-box{
+    width: 60%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+    /* Display 12", iPad PRO Portrait, iPad landscape */
+    @media only screen and (max-width: 900px) {
+      .login-form-box{
+        /* border: 1px solid red; */
+      }
+
+      .box-login{
+        flex-direction: column;
+    align-content: center;
+    align-items: center;
+  }
+
+      .bg-illustration {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        height: 30vh; 
+        width: auto;
+        margin: 0 auto;
+        background: none;
+      }
+
+      .bg-illustration img {
+        position: absolute;
+        top: -390px;
+        left: 0;
+        height: 370px;
+        z-index: 20;
+        /* width: auto; */
+      }
+      
+      .login-form-box{
+        position: absolute;
+        top: 230px;
+        left: 90px;
+        z-index: 10;
+      }
+
+      @-webkit-keyframes bgslide {
+        from {
+          left: -100%;
+          width: 0;
+          opacity: 0;
+        }
+        to {
+          left: 8%;
+          width: 900px;
+          opacity: 1;
+        }
+      }
+      
+      @keyframes bgslide {
+        from {
+          left: -100%;
+          width: 0;
+          opacity: 0;
+        }
+        to {
+          left: 8%;
+          width: 900px;
+          opacity: 1;
+        }   
+      }
+    
+    }

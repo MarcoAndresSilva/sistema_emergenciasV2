@@ -1,0 +1,17 @@
+.side-menu {
+    border-right: 0px !important;
+}
+.lbl {
+    color: #383838 !important;
+}
+.glyphicon {
+    color: rgb(35, 35, 255) !important;
+}
+.selected{
+    background: rgb(133,22,135);
+    background: linear-gradient(90deg, rgba(133,22,135,1) 0%, rgba(125,31,203,1) 50%, rgba(127,16,214,0.8981793400954132) 100%);  
+    color: rgb(255, 255, 255) !important;
+}
+.selected span{
+    color: rgb(255, 255, 255) !important;
+}

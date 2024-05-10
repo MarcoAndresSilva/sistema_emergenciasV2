@@ -1,0 +1,16 @@
+
+.peligro_critico {
+    background-color: #f64747d6;
+}
+.peligro_medio{
+    background-color: #fbeb41d6;
+}
+.peligro_bajo {
+    background-color: #bbf63cd6;
+}
+.peligro_comun {
+    background-color: #7a7a7ad6;
+}
+#myChart{
+    padding-bottom: 2rem;
+}

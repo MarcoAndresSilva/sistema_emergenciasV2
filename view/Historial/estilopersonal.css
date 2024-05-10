@@ -1,0 +1,214 @@
+* {
+    margin: 0;
+    padding: 0%;
+}
+#filtros{
+    border: 1px none black;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.select{
+    width: 150px;
+}
+
+.estructura-tablas{
+    /* width: 100%; */
+    display: grid;
+}
+#datos-generales tr{
+    background-color: #d7d6d6d6;
+}
+
+.tabla-basica {
+    /* width: 100%; */
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.tabla-basica th, .tabla-basica td {
+    border-bottom: 1px solid #c0c0c0;
+    padding: 8px;
+    text-align: left;
+}
+
+.tabla-basica th {
+    background-color: #bdbdbd;
+}
+
+.peligro_critico {
+    background-color: #f64747d6;
+}
+.peligro_medio{
+    background-color: #fbeb41d6;
+}
+.peligro_bajo {
+    background-color: #bbf63cd6;
+}
+
+.peligro_comun {
+    background-color: #7a7a7ad6;
+}
+.ovalo_peligro {
+    display: flex;
+    justify-content: center;
+    border-radius: 15%;
+    padding: 5%;
+    width: 100%;
+    height: 100%;
+}
+
+/*FILTROS*/
+
+.search-input {
+    padding: 0.5rem;
+    background: var(--grey-200);
+    border-radius: var(--borderRadius);
+    letter-spacing: var(--letterSpacing);
+    border-radius: 10px;
+}
+
+#modal-mapa{
+    display: none;
+    color: black;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #c9a4fa;
+    width: 60vw;
+    height: 60vh;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(46, 46, 46, 0.5); /* Sombra para un efecto de profundidad */
+    z-index: 9999; /* Asegura que el modal esté sobre otros elementos */
+    color: black;
+    text-align-last: center;
+}
+#map {
+    width: 100%;
+    height: 90%;
+}
+.vista-mapa{
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+.btnCrearRuta {
+    width: 30%;
+    height:  10%;
+    margin-top: 10px;
+}
+.CerrarModalMap {
+    top: 10px;
+    left: 30%;
+    color: black !important;
+    font-size: 25px;
+    text-decoration: none;
+}
+
+#modalInfoEmergencia{
+    display: none;
+    color: #fff;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgb(133,22,135);
+    background: linear-gradient(90deg, rgba(133,22,135,1) 0%, rgba(125,31,203,1) 50%, rgba(127,16,214,0.8981793400954132) 100%);  
+    width: 50%;
+    height: 100%;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(46, 46, 46, 0.5);
+    z-index: 9999;
+    text-align-last: center;
+}   
+
+.titleDatosEmergencia{
+    text-align: center;
+}
+.contenedorInfoEmergencia {
+    padding: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+#tabla-principal-historial{
+    text-align: center;
+    max-width: 850px;
+    margin: 0 auto;
+}
+
+.infoEmergencia{
+    display: flex;
+    flex-direction: column;
+}
+.datosEmergencia {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin: 0 auto;
+    color: #000;
+}
+
+.dato-emergencia-item_1{
+    background-color: #e1cdf2;
+}
+
+.datosEmergencia p{
+    width: 70%;
+    margin-top: 10px;
+}
+.datosEmergencia label{
+    width: 27%;
+}
+
+.datosEmergencia .dato-emergencia-item{
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid #ccc;
+    align-items: center ;
+}
+
+.imagenDatosEmergencia {
+    width: 30%;
+  margin: 0 auto;
+  margin-top: 2rem;
+  max-height: 350px;
+}
+ #imagenEmergencia{
+    width: 100%;
+}
+.btnDatosEmergencia {
+    display: flex;
+  justify-content: end;
+}
+
+.btnDatosEmergencia .btnCerrarInfoEmergencia{
+    border-radius: 50%;
+    float: right;
+}
+
+@media screen and (max-width: 800px) {
+    #modalInfoEmergencia {
+        width: 100%;
+    }
+    .datosEmergencia label {
+        width: 50%;
+        text-align: center;
+      }
+      .datosEmergencia p {
+        width: 60%;
+      }
+      .imagenDatosEmergencia {
+        width: 50%;
+      }
+      .btn.btn-primary {
+        width: 40%;
+      }
+      
+
+
+}

@@ -1,0 +1,28 @@
+* {
+    margin: 0;
+    padding: 0%;
+}
+
+.estructura-tablas{
+    width: 100%;
+    display: grid;
+}
+#datos-generales tr{
+    background-color: #d7d6d6d6;
+}
+
+.tabla-basica {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.tabla-basica th, .tabla-basica td {
+    border-bottom: 1px solid #c0c0c0;
+    padding: 8px;
+    text-align: left;
+}
+
+.tabla-basica th {
+    background-color: #bdbdbd;
+}
