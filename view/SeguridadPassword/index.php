@@ -9,11 +9,10 @@ if (isset($_SESSION["usu_id"])) {
 <!DOCTYPE html>
 <html>
 <?php require_once("../MainHead/head.php") ?>
-<link rel="stylesheet" href="./estilopersonal.css">
+<link rel="stylesheet" href="./StyleSeguridadPassword.css">
 <title>Sistema Emergencia</title>
 <script defer type="text/javascript" src="./searchpass.js"></script>
 <script defer type="text/javascript" src="./mesesExpiracion.js"></script>
-<script async src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
 
 </head>
 
