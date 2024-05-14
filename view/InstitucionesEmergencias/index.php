@@ -9,6 +9,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 	<?php require_once("../MainHead/head.php") ?>
 <link rel="stylesheet" href="estiloinstitucionesemergencias.css">
 <title>Sistema Emergencia</title>
+<script defer type="text/javascript" src="./institucionesemergencias.js"></script>
 </head>
 
 <body class="with-side-menu">
@@ -37,14 +38,26 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 
 			<h5 class="m-t-lg with-border">Informaci&oacute;n de Instituciones de Emergencias</h5>
 
-			
+					<table id="miTabla" class="table table-bordered table-responsive table-striped table-vcenter js-dataTable-js">
+						<thead>
+							<tr>
+							<th>ID Categoría</th>
+							<th>Nombre Categoría</th>
+							<th>Estado</th>
+							<th>Nivel de Evaluación</th>
+							</tr>
+						</thead>
+						<tbody>
+						<!-- Las filas se añadirán dinámicamente aquí -->
+						</tbody>
+					</table>
+
         </div><!--.container-fluid-->
     </div><!--.page-content-->
 
 	<?php require_once("../MainFooter/footer.php"); ?>
 	
 </body>
-	<script type="text/javascript" src="institucionesemergencias.js"></script>
 	<script>
 		document.getElementById('show-hide-sidebar-toggle').addEventListener('click', function(e) {
 			e.preventDefault();
