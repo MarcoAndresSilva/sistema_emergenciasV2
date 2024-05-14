@@ -10,6 +10,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 <link rel="stylesheet" href="estiloinstitucionesemergencias.css">
 <title>Sistema Emergencia</title>
 <script defer type="text/javascript" src="./institucionesemergencias.js"></script>
+<script src="../../public/js/sweetaler2v11-11-0.js"></script>
 </head>
 
 <body class="with-side-menu">
