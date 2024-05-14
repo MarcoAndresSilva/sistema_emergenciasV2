@@ -47,7 +47,7 @@ if (isset($_SESSION["usu_id"])) {
                     </div>
                     
                     
-                    <table id="tabla-general tabla-basica" class="table table-bordered table-responsive table-striped table-vcenter js-dataTable-js">
+                    <table id="tabla-general tabla-basica" class="table table-bordered table-responsive  table-vcenter js-dataTable-js">
                         <thead>
                             <tr>
                                 <th style="width:10%">Nombre</th>
