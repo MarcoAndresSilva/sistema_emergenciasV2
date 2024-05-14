@@ -61,3 +61,42 @@ function actualizarTabla(datos) {
         tbody.append(tr);
     });
 }
+
+// Función para agregar el evento change a los selects
+    $("body").on("change", ".form-select", function() {
+        console.log("change")
+        let tr = $(this).closest("tr");
+        let cat_id = tr.find("td").eq(0).text();
+        let cat_nom = tr.find("td").eq(1).text();
+        let ev_niv_id = $(this).val();
+        let data ={
+            op:"update_categoria",
+            cat_id: cat_id,
+            cat_nom: cat_nom,
+            ev_niv_id: ev_niv_id
+        }
+        console.table(data)
+        // Enviar datos mediante una solicitud POST
+        $.post("../../controller/categoria.php",data , function(response) {
+            // Manejar la respuesta del servidor
+            if (response.status === "success") {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: response.mensaje
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: response.mensaje
+                });
+            }
+        }, "json").fail(function(jqXHR, textStatus, errorThrown) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Error en la solicitud: ' + textStatus
+            });
+        });
+    });
