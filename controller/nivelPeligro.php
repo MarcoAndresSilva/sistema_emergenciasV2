@@ -28,5 +28,13 @@ if (isset($_GET["op"])) {
                 echo $html;
             }
             break;
+        case "get_nivel_peligro_json":
+            $peligros = $nivelPeligro->get_nivel_peligro();
+
+            if (is_array($peligros) == true and count($peligros) > 0) {
+                $peligros = json_encode($peligros);
+                echo $peligros;
+            }
+        break;
     }
 }
