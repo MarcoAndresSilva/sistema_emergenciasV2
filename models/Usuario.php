@@ -100,7 +100,7 @@
                     "numero" =>     (bool) preg_match('@[0-9]@', $pass),
                     "especiales"=>  (bool) preg_match('@[^\w]@', $pass),
                     "largo" =>      strlen($pass) > 7,
-                    "fecha" =>     ($fecha < $meses)
+                    "fecha" =>     $fecha
                 );
 
                 $resultado[] = $ArrayPassUser;
