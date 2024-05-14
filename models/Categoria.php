@@ -137,7 +137,24 @@ class Categoria extends Conectar
              return json_encode(array('error' => $e->getMessage()));
          }
      }
+     public function get_categoria_nivel(){
+         try {
+             $conectar = parent::conexion();
+             parent::set_names();
+             $sql = "SELECT * FROM tm_categoria as cat INNER JOIN tm_ev_niv niv ON(cat.est=niv.ev_niv_id);";
+             $consulta = $conectar->prepare($sql);
+             $consulta->execute();
+             $resultado = $consulta->fetchAll();
 
+             if ($resultado) {
+                return $resultado;
+            } else {
+                return array('error' => 'Categoría no encontradas');
+            }
+        } catch (Exception $e) {
+            return json_encode(array('error' => $e->getMessage()));
+        }
+     }
  }
 
 
