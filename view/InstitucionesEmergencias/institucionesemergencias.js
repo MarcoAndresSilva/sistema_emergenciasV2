@@ -37,7 +37,9 @@ function actualizarTabla(datos) {
     
     // Limpia cualquier contenido existente en el cuerpo de la tabla
     tbody.empty();
-    
+    const buttonedit   ='<button id="buttonedit"   class="btn btn-warning" type="button"><img src="../../public/img/edit.svg"></button>'
+    const buttondelete ='<button id="buttondelete" class="btn btn-danger" type="button"><img src="../../public/img/trash.svg"></button>'
+    const buttons = buttonedit+buttondelete
     // Recorre los datos recibidos y crea nuevas filas para la tabla
     datos.forEach(function (fila) {
         let tr = $("<tr></tr>");
@@ -56,8 +58,8 @@ function actualizarTabla(datos) {
             }
             selectHtml.append(option);
         });
-
         tr.append($("<td></td>").append(selectHtml));
+        tr.append($("<td></td>").append(buttons));
         tbody.append(tr);
     });
 }
