@@ -7,6 +7,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 <!DOCTYPE html>
 <html>
 	<?php require_once("../MainHead/head.php") ?>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css">
 <link rel="stylesheet" href="estiloinstitucionesemergencias.css">
 <title>Sistema Emergencia</title>
 <script defer type="text/javascript" src="./institucionesemergencias.js"></script>
@@ -38,7 +39,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 			</header>
 
 			<h5 class="m-t-lg with-border">Informaci&oacute;n de Instituciones de Emergencias</h5>
-
+			<button class="btn btn-success" id="addButton">Agregar Categoría</button>
 					<table id="miTabla" class="table table-bordered table-responsive table-striped table-vcenter js-dataTable-js">
 						<thead>
 							<tr>
