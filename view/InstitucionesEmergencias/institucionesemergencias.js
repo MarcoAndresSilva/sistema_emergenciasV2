@@ -100,3 +100,58 @@ function actualizarTabla(datos) {
             });
         });
     });
+  // Agregar funcionalidad al botón para mostrar la ventana SweetAlert2
+  $('#addButton').on('click', function() {
+    let selectOptions = nivelPeligro.map(function(item) {
+        return `<option value="${item.ev_niv_id}">${item.ev_niv_nom}</option>`;
+    }).join('');
+
+    Swal.fire({
+        title: 'Agregar Categoría',
+        html: `
+            <input type="text" id="cat_nom" class="swal2-input" placeholder="Nombre de la Categoría">
+            <select id="ev_niv_id" class="swal2-select">
+                ${selectOptions}
+            </select>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Agregar',
+        cancelButtonText: 'Cancelar',
+        preConfirm: () => {
+            return {
+                cat_nom: $('#cat_nom').val(),
+                ev_niv_id: $('#ev_niv_id').val()
+            }
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.post('../../controller/categoria.php', {
+                op: 'add_categoria',
+                cat_nom: result.value.cat_nom,
+                ev_niv_id: result.value.ev_niv_id
+            }, function(response) {
+                // Aquí puedes manejar la respuesta del servidor
+                if (response.status === 'success') {
+                    Swal.fire('¡Categoría Agregada!', '', 'success');
+                    // Actualizar la tabla después de agregar la categoría
+                    $.get("../../controller/categoria.php", { op: "cateogia_nivel" },
+                        function (data, textStatus, jqXHR) {
+                            if (data && Array.isArray(data)) {
+                                actualizarTabla(data);
+                            } else {
+                                console.error("Datos categoría inválidos:", data);
+                            }
+                        },
+                        "json"
+                    ).fail(function(jqXHR, textStatus, errorThrown) {
+                        console.error("Error en la solicitud AJAX de categorías:", textStatus, errorThrown);
+                    });
+                } else {
+                    Swal.fire('Error al agregar la categoría', response.mensaje, 'error');
+                }
+            }, "json").fail(function(jqXHR, textStatus, errorThrown) {
+                Swal.fire('Error al agregar la categoría', 'Error en la solicitud: ' + textStatus, 'error');
+            });
+        }
+    });
+});
