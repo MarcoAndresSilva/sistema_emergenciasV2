@@ -2,6 +2,7 @@
 require_once("../config/conexion.php");
 require_once("../models/Categoria.php");
 $categoria = new Categoria();
+if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_tipo"] == 2)) {
 
 if (isset($_GET["op"])) {
     switch ($_GET["op"]) {
@@ -85,4 +86,20 @@ if (isset($_POST["op"])) {
             );
             echo json_encode($response);
             break;
-}}
+        case "delete_categoria":
+            $cat_id = $_POST["cat_id"];
+            $resultado = $categoria->delete_categoria($cat_id);
+            if ($resultado === true) {
+                $mensaje = "¡La operación se ha realizado exitosamente!";
+                $status = "success";
+            } else {
+                $mensaje = "¡La operación ha fallado!";
+                $status = "error";
+            }
+            $response = array(
+                "status" => $status,
+                "mensaje" => $mensaje
+            );
+            echo json_encode($response);
+        break;
+}}}
