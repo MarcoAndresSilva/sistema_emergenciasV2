@@ -66,6 +66,23 @@ if (isset($_POST["op"])) {
                 "mensaje" => $mensaje
             );
             echo json_encode($response);
-            break;        
+            break;
 
+        case "add_categoria":
+            $cat_nom = $_POST["cat_nom"];
+            $est = $_POST["ev_niv_id"];
+            $resultado = $categoria->add_categoria($cat_nom, $est);
+            if ($resultado === true) {
+                $mensaje = "¡La operación se ha realizado exitosamente!";
+                $status = "success";
+            } else {
+                $mensaje = "¡La operación ha fallado!";
+                $status = "error";
+            }
+            $response = array(
+                "status" => $status,
+                "mensaje" => $mensaje
+            );
+            echo json_encode($response);
+            break;
 }}
