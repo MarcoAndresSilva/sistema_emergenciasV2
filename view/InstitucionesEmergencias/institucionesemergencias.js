@@ -206,3 +206,66 @@ $("body").on("click", "#buttondelete", function() {
         }
     });
 });
+
+// Función para manejar el evento de clic en el botón de editar
+$("body").on("click", "#buttonedit", function() {
+    // Obtener los datos de la fila actual
+    let tr = $(this).closest("tr");
+    let cat_id = tr.find("td:eq(0)").text();
+    let cat_nom = tr.find("td:eq(1)").text();
+    let ev_niv_id = tr.find("select").val();
+
+    // Mostrar el formulario de edición usando SweetAlert2
+    Swal.fire({
+        title: 'Editar Categoría',
+        html: `
+            <input type="hidden" id="edit_cat_id" value="${cat_id}">
+            <input type="text" id="edit_cat_nom" class="swal2-input" value="${cat_nom}">
+            <select id="edit_ev_niv_id" class="swal2-select">
+                ${nivelPeligro.map(item => `<option value="${item.ev_niv_id}" ${item.ev_niv_id === ev_niv_id ? 'selected' : ''}>${item.ev_niv_nom}</option>`).join('')}
+            </select>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Guardar',
+        cancelButtonText: 'Cancelar',
+        preConfirm: () => {
+            return {
+                cat_id: $('#edit_cat_id').val(),
+                cat_nom: $('#edit_cat_nom').val(),
+                ev_niv_id: $('#edit_ev_niv_id').val()
+            }
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Enviar los datos al servidor para actualizar la categoría
+            $.post("../../controller/categoria.php", {
+                op: 'update_categoria',
+                cat_id: result.value.cat_id,
+                cat_nom: result.value.cat_nom,
+                ev_niv_id: result.value.ev_niv_id
+            }, function(response) {
+                // Manejar la respuesta del servidor
+                if (response.status === 'success') {
+                    Swal.fire('¡Categoría Actualizada!', '', 'success');
+                    // Actualizar la tabla después de editar la categoría
+                    $.get("../../controller/categoria.php", { op: "cateogia_nivel" },
+                        function (data, textStatus, jqXHR) {
+                            if (data && Array.isArray(data)) {
+                                actualizarTabla(data);
+                            } else {
+                                console.error("Datos categoría inválidos:", data);
+                            }
+                        },
+                        "json"
+                    ).fail(function(jqXHR, textStatus, errorThrown) {
+                        console.error("Error en la solicitud AJAX de categorías:", textStatus, errorThrown);
+                    });
+                } else {
+                    Swal.fire('Error al editar la categoría', response.mensaje, 'error');
+                }
+            }, "json").fail(function(jqXHR, textStatus, errorThrown) {
+                Swal.fire('Error al editar la categoría', 'Error en la solicitud: ' + textStatus, 'error');
+            });
+        }
+    });
+});
