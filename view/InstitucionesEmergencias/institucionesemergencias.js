@@ -157,3 +157,52 @@ function actualizarTabla(datos) {
         }
     });
 });
+// Función para manejar el evento de clic en el botón de borrar
+$("body").on("click", "#buttondelete", function() {
+    // Obtener el ID de la categoría que se va a eliminar
+    let cat_id = $(this).closest("tr").find("td:eq(0)").text();
+
+    // Mostrar confirmación antes de eliminar
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "¡No podrás revertir esto!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, bórralo'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Enviar el cat_id al servidor para eliminar la categoría
+            $.post("../../controller/categoria.php", { op: "delete_categoria", cat_id: cat_id },
+                function(response) {
+                    // Manejar la respuesta del servidor
+                    if (response.status === "success") {
+                        // Mostrar mensaje de éxito
+                        Swal.fire('¡Eliminado!', 'La categoría ha sido eliminada.', 'success');
+                        // Actualizar la tabla después de eliminar la categoría
+                        $.get("../../controller/categoria.php", { op: "cateogia_nivel" },
+                            function(data, textStatus, jqXHR) {
+                                if (data && Array.isArray(data)) {
+                                    actualizarTabla(data);
+                                } else {
+                                    console.error("Datos categoría inválidos:", data);
+                                }
+                            },
+                            "json"
+                        ).fail(function(jqXHR, textStatus, errorThrown) {
+                            console.error("Error en la solicitud AJAX de categorías:", textStatus, errorThrown);
+                        });
+                    } else {
+                        // Mostrar mensaje de error
+                        Swal.fire('Error', 'No se pudo eliminar la categoría.', 'error');
+                    }
+                },
+                "json"
+            ).fail(function(jqXHR, textStatus, errorThrown) {
+                // Mostrar mensaje de error si la solicitud falla
+                Swal.fire('Error', 'Error en la solicitud: ' + textStatus, 'error');
+            });
+        }
+    });
+});
