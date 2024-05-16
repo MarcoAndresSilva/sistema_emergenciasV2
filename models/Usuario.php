@@ -14,7 +14,7 @@
                     $sql ="SELECT * FROM tm_usuario WHERE usu_name= ? and usu_pass= ? and estado=1 ";
                     $stmt=$conectar->prepare($sql);
                     $stmt->bindValue(1, $name);
-                    $stmt->bindValue(2, $pass);
+                    $stmt->bindValue(2, md5($pass)); // cifrando a md5 la pass
                     $stmt->execute();
                     //se agrega variable para almacenar el usuario
                     $resultado = $stmt->fetch();
@@ -125,7 +125,7 @@
                 $consulta->bindParam(':usu_ape',$usu_ape);
                 $consulta->bindParam(':usu_correo',$usu_correo);
                 $consulta->bindParam(':usu_name',$usu_name);
-                $consulta->bindParam(':usu_pass',$usu_pass);
+                $consulta->bindParam(':usu_pass',md5($usu_pass));
                 $consulta->bindParam(':fecha_crea',$fecha_crea);
                 $consulta->bindParam(':estado',$estado);
                 $consulta->bindParam(':usu_tipo',$usu_tipo);
