@@ -69,47 +69,40 @@
 
         public function get_usuarios_status_passwords(){
             /**
-             * return array de las password de los usuarios dando informacion de que parametros de robustes se cumplen
+             * Retorna un array con la información de las password de los usuarios y los parámetros de robustez que cumplen
              * @autor: Nelson Navarro
              */
-
-            $conectar = parent::conexion();
-            parent::set_names();
-            $sql = "SELECT usu_nom,usu_ape,usu_correo,usu_pass,DATEDIFF(NOW(), fecha_crea) DIV 30 AS meses_creado, DATEDIFF(NOW(), fecha_modi) DIV 30 AS meses_modificado  FROM tm_usuario WHERE fecha_elim IS NULL";
-            $sql = $conectar->prepare($sql);
-            $sql->execute();
-            $userAll = $sql ->fetchAll();
-
-            $resultado = array();
-            $meses = 3; //son la cantidad de meses para decirq ue debe cambiarse
-            foreach ($userAll as $user) {
-                $pass = $user["usu_pass"];
-
-                if ($user["meses_modificado"]) {
-                    $fecha = $user["meses_modificado"];
+        
+            try {
+                $conectar = parent::conexion();
+                parent::set_names();
+                $sql = "SELECT 
+                            usu.usu_nom as 'nombre', 
+                            usu.usu_ape as 'apellido',
+                            usu.usu_correo as 'correo',
+                            DATEDIFF(NOW(), fecha_crea) DIV 30 AS 'fecha',
+                            rb.mayuscula as 'mayuscula',
+                            rb.minuscula as 'minuscula',
+                            rb.numeros as 'numero',
+                            rb.especiales as 'especiales',
+                            rb.largo as 'largo'
+                        FROM tm_rob_pass as rb
+                        JOIN tm_usuario as usu
+                        ON(usu.usu_id=rb.usu_id)
+                        WHERE usu.fecha_elim IS NULL";
+                $sql = $conectar->prepare($sql);
+                $sql->execute();
+                $userAll = $sql ->fetchAll(PDO::FETCH_ASSOC);
+        
+                if(is_array($userAll) && count($userAll) > 0){
+                    return $userAll;
                 } else {
-                    $fecha = $user["meses_creado"];
+                    ?> <script>console.log("No se encontraron usuarios con contraseñas")</script><?php
+                    return array(); // Devuelve un array vacío si no se encuentran usuarios con contraseñas
                 }
-                
-                $ArrayPassUser = array(
-                    "nombre" =>   $user["usu_nom"], 
-                    "apellido" => $user["usu_ape"],
-                    "correo" =>   $user["usu_correo"],
-                    "mayuscula" =>  (bool) preg_match('@[A-Z]@', $pass),
-                    "minuscula" =>  (bool) preg_match('@[a-z]@', $pass),
-                    "numero" =>     (bool) preg_match('@[0-9]@', $pass),
-                    "especiales"=>  (bool) preg_match('@[^\w]@', $pass),
-                    "largo" =>      strlen($pass) > 7,
-                    "fecha" =>     $fecha
-                );
-
-                $resultado[] = $ArrayPassUser;
-            } 
-            if(is_array($resultado) and count($resultado) > 0){
-                return $resultado;
-            }else {
-                ?> <script>console.log("No se encontraron Eventos")</script><?php
-                return 0;
+            } catch (Exception $e) {
+                ?> <script>console.log("Error al obtener usuarios con contraseñas")</script><?php
+                throw $e;
             }
         }
         //add_categoria (Insert categoria)
