@@ -54,6 +54,28 @@ class SeguridadPassword extends Conectar {
         );
         return $jsonPass;
     }
+    function update_password_info($usu_id, $pass) : Returntype {
+        $conectar = parent::conexion();
+        parent::set_names();
+        $seguridad = $this->PasswordSegura($pass);
+        $sql = "UPDATE tm_rob_pass SET mayuscula=:mayuscula, minuscula=:minuscula, especiales=:especiales, numeros=:numeros, largo=:largo,fecha_modi=:fecha_modi WHERE usu_id = :usu_id";
+        $consulta = $conectar->prepare($sql);
+        $consulta->bindParam(':usu_id', $usu_id);
+        $consulta->bindParam(':mayuscula', $seguridad['mayuscula'], PDO::PARAM_BOOL);
+        $consulta->bindParam(':minuscula', $seguridad['minuscula'], PDO::PARAM_BOOL);
+        $consulta->bindParam(':especiales', $seguridad['especiales'], PDO::PARAM_BOOL);
+        $consulta->bindParam(':numeros', $seguridad['numero'], PDO::PARAM_BOOL);
+        $consulta->bindParam(':largo', $seguridad['largo'], PDO::PARAM_BOOL);
+        $consulta->bindParam(':fecha_modi', date('Y-m-d H:i:s'));
+
+        $consulta->execute();
+
+        if ($consulta->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
 
 
