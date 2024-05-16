@@ -1073,6 +1073,29 @@ INSERT INTO `tm_usuario` (`usu_id`, `usu_nom`, `usu_ape`, `usu_correo`, `usu_nam
 
 
 --
+-- Estructura de tabla para la tabla tm_rob_pass
+--
+CREATE TABLE tm_rob_pass (
+	`rob_id` INT NOT NUll auto_increment,
+    `usu_id` INT NOT NULL unique,
+    `mayuscula` BOOLEAN NOT NULL,
+    `minuscula` BOOLEAN NOT NULL,
+    `especiales` BOOLEAN NOT NULL,
+    `numeros` BOOLEAN NOT NULL,
+    `largo` BOOLEAN NOT NULL,
+    `fecha_modi` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`rob_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+--
+-- volcado de datos para la tabla tm_rob_pass
+--
+insert into tm_rob_pass(`usu_id`,`mayuscula`,`minuscula`,`especiales`,`numeros`,`largo`,`fecha_modi`) values
+(1,false,false,false,true,false,'2024-05-16 15:47:31'),
+(2,false,false,false,true,false,'2024-05-16 15:47:31'),
+(3,false,false,false,true,false,'2024-05-16 15:47:31'),
+(4,false,false,false,true,false,'2024-05-16 15:47:31');
+
+--
 -- Índices para tablas volcadas
 --
 
