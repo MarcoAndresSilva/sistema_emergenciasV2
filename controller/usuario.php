@@ -1,6 +1,7 @@
 <?php
 require_once("../config/conexion.php");
 require_once("../models/Usuario.php");
+require_once("../models/SeguridadPassword.php");
 $usuario = new Usuario();
 
 if (isset($_GET["op"])) {
@@ -15,6 +16,8 @@ if (isset($_GET["op"])) {
             $_POST['estado'],
             $_POST['usu_tipo']);
             if ($datos == true) {
+                $seguridadPassword = new  SeguridadPassword();
+                $seguridadPassword->add_password_info($_POST['usu_correo'],$_POST['usu_name'], $_POST['usu_pass']);
                 echo 1;
             } else {
                 echo 0;
