@@ -1053,7 +1053,7 @@ CREATE TABLE `tm_usuario` (
   `usu_ape` varchar(150) DEFAULT NULL,
   `usu_correo` varchar(150) NOT NULL,
   `usu_name` varchar(45) NOT NULL,
-  `usu_pass` varchar(30) NOT NULL,
+  `usu_pass` varchar(33) NOT NULL,
   `fecha_crea` datetime DEFAULT NULL,
   `fecha_modi` datetime DEFAULT NULL,
   `fecha_elim` datetime DEFAULT NULL,
