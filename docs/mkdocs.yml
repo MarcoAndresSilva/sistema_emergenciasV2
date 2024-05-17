@@ -1,0 +1,63 @@
+site_name: Mi sitio
+nav:
+    - Inicio: about.md
+    - index: index.md
+    - DB Emergencia: db_emergencia.md
+    - Eventos: eventos.md
+    - Controllers:
+        - Datos Geográficos: controllers/datosGeograficos.md
+        - Categoría: controllers/categoria.md
+        - Estado: controllers/estado.md
+        - Evento: controllers/evento.md
+        - Evento Unidad: controllers/eventoUnidad.md
+        - Nivel Peligro: controllers/nivelPeligro.md
+        - Unidad: controllers/unidad.md
+        - Usuario: controllers/usuario.md
+    - Models:
+        - Datos Geográficos: models/datosGeograficos.md
+        - Categoría: models/categoria.md
+        - Estado: models/estado.md
+        - Evento: models/evento.md
+        - Evento Unidad: models/eventoUnidad.md
+        - Nivel Peligro: models/nivelPeligro.md
+        - Unidad: models/unidad.md
+        - Usuario: models/usuario.md
+        - Funcionario: models/funcionario.md
+        - Funcionario Territorial: models/funcionarioTerritorial.md
+        - Institución: models/institucion.md
+        - Seguridad Password: models/seguridadPassword.md
+    - Public:
+        - public: public/public.md
+    - Docker:
+        - Docker File: docker/dockerFile.md
+        - Docker Container: docker/dockerContainer.md
+    - View:
+        - Atender Emergencia: view/atenderEmergencia.md
+        - Categorías Emergencias: view/categoriasEmergencias.md
+        - Control Eventos: view/controlEventos.md
+        - Crear Usuario: view/crearUsuario.md
+        - Emergencias Por Institución: view/emergenciasPorInstitucion.md
+        - Funcionarios Municipales: view/funcionariosMunicipales.md
+        - Funcionarios Territoriales: view/funcionariosTerritoriales.md
+        - Historial: view/historial.md
+        - Home: view/home.md
+        - Instituciones Emergencias: view/instittucionesEmergencias.md
+        - Logout: view/loguot.md
+        - Main Footer: view/MainFooter.md
+        - Main Head: view/MainHead.md
+        - Main Header: view/MainHeader.md
+        - Main JS: view/MainJS.md
+        - Main Nav: view/MainNav.md
+        - Map: view/Map.md
+        - Nuevo Evento: view/nuevoEvento.md
+        - Recibir Derivación Emergencia: view/RecibirDerivacionEmergencia.md
+        - Reporte General Emergencias: view/ReporteGeneralEmergencias.md
+        - Seguridad Password: view/SeguridadPassword.md
+        - Unidad Municipal: view/unidadMunicipal.md
+    - Config:
+        - Docker File: config/dockerFile.md
+        - Docker Container: config/dockerContainer.md
+    - DB ChartJS:
+        - Docker File: db_chartJS/db_chartJS.md
+        - Docker Container: db_chartJS/dockerContainer.md
+theme: readthedocs
