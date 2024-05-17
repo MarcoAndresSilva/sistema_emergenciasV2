@@ -6,10 +6,10 @@
         protected function Conexion () {
             try {
                 // Local
-                $conectar = $this->dbh = new PDO("mysql:local=localhost;dbname=emergencia_db","root","");
-                // Host
+                $this->dbh = new PDO("mysql:host=mysql;dbname=emergencia_db", "root", "tu");
+                $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 // $conectar = $this->dbh = new PDO("mysql:host=localhost;port=2083;dbname=admem_db_emergencia","admem_marco","Calamar.!1");
-                return $conectar;
+                return $this->dbh;
                 
             } catch (Exception $e) {
                 print "隆Error DB !: ".$e->getMessage()."<br/>";
@@ -23,8 +23,8 @@
 
         public function ruta () {
             // Local
-            return "http://localhost/sistema_emergencia/";
-            // host
+            return "http://localhost/";
+            // host 0
             // return "https://emergencias.melipilla.cl/";
         }
     }
