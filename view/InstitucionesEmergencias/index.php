@@ -45,7 +45,6 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 							<tr>
 							<th>ID Categoría</th>
 							<th>Nombre Categoría</th>
-							<th>Estado</th>
 							<th>Nivel de Evaluación</th>
 							<th>Accion</th>
 							</tr>

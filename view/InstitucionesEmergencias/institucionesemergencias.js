@@ -45,7 +45,6 @@ function actualizarTabla(datos) {
         let tr = $("<tr></tr>");
         tr.append($("<td></td>").text(fila.cat_id));
         tr.append($("<td></td>").text(fila.cat_nom));
-        tr.append($("<td></td>").text(fila.est));
         
         // Crear el select para niveles de peligro
         let selectHtml = $("<select class='form-select'></select>");
