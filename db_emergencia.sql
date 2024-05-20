@@ -1102,8 +1102,9 @@ CREATE TABLE tm_reg_log(
 `usu_id` INT NOT NULL,
 `op` VARCHAR(150),
 `fecha` DATETIME DEFAULT CURRENT_TIMESTAMP,
-`detalle` VARCHAR(250)
-)
+`detalle` VARCHAR(250),
+PRIMARY KEY (`log_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 --
 -- Índices para tablas volcadas
 --
