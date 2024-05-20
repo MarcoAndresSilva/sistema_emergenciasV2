@@ -1,6 +1,6 @@
 <?php
 require_once("../../config/conexion.php");
-require_once("../../models/usuario.php");
+require_once("../../models/Usuario.php");
 
 if (isset($_SESSION["usu_id"])) {
     $usuario = new Usuario();
