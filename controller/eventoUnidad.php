@@ -5,13 +5,14 @@ require_once("../models/Categoria.php");
 require_once("../models/Unidad.php");
 require_once("../models/Estado.php");
 require_once("../models/EventoUnidad.php");
+require_once("../models/RegistroLog.php");
 
 $evento = new Evento();
 $categoria = new Categoria();
 $unidad = new Unidad();
 $estado = new Estado();
 $eventoUnidad = new EventoUnidad();
-
+$registroLog = new RegistroLog();
 if (isset($_GET["op"])) {
     switch ($_GET["op"]) {
 
@@ -25,8 +26,8 @@ if (isset($_GET["op"])) {
             } else {
                 echo 0;
             }
+            $registroLog->add_log_registro($_SESSION['usu_id'],$_GET['op'],"evento id:{$_POST['ev_id']} unid:{unid_id}");
             break;
-            
             
         case "update_asignacion_evento":
             $datos = $eventoUnidad->update_asignacion_evento($_POST['ev_id'],$_POST['unid_id']);
@@ -36,6 +37,7 @@ if (isset($_GET["op"])) {
             } else {
                 echo 0;
             }
+            $registroLog->add_log_registro($_SESSION['usu_id'],$_GET['op'],"evento id:{$_POST['ev_id']} unid:{$_POST['unid_id']}");
             break;
 
         case "get_datos_eventoUnidad":
@@ -61,6 +63,7 @@ if (isset($_GET["op"])) {
             } else {
                 echo 0;
             }
+            $registroLog->add_log_registro($_SESSION['usu_id'],$_GET['op'],"Actualizar evento id:{$_POST['ev_id']} Nombre:{$_POST['str_antiguo']} a {$_POST['str_nuevo']}");
             break;
         
         case "delete_unidad":
@@ -70,6 +73,7 @@ if (isset($_GET["op"])) {
             } else {
                 echo 0;
             }
+            $registroLog->add_log_registro($_SESSION['usu_id'],$_GET['op'],"Eliminar unidad:{$_POST['unid_id']} de evento id {$_POST['ev_id']}");
             break;
 
 
