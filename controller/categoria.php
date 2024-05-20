@@ -1,9 +1,11 @@
 <?php
 require_once("../config/conexion.php");
 require_once("../models/Categoria.php");
+require_once("../models/RegistroLog.php");
 $categoria = new Categoria();
 if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_tipo"] == 2)) {
 
+$RegistroLog= new RegistroLog();
 if (isset($_GET["op"])) {
     switch ($_GET["op"]) {
 
@@ -66,6 +68,7 @@ if (isset($_POST["op"])) {
                 "status" => $status,
                 "mensaje" => $mensaje
             );
+            $RegistroLog->add_log_registro($_SESSION['usu_id'],$_POST['op'],"actualizar {$cat_nom}:{$cat_id} al estado {$est}:".$mensaje);
             echo json_encode($response);
             break;
 
@@ -84,6 +87,7 @@ if (isset($_POST["op"])) {
                 "status" => $status,
                 "mensaje" => $mensaje
             );
+            $RegistroLog->add_log_registro($_SESSION['usu_id'],$_POST['op'],"se agrega la categoria {$cat_nom} estado {$est}:".$mensaje);
             echo json_encode($response);
             break;
         case "delete_categoria":
@@ -100,6 +104,7 @@ if (isset($_POST["op"])) {
                 "status" => $status,
                 "mensaje" => $mensaje
             );
+            $RegistroLog->add_log_registro($_SESSION['usu_id'],$_POST['op'],"eliminar {$cat_id}".$mensaje);
             echo json_encode($response);
         break;
 }}}
