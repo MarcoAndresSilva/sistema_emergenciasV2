@@ -1094,7 +1094,16 @@ insert into tm_rob_pass(`usu_id`,`mayuscula`,`minuscula`,`especiales`,`numeros`,
 (2,false,false,false,true,false,'2024-05-16 15:47:31'),
 (3,false,false,false,true,false,'2024-05-16 15:47:31'),
 (4,false,false,false,true,false,'2024-05-16 15:47:31');
-
+--
+-- Estructua de tabla para tm_reg_log
+--
+CREATE TABLE tm_reg_log(
+`log_id` INT NOT NULL AUTO_INCREMENT,
+`usu_id` INT NOT NULL,
+`op` VARCHAR(150),
+`fecha` DATETIME DEFAULT CURRENT_TIMESTAMP,
+`detalle` VARCHAR(250)
+)
 --
 -- Índices para tablas volcadas
 --
