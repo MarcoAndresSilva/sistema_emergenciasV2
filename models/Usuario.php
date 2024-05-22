@@ -40,7 +40,25 @@ require_once 'RegistroLog.php';
                 }
             }
         }
-        
+        private function GetIpCliente() {
+            /**
+            * Obtener la dirección IP del cliente.
+            *
+            * Esta función verifica varias fuentes posibles para obtener la dirección IP del cliente,
+            * incluyendo $_SERVER['HTTP_CLIENT_IP'], $_SERVER['HTTP_X_FORWARDED_FOR'] y $_SERVER['REMOTE_ADDR'].
+            *
+            * @return string La dirección IP del cliente.
+            */
+            
+            if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+                $ip = $_SERVER['HTTP_CLIENT_IP'];
+            } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+                $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+            } else {
+                $ip = $_SERVER['REMOTE_ADDR'];
+            }
+            return $ip;
+        }
         public function get_tipo($usu_id){
             $conectar = parent::conexion();
             parent::set_names();
