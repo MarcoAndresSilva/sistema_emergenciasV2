@@ -4,6 +4,6 @@ session_destroy();
 // Host
 header("Location:". "http://emergencias.melipilla.cl/");
 // Local
-header("Location:". "http://localhost/sistema_emergencia/");
+header("Location:". "http://localhost/sistema_emergenciasV2/");
 exit();
 ?>

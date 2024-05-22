@@ -12,9 +12,24 @@
 }
 
 #event_form{
+    /* display: grid;
+    grid-template-rows: auto auto; /* Dos filas, una para Información Personal y otra para Emergencia e Identificación 
+    grid-template-columns: 1fr;  Una sola columna para ocupar todo el ancho 
+    gap: 20px; Espacio entre los grupos */
     display: flex;
-    justify-content: space-around;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: 30px;
+}
 
+.group-info-personal{
+    grid-row: 1;
+}
+.group-info-personal .col-lg-5{
+    width: 20%;
+}
+.group-info-personal .col-lg-5:last-child{
+    width: 30%;
 }
 
 .group-ident{
@@ -23,30 +38,24 @@
     justify-content: center;
     width: 45%;
 }
-
-.reportadopor{
-    background: #fff;
-  padding: 8px;
-  width: 100%;
-  display: block;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+.group-emergencia{
+    display: flex;
+    flex-wrap: wrap;
 }
+
+.group-emergencia .col-lg-5{
+    width: 45%;
+}
+.group-emergencia:last-child{
+    width: 90%;
+    margin: 0 auto;
+}
+
 
 .group-ident .col-lg-5{
     width: 100%;
 }
 
-.group-emergencia{
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    width: 45%;
-}
-
-.group-emergencia .col-lg-5{
-    width: 100%;
-}
 
 #btnGuardar{
     margin-top: 2rem;
@@ -55,8 +64,21 @@
 
 @media screen and (max-width: 800px) {
     #event_form{
-        flex-direction: column;
-        align-items: center;
+        /* flex-direction: column; */
+    }
+    .group-info-personal .col-lg-5{
+        width: 90%;
+    }
+    .group-info-personal .col-lg-5:last-child{
+        width: 90%;
+    }
+
+    .group-emergencia{
+        display: flex;
+    }
+    
+    .group-emergencia .col-lg-5{
+        width: 90%;
     }
     
     .group-ident,
@@ -70,5 +92,6 @@
     #map{
         width: 100%;
     }
+
     
 }

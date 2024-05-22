@@ -23,6 +23,8 @@
                         $_SESSION["usu_nom"] = $resultado["usu_nom"];
                         $_SESSION["usu_ape"] = $resultado["usu_ape"];
                         $_SESSION["usu_tipo"] = $resultado["usu_tipo"];
+                        $_SESSION["usu_correo"] = $resultado["usu_correo"];
+                        $_SESSION["usu_telefono"] = $resultado["usu_telefono"];
                         header("Location:".Conectar::ruta()."view/Home/");
                         exit();
                     }else {
@@ -47,6 +49,29 @@
                 return $resultado;
             }else {
                 return false;
+            }
+        }
+
+        public function get_datos_contacto($usu_id){
+            try {
+                $conectar = parent::conexion();
+                parent::set_names();
+                $sql = "SELECT usu_nom, usu_ape, usu_telefono, usu_correo FROM tm_usuario WHERE usu_id = ?";
+                $stmt = $conectar->prepare($sql);
+                $stmt->bindValue(1, $usu_id);
+                $stmt->execute();
+                $resultado = $stmt->fetchAll();
+                
+                if (is_array($resultado) && count($resultado) > 0) {
+                    return $resultado;
+                } else {
+                    // No se encontraron datos
+                    return null;
+                }
+            } catch (PDOException $e) {
+                // Error al ejecutar la consulta
+                error_log('Error en get_datos_contacto(): ' . $e->getMessage());
+                return null;
             }
         }
 

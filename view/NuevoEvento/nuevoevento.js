@@ -2,6 +2,9 @@ var coordsUser = {};
 var permitirUbicacion = true;
 var marker;
 var mapContainer = document.getElementById('map');
+
+
+
 $(document).ready(function() {
     
     // Obtener el elemento <a> por su ID
@@ -9,19 +12,32 @@ $(document).ready(function() {
     
     // Añadir una clase al enlace
     enlace.classList.add('selected');
+
     
     //Funcion para cargar los datos de la tabla categoria
     $.post("../../controller/categoria.php?op=combo",function(data,status){
         $('#cat_id').html(data);
     });
-    
-});
+
+    //Funcion para mostrar el select en el que se compartira la ubicacion 
+        $('#elegir-ubicacion').on('change', function() {
+            var selectedOption = $(this).val();
+            if (selectedOption === 'direccion-escrita') {
+                $('#direccion-escrita').show();
+                $('#direccion-geolocalizacion').hide();
+            } else if (selectedOption === 'ubicacion-content') {
+                $('#direccion-escrita').hide();
+                $('#direccion-geolocalizacion').show();
+            }
+        });
+    });
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //ID para realizar una correcta asignación de unidades al evento
 var cat_id;
 var alerta = true;
 //Activacion del boton guardar
+
 $('#btnGuardar').off('click').on('click', function() {
     if (validarFormulario()) {
         // Llama a la función pasa add_evento 
@@ -57,22 +73,31 @@ document.getElementById('imagen').addEventListener('change', function() {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //Funcion para tomar datos y concretar funcion add_evento
-function add_evento(){
+function add_evento() {
     let ev_id;
     //Verifica si el marcador esta definido
-    if(marker === null || marker === undefined){
-        console.log("El marcador es nulo o no esta definido");
-    }else {
+    if (marker === null || marker === undefined) {
+        console.log("El marcador es nulo o no está definido");
+    } else {
         var newCoords = marker.getPosition();
     }
-    
-    
-    // var ev_nom = $('#nombre').val();
-    var ev_mail = $('#mail').val();
+
+    // Lógica para obtener datos dinámicos de la sesión y llenar campos
+    var nombre = "<?php echo $_SESSION['nombre']; ?>";
+    var apellido = "<?php echo $_SESSION['apellido']; ?>";
+    var telefono = "<?php echo $_SESSION['telefono']; ?>";
+    var correo = "<?php echo $_SESSION['correo']; ?>";
+
+    $('#nombre').val(nombre);
+    $('#apellido').val(apellido);
+    $('#telefono').val(telefono);
+    $('#correo').val(correo);
+
+    // Aquí agregamos la variable que falta
     var ev_desc = $('#descripcion').val();
-    var ev_telefono = $('#phone').val();
     var ev_est = 1;
-    
+
+
     //Fecha y Hora
     var ev_inicio = new Date();
     var anio = ev_inicio.getFullYear();
@@ -84,62 +109,70 @@ function add_evento(){
     // Formatear la fecha y hora como desees
     var fechaFormateada = anio + '-' + mes + '-' + dia + ' ' + horas + ':' + minutos + ':' + segundos;
     ev_inicio = fechaFormateada;
-    
+
     //Variable Categoría
     cat_id = $('#cat_id').val();
     //Verificamos la categoría asignada para automatizar la asignación de unidades a las emergencias
-    
 
     var ev_direc = $('#address').val();
     //Obtiene el valor del radiobutton del uso de ubicación
     var valorUbicacion = $("input[name='ubicacion']:checked").val();
-    
+
     //Utiliza la ubicación del marcador
-    if(valorUbicacion === 'permitir') { 
+    if (valorUbicacion === 'permitir') {
         if ($('#address').val() === "") {
-            ev_direc ='Sin dirección , ' + marker.getPosition().lat() + ',' + marker.getPosition().lng();
+            ev_direc = 'Sin dirección , ' + marker.getPosition().lat() + ',' + marker.getPosition().lng();
             console.log('Coordenadas a uilizar: ' + ev_direc);
-    
-        }else if ($('#address').val() !== ""){
+
+        } else if ($('#address').val() !== "") {
             ev_direc += ' , ' + marker.getPosition().lat() + ',' + marker.getPosition().lng();
         }
-        
+
     }
     //Utiliza la ubicación actual del dispositivo
     else if (valorUbicacion === 'permitirActual') {
         if ($('#address').val() === "") {
-            ev_direc ='Sin dirección , ' + marker.getPosition().lat() + ',' + marker.getPosition().lng();
-    
-        }else if ($('#address').val() !== ""){
+            ev_direc = 'Sin dirección , ' + marker.getPosition().lat() + ',' + marker.getPosition().lng();
+
+        } else if ($('#address').val() !== "") {
             ev_direc += ' , ' + marker.getPosition().lat() + ',' + marker.getPosition().lng();
         }
     }
     //No utiliza ubicación por lo que añade un string al final de la dirección para especificar que no hay coordenadas
-    else if (valorUbicacion === 'noPermitir'){
+    else if (valorUbicacion === 'noPermitir') {
         ev_direc += " , No hay coordenadas";
     }
-    
+
     // Valida si la direccion esta vacía o No
     validarCampoVacioDireccion('#address', 'Debes ingresar una dirección.');
 
     const ev_niv = 0;
     var ev_img = "";
+
     
-    $.post("../../controller/evento.php?op=add_evento",{ev_mail:ev_mail,ev_desc:ev_desc,ev_est:ev_est,ev_inicio:ev_inicio,ev_direc:ev_direc,cat_id:cat_id, ev_niv:ev_niv, ev_img:ev_img, ev_telefono:ev_telefono},function(data,status){
-        
+    $.post("../../controller/evento.php?op=add_evento", {
+        ev_desc: ev_desc,
+        ev_est: ev_est,
+        ev_inicio: ev_inicio,
+        ev_direc: ev_direc,
+        cat_id: cat_id,
+        ev_niv: ev_niv,
+        ev_img: ev_img
+    }, function(data, status) {
+
         console.log(data);
-        
-        if(data == 1){
-            
-            $.post("../../controller/evento.php?op=get_id_ultimo_evento",function(dataId,status){
+
+        if (data == 1) {
+
+            $.post("../../controller/evento.php?op=get_id_ultimo_evento", function(dataId, status) {
                 ev_id = dataId;
-                
+
                 console.log(dataId);
                 console.log(ev_id);
-                
+
                 // Después de agregar el evento con éxito, cargar la imagen
                 var formData = new FormData($('#event_form')[0]);
-                formData.append('ev_id',ev_id);
+                formData.append('ev_id', ev_id);
                 $.ajax({
                     url: '../../controller/evento.php?op=carga-imagen',
                     type: 'POST',
@@ -159,21 +192,21 @@ function add_evento(){
                 });
                 if (data == 1) {
                     console.log("data == 1");
-                }else{
+                } else {
                     alerta === false;
                 }
-                insert_asignacion_unidades(ev_id,cat_id);
+                insert_asignacion_unidades(ev_id, cat_id);
                 console.log(ev_asig);
             });
 
             // $('#nombre').val('');
-            $('#mail').val('');
+            // $('#mail').val('');
             $('#descripcion').val('');
-            $('#address').val('');
+            // $('#address').val('');
             $('#cat_id').val(1);
-            $('#phone').val(1);
+            // $('#phone').val(1);
 
-        }else {
+        } else {
             alerta === false;
         }
     });
@@ -352,15 +385,14 @@ function toggleMap() {
         mapContainer.style.display = 'none';
     }
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //Validación del formulario
 function validarFormulario() {
     return (
         // validarCampoNombre('#nombre', 'Debes ingresar un nombre sin caracteres especiales') &&
-        validarEmail('#mail', 'Debes ingresar una dirección de correo electrónico válida.') &&
+        // validarEmail('#mail', 'Debes ingresar una dirección de correo electrónico válida.') &&
         validarCampoVacio('#descripcion', 'Debes ingresar una descripción.') &&
-        validarCampoVacio('#cat_id', 'Debes seleccionar una categoría.') &&
-        validarTelefono('#phone', 'El teléfono solo puede contener números y no puede estar vacío.')
+        validarCampoVacio('#cat_id', 'Debes seleccionar una categoría.')
+        // validarTelefono('#phone', 'El teléfono solo puede contener números y no puede estar vacío.')
     );
 }
 // el nombre vendra diamicamente del perfil
@@ -377,6 +409,7 @@ function validarFormulario() {
     
 //     return true;
 // }
+
 function validarCampoVacio(selector, mensajeError) {
     var valor = $(selector).val().trim();
     if (valor === "") {
@@ -385,6 +418,7 @@ function validarCampoVacio(selector, mensajeError) {
     }
     return true;
 }
+
 function validarCampoVacioDireccion(selector, mensajeError) {
     var valor = $(selector).val().trim();
     if (valor === "" & (coordsUser.lat === "" || coordsUser.lng === "")) {
@@ -394,29 +428,30 @@ function validarCampoVacioDireccion(selector, mensajeError) {
     return true;
 }
 
-function validarEmail(selector, mensajeError) {
-    var email = $(selector).val();
-    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        mostrarMensajeError(mensajeError);
-        return false;
-    }
-    return true;
-}
-// Función para validar el campo de teléfono
-function validarTelefono(selector, mensajeError) {
-    var telefono = $(selector).val().trim();
-    
-    // Expresión regular que permite solo números
-    var regexTelefono = /^\d+$/;
+// function validarEmail(selector, mensajeError) {
+//     var email = $(selector).val();
+//     var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+//     if (!emailRegex.test(email)) {
+//         mostrarMensajeError(mensajeError);
+//         return false;
+//     }
+//     return true;
+// }
 
-    if (telefono === "" || !regexTelefono.test(telefono)) {
-        mostrarMensajeError(mensajeError);
-        return false;
-    }
+// Función para validar el campo de teléfono
+// function validarTelefono(selector, mensajeError) {
+//     var telefono = $(selector).val().trim();
     
-    return true;
-}
+//     // Expresión regular que permite solo números
+//     var regexTelefono = /^\d+$/;
+
+//     if (telefono === "" || !regexTelefono.test(telefono)) {
+//         mostrarMensajeError(mensajeError);
+//         return false;
+//     }
+    
+//     return true;
+// }
 
 function mostrarMensajeError(mensaje) {
     // Aquí puedes mostrar el mensaje de error en algún elemento específico o en la consola del navegador.

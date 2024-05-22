@@ -14,24 +14,35 @@ $eventounidad = new EventoUnidad();
 if (isset($_GET["op"])) {
     switch ($_GET["op"]) {
         case "add_evento":
+            // Obtener datos de la sesión del usuario
+            $usu_id = $_SESSION["usu_id"];
+            $usu_nom = $_SESSION["usu_nom"];
+            $usu_ape = $_SESSION["usu_ape"];
+            $usu_mail = $_SESSION["usu_correo"];
+            $usu_telefono = $_SESSION["usu_telefono"];
+        
             $datos = $evento->add_evento(
-            $_POST['ev_mail'],
-            $_POST['ev_desc'],
-            $_POST['ev_est'],
-            $_POST['ev_inicio'],
-            $_POST['ev_direc'],
-            $_POST['cat_id'],
-            $_POST['ev_niv'],
-            $_POST['ev_img'],
-            $_POST['ev_telefono']);
-
+                // $usu_id,
+                $usu_nom, // Llenar con el nom del usuario en sesión
+                $usu_ape, // Llenar con el ape del usuario en sesión
+                $usu_mail, // Llenar con el correo del usuario en sesión
+                $_POST['ev_desc'],
+                $_POST['ev_est'],
+                $_POST['ev_inicio'],
+                $_POST['ev_direc'],
+                $_POST['cat_id'],
+                $_POST['ev_niv'],
+                $_POST['ev_img'],
+                $usu_telefono // Llenar con el teléfono del usuario en sesión
+            );
+        
             if ($datos == true) {
                 echo 1;
             } else {
                 echo 0;
             }
         break;
-        
+
         case "carga-imagen":
             //verificar si se obtuvo el ID del evento
             if (isset($_POST['ev_id'])){

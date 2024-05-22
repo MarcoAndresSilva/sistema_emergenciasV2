@@ -23,7 +23,7 @@
 
         public function ruta () {
             // Local
-            return "http://localhost/sistema_emergencia/";
+            return "http://localhost/sistema_emergenciasV2/";
             // host
             // return "https://emergencias.melipilla.cl/";
         }

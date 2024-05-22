@@ -37,7 +37,7 @@ $(document).ready(function () {
       }
   });
   
-  let url = 'http://localhost/sistema_emergencia/eventos.php';
+  let url = 'http://localhost/sistema_emergenciasV2/eventos.php';
   fetch(url)
       .then(response => response.json())
       .then(datos => mostrar(datos))

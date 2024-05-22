@@ -168,15 +168,16 @@ class Evento extends Conectar {
             throw $e;
         }
     }
-
-    public function add_evento( $ev_mail, $ev_desc, $ev_est, $ev_inicio, $ev_direc, $cat_id, $ev_niv, $ev_img,$ev_telefono) {
-        try{
+        
+    public function add_evento($ev_nom, $ev_apellido, $ev_mail, $ev_desc, $ev_est, $ev_inicio, $ev_direc, $cat_id, $ev_niv, $ev_img, $ev_telefono) {
+        try {
             $conectar = parent::conexion();
             parent::set_names();
-            $sql = "INSERT INTO tm_evento ( ev_mail, ev_desc, ev_est, ev_inicio, ev_final, ev_direc, cat_id,ev_niv, ev_img, ev_telefono) 
-            VALUES ( :ev_mail, :ev_desc, :ev_est, :ev_inicio, NULL, :ev_direc, :cat_id ,:ev_niv , :ev_img, :ev_telefono)";
+            $sql = "INSERT INTO tm_evento (ev_nom, ev_apellido, ev_mail, ev_desc, ev_est, ev_inicio, ev_final, ev_direc, cat_id, ev_niv, ev_img, ev_telefono) 
+            VALUES (:ev_nom, :ev_apellido, :ev_mail, :ev_desc, :ev_est, :ev_inicio, NULL, :ev_direc, :cat_id, :ev_niv, :ev_img, :ev_telefono)";
             $consulta  = $conectar->prepare($sql);
-            // $consulta->bindParam(':ev_nom', $ev_nom);
+            $consulta->bindParam(':ev_nom', $ev_nom);
+            $consulta->bindParam(':ev_apellido', $ev_apellido);
             $consulta->bindParam(':ev_mail', $ev_mail);
             $consulta->bindParam(':ev_desc', $ev_desc);
             $consulta->bindParam(':ev_est', $ev_est);
@@ -188,23 +189,16 @@ class Evento extends Conectar {
             $consulta->bindParam(':ev_telefono', $ev_telefono);
             try {
                 $consulta->execute();
-            }catch (PDOException $e){
-                echo "Error al ejecutar la consulta: " .$e->getMessage();
-            }
-            
-            
+            } catch (PDOException $e) {
+                echo "Error al ejecutar la consulta: " . $e->getMessage();
+            }            
             if ($consulta->rowCount() > 0) {
                 return true;
-            } else {
-                ?>
-                <script>console.log("No se agregaro Eventos")</script>
-                <?php
-                return 0;
+            } else { 
+                return false;
             }
         } catch (Exception $e) {
-            ?> 
-            <script>console.log("Error catch     add_evento")</script>
-            <?php
+            echo "Error catch add_evento: " . $e->getMessage();
             throw $e;
         }
     }

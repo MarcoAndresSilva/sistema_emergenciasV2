@@ -34,50 +34,10 @@ if (isset($_SESSION["usu_id"])) {
 			<div class="row">
 				<div class="col-xl-12"    >
 
-				<!-- nuevo grafico con ChartJS -->
-										
-				<div>
-					<canvas id="myChart" style="height: 40vh; width:100%"></canvas>
-				</div>
-
-					<!-- chart antiguo del template
-						<div class="chart-statistic-box">
-						<div class="chart-txt">
-							<div class="chart-txt-top">
-								<p><span class="unit">Mes Actual</span><span class="number"></span></p>
-								<p class="caption">Emergencias mensuales</p>
-							</div>
-							<table class="tbl-data">
-								<tr>
-									<td class="price color-purple" id="contador-critico">3</td>
-									<td>Criticas</td>
-								</tr>
-								<tr>
-									<td class="price color-yellow" id="contador-medio">3</td>
-									<td>Medias</td>
-								</tr>
-								<tr>
-									<td class="price color-lime" id="contador-bajo">8</td>
-									<td>Bajas</td>
-								</tr>
-								<tr>
-									<td class="price color-lime" id="contador-comun">12</td>
-									<td>Comun</td>
-								</tr>
-							</table>
-						</div>
-						<div class="chart-container" >
-							<div class="chart-container-in">
-								<div id="chart_div"></div>
-								<header class="chart-container-title"></header>
-								<div class="chart-container-x" id="eje-x">
-								</div>
-								<div class="chart-container-y" id="eje-y">
-								</div>
-							</div>
-						</div>
-					</div> -->
-					<!--.chart-statistic-box-->
+				<!-- nuevo grafico con ChartJS -->										
+					<div>
+						<canvas id="myChart" style="height: 40vh; width:100%"></canvas>
+					</div>
 				</div>
 				<!--.col-->
 				<div class="col-xl-12">

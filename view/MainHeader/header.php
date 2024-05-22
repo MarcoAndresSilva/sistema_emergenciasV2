@@ -55,6 +55,7 @@
 							<span class="lblcontactonomx">
 								<?php echo $_SESSION["usu_nom"] ?>
 								<?php echo $_SESSION["usu_ape"] ?>
+								
 							</span>
 						</a>
 					</div>
