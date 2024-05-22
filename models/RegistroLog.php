@@ -27,4 +27,35 @@ class RegistroLog extends Conectar{
              return false;
         }
     }
+    public function get_registros_log(){
+        /**
+        * consulta los datos del logs
+        * 
+        * Esta consulta optienes los datos del usuario que ejecuta cada operacion registrada
+        *
+        * @return array|false Retorna un array con los registros o `false` si hay un error.
+        */
+        $conectar = parent::conexion();
+        parent::set_names();
+        $sql= "SELECT 
+                log.log_id     as 'id',  
+                IFNULL(usu.usu_nom   ,'Desconocido') as 'nombre', 
+                IFNULL(usu.usu_ape   ,'Desconocido') as 'apellido',
+                IFNULL(usu.usu_correo,'Desconocido') as 'correo',
+                IFNULL(usu.usu_name  ,'Desconocido') as 'usaurio',
+                log.fecha      as 'fecha',
+                log.op         as 'operacion',
+                log.detalle    as 'detalle' 
+               FROM tm_reg_log AS log 
+               left JOIN tm_usuario AS usu
+               ON(usu.usu_id=log.usu_id);";
+        $query = $conectar->prepare($sql);
+        $query->execute();
+        if ($query->rowCount() > 0) {
+            $resultado = $query->fetchAll(PDO::FETCH_ASSOC); 
+            return $resultado;
+         } else {
+             return false;
+        }
+    }
 }
