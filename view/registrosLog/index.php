@@ -9,8 +9,9 @@ if (isset($_SESSION["usu_id"])) {
 <link rel="stylesheet" href="./StyleRegistroLog.css">
 <title>Sistema Emergencia</title>
 <script defer type="text/javascript" src="./registroLog.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap5.css" />
 <script defer src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
+<script defer src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.js"></script>
 
 </head>
 
