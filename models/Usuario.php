@@ -1,4 +1,5 @@
 <?php
+require_once 'RegistroLog.php';
     class Usuario extends Conectar {
 
         public function login() {
@@ -7,6 +8,8 @@
             if (isset($_POST["enviar"])) {
                 $name = $_POST["usu_name"];
                 $pass = $_POST["usu_pass"];
+                $log= new RegistroLog;
+                $ipCliente = $this->GetIpCliente();
                 if (empty($name) and empty($pass) and empty($usu_tipo)) {
                     header("Location:".conectar::ruta()."index.php?m=2");
                     exit();
@@ -24,8 +27,12 @@
                         $_SESSION["usu_ape"] = $resultado["usu_ape"];
                         $_SESSION["usu_tipo"] = $resultado["usu_tipo"];
                         header("Location:".Conectar::ruta()."view/Home/");
+                        $mensaje="el usuario{$_SESSION['usu_nom']} {$_SESSION['usu_ape']} inició sesión desde la IP: $ipCliente";
+                        $log->add_log_registro( $_SESSION["usu_id"],'Inicio sesion',$mensaje); 
                         exit();
-                    }else {
+                     }else{ 
+                        $mensaje="el usuario {$_POST['usu_name']} intento iniciar sesion, ip: $ipCliente";
+                        $log->add_log_registro( 0,'Inicio sesion',$mensaje); 
                         header("Location:".Conectar::ruta()."index.php?m=1");
                         exit();
                     }
