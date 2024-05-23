@@ -1,4 +1,4 @@
-site_name: Mi sitio
+site_name: Documentación del Sistema de Emergencia
 nav:
     - Inicio: about.md
     - index: index.md
@@ -63,5 +63,9 @@ nav:
 theme:
   name: readthedocs
 plugins:
-  - with-pdf
+  - with-pdf:
+      author: Informatica
+      cover_title: Sistema de Emergencias
+      cover_subtitle: Documentacion 
+      copyright: municipalidad de melipilla
   - search 
