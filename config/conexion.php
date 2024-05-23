@@ -6,7 +6,7 @@
         protected function Conexion () {
             try {
                 // Local
-                $conectar = $this->dbh = new PDO("mysql:local=localhost;dbname=emergencia_db","root","");
+                $conectar = $this->dbh = new PDO("mysql:local=localhost;dbname=db_emergencia","root","");
                 // Host
                 // $conectar = $this->dbh = new PDO("mysql:host=localhost;port=2083;dbname=admem_db_emergencia","admem_marco","Calamar.!1");
                 return $conectar;
