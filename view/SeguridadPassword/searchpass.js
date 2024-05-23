@@ -1,37 +1,47 @@
-const input = document.getElementById('search-pass');
-const rows = document.querySelectorAll('#datos-pass tr');
-const selectStatus = document.getElementById('selectStatus');
+$.post('../../controller/seguridadPassword.php', { op: 'password_status' }, function(data) {
+    if (data.length === 0) {
+        $('#tabla-data').append('<tr><td colspan="100%">No hay datos disponibles</td></tr>');
+        return;
+    }
 
-function filtrarDatos(value) {
-  rows.forEach(row => {
-    const cellsToFilter = obtenerCeldasFiltrables(row);
-    const mostrarFila = cellsToFilter.some(cell => cell.textContent.toLowerCase().includes(value));
-    row.style.display = mostrarFila ? 'table-row' : 'none';
-  });
-}
+    // Transformar los datos para agregar estado y detalles
+    const transformedData = data.map(item => {
+        const { nombre, apellido, correo, mayuscula, minuscula, numero, especiales, largo } = item;
+        let estado = 'seguro';
+        let detalle = 'La contraseña es robusta';
 
+        // Verificar las condiciones
+        if (!mayuscula || !minuscula || !numero || !especiales || !largo) {
+            estado = 'inseguro';
+            detalle = 'La contraseña no cumple con: ';
+            if (!mayuscula) detalle += 'mayúsculas, ';
+            if (!minuscula) detalle += 'minúsculas, ';
+            if (!numero) detalle += 'números, ';
+            if (!especiales) detalle += 'caracteres especiales, ';
+            if (!largo) detalle += 'longitud mínima, ';
+            detalle = detalle.slice(0, -2);  // Eliminar la última coma y espacio
+        }
 
-function obtenerCeldasFiltrables(row) {
-  return [
-    row.querySelector('td:nth-child(1)'),// nombre
-    row.querySelector('td:nth-child(2)'),// apellido
-    row.querySelector('td:nth-child(4)')// correo
-  ];
-}
+        return { nombre, apellido, correo, estado, detalle };
+    });
 
-input.addEventListener('keyup', function() {
-  const value = this.value.toLowerCase();
-  filtrarDatos(value);
+    // Generar las columnas dinámicamente
+    var columns = [
+        { title: 'Nombre', data: 'nombre' },
+        { title: 'Apellido', data: 'apellido' },
+        { title: 'Correo', data: 'correo' },
+        { title: 'Estado', data: 'estado' },
+        { title: 'Detalle', data: 'detalle' }
+    ];
+
+    // Inicializa DataTables
+    var table = $.DataTable({
+        data: transformedData,
+        columns: columns,
+        language:{
+            url:'../registrosLog/spanishDatatable.json'
+        }
+    });
+}, 'json').fail(function(error) {
+    console.log('Error: ', error);
 });
-
-function filtrarDatosPorEstado() {
-  const selectedValue = selectStatus.value;
-  rows.forEach(row => {
-    const cell = row.querySelector('td:nth-child(3)');// estado
-    const cellValue = cell.textContent.trim();
-    const mostrarFila = selectedValue === '0' || selectedValue === cellValue;
-    row.style.display = mostrarFila ? 'table-row' : 'none';
-  });
-}
-
-selectStatus.addEventListener('change', filtrarDatosPorEstado);
