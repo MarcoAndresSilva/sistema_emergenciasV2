@@ -24,5 +24,26 @@ services:
     networks:
       - mi_red
 
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: root
+      PMA_PASSWORD: 'tu'
+    networks:
+      - mi_red
+
+  mkdocs:
+    image: python:3.8
+    volumes:
+      - ../../sistema_emergencia/docs:/docs
+    working_dir: /docs
+    command: bash -c "pip install mkdocs mkdocs-with-pdf && mkdocs serve --dev-addr=0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+    networks:
+      - mi_red
 networks:
   mi_red:
