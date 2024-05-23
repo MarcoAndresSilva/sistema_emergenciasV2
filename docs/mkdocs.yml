@@ -60,4 +60,8 @@ nav:
     - DB ChartJS:
         - Docker File: db_chartJS/db_chartJS.md
         - Docker Container: db_chartJS/dockerContainer.md
-theme: readthedocs
+theme:
+  name: readthedocs
+plugins:
+  - with-pdf
+  - search 
