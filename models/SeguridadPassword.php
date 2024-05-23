@@ -76,6 +76,45 @@ class SeguridadPassword extends Conectar {
             return false;
         }
     }
+    public function get_usuarios_status_passwords(){
+      /**
+       * Retorna un array con la información de las password de los usuarios y los parámetros de robustez que cumplen
+       * @autor: Nelson Navarro
+       * @return array
+       */
+        
+        try {
+            $conectar = parent::conexion();
+            parent::set_names();
+            $sql = "SELECT 
+                        usu.usu_nom as 'nombre', 
+                        usu.usu_ape as 'apellido',
+                        usu.usu_correo as 'correo',
+                        DATEDIFF(NOW(), fecha_crea) DIV 30 AS 'fecha',
+                        rb.mayuscula as 'mayuscula',
+                        rb.minuscula as 'minuscula',
+                        rb.numeros as 'numero',
+                        rb.especiales as 'especiales',
+                        rb.largo as 'largo'
+                    FROM tm_rob_pass as rb
+                    JOIN tm_usuario as usu
+                    ON(usu.usu_id=rb.usu_id)
+                    WHERE usu.fecha_elim IS NULL";
+            $sql = $conectar->prepare($sql);
+            $sql->execute();
+            $userAll = $sql ->fetchAll(PDO::FETCH_ASSOC);
+       
+            if(is_array($userAll) && count($userAll) > 0){
+                return $userAll;
+            } else {
+                ?> <script>console.log("No se encontraron usuarios con contraseñas")</script><?php
+                return array(); // Devuelve un array vacío si no se encuentran usuarios con contraseñas
+            }
+        } catch (Exception $e) {
+            ?> <script>console.log("Error al obtener usuarios con contraseñas")</script><?php
+            throw $e;
+        }
+    }
 }
 
 
