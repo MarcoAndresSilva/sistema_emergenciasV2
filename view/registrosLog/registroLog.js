@@ -26,7 +26,7 @@ $.post('../../controller/registroLog.php', { op: 'registro_log' }, function(data
         data: data,
         columns: columns,
         columnDefs: [
-            { searchable: false, targets: [6, 7] } // Deshabilita la búsqueda para las columnas 7 y 8
+            { searchable: false, targets: [ 7] } // Deshabilita la búsqueda detalle
         ],
         initComplete: function () {
             var column = this.api().column(6); // Índice de la columna "operacion"
