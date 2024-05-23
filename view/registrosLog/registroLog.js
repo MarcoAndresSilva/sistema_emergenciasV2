@@ -1,12 +1,10 @@
 // Crear los campos de entrada de fecha en tu HTML
-var startDateInput = $('<input type="date" id="startDate" class="form-control">')
-    .insertBefore('#tabla-log');
-var endDateInput = $('<input type="date" id="endDate" class="form-control">')
-    .insertBefore('#tabla-log');
+// Referencia a los campos de entrada de fecha en tu HTML
+var startDateInput = $('#startDate');
+var endDateInput = $('#endDate');
 
-// Crear el select en tu HTML
-var select = $('<select id="mySelect" class="form-select"><option value="">todos</option></select>')
-    .insertBefore('#tabla-log');
+// Referencia al select en tu HTML
+var select = $('#mySelect');
 
 $.post('../../controller/registroLog.php', { op: 'registro_log' }, function(data) {
     // Verificar que data no esté vacío y sea un arreglo

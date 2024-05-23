@@ -26,6 +26,21 @@ if (isset($_SESSION["usu_id"])) {
     <div class="page-content">
         <div class="container-fluid">
             <div class="box-typical box-typical-padding table-responsive-sm" id="container-tabla-log">
+<!-- Crear los campos de entrada de fecha y el select en tu HTML -->
+<div class="form-group col-xs-12 col-sm-6 col-md-4">
+    <label for="startDate">Fecha de inicio:</label>
+    <input type="date" id="startDate" class="form-control">
+</div>
+<div class="form-group col-xs-12 col-sm-6 col-md-4">
+    <label for="endDate">Fecha de fin:</label>
+    <input type="date" id="endDate" class="form-control">
+</div>
+<div class="form-group col-xs-12 col-sm-6 col-md-4">
+    <label for="mySelect">Operación:</label>
+    <select id="mySelect" class="form-select">
+        <option value="">todos</option>
+    </select>
+</div>
             <table class="table" id="tabla-log">
                     
             </table> 
