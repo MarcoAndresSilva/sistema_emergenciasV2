@@ -54,7 +54,7 @@ class SeguridadPassword extends Conectar {
         );
         return $jsonPass;
     }
-    function update_password_info($usu_id, $pass) : Returntype {
+    function update_password_info($usu_id, $pass) : bool {
         $conectar = parent::conexion();
         parent::set_names();
         $seguridad = $this->PasswordSegura($pass);
