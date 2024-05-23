@@ -23,6 +23,9 @@ $.post('../../controller/registroLog.php', { op: 'registro_log' }, function(data
     var table = $('#tabla-log').DataTable({
         data: data,
         columns: columns,
+        language:{
+            url:'./spanishDatatable.json'
+        },
         columnDefs: [
             { searchable: false, targets: [ 7] } // Deshabilita la búsqueda detalle
         ],
