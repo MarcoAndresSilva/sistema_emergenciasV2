@@ -27,7 +27,7 @@ require_once 'RegistroLog.php';
                         $_SESSION["usu_ape"] = $resultado["usu_ape"];
                         $_SESSION["usu_tipo"] = $resultado["usu_tipo"];
                         header("Location:".Conectar::ruta()."view/Home/");
-                        $mensaje="el usuario{$_SESSION['usu_nom']} {$_SESSION['usu_ape']} inició sesión desde la IP: $ipCliente";
+                        $mensaje="el usuario {$_SESSION['usu_nom']} {$_SESSION['usu_ape']} inició sesión desde la IP: $ipCliente";
                         $log->add_log_registro( $_SESSION["usu_id"],'Inicio sesion',$mensaje); 
                         exit();
                      }else{ 
