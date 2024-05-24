@@ -8,9 +8,9 @@ if (isset($_SESSION["usu_id"])) {
 <!DOCTYPE html>
 <html>
 <?php require_once("../MainHead/head.php") ?>
-<link rel="stylesheet" href="./StyleSeguridadPassword.css">
 <title>Sistema Emergencia</title>
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap5.css" />
+<link rel="stylesheet" href="./StyleSeguridadPassword.css">
 </head>
 
 <body class="with-side-menu">
@@ -27,7 +27,7 @@ if (isset($_SESSION["usu_id"])) {
                     <div class="input-group rounded">
                         <div class="form-floating">
                             <select class="form-select" id="selectStatus" >
-                                <option value="0" selected>Todos</option>
+                                <option value="" selected>Todos</option>
                                 <option value="Vulnerable">Vulnerable</option>
                                 <option value="Seguro">Seguro</option>
                             </select>
@@ -39,7 +39,7 @@ if (isset($_SESSION["usu_id"])) {
                     </div> <!-- .input-group -->
                     
                     
-<table id="table-data" class="table table-bordered table-responsive  table-vcenter js-dataTable-js"> 
+<table id="table-data" class="table table-bordered responsive  table-vcenter js-dataTable-js"> 
     <thead>
         <tr>
             <th>Nombre</th>

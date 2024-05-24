@@ -50,7 +50,7 @@ $.post('../../controller/seguridadPassword.php', { op: 'password_status' }, func
         tableBody.append(row);
     });
 
-    var table = $('#table-data').DataTable({
+    table = $('#table-data').DataTable({
         language:{
             url:'../registrosLog/spanishDatatable.json'
         }
@@ -58,3 +58,27 @@ $.post('../../controller/seguridadPassword.php', { op: 'password_status' }, func
 }, 'json').fail(function(error) {
     console.log('Error: ', error);
 });
+// Controlador de eventos para el cambio en #mesesexpiracion
+$('#mesesexpiracion').on('change', function() {
+    var selectedMonths = $(this).val();
+    // Comprobar si la tabla está definida antes de intentar usarla
+    if (table) {
+        // Filtrar la tabla basada en el número de meses
+        table.rows().every(function() {
+            var data = this.data();
+            // Acceder a la columna de 'meses' usando data[4]
+            if (selectedMonths === '') {
+                // Si el valor seleccionado es null, quitar todas las clases de colores
+                $(this.node()).removeClass('table-danger table-success');
+            } else if (data[4] >= selectedMonths) {
+                // Agregar la clase 'table-danger' a la fila
+                $(this.node()).removeClass('table-success').addClass('table-danger');
+            } else {
+                // Agregar la clase 'table-success' a la fila
+                $(this.node()).removeClass('table-danger').addClass('table-success');
+            }
+        });
+        table.draw();
+    }
+});
+
