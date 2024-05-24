@@ -25,15 +25,10 @@ if (isset($_SESSION["usu_id"])) {
         <div class="container-fluid">
             <div class="box-typical box-typical-padding table-responsive-sm" id="tabla-password">
                     <div class="input-group rounded">
-                        <input type="search" class="form-control rounded" placeholder="Buscar" aria-label="Search" aria-describedby="search-addon" id="search-pass" />
-                        <span class="input-group-text border-0" id="search-addon">
-                        <i class="fas fa-search"></i>
-                        </span>
                         <div class="form-floating">
                             <select class="form-select" id="selectStatus" >
                                 <option value="0" selected>Todos</option>
                                 <option value="Vulnerable">Vulnerable</option>
-                                <option value="Contrase&ntilde;a expirada">Contrase&ntilde;a Expirada</option>
                                 <option value="Seguro">Seguro</option>
                             </select>
                             <label for="floatingSelect">Estado de seguridad</label>
@@ -50,6 +45,8 @@ if (isset($_SESSION["usu_id"])) {
             <th>Nombre</th>
             <th>Apellido</th>
             <th>Correo</th>
+            <th>estado</th>
+            <th>meses</th>
             <th>Detalle</th>
         </tr>
     </thead>

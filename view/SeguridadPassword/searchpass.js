@@ -1,42 +1,55 @@
+function fn_img(detalleTipo, detalleTexto){
+    let iconos = {
+        'mayúsculas': 'icon-letter-case-upper.svg',
+        'minúsculas': 'icon-case-lower.svg',
+        'números': 'icon-numbers.svg',
+        'caracteres especiales': 'icon-at.svg',
+        'longitud mínima': 'icon-number-8.svg',
+        'seguro':'icon-shield-check.svg'
+    };
+    let img = iconos[detalleTipo];
+    let html = `<li><img src='../../public/img/${img}'> ${detalleTexto}</li>`;
+    return html;
+}
+
 $.post('../../controller/seguridadPassword.php', { op: 'password_status' }, function(data) {
     if (data.length === 0) {
         $('#table-data tbody').append('<tr><td colspan="100%">No hay datos disponibles</td></tr>');
         return;
     }
 
-    // Transformar los datos para agregar estado y detalles
+    console.log(data);
     const transformedData = data.map(item => {
-        const { nombre, apellido, correo, mayuscula, minuscula, numero, especiales, largo } = item;
+        const { nombre, apellido, correo, mayuscula, minuscula, numero, especiales, largo, fecha } = item;
         let estado = 'seguro';
-        let detalle = 'La contraseña es robusta';
+        let detalles = [];
 
-        // Verificar las condiciones
         if (!mayuscula || !minuscula || !numero || !especiales || !largo) {
-            estado = 'inseguro';
-            detalle = 'La contraseña no cumple con: ';
-            if (!mayuscula) detalle += 'mayúsculas, ';
-            if (!minuscula) detalle += 'minúsculas, ';
-            if (!numero) detalle += 'números, ';
-            if (!especiales) detalle += 'caracteres especiales, ';
-            if (!largo) detalle += 'longitud mínima, ';
-            detalle = detalle.slice(0, -2);  // Eliminar la última coma y espacio
+            estado = 'Vulnerable';
+            if (!mayuscula) detalles.push(fn_img('mayúsculas', 'mayúsculas'));
+            if (!minuscula) detalles.push(fn_img('minúsculas', 'minúsculas'));
+            if (!numero) detalles.push(fn_img('números', 'números'));
+            if (!especiales) detalles.push(fn_img('caracteres especiales', 'caracteres especiales'));
+            if (!largo) detalles.push(fn_img('longitud mínima', 'longitud mínima'));
         }
 
-        return { nombre, apellido, correo, estado, detalle };
+        let detalle = detalles.length > 0 ? detalles.join('') : fn_img('seguro','La contraseña robusta') ;
+        return { nombre, apellido, correo, estado, detalle, fecha };
     });
 
-    // Generar las filas de la tabla dinámicamente
     var tableBody = $('#table-data tbody');
+    console.table(transformedData);
     transformedData.forEach(function(rowData) {
         var row = $('<tr>');
         row.append($('<td>').text(rowData.nombre));
         row.append($('<td>').text(rowData.apellido));
         row.append($('<td>').text(rowData.correo));
-        row.append($('<td>').text(rowData.detalle));
+        row.append($('<td>').text(rowData.estado));
+        row.append($('<td>').text(rowData.fecha));
+        row.append($('<td>').html(rowData.detalle));
         tableBody.append(row);
     });
 
-    // Inicializa DataTables
     var table = $('#table-data').DataTable({
         language:{
             url:'../registrosLog/spanishDatatable.json'
