@@ -1,6 +1,6 @@
 $.post('../../controller/seguridadPassword.php', { op: 'password_status' }, function(data) {
     if (data.length === 0) {
-        $('#tabla-data').append('<tr><td colspan="100%">No hay datos disponibles</td></tr>');
+        $('#table-data tbody').append('<tr><td colspan="100%">No hay datos disponibles</td></tr>');
         return;
     }
 
@@ -25,19 +25,19 @@ $.post('../../controller/seguridadPassword.php', { op: 'password_status' }, func
         return { nombre, apellido, correo, estado, detalle };
     });
 
-    // Generar las columnas dinámicamente
-    var columns = [
-        { title: 'Nombre', data: 'nombre' },
-        { title: 'Apellido', data: 'apellido' },
-        { title: 'Correo', data: 'correo' },
-        { title: 'Estado', data: 'estado' },
-        { title: 'Detalle', data: 'detalle' }
-    ];
+    // Generar las filas de la tabla dinámicamente
+    var tableBody = $('#table-data tbody');
+    transformedData.forEach(function(rowData) {
+        var row = $('<tr>');
+        row.append($('<td>').text(rowData.nombre));
+        row.append($('<td>').text(rowData.apellido));
+        row.append($('<td>').text(rowData.correo));
+        row.append($('<td>').text(rowData.detalle));
+        tableBody.append(row);
+    });
 
     // Inicializa DataTables
-    var table = $.DataTable({
-        data: transformedData,
-        columns: columns,
+    var table = $('#table-data').DataTable({
         language:{
             url:'../registrosLog/spanishDatatable.json'
         }

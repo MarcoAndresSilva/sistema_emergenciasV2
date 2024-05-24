@@ -10,11 +10,7 @@ if (isset($_SESSION["usu_id"])) {
 <?php require_once("../MainHead/head.php") ?>
 <link rel="stylesheet" href="./StyleSeguridadPassword.css">
 <title>Sistema Emergencia</title>
-<script defer  src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
-<script defer src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
-<script defer type="text/javascript" src="./searchpass.js"></script>
-<script defer type="text/javascript" src="./mesesExpiracion.js"></script>
-
+<link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap5.css" />
 </head>
 
 <body class="with-side-menu">
@@ -48,14 +44,19 @@ if (isset($_SESSION["usu_id"])) {
                     </div> <!-- .input-group -->
                     
                     
-                    <table id="table-data" class="table table-bordered table-responsive  table-vcenter js-dataTable-js"> 
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Apellido</th>
-                        <th>Correo</th>
-                        <th>Detalle</th>
-                    </tr>
-                    </table>
+<table id="table-data" class="table table-bordered table-responsive  table-vcenter js-dataTable-js"> 
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Correo</th>
+            <th>Detalle</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Aquí se agregarán las filas de la tabla con JavaScript -->
+    </tbody>
+</table>
             </div> <!-- .box-typical -->
 
 
@@ -68,7 +69,12 @@ if (isset($_SESSION["usu_id"])) {
         
     <?php
        require_once("../MainJs/js.php"); 
-       
+echo ' <script  src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>';
+echo '<script defer type="text/javascript" src="./searchpass.js"></script>';
+echo '<script defer type="text/javascript" src="./mesesExpiracion.js"></script>';
+echo '<script defer src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.js"></script>';
+
+      
     }else{
         header("Location:". Conectar::ruta () ."index.php");
     }
