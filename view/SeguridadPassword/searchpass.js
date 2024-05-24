@@ -81,4 +81,13 @@ $('#mesesexpiracion').on('change', function() {
         table.draw();
     }
 });
+// Controlador de eventos para el cambio en #selectStatus
+$('#selectStatus').on('change', function() {
+    var selectedStatus = $(this).val();
+    // Comprobar si la tabla está definida antes de intentar usarla
+    if (table) {
+        // Filtrar la tabla basada en el estado seleccionado
+        table.column(3).search(selectedStatus).draw();
+    }
+});
 
