@@ -54,14 +54,18 @@ nav:
         - Reporte General Emergencias: view/ReporteGeneralEmergencias.md
         - Seguridad Password: view/SeguridadPassword.md
         - Unidad Municipal: view/unidadMunicipal.md
+        - RegistroLog: view/registrosLog.md
     - Config:
-        - Docker File: config/dockerFile.md
-        - Docker Container: config/dockerContainer.md
+        - conexion: config/conexion.md
     - DB ChartJS:
         - Docker File: db_chartJS/db_chartJS.md
         - Docker Container: db_chartJS/dockerContainer.md
 theme:
-  name: readthedocs
+  name: material
+  features:
+    - content.code.annotate
+    - content.code.select
+    - content.code.copy
 plugins:
   - with-pdf:
       author: Informatica
@@ -69,3 +73,7 @@ plugins:
       cover_subtitle: Documentacion 
       copyright: municipalidad de melipilla
   - search 
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
