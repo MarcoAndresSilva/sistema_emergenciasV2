@@ -18,8 +18,7 @@ Services: Define los diferentes contenedores que se ejecutarán como servicios.
 
 ## Codigo DockerContainer
 
-```yml
-version: '3.8'
+``` yml
 
 services:
   php:
@@ -61,7 +60,7 @@ services:
     volumes:
       - ../../sistema_emergencia/docs:/docs
     working_dir: /docs
-    command: bash -c "pip install mkdocs mkdocs-with-pdf && mkdocs serve --dev-addr=0.0.0.0:8000"
+    command: bash -c "pip install mkdocs mkdocs-with-pdf mkdocs-material && mkdocs serve --dev-addr=0.0.0.0:8000"
     ports:
       - "8000:8000"
     networks:
