@@ -8,7 +8,7 @@ function fn_img(detalleTipo, detalleTexto){
         'seguro':'icon-shield-check.svg'
     };
     let img = iconos[detalleTipo];
-    let html = `<li><img src='../../public/img/${img}'> ${detalleTexto}</li>`;
+    let html = `<div><img src='../../public/img/${img}'> ${detalleTexto}</div>`;
     return html;
 }
 
