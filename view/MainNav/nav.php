@@ -136,6 +136,10 @@
                         <span class="glyphicon glyphicon-asterisk"></span>
                         <span class="lbl"> Atender Emergencia</span>
                     </a>
+                    <a class="" href="../NivelCategoria/">
+                        <span class="glyphicon glyphicon-asterisk"></span>
+                        <span class="lbl">Nivel Categoria </span>
+                    </a>
                 </div>
             </div>
         </li>
@@ -156,7 +160,10 @@
                         <span class="glyphicon glyphicon-asterisk"></span>
                         <span class="lbl"> Emergenias por institución</span>
                     </a>
-
+                    <a class="" href="../registrosLog/">
+                        <span class="glyphicon glyphicon-asterisk"></span>
+                        <span class="lbl">Registros Logs</span>
+                    </a>
                 </div>
             </div>
         </li>
