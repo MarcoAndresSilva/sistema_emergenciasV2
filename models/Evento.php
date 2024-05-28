@@ -376,4 +376,25 @@ class Evento extends Conectar {
             throw $e;
         }
     }
+public function get_evento_por_categoria($cat_id){
+    try {
+        $conectar = parent::conexion();
+        parent::set_names();
+        $sql = "SELECT * FROM tm_evento where cat_id=:cat_id";
+        $sql = $conectar->prepare($sql);
+        $sql->bindValue(":cat_id", $cat_id);
+        $sql->execute();
+        $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+        if (is_array($resultado) && count($resultado) > 0) {
+            return $resultado;
+        } else {
+            error_log("No logro obtener eventos por categoria");
+            return array(); // return an empty array instead of 0
+        }
+    } catch (Exception $e) {
+        error_log("Error catch get_evento: " . $e->getMessage());
+        throw $e;
+    }
+}
 }
