@@ -1,9 +1,8 @@
-// Crear los campos de entrada de fecha en tu HTML
-// Referencia a los campos de entrada de fecha en tu HTML
+
+$( document ).ready(function() {
 var startDateInput = $('#startDate');
 var endDateInput = $('#endDate');
 
-// Referencia al select en tu HTML
 var select = $('#mySelect');
 
 $.post('../../controller/registroLog.php', { op: 'registro_log' }, function(data) {
@@ -76,4 +75,5 @@ $.post('../../controller/registroLog.php', { op: 'registro_log' }, function(data
 
 }, 'json').fail(function(error) {
     console.log('Error: ', error);
+});
 });
