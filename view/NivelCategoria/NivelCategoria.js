@@ -1,7 +1,18 @@
 console.log("institucionesemergencias.js");
 
 let nivelPeligro = []; // Variable global para almacenar los niveles de peligro
-
+// mensaje flotante de sweetalert2
+const Toast = Swal.mixin({
+  toast: true,
+  position: 'top-end',
+  showConfirmButton: false,
+  timer: 3000,
+  timerProgressBar: true,
+  didOpen: (toast) => {
+    toast.onmouseenter = Swal.stopTimer;
+    toast.onmouseleave = Swal.resumeTimer;
+  }
+});
 // Obtener los niveles de peligro
 $.get("../../controller/nivelPeligro.php", { op: "get_nivel_peligro_json" },
     function (data, textStatus, jqXHR) {
@@ -81,13 +92,13 @@ function actualizarTabla(datos) {
         $.post("../../controller/categoria.php",data , function(response) {
             // Manejar la respuesta del servidor
             if (response.status === "success") {
-                Swal.fire({
-                    icon: 'success',
-                    title: '¡Éxito!',
-                    text: response.mensaje
+                Toast.fire({
+                   icon: 'success',
+                   title: '¡Éxito!',
+                   text: response.mensaje
                 });
             } else {
-                Swal.fire({
+                Toast.fire({
                     icon: 'error',
                     title: 'Error',
                     text: response.mensaje
