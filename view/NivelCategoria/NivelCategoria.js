@@ -1,5 +1,3 @@
-console.log("institucionesemergencias.js");
-
 let nivelPeligro = []; // Variable global para almacenar los niveles de peligro
 // mensaje flotante de sweetalert2
 const Toast = Swal.mixin({
@@ -205,7 +203,7 @@ $("body").on("click", "#buttondelete", function() {
                         });
                     } else {
                         // Mostrar mensaje de error
-                        Swal.fire('Error', 'No se pudo eliminar la categoría.', 'error');
+                        Swal.fire('Error', response.mensaje, 'error');
                     }
                 },
                 "json"
