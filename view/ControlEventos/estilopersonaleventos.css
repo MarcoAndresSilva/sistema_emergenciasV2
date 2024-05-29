@@ -66,7 +66,8 @@
   border-radius: 50%;
 }
 
-#selector-unidad{
+#selector-unidad,
+#selector-cerrar{
     color: #fff;
   position: fixed;
   top: 50%;
@@ -147,6 +148,7 @@
 #grupito{
     width: 100%;
     background-color: #cccccc8f;
+    padding: 0 0 10px 0;
 }
 
 #ev_id,
@@ -154,8 +156,10 @@
     padding-bottom: 0.5rem;
 }
 
-#grupito:nth-of-type(2) {
+#grupito:nth-of-type(2),
+#grupito:nth-of-type(4) {
     background-color:#BE80F082;
+    padding: 0 0 10px 0;
   }
 
 .form-check {
