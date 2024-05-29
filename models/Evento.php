@@ -278,29 +278,61 @@ class Evento extends Conectar {
 
     }
 
-    //cerrar_evento_id segun id del evento (Se añade hora de cierre)
-    public function cerrar_evento($ev_id,$ev_final,$ev_est) {
+    public function obtener_usuario_id($nombre, $apellido) {
         try {
             $conectar = parent::conexion();
             parent::set_names();
-            $sql = "UPDATE tm_evento SET  ev_final=:ev_final ,ev_est=:ev_est WHERE ev_id = :ev_id ";
+            $sql = "SELECT usu_id FROM tm_usuario WHERE usu_nom = :nombre AND usu_ape = :apellido";
             $consulta = $conectar->prepare($sql);
-            $consulta->bindValue(':ev_final', $ev_final);
-            $consulta->bindValue(':ev_est', $ev_est);
-            $consulta->bindValue(':ev_id', $ev_id);
+            $consulta->bindValue(':nombre', $nombre);
+            $consulta->bindValue(':apellido', $apellido);
             $consulta->execute();
-
-
-            if ($consulta->rowCount() > 0) {
-                return true;
+            $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
+    
+            if ($resultado) {
+                return $resultado['usu_id'];
             } else {
-                ?>
-                <script>console.log("No se finalizo el Evento")</script>
-                <?php
-                return 0;
+                return false;
             }
         } catch (Exception $e) {
-            ?> <script>console.log("Error catch     cerrar_evento")</script> <?php
+            echo "<script>console.log('Error catch obtener_usuario_id')</script>";
+            throw $e;
+        }
+    }
+    
+    public function cerrar_evento($ev_id, $ev_final, $ev_est, $detalle_cierre, $motivo_cierre, $usu_id) {
+        try {
+            $conectar = parent::conexion();
+            parent::set_names();
+    
+            // Iniciar transacción
+            $conectar->beginTransaction();
+    
+            // Actualizar la tabla tm_evento
+            $sql_evento = "UPDATE tm_evento SET ev_final = :ev_final, ev_est = :ev_est WHERE ev_id = :ev_id";
+            $consulta_evento = $conectar->prepare($sql_evento);
+            $consulta_evento->bindValue(':ev_final', $ev_final);
+            $consulta_evento->bindValue(':ev_est', $ev_est);
+            $consulta_evento->bindValue(':ev_id', $ev_id);
+            $consulta_evento->execute();
+    
+            // Insertar en la tabla tm_ev_cierre
+            $sql_cierre = "INSERT INTO tm_ev_cierre (usu_id, ev_id, detalle, motivo) VALUES (:usu_id, :ev_id, :detalle, :motivo)";
+            $consulta_cierre = $conectar->prepare($sql_cierre);
+            $consulta_cierre->bindValue(':usu_id', $usu_id);
+            $consulta_cierre->bindValue(':ev_id', $ev_id);
+            $consulta_cierre->bindValue(':detalle', $detalle_cierre);
+            $consulta_cierre->bindValue(':motivo', $motivo_cierre);
+            $consulta_cierre->execute();
+    
+            // Confirmar transacción
+            $conectar->commit();
+    
+            return true;
+        } catch (Exception $e) {
+            // Revertir transacción en caso de error
+            $conectar->rollBack();
+            echo "<script>console.log('Error catch cerrar_evento')</script>";
             throw $e;
         }
     }
