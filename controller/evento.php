@@ -158,10 +158,19 @@ if (isset($_GET["op"])) {
                         $recorrido.= "<td>". $row_estado['est_nom']. "</td>";
                     }
                     
+                    // Hora de Apertura
                     $recorrido .= "<td>" . $row['ev_inicio'] . "</td>";
+                    
+                    // boton derivar
                     $recorrido .= "<td> <button id='btn' type='button' class='btn btn-inline btn-primary btn-sm ladda-button btnMostrarDatos modal-btn'> <i class='fa-solid fa-up-right-from-square'></i> </button>
                     </td>";
+
+                     // boton cerrar
+                     $recorrido .= "<td> <button id='btn' type='button' class='btn btn-inline btn-primary btn-sm ladda-button btnPanelCerrar modal-btn'> <i class='fa-solid fa-square-xmark'></i> </button>
+                     </td>";
+
                     $recorrido .= "</tr>";
+
                     //Filtro de filas por nivel de peligro
                     if($row['ev_est'] == 1){
                         if($row['ev_niv_id'] == 1){
@@ -464,16 +473,25 @@ if (isset($_GET["op"])) {
                 echo '<script> console.log(Error al obtener evento con la id: ' . $ev_id . ') </script>';
             }
             break;
-        case "cerrar_evento":
-            $datos = $evento->cerrar_evento($_POST['ev_id'], $_POST['ev_final'], $_POST['ev_est']);
+            case "cerrar_evento":
+                $nombre_apellido = $_POST['nombre_apellido'];
+                list($nombre, $apellido) = explode(' ', $nombre_apellido, 2);
             
-            if ($datos == true) {
-                echo 1;
-            } else {
-                echo 0;
-            }
-            break;
+                // Obtener el usu_id basado en el nombre y apellido
+                $usu_id = $evento->obtener_usuario_id($nombre, $apellido);
             
+                if ($usu_id) {
+                    $datos = $evento->cerrar_evento($_POST['ev_id'], $_POST['ev_final'], $_POST['ev_est'], $_POST['detalle_cierre'], $_POST['motivo_cierre'], $usu_id);
+                    
+                    if ($datos == true) {
+                        echo 1;
+                    } else {
+                        echo 0;
+                    }
+                } else {
+                    echo 0; // No se encontró el usuario
+                }
+                break;
         case "cantidad-eventos":
             
             $eventos_abiertos = 0;
