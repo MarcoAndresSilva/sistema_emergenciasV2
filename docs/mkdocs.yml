@@ -13,6 +13,7 @@ nav:
         - Nivel Peligro: controllers/nivelPeligro.md
         - Unidad: controllers/unidad.md
         - Usuario: controllers/usuario.md
+        - RegistroLog: controllers/registroLog.md 
     - Models:
         - Datos Geográficos: models/datosGeograficos.md
         - Categoría: models/categoria.md
@@ -26,6 +27,7 @@ nav:
         - Funcionario Territorial: models/funcionarioTerritorial.md
         - Institución: models/institucion.md
         - Seguridad Password: models/seguridadPassword.md
+        - RegistroLog: models/RegistroLog.md 
     - Public:
         - public: public/public.md
     - Docker:
