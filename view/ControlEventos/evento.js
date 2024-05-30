@@ -1,4 +1,3 @@
-
 $(document).ready(function() {
 
     // Obtener el elemento <a> por su ID
@@ -13,20 +12,17 @@ $(document).ready(function() {
         // Parsear la respuesta JSON
         var data = JSON.parse(respuesta);
         
-        
-
         $('#datos-criticos').html(data.critico);
         $('#datos-medios').html(data.medio);
         $('#datos-bajos').html(data.bajo);
         $('#datos-generales').html(data.comun);
     });
-
-
 });
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 //Variable Iid_evento
 $id_evento = 0;
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //Activar el boton de asignación
 $(document).on('click', '.btnMostrarDatos', function() {
@@ -48,15 +44,19 @@ $(document).on('click', '.btnMostrarDatos', function() {
     
     //Llamar a la función para consultar el nivel de peligro
     consultarNivelPeligro($id_evento);
-    
-    
 });
 
-
-// Función para mostrar u ocultar la pestaña
+// Función para mostrar u ocultar la pestaña Derivar
 function togglePestana() { 
     $('#selector-unidad').toggle();
 }
+
+// Cancelar actualización
+$('.btnCancelar').off('click').on('click',function(){
+    // Llamar a la función para mostrar u ocultar la pestaña
+    togglePestana();
+});
+  
 
 // Función para obtener el cat_id del evento y mostrarlo en el div cat_id
 function mostrarCatIdEvento(ev_id) {
@@ -180,12 +180,9 @@ function ActualizarNivelPeligro($id_evento) {
 }
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-//Funcion para Modificar las unidades y asignaciones a un evento
-//Activar el boton de asignación
-$('.btnUnidadAsignada').off('click').on('click',function(){
+    //Funcion para Modificar las unidades y asignaciones a un evento
+    //Activar el boton de asignación
+    $('.btnUnidadAsignada').off('click').on('click',function(){
     
     //Llama a la funcion para modificar las unidades y asignaciones a un evento
     ActualizarUnidadAsignada($id_evento);
@@ -193,7 +190,7 @@ $('.btnUnidadAsignada').off('click').on('click',function(){
     //Llamar a la funcion para ocultar la pestaña de Unidades Disponibles
     togglePestana();
     
-});
+    });
 
 function ActualizarUnidadAsignada($id_evento) {
     var ev_id = $id_evento;
@@ -421,64 +418,13 @@ function ActualizarTodo($id_evento){
         
     
     
-    
-    //Btn Cerrar evento (Añade hora cierre)
-    $('.btnCerrarEvento').off('click').on('click',function(){
-        //Llama a la funcion cerrar evento Añade la hora final
-        CerrarEvento();
-        
-        // Llamar a la función para mostrar u ocultar la pestaña
-        togglePestana();
 
-       
-    });
-    
-    function CerrarEvento() {
-        var ev_id = $id_evento;
-        //Fecha y Hora
-        var ev_final = new Date();
-        var año = ev_final.getFullYear();
-        var mes = ev_final.getMonth() + 1; // Mes en JavaScript es 0-indexado, así que suma 1
-        var dia = ev_final.getDate();
-        var horas = ev_final.getHours();
-        var minutos = ev_final.getMinutes();
-        var segundos = ev_final.getSeconds();
-        // Formatear la fecha y hora como desees
-        var fechaFormateada = año + '-' + mes + '-' + dia + ' ' + horas + ':' + minutos + ':' + segundos;
-        var ev_final = fechaFormateada;
-
-        //Estado del evento al cerrarse
-        var ev_est= 2;
-        //Respuesta de consulta cerrarEvento
-        var CerrarEvento = $.post("../../controller/evento.php?op=cerrar_evento", { ev_id: ev_id, ev_final: ev_final, ev_est: ev_est});
-        
-        $.when(CerrarEvento).done(function (data){
-            console.log(data);
-            if(data == 1) {
-                swal("Evento Finalizado", "El evento se a cerrado correctamente" , "success");
-            }else {
-                swal("No Finalizado", "El evento no se a podido cerrar correctamente", "error");
-            }
-            
-        });
-        
-    }
-    
-    
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Cancelar actualización
-$('.btnCancelar').off('click').on('click',function(){
-    
-    // Llamar a la función para mostrar u ocultar la pestaña
-    togglePestana();
-    
-});
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Abrir mapa
 let lat;
 let long;
-$(document).on('click', '.btnDireccionarMapa',function() {
+$(document).on('click', '.btnDireccionarMapa', function() {
     
     //Desplegar mapa para direccionar al lugar
     toggleMapa();
@@ -499,13 +445,12 @@ function toggleMapa() {
 
 function consultarEventoMostarMapa(ev_id) {
 
-    $.post("../../controller/evento.php?op=get_evento_id",{ev_id : ev_id}, function(data,status){
+    $.post("../../controller/evento.php?op=get_evento_id", {ev_id: ev_id}, function(data, status) {
         
         var eventos = JSON.parse(data);
 
         var direccion = eventos[0]['ev_direc'];
         
-
         // Expresión regular para extraer las coordenadas
         var coordenadasRegex = /(-?\d+\.\d+),\s*(-?\d+\.\d+)/;
 
@@ -522,19 +467,22 @@ function consultarEventoMostarMapa(ev_id) {
             console.log("No se encontraron coordenadas en la dirección.");
         }
 
-        mostrarMapa(lat,long);
+        mostrarMapa(lat, long);
     });
 }
 
 var LocationUserOrigin;
 
-function mostrarMapa(lat,long) {
+async function mostrarMapa(lat, long) {
+
+    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
 
     var map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 17 // Nivel de zoom
+        zoom: 17, // Nivel de zoom
+        mapId: 'DEMO_MAP_ID' // Map ID requerido para AdvancedMarkerElement
     });
 
-    //Activación y ejecución de la obtencion de coordenadas del usuario
+    //Activación y ejecución de la obtención de coordenadas del usuario
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
                 
@@ -547,7 +495,7 @@ function mostrarMapa(lat,long) {
                 lng: position.coords.longitude
             };
             //Marcador que ingresa el usuario
-            marker = new google.maps.Marker({
+            var marker = new AdvancedMarkerElement({
                 position: userLocation, // Coordenadas del marcador
                 map: map,
                 title: 'ArrastrarEmergencia'
@@ -566,10 +514,10 @@ function mostrarMapa(lat,long) {
                 case error.TIMEOUT:
                     console.error("Se agotó el tiempo de espera para la solicitud de geolocalización.");
                     break;
-                    default:
-                        console.error("Error desconocido al intentar obtener la ubicación.");
+                default:
+                    console.error("Error desconocido al intentar obtener la ubicación.");
             }
-            swal("Error de Geolocalización!","No se logro optener la ubicación", "error");
+            swal("Error de Geolocalización!", "No se logró obtener la ubicación", "error");
         });
     } else {
         console.error('Error: El navegador no soporta geolocalización.');
@@ -577,14 +525,17 @@ function mostrarMapa(lat,long) {
 }
 
 //Btn Cerrar evento (Añade hora cierre)
-$('.btnCrearRuta').off('click').on('click',function(){
-    
-    // Redirecciona a google maps
-    window.location.href = "https://www.google.com/maps/dir/" + LocationUserOrigin.lat + "," + LocationUserOrigin.lng + "/" + lat + "," + long  ;
-
+// Redireccionar a Google Maps para crear ruta
+$('.btnCrearRuta').off('click').on('click', function() {
+    // Redirecciona a Google Maps
+    if (LocationUserOrigin && lat && long) {
+        window.location.href = "https://www.google.com/maps/dir/" + LocationUserOrigin.lat + "," + LocationUserOrigin.lng + "/" + lat + "," + long;
+    } else {
+        console.error("No se han obtenido las coordenadas necesarias.");
+    }
 });
 
-$('.CerrarModalMap').off('click').on('click',function(){
+$('.CerrarModalMap').off('click').on('click', function() {
     
     // Llamar a la función para mostrar u ocultar la pestaña
     toggleMapa();
@@ -598,3 +549,173 @@ function initMap() {
         zoom: 8 // Nivel de zoom
     });
 }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Cerrar evento
+
+// Mapeo de motivos de cierre según la categoría
+var motivosCierre = {
+    "Incendios": [
+        "Controlado y extinguido",
+        "Sin víctimas ni daños mayores",
+        "Daños estructurales controlados",
+        "Necesidad de investigación adicional",
+        "Requiere seguimiento por posibles puntos calientes"
+    ],
+    "Intoxicacion": [
+        "Paciente estabilizado y trasladado a hospital",
+        "Intoxicación leve, tratado en el lugar",
+        "Causa de intoxicación identificada y mitigada",
+        "Necesidad de seguimiento médico adicional",
+        "Contaminación controlada y descontaminación realizada"
+    ],
+    "CaidadeArbol": [
+        "Árbol removido y área despejada",
+        "Sin daños a personas o propiedades",
+        "Daños a infraestructura reparados",
+        "Necesidad de evaluación adicional de árboles cercanos",
+        "Servicios públicos restablecidos"
+    ],
+    "AccidenteVehicular": [
+        "Víctimas estabilizadas y trasladadas a hospital",
+        "Vehículos retirados y tráfico restablecido",
+        "Necesidad de investigación adicional por parte de la policía",
+        "Daños a infraestructura reparados",
+        "Seguimiento de seguro y responsabilidades"
+    ],
+    "DesordenPublico": [
+        "Situación controlada y disuelta",
+        "Sin heridos ni daños mayores",
+        "Detenciones realizadas y sospechosos en custodia",
+        "Necesidad de patrullaje adicional en la zona",
+        "Investigación adicional requerida"
+    ],
+    "Asaltos": [
+        "Sospechosos detenidos y bajo custodia",
+        "Sin heridos mayores",
+        "Recuperación de bienes robados",
+        "Necesidad de patrullaje adicional en la zona",
+        "Investigación adicional requerida"
+    ],
+    "Otros": [
+        "Situación controlada y resuelta",
+        "Víctimas atendidas y trasladadas",
+        "Daños mitigados y área asegurada",
+        "Investigación adicional requerida",
+        "Necesidad de seguimiento y monitoreo",
+        "Sospechosos detenidos y bajo custodia"
+    ]
+};
+
+
+// Activar el botón de Cerrar Evento
+$(document).on('click', '.btnPanelCerrar', function() {
+    // Llamar a la función para mostrar u ocultar la pestaña 
+    togglePestanaCerrar();
+    
+    // Obtener el valor del ID del evento desde la celda
+    var id_evento = $(this).closest('tr').find('#id_evento_celda').attr('value');
+
+    // Llama a la función para consultar la categoría y otros detalles
+    consultarCategoriaCierre(id_evento);
+    mostrarCatIdEventoCierre(id_evento);
+});
+
+// Función para mostrar u ocultar la pestaña Panel Cerrar
+function togglePestanaCerrar() { 
+    $('#selector-cerrar').toggle();
+}
+
+// Función para obtener el cat_id del evento y mostrarlo en el div cat_id
+function mostrarCatIdEventoCierre(ev_id) {
+    $('#ev_id_cierre').text(ev_id);
+}
+
+// Función para mostrar el cat_nom_cierre en el div y cargar los motivos de cierre
+function consultarCategoriaCierre(ev_id) {
+    $.post("../../controller/categoria.php?op=get_cat_nom_by_ev_id", { ev_id: ev_id }, function(data, status) {
+        try {
+            var jsonData = JSON.parse(data);
+            if (jsonData && jsonData.cat_nom) {
+                $('#cat_nom_cierre').text(jsonData.cat_nom); // Usar .text() para establecer el contenido del div
+                cargarMotivosCierre(jsonData.cat_nom); // Cargar los motivos de cierre según la categoría
+            } else {
+                console.log("No se encontró el cat_nom correspondiente para el evento con ID: " + ev_id);
+            }
+        } catch (error) {
+            console.log("Error al analizar la respuesta JSON:", error);
+        }
+    });
+}
+
+
+// Función para normalizar las claves de las categorías
+function normalizarCategoria(categoria) {
+    return categoria
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Eliminar acentos
+        .replace(/ /g, ''); // Eliminar espacios
+}
+
+// Función para cargar los motivos de cierre en el select
+function cargarMotivosCierre(categoria) {
+    var categoriaNormalizada = normalizarCategoria(categoria);
+    var motivos = motivosCierre[categoriaNormalizada] || [];
+    var $select = $('#motivo_cierre');
+    $select.empty();
+
+    motivos.forEach(function(motivo) {
+        $select.append($('<option>', { value: motivo, text: motivo }));
+    });
+}
+
+//Btn Cerrar evento (Añade hora cierre)
+$('.btnCerrarEvento').off('click').on('click',function(){
+    //Llama a la funcion cerrar evento Añade la hora final
+    CerrarEvento();
+        
+    // Llamar a la función para mostrar u ocultar la pestaña
+    togglePestanaCerrar();    
+});
+    
+function CerrarEvento() {
+    var ev_id = $('#ev_id_cierre').text();
+    var detalle_cierre = $('#detalle_cierre').val();
+    var motivo_cierre = $('#motivo_cierre').val();
+    var nombre_apellido = $('#nombre_apellido').val();
+
+    // Fecha y Hora
+    var ev_final = new Date();
+    var año = ev_final.getFullYear();
+    var mes = ev_final.getMonth() + 1; // Mes en JavaScript es 0-indexado, así que suma 1
+    var dia = ev_final.getDate();
+    var horas = ev_final.getHours();
+    var minutos = ev_final.getMinutes();
+    var segundos = ev_final.getSeconds();
+
+    // Formatear la fecha y hora como desees
+    var fechaFormateada = año + '-' + mes + '-' + dia + ' ' + horas + ':' + minutos + ':' + segundos;
+
+    // Estado del evento al cerrarse
+    var ev_est = 2;
+
+    // Respuesta de consulta cerrarEvento
+    $.post("../../controller/evento.php?op=cerrar_evento", {
+        ev_id: ev_id,
+        ev_final: fechaFormateada,
+        ev_est: ev_est,
+        detalle_cierre: detalle_cierre,
+        motivo_cierre: motivo_cierre,
+        nombre_apellido: nombre_apellido
+    }, function(data) {
+        if(data == 1) {
+            swal("Evento Finalizado", "El evento se ha cerrado correctamente", "success");
+        } else {
+            swal("No Finalizado", "El evento no se ha podido cerrar correctamente", "error");
+        }
+    });
+}
+    
+// Cancelar actualización PAnel Cerrar
+$('.btnCancelarCerrar').off('click').on('click',function(){
+    // Llamar a la función para mostrar u ocultar la pestaña
+    togglePestanaCerrar();
+});
