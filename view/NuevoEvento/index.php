@@ -1,7 +1,6 @@
 <?php
 require_once("../../config/conexion.php");
 
-// if (isset($_SESSION["usu_id"])) {
 if (isset($_SESSION["usu_id"])) {
 ?>
 
@@ -36,12 +35,12 @@ if (isset($_SESSION["usu_id"])) {
                 </div>
             </header>
 
-            <h5 class="m-t-lg with-border">Ingresar informaci&oacute;n</h5>
+            <h5 class="m-t-lg with-border">Ingresar información</h5>
 
             <div class="row">
                 <form class="event-box" action="nuevoevento.js" method="post" id="event_form" enctype="multipart/form-data">
 
-                    <div class="group-info-personal">   
+                <div class="group-info-personal">   
                         <div class="col-lg-5">
                             <fieldset class="form-group">
                                 <label class="form-label semibold" for="nombre">Nombre</label>
@@ -71,27 +70,26 @@ if (isset($_SESSION["usu_id"])) {
                     <div class="group-emergencia">
                         <div class="col-lg-5">
                             <fieldset class="form-group">
-                                <label class="form-label semibold" for="exampleInput">Seleccione una Categor&iacute;a</label>
-                                <select id="cat_id" class="form-control" >
-                                <!-- Datos recopilados desde funcion get_categoria -->
+                                <label class="form-label semibold" for="exampleInput">Seleccione una Categoría</label>
+                                <select id="cat_id" class="form-control">
+                                    <!-- Datos recopilados desde función get_categoria -->
                                 </select>
                             </fieldset>
                         </div>                                           
                         <div class="col-lg-5">
                             <fieldset class="form-group">
-                                <label class="form-label semibold" for="descripcion">Ingrese una breve descripci&oacute;n </label>
-                                <input type="text" class="form-control" id="descripcion" placeholder="Descripci&oacute;n">
+                                <label class="form-label semibold" for="descripcion">Ingrese una breve descripción</label>
+                                <input type="text" class="form-control" id="descripcion" placeholder="Descripción">
                             </fieldset>
                         </div>     
                         <div class="col-lg-5">
                             <fieldset class="form-group">
-                                <label class="form-label semibold" for="exampleInput">Desea Adjuntar una imagen de la emergencia? </label>
+                                <label class="form-label semibold" for="exampleInput">Desea adjuntar una imagen de la emergencia?</label>
                                 <input type="file" id="imagen" name="imagen" accept="image/*">
                                 <button id="btnCargarArchivo" class="btn btn-round btn-inline btn-primary">Cargar Archivo</button>
                                 <label id="archivoAdjuntado">No hay archivo adjunto (.JPG/.JPEG/.PNG)</label>
                             </fieldset>
-                    </div>
-                                            
+                        </div>
                     </div>                  
 
                     <div class="group-ident">
@@ -99,7 +97,7 @@ if (isset($_SESSION["usu_id"])) {
                             <fieldset class="form-group">
                                 <label class="form-label semibold" for="exampleInput">Ubicación de la emergencia</label>
                                 <select id="elegir-ubicacion" class="form-control">
-                                    <option value="direccion-escrita">Elija una opción</option>
+                                    <option value="direccion-escrita">Ingresa una dirección manualmente y marque el sitio en el mapa </option>
                                     <option value="direccion-escrita">Escribir la ubicación</option>
                                     <option value="ubicacion-content">Geolocalización</option>
                                 </select>
@@ -107,12 +105,12 @@ if (isset($_SESSION["usu_id"])) {
                         </div>
                         <div class="col-lg-5" id="direccion-escrita" style="display:none;">
                             <fieldset class="form-group">
-                                <label class="form-label semibold" for="Address">Ingrese Dirección </label>
+                                <label class="form-label semibold" for="Address">Ingrese Dirección</label>
                                 <input type="text" class="form-control" id="address" placeholder="Dirección">
                             </fieldset>
                         </div>
                         <div class="ubicacion-content" id="direccion-geolocalizacion" style="display:none;">
-                            <!-- Agregamos el checklist para permitir o no permitir la ubicación -->
+                            <!-- Contenido relacionado con la geolocalización -->
                             <div class="col-lg-5">
                                 <fieldset class="form-group">
                                     <label class="form-label semibold">Utilizar Ubicación</label>
@@ -131,7 +129,7 @@ if (isset($_SESSION["usu_id"])) {
                                 </fieldset>
                             </div>
                             <div id="map">
-                                <!-- API DE GOOGLE MAPS -->
+                                <!-- Aquí se muestra el mapa utilizando la API de Google Maps -->
                             </div>
                         </div>
                     </div>
@@ -151,13 +149,10 @@ if (isset($_SESSION["usu_id"])) {
     
 </body>
         
-    <?php
-       require_once("../MainJs/js.php"); 
-       
-    }else{
-        header("Location:". Conectar::ruta () ."index.php");
-    }
-    
-    ?>
-   
+<?php
+    require_once("../MainJs/js.php"); 
+}else{
+    header("Location:". Conectar::ruta () ."index.php");
+}
+?>
 </html>
