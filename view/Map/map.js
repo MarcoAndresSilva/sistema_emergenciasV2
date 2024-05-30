@@ -1,5 +1,5 @@
-//API GOOGLE MAPS
-$(document).ready(function() {
+// API GOOGLE MAPS
+$(document).ready(async function() {
 
     // Obtener el elemento <a> por su ID
     var enlace = document.querySelector('.Map');
@@ -7,11 +7,15 @@ $(document).ready(function() {
     // Añadir una clase al enlace
     enlace.classList.add('selected');
 
-    //Funcion para cargar el mapa
-    // initMap();
-   
+    // Importar la librería de marcadores avanzados de Google Maps
+    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+
+    // Función para cargar el mapa
     var map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 17 // Nivel de zoom
+        zoom: 17, // Nivel de zoom
+        center: { lat: -34.397, lng: 150.644 }, // Coordenadas iniciales (puedes ajustar según tus necesidades)
+        mapId: 'DEMO_MAP_ID', // Map ID requerido para AdvancedMarkerElement (solo si lo necesitas)
+        apiKey: 'AIzaSyAQrYCFSz7Q-a-WONxo4yymu9SAPgmaA6c' // Tu clave de API
     });
 
     // Este script debe estar después de la inicialización del mapa
@@ -21,11 +25,11 @@ $(document).ready(function() {
                 lat: position.coords.latitude,
                 lng: position.coords.longitude
             };
-            console.log(userLocation);
-            var marker = new google.maps.Marker({
-                position: {lat: position.coords.latitude, lng: position.coords.longitude}, // Coordenadas del marcador
+
+            var marker = new AdvancedMarkerElement({
+                position: userLocation, // Coordenadas del marcador
                 map: map,
-                title: 'Tu estas aquí'
+                title: 'Tu estás aquí'
             });
 
             map.setCenter(userLocation);
@@ -38,23 +42,15 @@ $(document).ready(function() {
         console.error('Error: El navegador no soporta geolocalización.');
     }
 
+    // Código adicional para cargar una imagen de un evento específico
     var ev_id = 165;
-    $.post("../../controller/evento.php?op=get_evento_id",{ev_id:ev_id},function(respuesta,status){
+    $.post("../../controller/evento.php?op=get_evento_id", { ev_id: ev_id }, function(respuesta, status) {
         // Parsear la respuesta JSON
         var data = JSON.parse(respuesta);
         console.log("../" + data[0]['ev_img']);
-        //Ruta imagen
+        // Ruta imagen
         var imagenURL = "../" + data[0]['ev_img'];
 
-        $('#imagen-cargada').attr('src', imagenURL)
-        
+        $('#imagen-cargada').attr('src', imagenURL);
     });
 });
-
-// Este script debe estar después de incluir la API de Google Maps
-function initMap() {
-    var map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: -34.397, lng: 150.644}, // Coordenadas iniciales
-        zoom: 8 // Nivel de zoom
-    });
-}
