@@ -14,7 +14,7 @@
                // $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
                 // $conectar = $this->dbh = new PDO("mysql:host=localhost;port=2083;dbname=admem_db_emergencia","admem_marco","Calamar.!1");
-                return $this->dbh;
+                return $conectar;
                 
             } catch (Exception $e) {
                 print "隆Error DB !: ".$e->getMessage()."<br/>";
