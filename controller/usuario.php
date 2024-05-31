@@ -1,7 +1,10 @@
 <?php
 require_once("../config/conexion.php");
 require_once("../models/Usuario.php");
+require_once("../models/SeguridadPassword.php");
+require_once("../models/RegistroLog.php");
 $usuario = new Usuario();
+$RegistroLog= new RegistroLog();
 
 if (isset($_GET["op"])) {
     switch ($_GET["op"]) {
@@ -15,9 +18,13 @@ if (isset($_GET["op"])) {
             $_POST['estado'],
             $_POST['usu_tipo']);
             if ($datos == true) {
+                $seguridadPassword = new  SeguridadPassword();
+                $seguridadPassword->add_password_info($_POST['usu_correo'],$_POST['usu_name'], $_POST['usu_pass']);
                 echo 1;
+                $RegistroLog->add_log_registro($_SESSION["usu_id"],$_GET['op'],"el usuario {$_SESSION['usu_nom']} crea al usuario {$_POST['usu_name']}");
             } else {
                 echo 0;
+                $RegistroLog->add_log_registro($_SESSION["usu_id"],$_GET['op'],"el usuario {$_SESSION['usu_nom']} intenta crear usuario: {$_POST['usu_name']} operaccion fallida");
             }
             break;
 

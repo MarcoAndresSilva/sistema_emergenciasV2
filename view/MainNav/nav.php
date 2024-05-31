@@ -112,7 +112,10 @@
                         <span class="glyphicon glyphicon-asterisk"></span>
                         <span class="lbl"> Intituciones de Emergencia</span>
                     </a>
-
+                    <a class="" href="../SeguridadPassword/">
+                        <span class="glyphicon glyphicon-asterisk"></span>
+                        <span class="lbl"> Seguridad contrase&ntilde;a</span>
+                    </a>
                 </div>
             </div>
         </li>
@@ -132,6 +135,10 @@
                     <a class="" href="../AtenderEmergencia/">
                         <span class="glyphicon glyphicon-asterisk"></span>
                         <span class="lbl"> Atender Emergencia</span>
+                    </a>
+                    <a class="" href="../NivelCategoria/">
+                        <span class="glyphicon glyphicon-asterisk"></span>
+                        <span class="lbl">Nivel Categoria </span>
                     </a>
                 </div>
             </div>
@@ -153,7 +160,10 @@
                         <span class="glyphicon glyphicon-asterisk"></span>
                         <span class="lbl"> Emergenias por institución</span>
                     </a>
-
+                    <a class="" href="../registrosLog/">
+                        <span class="glyphicon glyphicon-asterisk"></span>
+                        <span class="lbl">Registros Logs</span>
+                    </a>
                 </div>
             </div>
         </li>
