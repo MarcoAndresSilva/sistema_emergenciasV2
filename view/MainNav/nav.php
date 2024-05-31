@@ -92,7 +92,7 @@
                         </div>
                     </div> -->
                     <!-- Contenido de tu despliegue -->
-                    <a class="Unidad-Municipal" href="../UnidadMunicipal/">
+                    <!-- <a class="Unidad-Municipal" href="../UnidadMunicipal/">
                         <span class="glyphicon glyphicon-asterisk"></span>
                         <span class="lbl">Unidades Municipales</span>
                     </a>
@@ -111,7 +111,7 @@
                     <a class="" href="../InstitucionesEmergencias/">
                         <span class="glyphicon glyphicon-asterisk"></span>
                         <span class="lbl"> Intituciones de Emergencia</span>
-                    </a>
+                    </a> -->
                     <a class="" href="../SeguridadPassword/">
                         <span class="glyphicon glyphicon-asterisk"></span>
                         <span class="lbl"> Seguridad contrase&ntilde;a</span>
@@ -128,14 +128,14 @@
             </a>
             <div class="collapse-personal" id="collapseGestionEventos"  >
                 <div class="card card-body" style="padding-left: 5px; border: none" style="padding-left: 5px; border: none">
-                    <a class="" href="../RecibirDerivacionEmergencia/">
+                    <!-- <a class="" href="../RecibirDerivacionEmergencia/">
                         <span class="glyphicon glyphicon-asterisk"></span>
                         <span class="lbl"> Recibir Derivación de Emergencia</span>
                     </a>
                     <a class="" href="../AtenderEmergencia/">
                         <span class="glyphicon glyphicon-asterisk"></span>
                         <span class="lbl"> Atender Emergencia</span>
-                    </a>
+                    </a> -->
                     <a class="" href="../NivelCategoria/">
                         <span class="glyphicon glyphicon-asterisk"></span>
                         <span class="lbl">Nivel Categoria </span>
@@ -145,7 +145,7 @@
         </li>
         <!-- FIN Gestión de Eventos de Emergencia -->
         <!-- Reportes -->
-        <li class="blue-dirty">
+        <!-- <li class="blue-dirty">
             <a class="" data-toggle="collapse-personal" href="#collapseReportes" role="button"  aria-controls="collapseReportes" >
                 <span class="glyphicon glyphicon-th"></span>
                 <span class="lbl">Reportes</span>
@@ -166,7 +166,7 @@
                     </a>
                 </div>
             </div>
-        </li>
+        </li> -->
         <!-- Fin Reportes -->
                 
         <?php
