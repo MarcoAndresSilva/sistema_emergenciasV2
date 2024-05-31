@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-03-2024 a las 22:03:03
+-- Tiempo de generación: 27-05-2024 a las 18:19:12
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `emergencia_db`
+-- Base de datos: `db_emergencia`
 --
 
 -- --------------------------------------------------------
@@ -105,7 +105,10 @@ INSERT INTO `tm_camb_asig` (`camb_asig_id`, `ev_id`, `antigua_asig`, `nueva_asig
 (63, 144, '2,3,4,5', '4', '2024-03-25 16:58:02'),
 (64, 145, '3,5', '3', '2024-03-25 17:05:48'),
 (65, 150, '2,3', '3', '2024-03-26 10:09:06'),
-(66, 150, '3', '3,5', '2024-03-26 10:09:20');
+(66, 150, '3', '3,5', '2024-03-26 10:09:20'),
+(67, 151, 'No hay unidades asignadas', '3', '2024-05-22 23:23:45'),
+(68, 152, '3', '3', '2024-05-22 23:28:53'),
+(69, 158, '2', '1', '2024-05-27 09:21:57');
 
 -- --------------------------------------------------------
 
@@ -562,6 +565,7 @@ INSERT INTO `tm_est_unidad` (`est_un_id`, `est_un_nom`) VALUES
 CREATE TABLE `tm_evento` (
   `ev_id` int(11) NOT NULL,
   `ev_nom` varchar(30) NOT NULL,
+  `ev_apellido` varchar(50) NOT NULL,
   `ev_mail` varchar(50) NOT NULL,
   `ev_desc` varchar(50) NOT NULL,
   `ev_est` int(11) NOT NULL,
@@ -578,24 +582,47 @@ CREATE TABLE `tm_evento` (
 -- Volcado de datos para la tabla `tm_evento`
 --
 
-INSERT INTO `tm_evento` (`ev_id`, `ev_nom`, `ev_mail`, `ev_desc`, `ev_est`, `ev_inicio`, `ev_final`, `ev_direc`, `cat_id`, `ev_niv`, `ev_img`, `ev_telefono`) VALUES
-(10, 'Bastian Cerda', 'bastianalen3@gmail.com', 'Descripcion', 2, '2024-01-08 12:09:06', NULL, 'Anita Fresno 327 , No hay coordenadas', 9, 1, NULL, 0),
-(16, 'Peligro constante', 'mail@mail.com', 'Descripcion', 2, '2024-01-08 17:03:26', NULL, 'loica parcela 7 , No hay coordenadas', 1, 3, NULL, 0),
-(19, 'Catastrofe', 'mail@mail.com', 'Descripcion', 2, '2024-01-11 12:53:31', NULL, 'Colonial 2 , No hay coordenadas', 7, 1, NULL, 0),
-(21, 'Explision', 'bas.cerda@duocuc.cl', 'Descripcion', 2, '2024-01-15 13:11:52', NULL, 'Libertad 2031 , No hay coordenadas', 5, 3, NULL, 0),
-(22, 'Bastian Cerda', 'bast.cerda@duocuc.cl', 'Constado de carretera km18', 2, '2024-01-16 18:44:15', NULL, 'Ruta 78 , No hay coordenadas', 1, 3, NULL, 0),
-(24, 'Bastian Cerda', 'mail@mail.com', 'Costado de Carretera direccion santiago', 2, '2024-01-16 19:21:18', NULL, 'Ruta 78 , No hay coordenadas', 1, 2, NULL, 0),
-(85, 'denfred', 'isabelmartinezr1968@gmail.com', 'Planta interior ', 2, '2024-01-21 20:35:37', NULL, 'Anita Fresno 327 , -33.7413118,-71.1809286', 1, 2, NULL, 0),
-(114, 'cristian', 'cristian@munimelipilla.cl', 'caso de incendio en la villa colonial', 1, '2024-01-31 09:13:23', NULL, 'colonial 13 , -33.6855421,-71.2171669', 1, 1, '', 0),
-(141, 'martin', 'Bastianalen3@gmail.com', 'Planta interior ', 2, '2024-02-02 08:18:52', '2024-02-06 10:45:59', 'Plaza cardenales , No hay coordenadas', 1, 1, '', 0),
-(143, 'denfred', 'Bastianalen3@gmail.com', 'Planta interior ', 2, '2024-02-06 11:26:10', '2024-02-15 11:27:38', 'Sin dirección , -33.6855446,-71.2171806', 1, 0, '', 0),
-(144, 'marco', 'marco.silvaponce10@gmail.com', 'Asalto', 1, '2024-02-15 11:30:32', NULL, 'cunco2207 , -33.67798948680299,-71.17433681528627', 1, 2, '', 0),
-(145, 'marquito', 'mmmmm@mmmm.cl', 'evento test', 1, '2024-02-16 09:29:05', NULL, 'muni melipilla , -33.6855441,-71.2171793', 4, 2, '', 0),
-(146, '', 'marco.silva@mujnimelipill.cl', 'gdfhfgdh', 2, '2024-03-21 17:21:00', '2024-03-22 11:17:20', 'gfhfdghhggh , No hay coordenadas', 9, 3, '', 35346),
-(147, '', 'marco.silva@mujnimelipill.cl', 'se cayo un arbol', 1, '2024-03-22 09:37:49', NULL, 'Sin dirección , -33.685643491757574,-71.22309704448853', 7, 0, 0x2e2e2f7075626c69632f696d672f696d6167656e65734576656e746f732f436170747572612064652070616e74616c6c6120323032342d30332d3034203133303932332e706e67, 123124324),
-(148, '', 'marco.silva@mujnimelipill.cl', 'asaltacion', 1, '2024-03-22 16:10:33', NULL, 'Sin dirección , -33.6855738,-71.2172411', 2, 1, '', 133),
-(149, '', 'marco.silva@mujnimelipill.cl', 'efsdfsdfds', 1, '2024-03-25 16:50:19', NULL, 'Sin dirección , -33.6855794,-71.2172355', 9, 2, '', 123242355),
-(150, '', 'marco.silva@mujnimelipill.cl', 'barristas quemando neumaticos', 1, '2024-03-26 10:08:15', NULL, 'centro de melipila , -33.68604932337804,-71.21500190209962', 4, 1, '', 133434343);
+INSERT INTO `tm_evento` (`ev_id`, `ev_nom`, `ev_apellido`, `ev_mail`, `ev_desc`, `ev_est`, `ev_inicio`, `ev_final`, `ev_direc`, `cat_id`, `ev_niv`, `ev_img`, `ev_telefono`) VALUES
+(10, 'Bastian Cerda', '', 'bastianalen3@gmail.com', 'Descripcion', 2, '2024-01-08 12:09:06', NULL, 'Anita Fresno 327 , No hay coordenadas', 9, 1, NULL, 0),
+(16, 'Peligro constante', '', 'mail@mail.com', 'Descripcion', 2, '2024-01-08 17:03:26', NULL, 'loica parcela 7 , No hay coordenadas', 1, 3, NULL, 0),
+(19, 'Catastrofe', '', 'mail@mail.com', 'Descripcion', 2, '2024-01-11 12:53:31', NULL, 'Colonial 2 , No hay coordenadas', 7, 1, NULL, 0),
+(21, 'Explision', '', 'bas.cerda@duocuc.cl', 'Descripcion', 2, '2024-01-15 13:11:52', NULL, 'Libertad 2031 , No hay coordenadas', 5, 3, NULL, 0),
+(22, 'Bastian Cerda', '', 'bast.cerda@duocuc.cl', 'Constado de carretera km18', 2, '2024-01-16 18:44:15', NULL, 'Ruta 78 , No hay coordenadas', 1, 3, NULL, 0),
+(24, 'Bastian Cerda', '', 'mail@mail.com', 'Costado de Carretera direccion santiago', 2, '2024-01-16 19:21:18', NULL, 'Ruta 78 , No hay coordenadas', 1, 2, NULL, 0),
+(85, 'denfred', '', 'isabelmartinezr1968@gmail.com', 'Planta interior ', 2, '2024-01-21 20:35:37', NULL, 'Anita Fresno 327 , -33.7413118,-71.1809286', 1, 2, NULL, 0),
+(114, 'cristian', '', 'cristian@munimelipilla.cl', 'caso de incendio en la villa colonial', 2, '2024-01-31 09:13:23', '2024-05-24 15:48:12', 'colonial 13 , -33.6855421,-71.2171669', 1, 1, '', 0),
+(141, 'martin', '', 'Bastianalen3@gmail.com', 'Planta interior ', 2, '2024-02-02 08:18:52', '2024-02-06 10:45:59', 'Plaza cardenales , No hay coordenadas', 1, 1, '', 0),
+(143, 'denfred', '', 'Bastianalen3@gmail.com', 'Planta interior ', 2, '2024-02-06 11:26:10', '2024-02-15 11:27:38', 'Sin dirección , -33.6855446,-71.2171806', 1, 0, '', 0),
+(144, 'marco', '', 'marco.silvaponce10@gmail.com', 'Asalto', 2, '2024-02-15 11:30:32', '2024-05-24 10:19:11', 'cunco2207 , -33.67798948680299,-71.17433681528627', 1, 2, '', 0),
+(145, 'marquito', '', 'mmmmm@mmmm.cl', 'evento test', 2, '2024-02-16 09:29:05', '2024-05-24 12:13:39', 'muni melipilla , -33.6855441,-71.2171793', 4, 2, '', 0),
+(146, '', '', 'marco.silva@mujnimelipill.cl', 'gdfhfgdh', 2, '2024-03-21 17:21:00', '2024-03-22 11:17:20', 'gfhfdghhggh , No hay coordenadas', 9, 3, '', 35346),
+(147, '', '', 'marco.silva@mujnimelipill.cl', 'se cayo un arbol', 2, '2024-03-22 09:37:49', '2024-05-24 10:03:19', 'Sin dirección , -33.685643491757574,-71.22309704448853', 7, 0, 0x2e2e2f7075626c69632f696d672f696d6167656e65734576656e746f732f436170747572612064652070616e74616c6c6120323032342d30332d3034203133303932332e706e67, 123124324),
+(148, '', '', 'marco.silva@mujnimelipill.cl', 'asaltacion', 2, '2024-03-22 16:10:33', '2024-05-24 15:49:22', 'Sin dirección , -33.6855738,-71.2172411', 2, 1, '', 133),
+(149, '', '', 'marco.silva@mujnimelipill.cl', 'efsdfsdfds', 2, '2024-03-25 16:50:19', '2024-05-24 12:13:42', 'Sin dirección , -33.6855794,-71.2172355', 9, 2, '', 123242355),
+(150, '', '', 'marco.silva@mujnimelipill.cl', 'barristas quemando neumaticos', 2, '2024-03-26 10:08:15', '2024-05-24 15:49:19', 'centro de melipila , -33.68604932337804,-71.21500190209962', 4, 1, '', 133434343),
+(151, 'dsfdsf', 'fadsfdasf', 'marco.silva@mujnimelipill.cl', 'barristas quemando neumaticos', 2, '2024-05-22 10:08:15', '2024-05-24 15:39:45', 'centro de melipila , -33.68604932337804,-71.21500190209962', 4, 1, NULL, 46545454),
+(152, 'Admin', 'admin', 'admin@mail.com', 'dfsafdsrgde', 2, '2024-05-22 23:27:39', '2024-05-24 15:07:47', 'Sin dirección , -33.6779712,-71.1745988', 2, 1, '', 961718297),
+(153, 'Admin', 'admin', 'admin@mail.com', 'accidente arma corta', 2, '2024-05-24 09:56:27', '2024-05-24 10:03:30', 'Sin dirección , -33.68095711878329,-71.21664931640625', 2, 0, '', 961718297),
+(154, 'Admin', 'admin', 'admin@mail.com', 'barricadas', 2, '2024-05-24 10:01:55', '2024-05-24 10:03:33', 'mackena #5465 , -33.4521,-70.6536', 4, 0, '', 961718297),
+(155, 'Admin', 'admin', 'admin@mail.com', 'casa habitacion', 2, '2024-05-24 10:02:36', '2024-05-24 10:03:36', 'bernardo leigthon 87687 , -33.4521,-70.6536', 1, 0, '', 961718297),
+(156, 'Cristian', 'Suazo', 'crhiiss26@gmail.com', 'casa habitacion', 1, '2024-05-24 15:50:11', NULL, 'los jazmines 342 , -33.4521,-70.6536', 1, 0, '', 968093527),
+(157, 'Marco', 'Silva', 'marco.silvaponce10@gmail.com', 'niño intoxicado', 1, '2024-05-24 15:50:49', NULL, 'colegio melipilla , No hay coordenadas', 9, 0, '', 997827161),
+(158, 'Admin', 'admin', 'admin@mail.com', 'caída de árbol obstruye la vía ', 1, '2024-05-27 09:21:28', NULL, 'el paico , -33.69524053580763,-71.0546009765625', 7, 2, '', 961718297);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `tm_ev_cierre`
+--
+
+CREATE TABLE `tm_ev_cierre` (
+  `id_cierre` int(11) NOT NULL,
+  `usu_id` int(11) NOT NULL,
+  `ev_id` int(11) NOT NULL,
+  `detalle` varchar(300) NOT NULL,
+  `motivo` varchar(300) NOT NULL,
+  `adjunto` blob NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -682,7 +709,25 @@ INSERT INTO `tm_ev_tm_unid` (`id_inter`, `ev_id`, `unid_id`) VALUES
 (303, 144, 4),
 (304, 145, 3),
 (308, 150, 3),
-(309, 150, 5);
+(309, 150, 5),
+(310, 151, 3),
+(312, 152, 3),
+(313, 153, 3),
+(314, 154, 2),
+(315, 154, 3),
+(316, 155, 2),
+(317, 155, 3),
+(318, 155, 4),
+(319, 155, 5),
+(320, 156, 2),
+(321, 156, 5),
+(322, 156, 4),
+(323, 156, 3),
+(324, 157, 2),
+(325, 157, 4),
+(326, 157, 3),
+(327, 157, 5),
+(329, 158, 1);
 
 -- --------------------------------------------------------
 
@@ -1052,6 +1097,7 @@ CREATE TABLE `tm_usuario` (
   `usu_nom` varchar(150) DEFAULT NULL,
   `usu_ape` varchar(150) DEFAULT NULL,
   `usu_correo` varchar(150) NOT NULL,
+  `usu_telefono` int(11) NOT NULL,
   `usu_name` varchar(45) NOT NULL,
   `usu_pass` varchar(30) NOT NULL,
   `fecha_crea` datetime DEFAULT NULL,
@@ -1065,11 +1111,11 @@ CREATE TABLE `tm_usuario` (
 -- Volcado de datos para la tabla `tm_usuario`
 --
 
-INSERT INTO `tm_usuario` (`usu_id`, `usu_nom`, `usu_ape`, `usu_correo`, `usu_name`, `usu_pass`, `fecha_crea`, `fecha_modi`, `fecha_elim`, `estado`, `usu_tipo`) VALUES
-(1, 'Cristian', 'Suazo', 'crhiiss26@gmail.com', 'csuazo', '123456', '2023-12-30 13:15:58', NULL, NULL, 1, 2),
-(2, 'Admin', 'admin', 'admin@mail.com', 'admin', '123', '2024-01-03 18:09:32', NULL, NULL, 1, 1),
-(3, 'Marco', 'Silva', 'marco.silvaponce10@gmail.com', 'msilva', '12345', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 3),
-(4, 'marquisio', 'Silviña', 'memo@test.com', 'marquisio', '12345', '2024-03-20 13:01:58', NULL, NULL, 1, 3);
+INSERT INTO `tm_usuario` (`usu_id`, `usu_nom`, `usu_ape`, `usu_correo`, `usu_telefono`, `usu_name`, `usu_pass`, `fecha_crea`, `fecha_modi`, `fecha_elim`, `estado`, `usu_tipo`) VALUES
+(1, 'Cristian', 'Suazo', 'crhiiss26@gmail.com', 968093527, 'csuazo', '123456', '2023-12-30 13:15:58', NULL, NULL, 1, 2),
+(2, 'Admin', 'admin', 'admin@mail.com', 961718297, 'admin', '123', '2024-01-03 18:09:32', NULL, NULL, 1, 1),
+(3, 'Marco', 'Silva', 'marco.silvaponce10@gmail.com', 997827161, 'msilva', '12345', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 3),
+(4, 'marquisio', 'Silviña', 'memo@test.com', 965412724, 'marquisio', '12345', '2024-03-20 13:01:58', NULL, NULL, 1, 3);
 
 --
 -- Índices para tablas volcadas
@@ -1116,6 +1162,12 @@ ALTER TABLE `tm_est_unidad`
 --
 ALTER TABLE `tm_evento`
   ADD PRIMARY KEY (`ev_id`);
+
+--
+-- Indices de la tabla `tm_ev_cierre`
+--
+ALTER TABLE `tm_ev_cierre`
+  ADD PRIMARY KEY (`id_cierre`);
 
 --
 -- Indices de la tabla `tm_ev_niv`
@@ -1191,7 +1243,7 @@ ALTER TABLE `tm_usuario`
 -- AUTO_INCREMENT de la tabla `tm_camb_asig`
 --
 ALTER TABLE `tm_camb_asig`
-  MODIFY `camb_asig_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
+  MODIFY `camb_asig_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
 
 --
 -- AUTO_INCREMENT de la tabla `tm_categoria`
@@ -1227,7 +1279,13 @@ ALTER TABLE `tm_est_unidad`
 -- AUTO_INCREMENT de la tabla `tm_evento`
 --
 ALTER TABLE `tm_evento`
-  MODIFY `ev_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=151;
+  MODIFY `ev_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=159;
+
+--
+-- AUTO_INCREMENT de la tabla `tm_ev_cierre`
+--
+ALTER TABLE `tm_ev_cierre`
+  MODIFY `id_cierre` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `tm_ev_niv`
@@ -1239,7 +1297,7 @@ ALTER TABLE `tm_ev_niv`
 -- AUTO_INCREMENT de la tabla `tm_ev_tm_unid`
 --
 ALTER TABLE `tm_ev_tm_unid`
-  MODIFY `id_inter` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=310;
+  MODIFY `id_inter` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=330;
 
 --
 -- AUTO_INCREMENT de la tabla `tm_f_territorial`

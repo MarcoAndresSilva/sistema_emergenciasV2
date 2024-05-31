@@ -28,6 +28,4 @@
             // return "https://emergencias.melipilla.cl/";
         }
     }
-
-
 ?>
