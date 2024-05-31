@@ -1,0 +1,83 @@
+[33mcommit 5244ff705d3b4fd2b45dbeec5245225e2ffdf770[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/update_cerrarEvento[m[33m, [m[1;31morigin/feature/update_cerrarEvento[m[33m)[m
+Author: marcosilva1088 <marco.silva@munimelipilla.cl>
+Date:   Thu May 30 12:33:48 2024 -0400
+
+    Agregar public/img/imagenesEventos/nationalgeographic_2720812.jpg: new photo added to emergencia event
+
+[33mcommit 5ec7eb287734818a7083dc79c4fe868686c150e2[m
+Author: marcosilva1088 <marco.silva@munimelipilla.cl>
+Date:   Thu May 30 12:31:21 2024 -0400
+
+    Agregar db_emergencia_27-05.sql: description fix(db) add new table to db emergencias
+
+[33mcommit db271cedf84288de3000c47810365c68570e9d12[m
+Author: marcosilva1088 <marco.silva@munimelipilla.cl>
+Date:   Thu May 30 12:30:06 2024 -0400
+
+    Modify view/NuevoEvento/index.php: description: style(frontEnd) changue way to inser info to form of nuevoEvento
+
+[33mcommit b42c0334571d5980657e02cfb80dc460bf791f8d[m
+Author: marcosilva1088 <marco.silva@munimelipilla.cl>
+Date:   Thu May 30 12:25:39 2024 -0400
+
+    Modify view/Map/map.js: description: refactor(js) migration function marker from marker to markerAdvanceElement
+
+[33mcommit 8faaef17d4ad8ee9d476f255893bff11eea6c8ce[m
+Author: marcosilva1088 <marco.silva@munimelipilla.cl>
+Date:   Thu May 30 12:13:06 2024 -0400
+
+    Modify view/Map/index.php: description: add script to botton of file js to be able google map API_KEY
+
+[33mcommit b93fe83e07ceef6034c804073ddfc8e8d7c0d296[m
+Author: marcosilva1088 <marco.silva@munimelipilla.cl>
+Date:   Thu May 30 12:09:15 2024 -0400
+
+    Modificar view/ControlEventos/index.php: description: feat(frontEnd) add new panel to close events
+
+[33mcommit 9712eeb40ed1a2c0cd0223f5b8567ffb7101414c[m
+Author: marcosilva1088 <marco.silva@munimelipilla.cl>
+Date:   Thu May 30 00:14:48 2024 -0400
+
+    Modify view/ControlEventos/evento.js: feat(js) was modified js file whit the new funconality cerrar_evento
+
+[33mcommit 2f2810a52959e0cf0d75e914c86d3d8a6ddfe64e[m
+Author: marcosilva1088 <marco.silva@munimelipilla.cl>
+Date:   Wed May 29 17:30:13 2024 -0400
+
+    Modify view/ControlEventos/estilopersonaleventos.css: refactor(ui)
+
+[33mcommit 42f42ec6af5aa41dc66a735038f9f0ea67b48495[m
+Author: marcosilva1088 <marco.silva@munimelipilla.cl>
+Date:   Wed May 29 17:27:08 2024 -0400
+
+    Modify models/Evento.php: description of changue - feat(model) - add function obtener_usuario_id | was modified function cerrar_evento
+
+[33mcommit 0791f71203332152de5ccdd5b71e9ba92196dec8[m
+Author: marcosilva1088 <marco.silva@munimelipilla.cl>
+Date:   Wed May 29 17:20:52 2024 -0400
+
+    Modificar controller/evento.php: descripción: feat(controller) Modify controller: case - tabla-general - add new button
+
+[33mcommit 2d695eed2a0e1a2f7230b90cfcce83495ef40297[m[33m ([m[1;31morigin/develop[m[33m, [m[1;32mfeature/nueva_caracteristica[m[33m, [m[1;32mdevelop[m[33m)[m
+Author: marcosilva1088 <marco.silva@munimelipilla.cl>
+Date:   Wed May 22 23:49:54 2024 -0400
+
+    fix(db): cambio en el nombre de la base de datos para lograr la conexión
+
+[33mcommit e05b11e9ed1e6cb98b1c82ec7299dbc08c719db2[m[33m ([m[1;31morigin/feature/nueva_caracteristica[m[33m)[m
+Author: marcosilva1088 <marco.silva@munimelipilla.cl>
+Date:   Wed May 22 17:20:50 2024 -0400
+
+    copia de seguridad
+
+[33mcommit 374d93a6080ab87e408bc835a28b1b9a9fd91716[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m
+Author: marcosilva1088 <marco.silva@munimelipilla.cl>
+Date:   Wed May 22 15:49:31 2024 -0400
+
+    fix(config): corregir configuración de conexión a la base de datos
+
+[33mcommit 22f0867a3a2b51223df8f841b8067906dc34f0cc[m
+Author: marcosilva1088 <marco.silva@munimelipilla.cl>
+Date:   Fri May 10 12:14:06 2024 -0400
+
+    nueva verison del software de emergencia
