@@ -568,7 +568,7 @@ var motivosCierre = {
         "Necesidad de seguimiento médico adicional",
         "Contaminación controlada y descontaminación realizada"
     ],
-    "CaidadeArbol": [
+    "Caidadearbol": [
         "Árbol removido y área despejada",
         "Sin daños a personas o propiedades",
         "Daños a infraestructura reparados",
