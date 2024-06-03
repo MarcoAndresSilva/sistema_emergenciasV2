@@ -122,10 +122,10 @@ require_once 'RegistroLog.php';
             try {
                 $conectar = parent::conexion();
                 parent::set_names();
-                $sql = "INSERT INTO tm_usuario (usu_nom, usu_ape, usu_correo, usu_name,usu_pass, fecha_crea, estado,usu_tipo) VALUES (:usu_nom, :usu_ape, :usu_correo, :usu_name,:usu_pass, :fecha_crea, :estado,:usu_tipo)";
+                $sql = "INSERT INTO tm_usuario (usu_nom, usu_ape, usu_correo, usu_name,usu_pass, fecha_crea, estado,usu_tipo,usu_telefono) VALUES (:usu_nom, :usu_ape, :usu_correo, :usu_name,:usu_pass, :fecha_crea, :estado,:usu_tipo,:usu_telefono)";
 
                 $consulta = $conectar->prepare($sql);
-
+                $numero = 12345678;
                 $consulta->bindParam(':usu_nom',$usu_nom);
                 $consulta->bindParam(':usu_ape',$usu_ape);
                 $consulta->bindParam(':usu_correo',$usu_correo);
@@ -134,6 +134,7 @@ require_once 'RegistroLog.php';
                 $consulta->bindParam(':fecha_crea',$fecha_crea);
                 $consulta->bindParam(':estado',$estado);
                 $consulta->bindParam(':usu_tipo',$usu_tipo);
+                $consulta->bindParam(':usu_telefono',$numero);
 
                 $consulta->execute();
                 
@@ -141,7 +142,7 @@ require_once 'RegistroLog.php';
                     return true;
                 } else {
                     ?> <script>console.log("No se agrego el usuario ". $usu_nom ." ")</script><?php
-                    return 0;
+                    return false;
                 }
             } catch (Exception $e) {
                 ?> <script> console.log("Error catch    add_usuario") </script>  <?php
