@@ -95,9 +95,9 @@ if (isset($_SESSION["usu_id"])) {
                     <div class="group-ident">
                         <div class="col-lg-5" id="select-ubicacion">
                             <fieldset class="form-group">
-                                <label class="form-label semibold" for="exampleInput">Ubicación de la emergencia</label>
+                                <label class="form-label semibold" for="exampleInput">Ingresa una dirección manualmente y adicionalmente<span class="label-red"> (marque la emeregencia en el mapa)</span> </label>
                                 <select id="elegir-ubicacion" class="form-control">
-                                    <option value="direccion-escrita">Ingresa una dirección manualmente y marque el sitio en el mapa </option>
+                                    <option value="direccion-escrita">Seleccionar </option>
                                     <option value="direccion-escrita">Escribir la ubicación</option>
                                     <option value="ubicacion-content">Geolocalización</option>
                                 </select>
