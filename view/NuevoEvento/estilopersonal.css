@@ -62,6 +62,9 @@
     text-align: center;
 }
 
+.form-label .label-red{
+    color: red;
+}
 @media screen and (max-width: 800px) {
     #event_form{
         /* flex-direction: column; */
