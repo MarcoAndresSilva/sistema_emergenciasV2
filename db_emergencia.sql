@@ -1153,6 +1153,25 @@ CREATE TABLE tm_reg_log(
 PRIMARY KEY (`log_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 --
+-- estructura de tabla para tm_cierre_motivo
+--
+CREATE TABLE tm_cierre_motivo(
+	`mov_id` INT NOT NUll auto_increment,
+    `motivo` VARCHAR(100),
+    `fecha_crea` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`mov_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- ESTRUCTURA DE TABLA tm_mv_ca
+--
+CREATE TABLE tm_motivo_cate(
+    `mov_cat_id` INT NOT NUll auto_increment,
+    `cat_id` INT NOT NULL,
+    `mov_id` INT NOT NULL,
+    PRIMARY KEY (`mov_cat_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+--
 -- Índices para tablas volcadas
 --
 
