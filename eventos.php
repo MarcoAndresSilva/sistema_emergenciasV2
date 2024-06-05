@@ -1,6 +1,7 @@
 <?php
-// if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_tipo"] == 2)) {
+  // if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_tipo"] == 2)) {
   require_once("db_chartJS/parametros.php");
+
   function permisos() {  
     if (isset($_SERVER['HTTP_ORIGIN'])){
         header("Access-Control-Allow-Origin: *");
