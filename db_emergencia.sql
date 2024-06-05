@@ -1157,7 +1157,7 @@ PRIMARY KEY (`log_id`)
 --
 CREATE TABLE tm_cierre_motivo(
 	`mov_id` INT NOT NUll auto_increment,
-    `motivo` VARCHAR(100),
+    `motivo` VARCHAR(250) NOT NULL unique,
     `fecha_crea` DATETIME DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (`mov_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
