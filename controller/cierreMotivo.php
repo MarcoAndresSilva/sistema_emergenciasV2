@@ -23,8 +23,8 @@ if (isset($_GET["op"])) {
             break;
 
         case 'delete_cierre_motivo':
-            $id_mov = $_POST['id_mov'];
-            $result = $model->delete_motivo_cierre($id_mov);
+            $mov_id = $_POST['mov_id'];
+            $result = $model->delete_motivo_cierre($mov_id);
             echo json_encode($result);
             break;
 
