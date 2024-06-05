@@ -37,7 +37,7 @@ $(document).ready(function () {
       }
   });
   
-  //en el local localhosst en el host emergencias.melipilla.cl
+  //en el host en el host emergencias.melipilla.cl/eventos.php;
   let url = 'http://localhost/sistema_emergenciasV2/eventos.php';
   fetch(url)
       .then(response => response.json())
