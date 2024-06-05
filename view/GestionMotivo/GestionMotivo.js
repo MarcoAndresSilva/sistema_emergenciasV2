@@ -109,6 +109,36 @@ async function OptenerMotivos() {
     }
 }
 
+
+function fn_delete_motivo(id){
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "No podrás revertir esto!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, bórralo!',
+        cancelButtonText: 'No, cancelar!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            let data = {'mov_id': id};
+            fetchData('delete_cierre_motivo', data)
+                .then(response => {
+                    // Verificar el estado de la respuesta
+                    if (response.status === 'success') {
+                        console.log('La consulta fue exitosa:', response.data);
+                        OptenerMotivos()
+                    } else {
+                        console.error('Error en la consulta:', response.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al realizar la consulta:', error);
+                });
+        }
+    })
+}
 function actualizarTabla(data) {
     // Limpia la tabla
     while (tabla.firstChild) {
@@ -148,6 +178,9 @@ function actualizarTabla(data) {
         let imgDelete = document.createElement('img');
         imgDelete.src = "../../public/img/trash.svg";
         buttondelete.appendChild(imgDelete);
+        buttondelete.onclick = function(){
+            fn_delete_motivo(item.mov_id)
+        }
 
         let celdaAccion = document.createElement('td');
         celdaAccion.appendChild(buttonedit);
