@@ -2,9 +2,13 @@
 
 class CierreMotivo extends Conectar {
     function add_motivo_cierre($motivo){
+        $response = array();
+
         if(empty($motivo)){
-            return "Error: El motivo no puede ser nulo.";
-        }    
+            $response['status'] = 'error';
+            $response['message'] = 'El motivo no puede estar vacio.';
+            return $response;
+        }
         $conexion = parent::Conexion();
         $sql = "SELECT * FROM tm_cierre_motivo WHERE motivo = :motivo;";
         $query = $conexion->prepare($sql);
@@ -13,7 +17,9 @@ class CierreMotivo extends Conectar {
         $resultado = $query->fetch();
     
         if(is_array($resultado) and count($resultado) > 0){
-            return "Error: El motivo ya existe.";
+            $response['status'] = 'warning';
+            $response['message'] = 'El motivo ya existe.';
+            return $response;
         }
     
         $sql = "INSERT INTO tm_cierre_motivo (motivo) VALUES (:motivo);";
@@ -22,10 +28,13 @@ class CierreMotivo extends Conectar {
         $query->execute();
     
         if($query->rowCount() > 0){
-            return true;
+            $response['status'] = 'success';
+            $response['message'] = 'El motivo de cierre se agregó correctamente.';
         } else {
-            return "Error: No se pudo insertar el motivo.";
+            $response['status'] = 'error';
+            $response['message'] = 'No se pudo insertar el motivo.';
         }
+        return $response;
     }
     function update_motivo_cierre($motivo,$id_mov){ 
         $conexion = parent::Conexion();

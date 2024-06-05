@@ -76,8 +76,10 @@ function fetchData(op, postData) {
             // Mostrar un mensaje de alerta según el estado de la respuesta
             if (data.status === 'success') {
                 Swal.fire('Éxito', data.message, 'success');
-            } else {
+            } else if(data.status === 'error'){
                 Swal.fire('Error', data.message, 'error');
+            }else if(data.status === 'warning'){
+                Swal.fire('Cuidado', data.message, 'warning');
             }
 
             return data; // Devolver la respuesta del servidor

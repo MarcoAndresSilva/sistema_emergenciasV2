@@ -12,14 +12,8 @@ if (isset($_GET["op"])) {
         case 'add_cierre_motivo':
             $motivo = $_POST['motivo'];
             $result = $model->add_motivo_cierre($motivo);
-            if ($result === true){
-                $response = array("status" => "success", "message" => "El motivo de cierre se agregó correctamente.");
-            } else {
-                $response = array("status" => "error", "message" => $result);
-            }
-            echo json_encode($response);
+            echo json_encode($result);
             break;
-
 
         case 'update_cierre_motivo':
             $motivo = $_POST['motivo'];
