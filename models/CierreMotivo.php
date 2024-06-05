@@ -68,7 +68,7 @@ class CierreMotivo extends Conectar {
         $sql = "SELECT * FROM tm_cierre_motivo";
         $query = $conexion->prepare($sql);
         $query->execute();
-        $resultado = $query->fetch();
+        $resultado = $query->fetchAll();
         if (is_array($resultado) and count($resultado) > 0) {
             return $resultado;
         }elseif(is_array($resultado) and count($resultado) == 0){
