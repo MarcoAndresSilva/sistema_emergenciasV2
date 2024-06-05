@@ -16,6 +16,7 @@ function fn_agregar_motivo_cierre() {
                     // Verificar el estado de la respuesta
                     if (response.status === 'success') {
                         console.log('La consulta fue exitosa:', response.data);
+                        OptenerMotivos()
                     } else {
                         console.error('Error en la consulta:', response.error);
                     }
@@ -94,4 +95,71 @@ function fetchData(op, postData) {
             console.error('Error al realizar la consulta:', error);
         });
 }
+
+let tabla = document.getElementById("miTabla");
+async function OptenerMotivos() {
+    let response = await fetch('../../controller/cierreMotivo.php?op=get_cierre_motivo');
+
+    if (response.ok) {
+        let data = await response.json();
+        console.log(data)
+        actualizarTabla(data);
+    } else {
+        console.error('Error en la petición:', response.status, response.statusText);
+    }
+}
+
+function actualizarTabla(data) {
+    // Limpia la tabla
+    while (tabla.firstChild) {
+        tabla.removeChild(tabla.firstChild);
+    }
+    // Agrega los nuevos datos a la tabla 
+    data.forEach(item => {
+        let fila = document.createElement('tr');
+
+        let celdaMotivo = document.createElement('td');
+        celdaMotivo.textContent = item.motivo;
+        fila.appendChild(celdaMotivo);
+
+        // Crear botones
+        let buttonedit = document.createElement('button');
+        buttonedit.id = "buttonedit";
+        buttonedit.className = "btn btn-warning";
+        buttonedit.type = "button";
+        let imgEdit = document.createElement('img');
+        imgEdit.src = "../../public/img/edit.svg";
+        buttonedit.appendChild(imgEdit);
+
+        let buttonCatego = document.createElement('button');
+        buttonCatego.id = "buttoncatego";
+        buttonCatego.className = "btn btn-info";
+        buttonCatego.type = "button";
+        let imgCatego = document.createElement('img');
+        imgCatego.src = "../../public/img/categoria.svg";
+        buttonCatego.appendChild(imgCatego);
+        let textoCatego = document.createTextNode("Categoria");
+        buttonCatego.appendChild(textoCatego);
+        
+        let buttondelete = document.createElement('button');
+        buttondelete.id = "buttondelete";
+        buttondelete.className = "btn btn-danger";
+        buttondelete.type = "button";
+        let imgDelete = document.createElement('img');
+        imgDelete.src = "../../public/img/trash.svg";
+        buttondelete.appendChild(imgDelete);
+
+        let celdaAccion = document.createElement('td');
+        celdaAccion.appendChild(buttonedit);
+        celdaAccion.appendChild(buttonCatego);
+        celdaAccion.appendChild(buttondelete);
+        fila.appendChild(celdaAccion);
+ 
+        tabla.appendChild(fila);
+    });
+
+}
+
+// Llamada a fetchData al inicio
+OptenerMotivos();
 
