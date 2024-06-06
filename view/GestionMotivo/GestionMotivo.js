@@ -139,6 +139,39 @@ function fn_delete_motivo(id){
         }
     })
 }
+function fn_edit_motivo(mov_id, motivo_original) {
+    Swal.fire({
+        title: 'Renombrar motivo',
+        input: 'text',
+        inputPlaceholder: 'Escriba el nuevo nombre',
+        showCancelButton: true,
+        confirmButtonText: 'Aceptar',
+        cancelButtonText: 'Cancelar',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire('Motivo Renombrado', `Se procesa cambio`, 'success');
+            let data = {
+                'mov_id':mov_id,
+                'motivo_original':motivo_original ,
+                'motivo_edit': result.value
+            };
+            // Hacer la solicitud a fetchData
+            fetchData('update_cierre_motivo', data)
+                .then(response => {
+                    // Verificar el estado de la respuesta
+                    if (response.status === 'success') {
+                        console.log('La consulta fue exitosa:', response.data);
+                        OptenerMotivos()
+                    } else {
+                        console.error('Error en la consulta:', response.error);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al realizar la consulta:', error);
+                });
+        }
+    });
+}
 function actualizarTabla(data) {
     // Limpia la tabla
     while (tabla.firstChild) {
@@ -160,6 +193,11 @@ function actualizarTabla(data) {
         let imgEdit = document.createElement('img');
         imgEdit.src = "../../public/img/edit.svg";
         buttonedit.appendChild(imgEdit);
+         let textoedit= document.createTextNode("Renombrar");
+        buttonedit.appendChild(textoedit);
+        buttonedit.onclick= function(){
+            fn_edit_motivo(item.mov_id,item.motivo)
+        }
 
         let buttonCatego = document.createElement('button');
         buttonCatego.id = "buttoncatego";
@@ -170,6 +208,7 @@ function actualizarTabla(data) {
         buttonCatego.appendChild(imgCatego);
         let textoCatego = document.createTextNode("Categoria");
         buttonCatego.appendChild(textoCatego);
+        
         
         let buttondelete = document.createElement('button');
         buttondelete.id = "buttondelete";
