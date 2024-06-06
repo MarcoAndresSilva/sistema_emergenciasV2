@@ -208,6 +208,9 @@ function actualizarTabla(data) {
         buttonCatego.appendChild(imgCatego);
         let textoCatego = document.createTextNode("Categoria");
         buttonCatego.appendChild(textoCatego);
+        buttonCatego.onclick = function(){
+            showSelection(item.mov_id)
+        }
         
         
         let buttondelete = document.createElement('button');
@@ -232,6 +235,99 @@ function actualizarTabla(data) {
 
 }
 
+function showSelection(mov_id) {
+    datosCategoria(mov_id);
+}
+
+function datosCategoria(mov_id) {
+    var url = '../../controller/categoria.php?op=get_categoria_json';
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            mostrarDialogo(data, mov_id);
+        })
+        .catch(error => {
+            console.error('Error al obtener datos de categoría:', error);
+        });
+}
+// Función para generar los checkboxes de las categorías
+function generarCheckboxes(categorias) {
+    var checkboxes = '';
+    categorias.forEach(function (categoria) {
+        if (categoria.cat_nom && categoria.cat_nom.trim() !== "") {
+            checkboxes += '<li><label style="display:flex;"><input type="checkbox" name="' + categoria.cat_nom + '" data-cat-id="' + categoria.cat_id + '" style="margin-right:6px;" value="' + categoria.cat_id + '"> ' + categoria.cat_nom + '</label></li>';
+        }
+    });
+    return checkboxes;
+}
+
+// Función para obtener las opciones seleccionadas
+function obtenerOpcionesSeleccionadas() {
+    var selectedOptions = {};
+    document.querySelectorAll('input[type=checkbox]').forEach(function (checkbox) {
+        if (checkbox.name.trim() !== "") {
+            selectedOptions[checkbox.name] = {
+                id: checkbox.getAttribute('data-cat-id'),
+                value: checkbox.checked
+            };
+        }
+    });
+    return selectedOptions;
+}
+
+// Función para mostrar el diálogo de selección de opciones
+function mostrarDialogo(categorias, mov_id) {
+    var checkboxes = generarCheckboxes(categorias);
+
+    Swal.fire({
+        title: 'Selecciona tus opciones',
+        html: '<input type="text" id="searchInput" class="swal2-input" placeholder="Buscar...">' +
+            '<ul id="optionsContainer" style="max-height: 200px; overflow-y: auto;">' +
+            checkboxes +
+            '</ul>',
+        showCancelButton: true,
+        preConfirm: function () {
+            var selectedOptions = obtenerOpcionesSeleccionadas();
+            console.log(selectedOptions); // Agregar este console.log para depurar
+            return selectedOptions;
+        }
+    }).then(function (result) {
+        if (result.isConfirmed) {
+            var selectedOptions = result.value;
+            // Eliminar cualquier categoría vacía del objeto selectedOptions
+            for (var categoria in selectedOptions) {
+                if (!selectedOptions.hasOwnProperty(categoria)) continue;
+                if (categoria.trim() === "") {
+                    delete selectedOptions[categoria];
+                }
+            }
+            // Convertir el objeto selectedOptions a una cadena JSON
+            var categoriasJSON = JSON.stringify(selectedOptions);
+
+            // Aquí puedes enviar los datos seleccionados mediante una solicitud POST
+            var op = 'asociar_motivos_categoria';
+            var postData = {
+                mov_id: mov_id,
+                categorias: categoriasJSON // Enviar el objeto como una cadena JSON
+            };
+            fetchData(op, postData);
+        }
+    });
+
+    // Agregar funcionalidad de búsqueda
+    document.getElementById('searchInput').addEventListener('input', function () {
+        var searchText = this.value.toLowerCase();
+        document.querySelectorAll('#optionsContainer label').forEach(function (label) {
+            var optionText = label.textContent.toLowerCase();
+            if (optionText.includes(searchText)) {
+                label.style.display = 'flex';
+            } else {
+                label.style.display = 'none';
+            }
+        });
+    });
+}
 // Llamada a fetchData al inicio
 OptenerMotivos();
 
