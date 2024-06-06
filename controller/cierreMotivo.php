@@ -16,9 +16,10 @@ if (isset($_GET["op"])) {
             break;
 
         case 'update_cierre_motivo':
-            $motivo = $_POST['motivo'];
-            $id_mov = $_POST['id_mov'];
-            $result = $model->update_motivo_cierre($motivo, $id_mov);
+            $motivo = $_POST['motivo_original'];
+            $motivo_rename = $_POST['motivo_edit'];
+            $mov_id= $_POST['mov_id'];
+            $result = $model->update_motivo_cierre($motivo_rename,$mov_id );
             echo json_encode($result);
             break;
 
