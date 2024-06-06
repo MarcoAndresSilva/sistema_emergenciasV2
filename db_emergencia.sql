@@ -1169,6 +1169,7 @@ CREATE TABLE tm_motivo_cate(
     `mov_cat_id` INT NOT NUll auto_increment,
     `cat_id` INT NOT NULL,
     `mov_id` INT NOT NULL,
+    `activo` BOOLEAN NOT NULL,
     PRIMARY KEY (`mov_cat_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 --
