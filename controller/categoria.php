@@ -23,7 +23,10 @@ if (isset($_GET["op"])) {
                 echo $html;
             }
         break;
-            
+        case "get_categoria_json":
+            $lista = $categoria->get_categoria();
+            echo json_encode($lista);
+            break;
          //Datos de categoría segun si ID
         case "datos_categoria":
 
