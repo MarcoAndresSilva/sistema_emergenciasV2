@@ -34,7 +34,7 @@ if (isset($_GET["op"])) {
                 foreach ($categorias as $key => $cat) {
                     $categorias[$key]['activo'] = 0; // Por defecto es falso
                     foreach ($relacion as $rel) {
-                        if ($cat['cat_nom'] == $rel['cat_nom']) {
+                        if ($cat['cat_nom'] == $rel['cat_nom'] and array_key_exists('activo',$rel)) {
                             $categorias[$key]['activo'] = $rel['activo']; // Si existe en la relación, se actualiza el valor
                             break;
                         }
