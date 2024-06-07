@@ -126,4 +126,24 @@ function delete_motivo_cierre($id_mov){
         }
         return $response;
     }
+    function get_motivo_categoria(){
+        $conexion = parent::Conexion();
+        $sql = 'SELECT
+                    cat.cat_nom as "categoria", 
+                    mov.motivo as "motivo" 
+                FROM tm_categoria as cat 
+                JOIN tm_motivo_cate as mc  
+                ON(cat.cat_id= mc.cat_id) 
+                JOIN tm_cierre_motivo as mov 
+                ON(mov.mov_id=mc.mov_id);';
+        $query = $conexion->prepare($sql);
+        $query->execute();
+        $resultado = $query->fetchAll();
+        if (is_array($resultado) and count($resultado) > 0) {
+            return $resultado;
+        }elseif(is_array($resultado) and count($resultado) == 0){
+            return false;
+        }
+
+    }
 }
