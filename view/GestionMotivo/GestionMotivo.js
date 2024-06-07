@@ -271,7 +271,7 @@ function generarCheckboxes(categorias) {
     var checkboxes = '';
     categorias.forEach(function (categoria) {
         if (categoria.cat_nom && categoria.cat_nom.trim() !== "") {
-            checkboxes += '<li><label style="display:flex;"><input type="checkbox" name="' + categoria.cat_nom + '" data-cat-id="' + categoria.cat_id + '" style="margin-right:6px;" value="' + categoria.cat_id + '"> ' + categoria.cat_nom + '</label></li>';
+            checkboxes += `<li><label style="display:flex;"><input type="checkbox" name="${categoria.cat_nom}" data-cat-id="${categoria.cat_id}" style="margin-right:6px;" value="${categoria.cat_id}" ${categoria.activo === 1 ? 'checked' : ''}> ${categoria.cat_nom}</label></li>`;
         }
     });
     return checkboxes;
