@@ -247,17 +247,24 @@ function showSelection(mov_id) {
     datosCategoria(mov_id);
 }
 
-function datosCategoria(mov_id) {
-    var url = '../../controller/categoria.php?op=get_categoria_json';
 
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            mostrarDialogo(data, mov_id);
-        })
-        .catch(error => {
-            console.error('Error al obtener datos de categoría:', error);
-        });
+function datosCategoria(mov_id) {
+    var url = '../../controller/categoria.php?op=get_categoria_gestion_motivo';
+
+    var data = new FormData();
+    data.append('mov_id', mov_id);
+
+    fetch(url, {
+        method: 'POST',
+        body: data
+    })
+    .then(response => response.json())
+    .then(data => {
+        mostrarDialogo(data, mov_id);
+    })
+    .catch(error => {
+        console.error('Error al obtener datos de categoría:', error);
+    });
 }
 // Función para generar los checkboxes de las categorías
 function generarCheckboxes(categorias) {
