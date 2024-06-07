@@ -28,7 +28,7 @@ function fn_agregar_motivo_cierre() {
     });
 }
 
-function fetchData(op, postData) {
+function fetchData(op, postData, sendAsJson = false) {
     // URL del controlador
     const url = '../../controller/cierreMotivo.php';
 
@@ -39,15 +39,23 @@ function fetchData(op, postData) {
 
     // Agregar los parámetros GET a la URL del controlador
     const fetchUrl = `${url}?${params}`;
-    
-    // Convertir el objeto postData a formato x-www-form-urlencoded
-    const formData = new URLSearchParams(postData).toString();
+
+    // Convertir el objeto postData a formato x-www-form-urlencoded o JSON
+    let formData;
+    let contentType;
+    if (sendAsJson) {
+        formData = JSON.stringify(postData);
+        contentType = 'application/json';
+    } else {
+        formData = new URLSearchParams(postData).toString();
+        contentType = 'application/x-www-form-urlencoded';
+    }
 
     // Configurar la solicitud FETCH
     const requestOptions = {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded', // Tipo de contenido del cuerpo de la solicitud
+            'Content-Type': contentType, // Tipo de contenido del cuerpo de la solicitud
         },
         body: formData, // Usar formData en lugar de JSON
     };
@@ -301,17 +309,15 @@ function mostrarDialogo(categorias, mov_id) {
                 if (categoria.trim() === "") {
                     delete selectedOptions[categoria];
                 }
-            }
-            // Convertir el objeto selectedOptions a una cadena JSON
-            var categoriasJSON = JSON.stringify(selectedOptions);
-
+        }
+ 
             // Aquí puedes enviar los datos seleccionados mediante una solicitud POST
             var op = 'asociar_motivos_categoria';
             var postData = {
                 mov_id: mov_id,
-                categorias: categoriasJSON // Enviar el objeto como una cadena JSON
+                categorias: selectedOptions // Enviar el objeto como un array
             };
-            fetchData(op, postData);
+            fetchData(op, postData, true);
         }
     });
 
