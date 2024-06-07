@@ -95,4 +95,35 @@ function delete_motivo_cierre($id_mov){
             return false;
         }
     }
+    function update_motivo_cate($mov_id, $categorias){
+        $conexion = parent::Conexion();
+        $response = ['status' => 'success', 'message' => 'Actualización realizada con éxito'];
+        try {
+            foreach($categorias as $cat_nom => $cat_data){
+                $cat_id = $cat_data['id'];
+                $activo = $cat_data['value'] ? 1 : 0;
+    
+                // Primero, verificamos si el registro ya existe
+                $sql = "SELECT * FROM tm_motivo_cate WHERE cat_id = :cat_id AND mov_id = :mov_id";
+                $query = $conexion->prepare($sql);
+                $query->execute(['cat_id' => $cat_id, 'mov_id' => $mov_id]);
+                $resultado = $query->fetch();
+    
+                if($resultado){
+                    // Si el registro existe, lo actualizamos
+                    $sql = "UPDATE tm_motivo_cate SET activo = :activo WHERE cat_id = :cat_id AND mov_id = :mov_id";
+                } else {
+                    // Si el registro no existe, lo insertamos
+                    $sql = "INSERT INTO tm_motivo_cate (cat_id, mov_id, activo) VALUES (:cat_id, :mov_id, :activo)";
+                }
+    
+                $query = $conexion->prepare($sql);
+                $query->execute(['cat_id' => $cat_id, 'mov_id' => $mov_id, 'activo' => $activo]);
+            }
+        } catch (Exception $e) {
+            $response['status'] = 'error';
+            $response['message'] = 'Hubo un error al actualizar: ' . $e->getMessage();
+        }
+        return $response;
+    }
 }

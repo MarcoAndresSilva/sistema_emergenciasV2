@@ -34,6 +34,21 @@ if (isset($_GET["op"])) {
             echo json_encode($result);
             break;
 
+        case 'asociar_motivos_categoria':
+            $data = json_decode(file_get_contents('php://input'), true);
+        
+            if (isset($data['categorias']) && is_array($data['categorias'])) {
+                $mov_id = $data['mov_id'];
+                $categorias = $data['categorias'];
+                $result = $model->update_motivo_cate($mov_id, $categorias);
+            } else {
+                $result = array(
+                    "error" => "El parámetro 'categorias' no es un array",
+                    "datos_recibidos" => $data
+                );
+            }
+            echo json_encode($result);
+            break;
         default:
             echo json_encode(['error' => 'Operación no reconocida']);
             break;
