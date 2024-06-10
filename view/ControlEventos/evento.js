@@ -641,8 +641,7 @@ function normalizarCategoria(categoria) {
 
 // Función para cargar los motivos de cierre en el select
 function cargarMotivosCierre(categoria) {
-    var categoriaNormalizada = normalizarCategoria(categoria);
-    var motivos = motivosCierre[categoriaNormalizada] || [];
+    var motivos = motivosCierre[categoria] || [];
     var $select = $('#motivo_cierre');
     $select.empty();
 
