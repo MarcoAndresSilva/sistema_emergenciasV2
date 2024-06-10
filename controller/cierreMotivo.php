@@ -49,7 +49,7 @@ if (isset($_GET["op"])) {
             }
             echo json_encode($result);
             break;
-        case 'get_cierre_motivo':
+        case 'get_cierre_motivo_categoria':
             $result = $model->get_motivo_categoria();
             echo json_encode($result);
             break;
