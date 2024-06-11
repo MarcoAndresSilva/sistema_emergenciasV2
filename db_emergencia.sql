@@ -620,7 +620,7 @@ CREATE TABLE `tm_ev_cierre` (
   `usu_id` int(11) NOT NULL,
   `ev_id` int(11) NOT NULL,
   `detalle` varchar(300) NOT NULL,
-  `motivo` varchar(300) NOT NULL,
+  `motivo` int NOT NULL,
   `adjunto` blob
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
