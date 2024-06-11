@@ -6,8 +6,12 @@ $(document).ready(function() {
     // Añadir una clase al enlace
     enlace.classList.add('selected');
 
-    //Funcion para cargar los datos de las tablas
-    $.post("../../controller/evento.php?op=tabla-general",function(respuesta,status){
+    cargarTablaGeneral();
+});
+
+function cargarTablaGeneral() {
+      //Funcion para cargar los datos de las tablas
+      $.post("../../controller/evento.php?op=tabla-general",function(respuesta,status){
 
         // Parsear la respuesta JSON
         var data = JSON.parse(respuesta);
@@ -17,9 +21,7 @@ $(document).ready(function() {
         $('#datos-bajos').html(data.bajo);
         $('#datos-generales').html(data.comun);
     });
-});
-
-
+}
 
 //Variable Iid_evento
 $id_evento = 0;
@@ -138,13 +140,8 @@ function consultarNivelPeligro($id_evento) {
             // Seleccionar el nivel de peligro en el select
             $('#niv_id').val(nivelPeligroEvento);
 
-        }
-        
-        
-        
+        }        
     }, 'json');
-    
-
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -667,14 +664,67 @@ function cargarMotivosCierre(categoria) {
     });
 }
 
+//Boton para cargar el archivo
+document.getElementById('btnCargarArchivo').addEventListener('click', function() {
+    //Evita que el formulario se envie
+    event.preventDefault();
+    
+    //Activa la funcion del input type file
+    document.getElementById('imagen').click();
+});
+
+document.getElementById('imagen').addEventListener('change', function() {
+    var label = document.getElementById('archivoAdjuntado');
+    if (this.files && this.files.length > 0) {
+      label.textContent = this.files[0].name; // Actualiza el contenido del label con el nombre del archivo seleccionado
+    } else {
+      label.textContent = 'No hay archivo adjunto (.JPG/.JPEG/.PNG)';
+    }
+});
+
 //Btn Cerrar evento (Añade hora cierre)
 $('.btnCerrarEvento').off('click').on('click',function(){
-    //Llama a la funcion cerrar evento Añade la hora final
+
+    if(validarFormulario()){
+         //Llama a la funcion cerrar evento Añade la hora final
     CerrarEvento();
         
     // Llamar a la función para mostrar u ocultar la pestaña
-    togglePestanaCerrar();    
+    togglePestanaCerrar();   
+      // Mostrar mensaje de éxito
+    swal({
+        title: "Evento Cerrado",
+        text: "El evento ha sido cerrado con éxito.",
+        icon: "warning",
+        button: "Aceptar",
+        closeOnClickOutside: false,
+        closeOnEsc: false
+    });
+    cargarTablaGeneral();
+    }
 });
+
+//Validación del formulario
+function validarFormulario() { 
+    return (
+        validarCampoVacio('#detalle_cierre', 'Debes ingresar un detalle para cerrar el evento.')
+    );
+}
+
+function validarCampoVacio(selector, mensajeError) {
+    var valor = $(selector).val().trim();
+    if (valor === "") {
+        mostrarMensajeError(mensajeError);
+        return false;
+    }
+    return true;
+}
+function mostrarMensajeError(mensaje) {
+    // Aquí puedes mostrar el mensaje de error en algún elemento específico o en la consola del navegador.
+    console.error(mensaje);
+    swal( "Validación de formulario",mensaje, "warning" ) ;
+}
+
     
 function CerrarEvento() {
     var ev_id = $('#ev_id_cierre').text();
@@ -706,6 +756,26 @@ function CerrarEvento() {
         motivo_cierre: motivo_cierre,
         nombre_apellido: nombre_apellido
     }, function(data) {
+        // Después de cerrar el evento con éxito, cargar la imagen
+        var formData = new FormData($('#event_form')[0]);
+        formData.append('ev_id', ev_id);
+        $.ajax({
+            url: '../../controller/evento.php?op=carga-imagen-cierre',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function(response) {
+                if (response == 1) {
+                    console.log("Imagen cargada correctamente");
+                } else {
+                    console.log("Error al cargar la imagen");
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error("Error en la solicitud de carga de imagen: " + error);
+            }
+        });
         if(data == 1) {
             swal("Evento Finalizado", "El evento se ha cerrado correctamente", "success");
         } else {
