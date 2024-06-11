@@ -112,10 +112,11 @@
                         <span class="glyphicon glyphicon-asterisk"></span>
                         <span class="lbl"> Intituciones de Emergencia</span>
                     </a> -->
-                    <a class="" href="../SeguridadPassword/">
+                    <a class="" href="../NivelCategoria/">
                         <span class="glyphicon glyphicon-asterisk"></span>
-                        <span class="lbl"> Seguridad contrase&ntilde;a</span>
+                        <span class="lbl">Nivel Categoria </span>
                     </a>
+                   
                 </div>
             </div>
         </li>
@@ -124,7 +125,7 @@
         <li class="blue-dirty">
             <a class="" data-toggle="collapse-personal" href="#collapseGestionEventos" role="button"  aria-controls="collapseGestionEventos" >
                 <span class="glyphicon glyphicon-th"></span>
-                <span class="lbl">Gestión de Emergencias</span>
+                <span class="lbl">Gestión de usuarios</span>
             </a>
             <div class="collapse-personal" id="collapseGestionEventos"  >
                 <div class="card card-body" style="padding-left: 5px; border: none" style="padding-left: 5px; border: none">
@@ -136,9 +137,9 @@
                         <span class="glyphicon glyphicon-asterisk"></span>
                         <span class="lbl"> Atender Emergencia</span>
                     </a> -->
-                    <a class="" href="../NivelCategoria/">
+                    <a class="" href="../SeguridadPassword/">
                         <span class="glyphicon glyphicon-asterisk"></span>
-                        <span class="lbl">Nivel Categoria </span>
+                        <span class="lbl"> Seguridad contrase&ntilde;a</span>
                     </a>
                 </div>
             </div>
