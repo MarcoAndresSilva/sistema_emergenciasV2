@@ -46,7 +46,7 @@ if (isset($_GET["op"])) {
             // Verificar si se recibió el ID del usuario en la solicitud
            
                 // Obtener el ID del usuario desde la solicitud
-                $usu_id = $_POST['usu_id'];
+                $usu_id = $_SESSION['usu_id'];
 
                 // Obtener los datos de contacto del usuario
                 $datos = $usuario->get_datos_contacto($usu_id);
@@ -54,7 +54,7 @@ if (isset($_GET["op"])) {
                 // Verificar si se encontraron datos de contacto
                 if (count($datos) > 0) {
                     // Imprimir los datos antes de devolverlos
-                    var_dump($datos);
+                    //var_dump($datos);
                     // Devolver los datos como JSON
                     echo json_encode($datos);
                 } else {
