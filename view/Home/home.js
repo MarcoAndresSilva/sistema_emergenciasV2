@@ -17,7 +17,7 @@ $(document).ready(function () {
   // Grafico nuevo con ChartJS
   var ctx = document.getElementById('myChart');
   var myChart = new Chart(ctx, {
-      type: 'doughnut',
+      type: 'bar',
       data: {
           labels: [], // Etiquetas de los eventos
           datasets: [{
