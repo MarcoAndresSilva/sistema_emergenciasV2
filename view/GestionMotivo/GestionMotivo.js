@@ -181,10 +181,22 @@ function fn_edit_motivo(mov_id, motivo_original) {
     });
 }
 function actualizarTabla(data) {
-    // Limpia la tabla
-    while (tabla.firstChild) {
-        tabla.removeChild(tabla.firstChild);
+    // Encuentra la tabla
+    let tabla = document.getElementById('miTabla');
+
+    // Encuentra los hijos de la tabla
+    let hijosTabla = tabla.children;
+
+    // Itera sobre los hijos y elimina solo las filas (tr)
+    for (let i = hijosTabla.length - 1; i >= 0; i--) {
+        if (hijosTabla[i].tagName.toLowerCase() === 'tbody') {
+            tabla.removeChild(hijosTabla[i]);
+        }
     }
+
+    // Crea un nuevo tbody
+    let tbody = document.createElement('tbody');
+
     // Agrega los nuevos datos a la tabla 
     data.forEach(item => {
         let fila = document.createElement('tr');
@@ -220,7 +232,6 @@ function actualizarTabla(data) {
             showSelection(item.mov_id)
         }
         
-        
         let buttondelete = document.createElement('button');
         buttondelete.id = "buttondelete";
         buttondelete.className = "btn btn-danger";
@@ -238,9 +249,11 @@ function actualizarTabla(data) {
         celdaAccion.appendChild(buttondelete);
         fila.appendChild(celdaAccion);
  
-        tabla.appendChild(fila);
+        tbody.appendChild(fila);
     });
 
+    // Agrega el nuevo tbody a la tabla
+    tabla.appendChild(tbody);
 }
 
 function showSelection(mov_id) {
