@@ -69,11 +69,27 @@ class CierreMotivo extends Conectar {
 function delete_motivo_cierre($id_mov){ 
     $response = [];
     $conexion = parent::Conexion();
-    $sql = "DELETE FROM tm_cierre_motivo WHERE mov_id=:id_mov";
-    $query = $conexion->prepare($sql);
-    $query->bindParam(':id_mov',$id_mov);
-    $query->execute(); 
-    $numRows = $query->rowCount();
+
+    // Verificar si la id_mov está siendo usada en la tabla tm_ev_cierre
+    $sql_check = "SELECT COUNT(*) AS count FROM tm_ev_cierre WHERE motivo=:id_mov";
+    $query_check = $conexion->prepare($sql_check);
+    $query_check->bindParam(':id_mov', $id_mov);
+    $query_check->execute(); 
+    $result = $query_check->fetch(PDO::FETCH_ASSOC);
+
+    if ($result['count'] > 0) {
+        $response['status'] = 'warning';
+        $response['message'] = 'El motivo ya se esta utilizando no se puede borrar.';
+        return $response;
+    }
+
+    // Si la id_mov no está siendo usada en tm_ev_cierre, proceder con la eliminación en tm_cierre_motivo
+    $sql_delete = "DELETE FROM tm_cierre_motivo WHERE mov_id=:id_mov";
+    $query_delete = $conexion->prepare($sql_delete);
+    $query_delete->bindParam(':id_mov', $id_mov);
+    $query_delete->execute(); 
+
+    $numRows = $query_delete->rowCount();
     if ($numRows > 0) {
         $response['status'] = 'success';
         $response['message'] = 'Se pudo borrar el motivo de forma exitosa';
