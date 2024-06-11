@@ -10,8 +10,6 @@ $(document).ready(function() {
 
     /////////////////////////////////////////////////////////////////////////////////////////////
     
-    
-    
     //Funcion para cargar los datos de las tablas
     $.post("../../controller/evento.php?op=tabla-general-historial",function(respuesta,status){
         // Parsear la respuesta JSON
@@ -19,8 +17,7 @@ $(document).ready(function() {
         $('#datos-generales').html(data.html);
         
     });
-    
-    /////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////
 
     let select;
     
@@ -177,7 +174,7 @@ function mostrarMapa(lat,long) {
     }
 }
 
-//Btn Cerrar evento (Añade hora cierre)
+//Btn Crear ruta)
 $('.btnCrearRuta').off('click').on('click',function(){
     
     // Redirecciona a google maps
@@ -302,8 +299,9 @@ function cargarInfoEmergencia() {
 
         });
 
+  // Estado de la emergencia
         const ev_est = eventos[0]['ev_est'];
-        // Estado de la emergencia
+      
         $.post("../../controller/estado.php?solicitud=estado_emergencia",{ev_est : ev_est}, function(datos_estado_respuesta,status){
             
             datos_estado_respuesta = JSON.parse(datos_estado_respuesta);
@@ -315,7 +313,6 @@ function cargarInfoEmergencia() {
 
         //Mostrar la imagen del evento
         let rutaImagen = eventos[0]['ev_img'];
-
 
         if(rutaImagen !== "" && rutaImagen !== undefined && rutaImagen !== null){
 
