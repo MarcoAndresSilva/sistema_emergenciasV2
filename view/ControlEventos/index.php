@@ -6,7 +6,9 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 <!DOCTYPE html>
 <html>
 	<?php require_once("../MainHead/head.php") ?>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css">
 <link rel="stylesheet" href="./estilopersonaleventos.css">
+<script src="../../public/js/sweetaler2v11-11-0.js"></script>
 <title>Sistema Emergencia</title>
 </head>
 
@@ -124,49 +126,55 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
                 <span class="glyphicon glyphicon-remove CerrarModalMap"></span>
             </div>
 
-			<div id="selector-cerrar" class="modal-overlay modalBox" >
+			<div id="selector-cerrar" class="modal-overlay modalBox" style="z-index: 1000">
 				<div class="btn-cancelar">
 					<button id="btn"type='button' class='btn btn-inline btn-danger btn-sm ladda-button btnCancelarCerrar'> <i class='fa fa-close'></i>
 					</button>
 				</div>
-				<div id="distribucion-box">
-					<div id="distribucion-espacios">
-						<h3 class="derivacion-title">Panel de Cierre</h3>
+				<form class="event-box" action="nuevoevento.js" method="post" id="event_form" enctype="multipart/form-data">
+					<div id="distribucion-box">
+						<div id="distribucion-espacios">
+							<h3 class="derivacion-title">Panel de Cierre</h3>
 
-						<fieldset class="form-group" id="grupito">
-							<label class="form-label bold" id="asignaciones-title">Id de Evento</label>
-							<div id="ev_id_cierre"></div>
-						</fieldset>
-						<fieldset class="form-group" id="grupito">
-							<label class="form-label bold" id="asignaciones-title">Categoria</label>
-							<div id="cat_nom_cierre"></div>
-						</fieldset>
-						<fieldset class="form-group" id="grupito">
-							<label class="form-label bold" id="asignaciones-title">Nombre Apellido</label>
-							<input type="text" class="form-control" id="nombre_apellido" placeholder="Nombre y Apellido" value="<?php echo $_SESSION['usu_nom'] . ' ' . $_SESSION['usu_ape']; ?>" readonly>
-
-						</fieldset>
-						<fieldset class="form-group" id="grupito">
-							<label class="form-label bold" id="asignaciones-title">Detalle del Cierre</label>
-							<input type="text" class="form-control" id="detalle_cierre" name="detalle_cierre" placeholder="Detalle del cierre">
-						</fieldset>
-						<fieldset class="form-group">
-							<label class="form-label bold" id="asignaciones-title">Seleccione el motivo del cierre</label>
-							<select id="motivo_cierre" class="form-control">
-								<!-- Datos de consulta -->
-							</select>
-						</fieldset>
-
-						<fieldset class="form-group box-selection" id="buttons-group">
-							<label class="form-label semibold" id="asignaciones-title">Seleccionar</label>
-							<div class="btn-box">
-								<button id="btn" type="button" class="btn btn-inline btn-warning btn-sm ladda-button btnCerrarEvento close-btn">
-									Cerrar Evento <span><i class="fa-regular fa-circle-xmark"></i></span>
-								</button>
-							</div>
-						</fieldset>
+							<fieldset class="form-group" id="grupito">
+								<label class="form-label bold" id="asignaciones-title">Id de Evento</label>
+								<div id="ev_id_cierre"></div>
+							</fieldset>
+							<fieldset class="form-group" id="grupito">
+								<label class="form-label bold" id="asignaciones-title">Categoria</label>
+								<div id="cat_nom_cierre"></div>
+							</fieldset>
+							<fieldset class="form-group" id="grupito">
+								<label class="form-label bold" id="asignaciones-title">Nombre Apellido</label>
+								<input type="text" class="form-control" id="nombre_apellido" placeholder="Nombre y Apellido" value="<?php echo $_SESSION['usu_nom'] . ' ' . $_SESSION['usu_ape']; ?>" readonly>
+							</fieldset>
+							<fieldset class="form-group" id="grupito">
+								<label class="form-label bold" id="asignaciones-title">Ingrese un detalle</label>
+								<input type="text" class="form-control" id="detalle_cierre" name="detalle_cierre" placeholder="Detalle del cierre">
+							</fieldset>
+							<fieldset class="form-group">
+								<label class="form-label bold" id="asignaciones-title">Seleccione el motivo</label>
+								<select id="motivo_cierre" class="form-control">
+									<!-- Datos de consulta -->
+								</select>
+							</fieldset>
+							<fieldset class="form-group">
+								<label class="form-label semibold" for="exampleInput">Desea adjuntar una imagen de la emergencia?</label>
+								<input type="file" id="imagen" name="imagen" accept="image/*">
+								<button id="btnCargarArchivo" class="btn btn-round btn-inline btn-primary">Cargar Archivo</button>
+								<label id="archivoAdjuntado">No hay archivo adjunto (.JPG/.JPEG/.PNG)</label>
+							</fieldset>
+							<fieldset class="form-group box-selection" id="buttons-group">
+								<label class="form-label semibold" id="asignaciones-title">Seleccionar</label>
+								<div class="btn-box">
+									<button id="btn" type="button" class="btn btn-inline btn-warning btn-sm ladda-button btnCerrarEvento close-btn">
+										Cerrar Evento <span><i class="fa-regular fa-circle-xmark"></i></span>
+									</button>
+								</div>
+							</fieldset>
+						</div>
 					</div>
-				</div>
+				</form>
 			</div>
 		</div>
    	</div><!--.page-content-->
