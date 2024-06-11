@@ -571,7 +571,7 @@ function fillAndGroupByCategory() {
       if (Array.isArray(response)) {
         response.forEach(function(item) {
           var categoria = item.categoria;
-          var motivo = item.motivo;
+          var motivo = { id: item.mov_id, nombre: item.motivo }; // Modificar la estructura del motivo
 
           if (!agrupados[categoria]) {
             agrupados[categoria] = [];
@@ -646,7 +646,7 @@ function cargarMotivosCierre(categoria) {
     $select.empty();
 
     motivos.forEach(function(motivo) {
-        $select.append($('<option>', { value: motivo, text: motivo }));
+        $select.append($('<option>', { value: motivo.id, text: motivo.nombre }));
     });
 }
 
