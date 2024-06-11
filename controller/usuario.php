@@ -45,7 +45,7 @@ if (isset($_GET["op"])) {
         case "info-personal":
             // Verificar si se recibió el ID del usuario en la solicitud
            
-                // Obtener el ID del usuario desde la solicitud
+                // Obtener el ID del usuario desde la session
                 $usu_id = $_SESSION['usu_id'];
 
                 // Obtener los datos de contacto del usuario
