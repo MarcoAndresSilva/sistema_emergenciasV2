@@ -71,6 +71,21 @@ document.getElementById('imagen').addEventListener('change', function() {
     }
 });
 
+// Lógica para obtener datos dinámicos de la sesión y llenar campos
+var nombre = document.getElementById('nombre').value;
+var apellido = document.getElementById('apellido').value;
+var telefono = document.getElementById('telefono').value;
+var correo = document.getElementById('correo').value;
+
+$('#nombre').val(nombre);
+$('#apellido').val(apellido);
+$('#telefono').val(telefono);
+$('#correo').val(correo);
+
+function guardarDatosPersonales() {  
+    let datosPersonales = [nombre, apellido, telefono, correo];
+    console.log(datosPersonales);
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 //Funcion para tomar datos y concretar funcion add_evento
 function add_evento() {
@@ -81,17 +96,8 @@ function add_evento() {
     } else {
         var newCoords = marker.getPosition();
     }
+    guardarDatosPersonales();
 
-    // Lógica para obtener datos dinámicos de la sesión y llenar campos
-    var nombre = "<?php echo $_SESSION['nombre']; ?>";
-    var apellido = "<?php echo $_SESSION['apellido']; ?>";
-    var telefono = "<?php echo $_SESSION['telefono']; ?>";
-    var correo = "<?php echo $_SESSION['correo']; ?>";
-
-    $('#nombre').val(nombre);
-    $('#apellido').val(apellido);
-    $('#telefono').val(telefono);
-    $('#correo').val(correo);
 
     // Aquí agregamos la variable que falta
     var ev_desc = $('#descripcion').val();
@@ -196,23 +202,16 @@ function add_evento() {
                     alerta === false;
                 }
                 insert_asignacion_unidades(ev_id, cat_id);
-                console.log(ev_asig);
-            });
-
-            // $('#nombre').val('');
-            // $('#mail').val('');
+                // console.log(ev_asig);
+            }); 
             $('#descripcion').val('');
-            // $('#address').val('');
             $('#cat_id').val(1);
-            // $('#phone').val(1);
-
         } else {
             alerta === false;
         }
     });
 
 };
-
 
 function insert_asignacion_unidades(ev_id, cat_id){
     var ev_asig = [];
