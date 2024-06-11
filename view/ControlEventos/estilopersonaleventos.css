@@ -76,7 +76,7 @@
   background: rgb(133,22,135);
   background: linear-gradient(90deg, rgba(133,22,135,1) 0%, rgba(125,31,203,1) 50%, rgba(127,16,214,0.8981793400954132) 100%);
   width: 30%;
-  height: 100%;
+  height: 70%;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(46, 46, 46, 0.5);
@@ -85,7 +85,9 @@
   display: none ;
 }
 
-
+#selector-cerrar{
+    height: 100%;
+}
 .modalBox{
     /* background-color: #000; */
 }
@@ -129,7 +131,6 @@
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
-    margin-top: 20px;
     border-radius: 20px;
 }
 .derivacion-title{
@@ -139,7 +140,7 @@
 
 #asignaciones-title{
     font-weight: 400;
-    font-size: 1.5rem;
+    font-size: 1rem;
 }
 .form-group{
     text-align: center;
@@ -175,12 +176,21 @@
     margin: 0 auto;
 }
 
+#btnCargarArchivo{
+    width: 40%;
+}
+
+#imagen {
+    display: none;
+}
+
+
 #niv_id,
 .btnCerrarEvento,
 .btnActualizarTodos{
     width: 250px;
     font-weight: bold;
-    font-size: 1.5rem;
+    font-size: 1rem;
     line-height: 30px;
 }
 
