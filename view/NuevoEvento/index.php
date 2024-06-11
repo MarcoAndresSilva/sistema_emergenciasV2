@@ -7,6 +7,7 @@ if (isset($_SESSION["usu_id"])) {
 <!DOCTYPE html>
 <html>
 <?php require_once("../MainHead/head.php") ?>
+
 <link rel="stylesheet" href="./estilopersonal.css">
 <title>Sistema Emergencia</title>
 </head>
