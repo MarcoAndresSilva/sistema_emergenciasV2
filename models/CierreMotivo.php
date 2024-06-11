@@ -130,7 +130,8 @@ function delete_motivo_cierre($id_mov){
         $conexion = parent::Conexion();
         $sql = 'SELECT
                     cat.cat_nom as "categoria", 
-                    mov.motivo as "motivo" 
+                    mov.motivo as "motivo",
+                    mov.mov_id as "mov_id"
                 FROM tm_categoria as cat 
                 JOIN tm_motivo_cate as mc  
                 ON(cat.cat_id= mc.cat_id) 
