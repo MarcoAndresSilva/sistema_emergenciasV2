@@ -228,6 +228,30 @@ class Evento extends Conectar {
         }
         
 	}
+    public function update_imagen_cierre($ev_id, $ev_img) {
+		try {
+			$conectar = parent::conexion();
+			parent::set_names();
+			$sql = "UPDATE tm_ev_cierre SET  adjunto = :adjunto WHERE ev_id = :ev_id ";
+			$consulta = $conectar->prepare($sql);
+
+            $consulta->bindParam(':ev_id',$ev_id);
+            $consulta->bindParam(':adjunto',$adjunto);
+			
+			if ($consulta->execute()) {
+                return true;
+            } else {
+                ?> <script>console.log("No se logro actualizar la imagen del evento")</script><?php
+                return 0;
+            }
+        } catch (Exception $e) {
+			?> 
+            <script>console.log("Error catch     update_imagen_evento")</script>
+            <?php
+            throw $e;
+        }
+        
+	}
     
     //update_nivelpeligro_evento segun id
 	public function update_nivelpeligro_evento($ev_id, $ev_niv) {
