@@ -32,7 +32,7 @@ class Categoria extends Conectar
     {
         $conectar = parent::conexion();
         parent::set_names();
-        $sql = "SELECT * FROM tm_categoria WHERE est=1";
+        $sql = "SELECT * FROM tm_categoria";
         $sql = $conectar->prepare($sql);
         $sql->execute();
         $resultado = $sql ->fetchAll();
