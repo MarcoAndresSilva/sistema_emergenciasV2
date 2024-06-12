@@ -256,9 +256,12 @@ function actualizarTabla(data) {
     tabla.appendChild(tbody);
     $('#miTabla').DataTable({
         "columns": [
-            { "width": "408.031px" },
-            { "width": "414.969px" }
-        ]
+            { "width": "50%" },
+            { "width": "50%" }
+        ],
+        "language":{
+            "url":'../registrosLog/spanishDatatable.json'
+        },
     });
 }
 
