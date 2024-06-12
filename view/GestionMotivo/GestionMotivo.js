@@ -254,6 +254,12 @@ function actualizarTabla(data) {
 
     // Agrega el nuevo tbody a la tabla
     tabla.appendChild(tbody);
+    $('#miTabla').DataTable({
+        "columns": [
+            { "width": "408.031px" },
+            { "width": "414.969px" }
+        ]
+    });
 }
 
 function showSelection(mov_id) {
