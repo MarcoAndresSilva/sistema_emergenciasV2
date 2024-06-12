@@ -38,7 +38,7 @@ $(document).ready(function () {
   });
   
   //en el host en el host emergencias.melipilla.cl/eventos.php;
-  let url = 'http://localhost/sistema_emergenciasV2/eventos.php';
+  let url = '../../controller/evento.php?op=get_datos_categoria_eventos_ultimos_30_dias';
   fetch(url)
       .then(response => response.json())
       .then(datos => mostrar(datos))

@@ -155,6 +155,31 @@ class Categoria extends Conectar
             return json_encode(array('error' => $e->getMessage()));
         }
      }
+    public function get_categoria_relacion_motivo($mov_id)
+    {
+        $conectar = parent::conexion();
+        parent::set_names();
+        $sql = 'SELECT 
+                	cat.cat_nom as "cat_nom",
+                	mc.activo as "activo",
+                    mc.mov_id as "mov_id"
+                FROM tm_categoria as cat
+                JOIN `tm_motivo_cate` as mc
+                on(mc.cat_id= cat.cat_id)
+                WHERE mc.mov_id = :mov_id;';
+        $sql = $conectar->prepare($sql);
+        $sql->bindParam(':mov_id', $mov_id);
+        $sql->execute();
+        $resultado = $sql ->fetchAll();
+
+        if(is_array($resultado) and count($resultado) > 0){
+            return $resultado;
+        }else {  
+            return $this->get_categoria();
+        }
+    }
+
  }
+
 
 

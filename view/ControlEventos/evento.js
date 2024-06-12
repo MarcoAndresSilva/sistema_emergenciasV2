@@ -550,59 +550,43 @@ function initMap() {
 // Cerrar evento
 
 // Mapeo de motivos de cierre según la categoría
-var motivosCierre = {
-    "Incendios": [
-        "Controlado y extinguido",
-        "Sin víctimas ni daños mayores",
-        "Daños estructurales controlados",
-        "Necesidad de investigación adicional",
-        "Requiere seguimiento por posibles puntos calientes"
-    ],
-    "Intoxicacion": [
-        "Paciente estabilizado y trasladado a hospital",
-        "Intoxicación leve, tratado en el lugar",
-        "Causa de intoxicación identificada y mitigada",
-        "Necesidad de seguimiento médico adicional",
-        "Contaminación controlada y descontaminación realizada"
-    ],
-    "Caidadearbol": [
-        "Árbol removido y área despejada",
-        "Sin daños a personas o propiedades",
-        "Daños a infraestructura reparados",
-        "Necesidad de evaluación adicional de árboles cercanos",
-        "Servicios públicos restablecidos"
-    ],
-    "AccidenteVehicular": [
-        "Víctimas estabilizadas y trasladadas a hospital",
-        "Vehículos retirados y tráfico restablecido",
-        "Necesidad de investigación adicional por parte de la policía",
-        "Daños a infraestructura reparados",
-        "Seguimiento de seguro y responsabilidades"
-    ],
-    "DesordenPublico": [
-        "Situación controlada y disuelta",
-        "Sin heridos ni daños mayores",
-        "Detenciones realizadas y sospechosos en custodia",
-        "Necesidad de patrullaje adicional en la zona",
-        "Investigación adicional requerida"
-    ],
-    "Asaltos": [
-        "Sospechosos detenidos y bajo custodia",
-        "Sin heridos mayores",
-        "Recuperación de bienes robados",
-        "Necesidad de patrullaje adicional en la zona",
-        "Investigación adicional requerida"
-    ],
-    "Otros": [
-        "Situación controlada y resuelta",
-        "Víctimas atendidas y trasladadas",
-        "Daños mitigados y área asegurada",
-        "Investigación adicional requerida",
-        "Necesidad de seguimiento y monitoreo",
-        "Sospechosos detenidos y bajo custodia"
-    ]
-};
 
+var motivosCierre = {}; // Variable para almacenar los datos agrupados por categoría
+
+function fillAndGroupByCategory() {
+  var agrupados = {};
+
+  // Realizar la solicitud POST
+  $.post(
+    "../../controller/cierreMotivo.php?op=get_cierre_motivo_categoria",
+    {},
+    function(data) {
+      // Parsear la respuesta a JSON
+      var response = JSON.parse(data);
+
+      // Verificar si la respuesta es un arreglo
+      if (Array.isArray(response)) {
+        response.forEach(function(item) {
+          var categoria = item.categoria;
+          var motivo = { id: item.mov_id, nombre: item.motivo }; // Modificar la estructura del motivo
+
+          if (!agrupados[categoria]) {
+            agrupados[categoria] = [];
+          }
+          agrupados[categoria].push(motivo);
+        });
+        console.log(agrupados);
+        // Asignar los datos agrupados a motivosCierre
+        motivosCierre = agrupados;
+      } else {
+        console.error("La respuesta no es un arreglo.");
+      }
+    }
+  );
+}
+
+// Llamar a la función para llenar y agrupar los datos por categoría
+fillAndGroupByCategory();
 
 // Activar el botón de Cerrar Evento
 $(document).on('click', '.btnPanelCerrar', function() {
@@ -654,13 +638,12 @@ function normalizarCategoria(categoria) {
 
 // Función para cargar los motivos de cierre en el select
 function cargarMotivosCierre(categoria) {
-    var categoriaNormalizada = normalizarCategoria(categoria);
-    var motivos = motivosCierre[categoriaNormalizada] || [];
+    var motivos = motivosCierre[categoria] || [];
     var $select = $('#motivo_cierre');
     $select.empty();
 
     motivos.forEach(function(motivo) {
-        $select.append($('<option>', { value: motivo, text: motivo }));
+        $select.append($('<option>', { value: motivo.id, text: motivo.nombre }));
     });
 }
 

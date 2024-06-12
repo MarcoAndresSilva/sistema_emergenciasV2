@@ -23,7 +23,30 @@ if (isset($_GET["op"])) {
                 echo $html;
             }
         break;
-            
+        case "get_categoria_gestion_motivo":
+            if(isset($_POST['mov_id'])) {
+                $mov_id = $_POST['mov_id'];
+
+                $relacion = $categoria->get_categoria_relacion_motivo($mov_id);
+                $categorias = $categoria->get_categoria(); 
+
+                // Agregar la propiedad 'activo' a cada categoría
+                foreach ($categorias as $key => $cat) {
+                    $categorias[$key]['activo'] = 0; // Por defecto es falso
+                    foreach ($relacion as $rel) {
+                        if ($cat['cat_nom'] == $rel['cat_nom'] and array_key_exists('activo',$rel)) {
+                            $categorias[$key]['activo'] = $rel['activo']; // Si existe en la relación, se actualiza el valor
+                            break;
+                        }
+                    }
+                } 
+                echo json_encode($categorias);
+            } else {
+                echo json_encode(array(
+                    "error" => "No se recibió el parámetro 'mov_id'".$_POST['mov_id']
+                ));
+            }
+            break;
          //Datos de categoría segun si ID
         case "datos_categoria":
 

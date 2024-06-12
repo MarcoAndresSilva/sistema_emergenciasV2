@@ -620,7 +620,7 @@ CREATE TABLE `tm_ev_cierre` (
   `usu_id` int(11) NOT NULL,
   `ev_id` int(11) NOT NULL,
   `detalle` varchar(300) NOT NULL,
-  `motivo` varchar(300) NOT NULL,
+  `motivo` int NOT NULL,
   `adjunto` blob
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -1153,8 +1153,92 @@ CREATE TABLE tm_reg_log(
 PRIMARY KEY (`log_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 --
+-- estructura de tabla para tm_cierre_motivo
+--
+CREATE TABLE tm_cierre_motivo(
+	`mov_id` INT NOT NUll auto_increment,
+    `motivo` VARCHAR(250) NOT NULL unique,
+    `fecha_crea` DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (`mov_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Insercion de datos para tm_cierre_motivo
+--
+
+INSERT INTO `tm_cierre_motivo`(`mov_id`,`motivo`) VALUES
+(1,'Controlado y extinguido'),
+(2,'Sin víctimas ni daños mayores'),
+(3,'Daños estructurales controlados'),
+(4,'Necesidad de investigacion adicional'),
+(5,'Requiere seguimiento por posibles puntos calientes'),
+(6,'Sospechosos detenidos y bajo custodia'),
+(7,'Sin heridos mayores'),
+(8,'Recuperación de bienes robados'),
+(9,'Situación controlada y resuelta'),
+(10,'Víctimas atendidas y trasladadas'),
+(11,'Intoxicación leve, tratado en el lugar'),
+(12,'Causa de intoxicación identificada y mitigada'),
+(13,'Necesidad de seguimiento médico adicional'),
+(14,'Contaminación controlada y descontaminación realizada'),
+(15,'Árbol removido y área despejada'),
+(16,'Sin daños a personas o propiedades'),
+(17,'Daños a infraestructura reparados'),
+(18,'Necesidad de evaluación adicional de árboles cercanos'),
+(19,'Servicios públicos restablecidos'),
+(20,'Víctimas estabilizadas y trasladadas a hospital'),
+(21,'Vehículos retirados y tráfico restablecido'),
+(22,'Necesidad de investigación adicional por parte de la policía'),
+(23,'Seguimiento de seguro y responsabilidades'),
+(24,'Situación controlada y disuelta'),
+(25,'Detenciones realizadas y sospechosos en custodia'),
+(26,'Necesidad de patrullaje adicional en la zona'),
+(27,'Investigación adicional requerida');
+
+--
+-- ESTRUCTURA DE TABLA tm_mv_ca
+--
+CREATE TABLE tm_motivo_cate(
+    `mov_cat_id` INT NOT NUll auto_increment,
+    `cat_id` INT NOT NULL,
+    `mov_id` INT NOT NULL,
+    `activo` BOOLEAN NOT NULL,
+    PRIMARY KEY (`mov_cat_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+--
 -- Índices para tablas volcadas
 --
+
+INSERT INTO `tm_motivo_cate` (`cat_id`, `mov_id`, `activo`) VALUES
+(1, 1, TRUE), -- Incendios - Controlado y extinguido
+(1, 2, TRUE), -- Incendios - Sin víctimas ni daños mayores
+(1, 3, TRUE), -- Incendios - Daños estructurales controlados
+(1, 4, TRUE), -- Incendios - Necesidad de investigacion adicional
+(1, 5, TRUE), -- Incendios - Requiere seguimiento por posibles puntos calientes
+(2, 22, TRUE), -- Asaltos - Necesidad de investigación adicional por parte de la policía
+(2, 25, TRUE), -- Asaltos - Detenciones realizadas y sospechosos en custodia
+(2, 26, TRUE), -- Asaltos - Necesidad de patrullaje adicional en la zona
+(2, 27, TRUE), -- Asaltos - Investigación adicional requerida
+(3, 20, TRUE), -- Accidente Vehicular - Víctimas estabilizadas y trasladadas a hospital
+(3, 21, TRUE), -- Accidente Vehicular - Vehículos retirados y tráfico restablecido
+(3, 22, TRUE), -- Accidente Vehicular - Necesidad de investigación adicional por parte de la policía
+(3, 23, TRUE), -- Accidente Vehicular - Seguimiento de seguro y responsabilidades
+(4, 24, TRUE), -- Desorden Público - Situación controlada y disuelta
+(4, 25, TRUE), -- Desorden Público - Detenciones realizadas y sospechosos en custodia
+(4, 26, TRUE), -- Desorden Público - Necesidad de patrullaje adicional en la zona
+(4, 27, TRUE), -- Desorden Público - Investigación adicional requerida
+(5, 6, TRUE),  -- Otros - Sospechosos detenidos y bajo custodia
+(5, 9, TRUE),  -- Otros - Situación controlada y resuelta
+(9, 11, TRUE), -- Intoxicación - Intoxicación leve, tratado en el lugar
+(9, 12, TRUE), -- Intoxicación - Causa de intoxicación identificada y mitigada
+(9, 13, TRUE), -- Intoxicación - Necesidad de seguimiento médico adicional
+(9, 14, TRUE), -- Intoxicación - Contaminación controlada y descontaminación realizada
+(7, 15, TRUE), -- Caida de arbol - Árbol removido y área despejada
+(7, 16, TRUE), -- Caida de arbol - Sin daños a personas o propiedades
+(7, 17, TRUE), -- Caida de arbol - Daños a infraestructura reparados
+(7, 18, TRUE), -- Caida de arbol - Necesidad de evaluación adicional de árboles cercanos
+(7, 19, TRUE); -- Caida de arbol - Servicios públicos restablecidos
+
 
 --
 -- Indices de la tabla `tm_camb_asig`

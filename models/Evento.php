@@ -447,4 +447,25 @@ public function get_evento_por_categoria($cat_id){
         throw $e;
     }
 }
+public function datos_categorias_eventos($fecha_inicio) {
+    try {
+        $conectar = parent::conexion();
+        parent::set_names();
+        
+        $sql = "SELECT tm_categoria.cat_nom, COUNT(tm_evento.ev_id) as cantidad_eventos 
+                FROM tm_categoria 
+                LEFT JOIN tm_evento ON tm_categoria.cat_id = tm_evento.cat_id AND tm_evento.ev_inicio >= :fecha_inicio
+                GROUP BY tm_categoria.cat_id";
+        
+        $sql = $conectar->prepare($sql);
+        $sql->bindValue(':fecha_inicio', $fecha_inicio);
+        $sql->execute();
+        
+        $resultado = $sql->fetchAll();
+        return $resultado;
+    } catch (Exception $e) {
+        throw $e;
+    }
+}
+
 }
