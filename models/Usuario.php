@@ -150,6 +150,47 @@ require_once 'RegistroLog.php';
             }
 
         }
+
+
+public function update_password($old_pass, $new_pass, $usu_id){
+    $conectar = parent::conexion();
+    parent::set_names();
+
+    $hashed_old_pass = md5($old_pass);
+    $sql = "SELECT usu_pass FROM tm_usuario WHERE usu_id = :usu_id AND usu_pass = :old_pass";
+    $consulta = $conectar->prepare($sql);
+    $consulta->bindParam(':usu_id', $usu_id);
+    $consulta->bindParam(':old_pass', $hashed_old_pass);
+    $consulta->execute();
+    $user = $consulta->fetch();
+
+    // Verificar si la contraseña antigua es correcta
+    if (!$user) {
+        return array('status' => 'warning', 'message' => 'La contraseña antigua no coincide');
+    }
+
+    // Verificar si la nueva contraseña es igual a la antigua
+    if ($user['usu_pass'] == md5($new_pass)) {
+        return array('status' => 'info', 'message' => 'La nueva contraseña debe ser distinta a la antigua');
+    }
+
+    // Actualizar la contraseña
+    $hashed_new_pass = md5($new_pass); // Almacenar el resultado de md5($new_pass) en una variable
+    $sql = "UPDATE tm_usuario SET usu_pass = :new_pass WHERE usu_id = :usu_id";
+    $consulta = $conectar->prepare($sql);
+    $consulta->bindParam(':new_pass', $hashed_new_pass); // Pasar la variable a bindParam
+    $consulta->bindParam(':usu_id', $usu_id);
+    $consulta->execute();
+
+    // Verificar si la contraseña se actualizó correctamente
+    if ($consulta->rowCount() == 1) {
+        return array('status' => 'success', 'message' => 'Contraseña actualizada con éxito');
+    } else {
+        return array('status' => 'info', 'message' => 'No se realizó ningún cambio');
+    }
+}
+
+
     }
 
     

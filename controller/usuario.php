@@ -77,6 +77,20 @@ if (isset($_GET["op"])) {
             }
         break;
 
+        case "update_password":
+            // Recibir los datos POST
+            $old_pass = $_POST['old_pass'];
+            $new_pass = $_POST['new_pass'];
+            $usu_id = $_SESSION['usu_id'];
+            // Llamar a la función update_password
+            $datos = $usuario->update_password($old_pass, $new_pass, $usu_id);
+            // Verificar el resultado y enviar la respuesta
+            if ($datos['status'] == 'success') {
+                echo json_encode($datos);
+            } else {
+                echo json_encode($datos);
+            }
+        break;
   
     }
 }
