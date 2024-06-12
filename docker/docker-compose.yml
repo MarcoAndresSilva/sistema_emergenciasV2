@@ -6,7 +6,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ../../sistema_emergencia:/var/www/html
+      - ../../sistema_emergenciasV2:/var/www/html
     networks:
       - mi_red
 
@@ -18,7 +18,7 @@ services:
       MYSQL_ROOT_PASSWORD: 'tu'
       MYSQL_DATABASE: emergencia_db
     volumes:
-      - ../../sistema_emergencia/db_emergencia.sql:/docker-entrypoint-initdb.d/db_emergencia.sql
+      - ../../sistema_emergenciasV2/db_emergencia.sql:/docker-entrypoint-initdb.d/db_emergencia.sql
     networks:
       - mi_red
 
@@ -36,7 +36,7 @@ services:
   mkdocs:
     image: python:3.8
     volumes:
-      - ../../sistema_emergencia/docs:/docs
+      - ../../sistema_emergenciasV2/docs:/docs
     working_dir: /docs
     command: bash -c "pip install mkdocs mkdocs-with-pdf mkdocs-material && mkdocs serve --dev-addr=0.0.0.0:8000"
     ports:
