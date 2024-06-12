@@ -5,16 +5,20 @@
         protected $dbh;
         protected function Conexion () {
             try {
-                // Local
-                $conectar = $this->dbh = new PDO("mysql:local=localhost;dbname=db_emergencia","root","");
+
                 // Host
-
-                //nelson     
-                //$this->dbh = new PDO("mysql:host=mysql;dbname=emergencia_db", "root", "tu");
-               // $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
                 // $conectar = $this->dbh = new PDO("mysql:host=localhost;port=2083;dbname=admem_db_emergencia","admem_marco","Calamar.!1");
-                return $conectar;
+                // return $conectar;
+
+                // docker     
+                $this->dbh = new PDO("mysql:host=mysql;dbname=emergencia_db", "root", "tu");
+                $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                return $this->dbh;
+              
+                // xampp
+                // $conectar = $this->dbh = new PDO("mysql:host=localhost;dbname=admem_db_emergencia","root","");
+                // return $conectar;
+
                 
             } catch (Exception $e) {
                 print "隆Error DB !: ".$e->getMessage()."<br/>";
@@ -27,8 +31,10 @@
         }
 
         public function ruta () {
-            // Local
-            return "http://localhost/sistema_emergenciasV2/";
+            // Local docker 
+            return "http://localhost/";
+            //local xamp
+            // return "http://localhost/sistema_emergenciasV2/";
             // host
             // return "https://emergencias.melipilla.cl/";
         }
