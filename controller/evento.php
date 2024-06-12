@@ -11,6 +11,7 @@ $categoria = new Categoria();
 $unidad = new Unidad();
 $estado = new Estado();
 $eventounidad = new EventoUnidad();
+if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_tipo"] == 2)) {
 if (isset($_GET["op"])) {
     switch ($_GET["op"]) {
         case "add_evento":
@@ -717,8 +718,14 @@ if (isset($_GET["op"])) {
             $datos = $evento->get_id_ultimo_evento();
             echo $datos;
             break;
+        case "get_datos_categoria_eventos_ultimos_30_dias":
+            $fecha_inicio = date('Y-m-d', strtotime('-30 days')); // Fecha de inicio hace 30 días
+            $datos = $evento->datos_categorias_eventos($fecha_inicio);
+            echo json_encode($datos);
+            break;
+
     }
 
 
-        
+}        
 }
