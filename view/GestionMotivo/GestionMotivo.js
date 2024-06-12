@@ -239,6 +239,8 @@ function actualizarTabla(data) {
         let imgDelete = document.createElement('img');
         imgDelete.src = "../../public/img/trash.svg";
         buttondelete.appendChild(imgDelete);
+        let textoDelete = document.createTextNode("Eliminar");
+        buttondelete.appendChild(textoDelete);
         buttondelete.onclick = function(){
             fn_delete_motivo(item.mov_id)
         }
