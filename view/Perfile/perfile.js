@@ -164,4 +164,25 @@ function showPassword(id) {
         x.type = "password";
     }
 }
+document.getElementById('updatePhoneForm').addEventListener('submit', function(event) {
+    event.preventDefault();
 
+    // Recoger los datos del formulario
+    const new_phone = document.getElementById('new_phone').value;
+
+    // Mostrar un mensaje de confirmación
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "¿Estás seguro de que quieres cambiar tu número de teléfono?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, cambiar número de teléfono'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Llamar a la función fetchData
+            fetchData('update_phone', { new_phone: new_phone});
+        }
+    });
+});

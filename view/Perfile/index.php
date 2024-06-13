@@ -67,6 +67,20 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
             <button type="submit" class="btn btn-primary">Cambiar contraseña</button>
         </form>
     </div><!--.container -->
+<div class="container">
+<h1>Cambiar Numero</h1>
+
+
+<form id="updatePhoneForm">
+    <div class="input-group mb-2">
+        <div class="input-group-prepend">
+            <div class="input-group-text">+56</div>
+        </div>
+        <input type="text" class="form-control" id="new_phone" name="new_phone" placeholder="Nuevo número de teléfono" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Actualizar número de teléfono</button>
+</form>
+</div>
         </div><!--.container-fluid-->
     </div><!--.page-content-->
 

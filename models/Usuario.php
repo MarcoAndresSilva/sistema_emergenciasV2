@@ -190,6 +190,31 @@ public function update_password($old_pass, $new_pass, $usu_id){
     }
 }
 
+public function update_phone($new_phone, $usu_id){
+    $conectar = parent::conexion();
+    parent::set_names();
+
+    // Limpiar el número de teléfono y dejar solo los números
+    $clean_phone = preg_replace('/\D/', '', $new_phone);
+
+    // Verificar si la longitud del número de teléfono es correcta
+    if (strlen($clean_phone) != 9) {
+        return array('status' => 'warning', 'message' => 'La longitud del número de teléfono no es correcta');
+    }
+
+    $sql = "UPDATE tm_usuario SET usu_telefono = :new_phone WHERE usu_id = :usu_id";
+    $consulta = $conectar->prepare($sql);
+    $consulta->bindParam(':new_phone', $clean_phone);
+    $consulta->bindParam(':usu_id', $usu_id);
+    $consulta->execute();
+
+    // Verificar si el número de teléfono se actualizó correctamente
+    if ($consulta->rowCount() == 1) {
+        return array('status' => 'success', 'message' => 'Número de teléfono actualizado con éxito');
+    } else {
+        return array('status' => 'info', 'message' => 'No se realizó ningún cambio');
+    }
+}
 
     }
 

@@ -95,6 +95,18 @@ if (isset($_GET["op"])) {
                 echo json_encode($datos);
             }
         break;
+        case "update_phone":
+            $new_phone = $_POST['new_phone'];
+            $usu_id = $_SESSION['usu_id'];
+            $datos = $usuario->update_phone($new_phone, $usu_id);
+            if ($datos['status'] == 'success') {
+                $RegistroLog->add_log_registro($_SESSION["usu_id"],$_GET['op'],"el usuario {$_SESSION['usu_nom']} cambió su número de teléfono");
+                echo json_encode($datos);
+            } else {
+                $RegistroLog->add_log_registro($_SESSION["usu_id"],$_GET['op'],"el usuario {$_SESSION['usu_nom']} intentó cambiar su número de teléfono");
+                echo json_encode($datos);
+            }
+        break;
   
     }
 }
