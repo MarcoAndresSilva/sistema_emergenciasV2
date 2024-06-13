@@ -46,18 +46,21 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
             <div class="form-group">
                 <label for="old_pass">Contraseña antigua:</label>
                 <input type="password" class="form-control" id="old_pass" name="old_pass" required>
+            <input type="checkbox" onclick="showPassword('old_pass')"> Mostrar Contraseña
             </div>
 
             <div class="form-group">
                 <label for="new_pass">Nueva contraseña:</label>
                 <input type="password" class="form-control" id="new_pass" name="new_pass" required>
                 <small id="passwordHelp" class="form-text text-muted">Debe tener al menos 8 caracteres.</small>
-            </div>
+            <input type="checkbox" onclick="showPassword('new_pass')"> Mostrar Contraseña
+        </div>
 
             <div class="form-group">
                 <label for="confirm_new_pass">Confirmar nueva contraseña:</label>
                 <input type="password" class="form-control" id="confirm_new_pass" name="confirm_new_pass" required>
                 <small id="confirmHelp" class="form-text"></small>
+                <input type="checkbox" onclick="showPassword('confirm_new_pass')"> Mostrar Contraseña
             </div>
 
             <input type="hidden" id="usu_id" name="usu_id" value="1"> <!-- Reemplaza el valor con el ID del usuario -->
