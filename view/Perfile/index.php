@@ -41,6 +41,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 
 			<h5 class="m-t-lg with-border">Informaci&oacute;n de Instituciones de Emergencias</h5>
     <div class="container">
+<h1>Cambiar Contrase&ntilde;a</h1>
         <form id="updatePasswordForm">
             <div class="form-group">
                 <label for="old_pass">Contraseña antigua:</label>
@@ -63,7 +64,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 
             <button type="submit" class="btn btn-primary">Cambiar contraseña</button>
         </form>
-    </div>
+    </div><!--.container -->
         </div><!--.container-fluid-->
     </div><!--.page-content-->
 
