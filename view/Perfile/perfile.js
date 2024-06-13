@@ -83,7 +83,6 @@ document.getElementById('updatePasswordForm').addEventListener('submit', functio
     const old_pass = document.getElementById('old_pass').value;
     const new_pass = document.getElementById('new_pass').value;
     const confirm_new_pass = document.getElementById('confirm_new_pass').value;
-    const usu_id = document.getElementById('usu_id').value;
 
     // Verificar si las contraseñas coinciden
     if (new_pass !== confirm_new_pass) {
@@ -109,7 +108,7 @@ document.getElementById('updatePasswordForm').addEventListener('submit', functio
     }).then((result) => {
         if (result.isConfirmed) {
             // Llamar a la función fetchData
-            fetchData('update_password', { old_pass: old_pass, new_pass: new_pass, usu_id: usu_id });
+            fetchData('update_password', { old_pass: old_pass, new_pass: new_pass});
         }
     });
 });
