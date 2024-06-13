@@ -86,6 +86,8 @@ if (isset($_GET["op"])) {
             $datos = $usuario->update_password($old_pass, $new_pass, $usu_id);
             // Verificar el resultado y enviar la respuesta
             if ($datos['status'] == 'success') {
+                $seguridadPassword = new SeguridadPassword();
+                $seguridadPassword->update_password_info($usu_id, $new_pass);
                 $RegistroLog->add_log_registro($_SESSION["usu_id"],$_GET['op'],"el usuario {$_SESSION['usu_nom']} cambio su contraseña");
                 echo json_encode($datos);
             } else {
