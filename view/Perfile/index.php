@@ -63,7 +63,6 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
                 <input type="checkbox" onclick="showPassword('confirm_new_pass')"> Mostrar Contraseña
             </div>
 
-            <input type="hidden" id="usu_id" name="usu_id" value="1"> <!-- Reemplaza el valor con el ID del usuario -->
 
             <button type="submit" class="btn btn-primary">Cambiar contraseña</button>
         </form>
