@@ -239,6 +239,29 @@ public function get_info_usuario($usu_id){
     }
     return array('status'=> 'success', 'message' =>  'se optienen los datos', 'result'=> $resultado);
 }
+
+public function get_full_usuarios(){
+    $conectar = parent::conexion();
+    parent::set_names();
+    $sql = 'SELECT 
+            	usu.usu_nom as "Nombre",
+                usu.usu_ape as "Apellido",
+                tp.usu_tipo_nom as "Tipo",
+                usu.usu_tipo_id as "id_tipo",
+                usu.usu_telefono as "Telefono",
+                usu.usu_correo as "Correo",
+                usu.usu_name as "Usuario"
+            FROM `tm_usuario` as usu
+            JOIN tm_udu_tipo as tp
+            ON(tp.usu_tipo_id=usu.usu_id);';
+    $consulta = $conectar->prepare($sql);
+    $consulta->execute();
+    $resultado = $consulta->fetchAll(PDO::FETCH_ASSOC);
+    if ($consulta->rowCount()!=1){
+        return array('status' => 'error', 'message' => 'No se puede optener los datos');
+    }
+    return array('status'=> 'success', 'message' =>  'se optienen los datos', 'result'=> $resultado);
+}
     }
 
     
