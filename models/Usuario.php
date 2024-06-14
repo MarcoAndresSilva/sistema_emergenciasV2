@@ -228,7 +228,7 @@ public function get_info_usuario($usu_id){
                 usu.usu_name as "Usuario"
             FROM `tm_usuario` as usu
             JOIN tm_udu_tipo as tp
-            ON(tp.usu_tipo_id=usu.usu_id)
+            ON(tp.usu_tipo_id=usu.usu_tipo)
             WHERE usu.usu_id=:usu_id;';
     $consulta = $conectar->prepare($sql);
     $consulta->bindParam(':usu_id',$usu_id);
