@@ -216,6 +216,29 @@ public function update_phone($new_phone, $usu_id){
     }
 }
 
+public function get_info_usuario($usu_id){
+    $conectar = parent::conexion();
+    parent::set_names();
+    $sql = 'SELECT 
+            	usu.usu_nom as "Nombre",
+                usu.usu_ape as "Apellido",
+                tp.usu_tipo_nom as "Tipo",
+                usu.usu_telefono as "Telefono",
+                usu.usu_correo as "Correo",
+                usu.usu_name as "Usuario"
+            FROM `tm_usuario` as usu
+            JOIN tm_udu_tipo as tp
+            ON(tp.usu_tipo_id=usu.usu_id)
+            WHERE usu.usu_id=:usu_id;';
+    $consulta = $conectar->prepare($sql);
+    $consulta->bindParam(':usu_id',$usu_id);
+    $consulta->execute();
+    $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
+    if ($consulta->rowCount()!=1){
+        return array('status' => 'error', 'message' => 'No se puede optener los datos');
+    }
+    return array('status'=> 'success', 'message' =>  'se optienen los datos', 'result'=> $resultado);
+}
     }
 
     

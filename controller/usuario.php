@@ -107,6 +107,9 @@ if (isset($_GET["op"])) {
                 echo json_encode($datos);
             }
         break;
-  
+        case "get_info_usuario":
+           $data = $usuario->get_info_usuario($_SESSION['usu_id']);
+           echo json_encode($data);
+        break;
     }
 }

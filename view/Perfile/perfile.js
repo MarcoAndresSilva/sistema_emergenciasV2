@@ -186,3 +186,39 @@ document.getElementById('updatePhoneForm').addEventListener('submit', function(e
         }
     });
 });
+function fetchUserInfo() {
+    fetch('../../controller/usuario.php?op=get_info_usuario')
+        .then(response => response.json())
+        .then(data => {
+            let userInfo = '';
+            if (data.status === 'success') {
+                for (let key in data.result) {
+                    if (key !== 'status' && key !== 'message') {
+                        userInfo += `
+                            <div class="col-md-6 col-lg-4 mb-4">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">${key}</h5>
+                                        <p class="card-text">${data.result[key]}</p>
+                                    </div>
+                                </div>
+                            </div>`;
+                    }
+                }
+            } else {
+                userInfo = `<div class="alert alert-danger" role="alert">${data.message}</div>`;
+            }
+            document.getElementById('userInfo').innerHTML = userInfo;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('userInfo').innerHTML = `<div class="alert alert-danger" role="alert">Error al obtener los datos del usuario.</div>`;
+        });
+}
+
+// Llama a la función al cargar la página
+window.onload = fetchUserInfo;
+
+// Llama a la función cada 5 segundos para actualizar los datos
+setInterval(fetchUserInfo, 5000);
+

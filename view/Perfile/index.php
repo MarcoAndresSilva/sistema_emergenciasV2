@@ -40,7 +40,17 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 			</header>
 
 			<h5 class="m-t-lg with-border">Informaci&oacute;n de Instituciones de Emergencias</h5>
-    <div class="container">
+
+<div class="container">
+    <h2>Información del Usuario</h2>
+    <div id="userInfo" class="row justify-content-center">
+        <div class="spinner-border text-primary mt-5" role="status">
+            <span class="sr-only">Cargando...</span>
+        </div>
+    </div>
+</div>
+
+<div class="container">
 <h1>Cambiar Contrase&ntilde;a</h1>
         <form id="updatePasswordForm">
             <div class="form-group">
