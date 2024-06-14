@@ -257,7 +257,7 @@ public function get_full_usuarios(){
     $consulta = $conectar->prepare($sql);
     $consulta->execute();
     $resultado = $consulta->fetchAll(PDO::FETCH_ASSOC);
-    if ($consulta->rowCount()!=1){
+    if ($consulta->rowCount()<=0){
         return array('status' => 'error', 'message' => 'No se puede optener los datos');
     }
     return array('status'=> 'success', 'message' =>  'se optienen los datos', 'result'=> $resultado);
