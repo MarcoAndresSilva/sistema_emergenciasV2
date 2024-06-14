@@ -247,7 +247,7 @@ public function get_full_usuarios(){
             	usu.usu_nom as "Nombre",
                 usu.usu_ape as "Apellido",
                 tp.usu_tipo_nom as "Tipo",
-                usu.usu_tipo_id as "id_tipo",
+                tp.usu_tipo_id as "id_tipo",
                 usu.usu_telefono as "Telefono",
                 usu.usu_correo as "Correo",
                 usu.usu_name as "Usuario"
