@@ -111,5 +111,10 @@ if (isset($_GET["op"])) {
            $data = $usuario->get_info_usuario($_SESSION['usu_id']);
            echo json_encode($data);
         break;
+        case "get_full_info_usuario":
+           $data = $usuario->get_full_usuarios($_SESSION['usu_id']);
+           echo json_encode($data);
+        break;
+
     }
 }
