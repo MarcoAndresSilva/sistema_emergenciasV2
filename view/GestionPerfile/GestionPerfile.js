@@ -1,0 +1,220 @@
+function fetchData(op, postData, sendAsJson = false) {
+    // URL del controlador
+    const url = '../../controller/usuario.php';
+
+    // Construir la URL con los parámetros GET
+    const params = new URLSearchParams({
+        op: op,
+    });
+
+    // Agregar los parámetros GET a la URL del controlador
+    const fetchUrl = `${url}?${params}`;
+
+    // Convertir el objeto postData a formato x-www-form-urlencoded o JSON
+    let formData;
+    let contentType;
+    if (sendAsJson) {
+        formData = JSON.stringify(postData);
+        contentType = 'application/json';
+    } else {
+        formData = new URLSearchParams(postData).toString();
+        contentType = 'application/x-www-form-urlencoded';
+    }
+
+    // Configurar la solicitud FETCH
+    const requestOptions = {
+        method: 'POST',
+        headers: {
+            'Content-Type': contentType, // Tipo de contenido del cuerpo de la solicitud
+        },
+        body: formData, // Usar formData en lugar de JSON
+    };
+
+    // Mostrar un mensaje de carga
+    Swal.fire({
+        title: 'Cargando...',
+        allowEscapeKey: false,
+        allowOutsideClick: false,
+        onOpen: () => {
+            Swal.showLoading();
+        }
+    });
+
+    // Realizar la solicitud FETCH
+    return fetch(fetchUrl, requestOptions)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la solicitud.');
+            }
+            return response.json(); // Convertir la respuesta a formato JSON
+        })
+        .then(data => {
+            // Cerrar el mensaje de carga
+            Swal.close();
+
+            // Mostrar un mensaje de alerta según el estado de la respuesta
+            if (data.status === 'success') {
+                Swal.fire('Éxito', data.message, 'success');
+            } else if(data.status === 'error'){
+                Swal.fire('Error', data.message, 'error');
+            }else if(data.status === 'warning'){
+                Swal.fire('Cuidado', data.message, 'warning');
+            }else if(data.status === 'info'){
+                Swal.fire('Informacion', data.message, 'info');
+            }
+
+            return data; // Devolver la respuesta del servidor
+        })
+        .catch(error => {
+            // Cerrar el mensaje de carga
+            Swal.close();
+
+            // Mostrar un mensaje de error
+            Swal.fire('Error', 'Error al realizar la consulta.', 'error');
+
+            console.error('Error al realizar la consulta:', error);
+        });
+}
+ document.addEventListener('DOMContentLoaded', FnOpetenerUsuarios);
+
+        function FnOpetenerUsuarios() {
+            const url = '../../controller/usuario.php';
+            const params = new URLSearchParams({ op: 'get_full_info_usuario' });
+            const fetchUrl = `${url}?${params}`;
+
+            const requestOptions = {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({})
+            };
+
+            fetch(fetchUrl, requestOptions)
+                .then(response => response.ok ? response.json() : Promise.reject('Error en la solicitud.'))
+                .then(data => {
+                    if (data.status === 'success') {
+                        renderTable(data.result);
+                    } else {
+                        Swal.fire('Error', data.message, 'error');
+                    }
+                })
+                .catch(error => {
+                    Swal.fire('Error', 'Error al realizar la consulta.', 'error');
+                    console.error('Error al obtener la información de los usuarios:', error);
+                });
+        }
+
+        function renderTable(users) {
+            const userInfo = document.getElementById('userInfo');
+            userInfo.innerHTML = '';
+
+            const table = createTable(users);
+            userInfo.appendChild(table);
+        }
+
+        function createTable(users) {
+            const table = document.createElement('table');
+            table.className = 'table table-striped';
+
+            table.appendChild(createTableHeader());
+            table.appendChild(createTableBody(users));
+
+            return table;
+        }
+
+        function createTableHeader() {
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            const headers = ['ID', 'Nombre', 'Apellido', 'Tipo', 'Teléfono', 'Correo', 'Usuario', 'Acciones'];
+
+            headers.forEach(headerText => {
+                const th = document.createElement('th');
+                th.textContent = headerText;
+                headerRow.appendChild(th);
+            });
+
+            thead.appendChild(headerRow);
+            return thead;
+        }
+
+        function createTableBody(users) {
+            const tbody = document.createElement('tbody');
+
+            users.forEach(user => {
+                const row = document.createElement('tr');
+
+                row.appendChild(createTableCell(user.usu_id));
+                row.appendChild(createTableCell(user.Nombre));
+                row.appendChild(createTableCell(user.Apellido));
+                row.appendChild(createTypeCell(user.id_tipo));
+                row.appendChild(createTableCell(user.Telefono));
+                row.appendChild(createTableCell(user.Correo));
+                row.appendChild(createTableCell(user.Usuario));
+                row.appendChild(createActionButtons(user.usu_id));
+
+                tbody.appendChild(row);
+            });
+
+            return tbody;
+        }
+
+        function createTableCell(content) {
+            const cell = document.createElement('td');
+            cell.textContent = content;
+            return cell;
+        }
+
+        function createTypeCell(id_tipo) {
+            const cell = document.createElement('td');
+            const select = document.createElement('select');
+            select.className = 'form-control';
+
+            const options = [
+                { value: 1, text: 'Emergencias' },
+                { value: 2, text: 'Informática' },
+                { value: 3, text: 'Territorial' }
+            ];
+
+            options.forEach(optionData => {
+                const option = document.createElement('option');
+                option.value = optionData.value;
+                option.textContent = optionData.text;
+                if (id_tipo === optionData.value) {
+                    option.selected = true;
+                }
+                select.appendChild(option);
+            });
+
+            cell.appendChild(select);
+            return cell;
+        }
+
+        function createActionButtons(userId) {
+            const cell = document.createElement('td');
+
+            const editButton = document.createElement('button');
+            editButton.className = 'btn btn-primary btn-sm mr-2';
+            editButton.textContent = 'Editar';
+            editButton.onclick = () => editUser(userId);
+
+            const deactivateButton = document.createElement('button');
+            deactivateButton.className = 'btn btn-danger btn-sm';
+            deactivateButton.textContent = 'Desactivar';
+            deactivateButton.onclick = () => deactivateUser(userId);
+
+            cell.appendChild(editButton);
+            cell.appendChild(deactivateButton);
+
+            return cell;
+        }
+
+        function editUser(userId) {
+            // Aquí se puede agregar la lógica para editar el usuario
+            console.log('Editar usuario:', userId);
+            Swal.fire('Editar', `Editar usuario con ID: ${userId}`, 'info');
+        }
+
+        function deactivateUser(userId) {
+            // Aquí se puede agregar la lógica para desactivar el usuario
+            console.log('Desactivar usuario:', userId);
+            Swal.fire('Desactivar', `Desactivar usuario con ID: ${userId}`, 'warning');
+        }
