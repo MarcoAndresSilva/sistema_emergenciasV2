@@ -30,10 +30,10 @@
             return $this->dbh->query("SET NAMES 'utf8'");
         }
 
-        public function ruta () {
+        public static function ruta () {
             // Local docker 
             return "http://localhost/";
-            //local xamp
+            // local xamp
             // return "http://localhost/sistema_emergenciasV2/";
             // host
             // return "https://emergencias.melipilla.cl/";
