@@ -217,15 +217,28 @@ function fetchData(op, postData, sendAsJson = false) {
             // Aquí se puede agregar la lógica para desactivar el usuario
             console.log('Desactivar usuario:', userId);
 
+function deactivateUser(userId) {
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "No podrás revertir esto!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, desactivarlo!'
+    }).then((result) => {
+        if (result.isConfirmed) {
             fetchData('disabled_usuario', { usu_id: userId })
             .then(data => {
                 // Aquí puedes manejar la respuesta si es necesario
                 if (data.status === 'success') {
-                // Volver a cargar los usuarios o actualizar la tabla
+                    // Volver a cargar los usuarios o actualizar la tabla
                     FnOpetenerUsuarios();
                 }
             })
             .catch(error => {
                 console.error('Error al desactivar el usuario:', error);
-                });
+            });
+        }
+    });
 }
