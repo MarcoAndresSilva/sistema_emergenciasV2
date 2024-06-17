@@ -8,16 +8,6 @@
     display: grid;
 }
 
-/* #datos-criticos tr{
-    background-color: #f64747d6;
-} */
-/* #datos-medios tr{
-    background-color: #fbeb41d6;
-}
-#datos-bajos tr{
-    background-color: #bbf63cd6;
-} */
-
 .tabla-basica {
     width: 100%;
     border-collapse: collapse;
@@ -87,9 +77,6 @@
 
 #selector-cerrar{
     height: 100%;
-}
-.modalBox{
-    /* background-color: #000; */
 }
 
 #buttons-group{
