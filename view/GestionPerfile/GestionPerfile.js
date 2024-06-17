@@ -216,5 +216,16 @@ function fetchData(op, postData, sendAsJson = false) {
         function deactivateUser(userId) {
             // Aquí se puede agregar la lógica para desactivar el usuario
             console.log('Desactivar usuario:', userId);
-            Swal.fire('Desactivar', `Desactivar usuario con ID: ${userId}`, 'warning');
-        }
+
+            fetchData('disabled_usuario', { usu_id: userId })
+            .then(data => {
+                // Aquí puedes manejar la respuesta si es necesario
+                if (data.status === 'success') {
+                // Volver a cargar los usuarios o actualizar la tabla
+                    FnOpetenerUsuarios();
+                }
+            })
+            .catch(error => {
+                console.error('Error al desactivar el usuario:', error);
+                });
+}
