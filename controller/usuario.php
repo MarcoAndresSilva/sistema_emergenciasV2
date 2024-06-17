@@ -115,6 +115,10 @@ if (isset($_GET["op"])) {
            $data = $usuario->get_full_usuarios($_SESSION['usu_id']);
            echo json_encode($data);
         break;
-
+        case "disabled_usuario":
+            $usu_id = $_POST['usu_id'];
+            $data = $usuario->disable_usuario($usu_id);
+            echo json_encode($data);
+        break;
     }
 }
