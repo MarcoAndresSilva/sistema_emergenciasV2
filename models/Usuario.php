@@ -253,7 +253,7 @@ public function get_full_usuarios(){
                 usu.usu_name as "Usuario"
             FROM `tm_usuario` as usu
             JOIN tm_udu_tipo as tp
-            ON(tp.usu_tipo_id=usu.usu_id);';
+            ON(tp.usu_tipo_id=usu.usu_tipo);';
     $consulta = $conectar->prepare($sql);
     $consulta->execute();
     $resultado = $consulta->fetchAll(PDO::FETCH_ASSOC);
