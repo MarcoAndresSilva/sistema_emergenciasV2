@@ -124,7 +124,7 @@ function fetchData(op, postData, sendAsJson = false) {
         function createTableHeader() {
             const thead = document.createElement('thead');
             const headerRow = document.createElement('tr');
-            const headers = ['ID', 'Nombre', 'Apellido', 'Tipo', 'Teléfono', 'Correo', 'Usuario', 'Acciones'];
+            const headers = ['ID', 'Nombre', 'Apellido', 'Tipo', 'Teléfono','Estado' ,'Correo', 'Usuario', 'Acciones'];
 
             headers.forEach(headerText => {
                 const th = document.createElement('th');
@@ -147,6 +147,7 @@ function fetchData(op, postData, sendAsJson = false) {
                 row.appendChild(createTableCell(user.Apellido));
                 row.appendChild(createTypeCell(user.id_tipo));
                 row.appendChild(createTableCell(user.Telefono));
+                row.appendChild(createStatusBadge(user.estado));
                 row.appendChild(createTableCell(user.Correo));
                 row.appendChild(createTableCell(user.Usuario));
                 row.appendChild(createActionButtons(user.usu_id));
@@ -241,4 +242,16 @@ function deactivateUser(userId) {
             });
         }
     });
+}
+
+function createStatusBadge(status) {
+    const cell = document.createElement('td');
+    const badge = document.createElement('span');
+    badge.className = 'badge';
+    badge.textContent = status === 0 ? 'Desactivado' : 'Activo';
+    badge.classList.add(status === 0 ? 'badge' : 'badge');
+    badge.classList.add(status === 0 ? 'bg-danger' : 'bg-success');
+    badge.classList.add(status === 0 ? 'bg-text-danger' : 'bg-text-success');
+    cell.appendChild(badge);
+    return cell;
 }
