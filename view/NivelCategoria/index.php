@@ -28,10 +28,10 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 				<div class="tbl">
 					<div class="tbl-row">
 						<div class="tbl-cell">
-							<h3>Instituciones de Emergencias</h3>
+							<h3>Categoría de Emergencias</h3>
 							<ol class="breadcrumb breadcrumb-simple">
-								<li><a href="#">Registro</a></li>
-								<li class="active">Instituciones</li>
+								<li><a href="#">Categorias</a></li>
+								<li class="active">Administración de categorias</li>
 							</ol>
 						</div>
 					</div>
