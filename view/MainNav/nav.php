@@ -32,89 +32,24 @@
                 <span class="lbl"> Eventos</span>
             </a>
         </li>
-        <!-- Mapa -->
-        <!--<li class="blue-dirty">-->
-        <!--    <a class="Map" href="../Map/">-->
-        <!--        <span class="glyphicon glyphicon-asterisk"></span>-->
-        <!--        <span class="lbl"> Mapa</span>-->
-        <!--    </a>-->
-        <!--</li>-->
-        <!-- Fin Evento -->
+
 
         <!-- Parametría -->
         <li class="blue-dirty">
             <a class="Parametria" data-toggle="collapse-personal" href="#collapseParametria" role="button"  aria-controls="collapseParametria" >
                 <span class="glyphicon glyphicon-th"></span>
-                <span class="lbl">Parametria</span>
+                <span class="lbl">Administración</span>
             </a>
             <div class="collapse-personal" id="collapseParametria"  >
                 <div class="card card-body" style="padding-left: 5px; border: none" style="padding-left: 5px; border: none">
 
-                    <!-- Contenido de tu despliegue -->
-                    <!-- <a class="Administracion_datos" data-toggle="collapse-personal" href="#collapseAdministracionDatosParametria"   role="button"  aria-controls="collapseAdministracionDatosParametria" >
-                        <span class="glyphicon glyphicon-list"></span>
-                        <span class="lbl">Administraci&oacute;n de datos</span>
-                    </a>
-                    <div class="collapse-personal" id="collapseAdministracionDatosParametria"  >
-                        <div class="card card-body" style="padding-left: 5px; border: none">
-                            Contenido de tu despliegue
-
-                            <a class="" data-toggle="collapse-personal" href="#collapseDatosGeograficoParametria"   role="button"  aria-controls="collapseDatosGeograficoParametria" >
-                                <span class="glyphicon glyphicon-option-vertical"></span>
-                                <span class="lbl">Datos Geogr&aacute;ficos</span>
-                            </a>
-                            <div class="collapse-personal" id="collapseDatosGeograficoParametria"  >
-                                <div class="card card-body" style="padding-left: 5px; border: none">
-                                    Contenido de tu despliegue
-
-                                    <a class="" href="../Países/">
-                                        <span class="glyphicon glyphicon-asterisk"></span>
-                                        <span class="lbl"> Pa&iacute;ses</span>
-                                    </a>
-                                    <a class="" href="../Regiones/">
-                                        <span class="glyphicon glyphicon-asterisk"></span>
-                                        <span class="lbl"> Regiones</span>
-                                    </a>
-                                    <a class="" href="../Comunas/">
-                                        <span class="glyphicon glyphicon-asterisk"></span>
-                                        <span class="lbl"> Comunas</span>
-                                    </a>
-                                    <a class="" href="../Ciudades/">
-                                        <span class="glyphicon glyphicon-asterisk"></span>
-                                        <span class="lbl"> Ciudades</span>
-                                    </a>
-                                    <a class="" href="../Sectores/">
-                                        <span class="glyphicon glyphicon-asterisk"></span>
-                                        <span class="lbl"> Sectores</span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div> -->
-                    <!-- Contenido de tu despliegue -->
-                    <!-- <a class="Unidad-Municipal" href="../UnidadMunicipal/">
-                        <span class="glyphicon glyphicon-asterisk"></span>
-                        <span class="lbl">Unidades Municipales</span>
-                    </a>
-                    <a class="" href="../FuncionariosTerritoriales/">
-                        <span class="glyphicon glyphicon-asterisk"></span>
-                        <span class="lbl"> Funcionarios Territoriales</span>
-                    </a>
-                    <a class="" href="../FuncionariosMunicipales/">
-                        <span class="glyphicon glyphicon-asterisk"></span>
-                        <span class="lbl"> Funcionarios Municipales</span>
-                    </a>
-                    <a class="" href="../CategoriasEmergencias/">
-                        <span class="glyphicon glyphicon-asterisk"></span>
-                        <span class="lbl"> Categor&iacute;as de Eventos de Emergencia</span>
-                    </a>
-                    <a class="" href="../InstitucionesEmergencias/">
-                        <span class="glyphicon glyphicon-asterisk"></span>
-                        <span class="lbl"> Intituciones de Emergencia</span>
-                    </a> -->
                     <a class="" href="../NivelCategoria/">
                         <span class="glyphicon glyphicon-asterisk"></span>
                         <span class="lbl">Nivel Categoria </span>
+                    </a>
+                    <a class="" href="../GestionMotivo/">
+                        <span class="glyphicon glyphicon-asterisk"></span>
+                        <span class="lbl">Gestion Motivos </span>
                     </a>
                    
                 </div>
@@ -129,14 +64,7 @@
             </a>
             <div class="collapse-personal" id="collapseGestionEventos"  >
                 <div class="card card-body" style="padding-left: 5px; border: none" style="padding-left: 5px; border: none">
-                    <!-- <a class="" href="../RecibirDerivacionEmergencia/">
-                        <span class="glyphicon glyphicon-asterisk"></span>
-                        <span class="lbl"> Recibir Derivación de Emergencia</span>
-                    </a>
-                    <a class="" href="../AtenderEmergencia/">
-                        <span class="glyphicon glyphicon-asterisk"></span>
-                        <span class="lbl"> Atender Emergencia</span>
-                    </a> -->
+                    
                     <a class="" href="../SeguridadPassword/">
                         <span class="glyphicon glyphicon-asterisk"></span>
                         <span class="lbl"> Seguridad contrase&ntilde;a</span>
@@ -144,31 +72,6 @@
                 </div>
             </div>
         </li>
-        <!-- FIN Gestión de Eventos de Emergencia -->
-        <!-- Reportes -->
-        <!-- <li class="blue-dirty">
-            <a class="" data-toggle="collapse-personal" href="#collapseReportes" role="button"  aria-controls="collapseReportes" >
-                <span class="glyphicon glyphicon-th"></span>
-                <span class="lbl">Reportes</span>
-            </a>
-            <div class="collapse-personal" id="collapseReportes"  >
-                <div class="card card-body" style="padding-left: 5px; border: none" style="padding-left: 5px; border: none">
-                    <a class="" href="../ReporteGeneralEmergencias/">
-                        <span class="glyphicon glyphicon-asterisk"></span>
-                        <span class="lbl"> Reporte General de Emergencias</span>
-                    </a>
-                    <a class="" href="../EmergenciasPorInstitucion/">
-                        <span class="glyphicon glyphicon-asterisk"></span>
-                        <span class="lbl"> Emergenias por institución</span>
-                    </a>
-                    <a class="" href="../registrosLog/">
-                        <span class="glyphicon glyphicon-asterisk"></span>
-                        <span class="lbl">Registros Logs</span>
-                    </a>
-                </div>
-            </div>
-        </li> -->
-        <!-- Fin Reportes -->
                 
         <?php
         }
