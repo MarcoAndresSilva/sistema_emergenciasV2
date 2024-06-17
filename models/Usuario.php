@@ -263,8 +263,27 @@ public function get_full_usuarios(){
         return array('status' => 'error', 'message' => 'No se puede optener los datos');
     }
     return array('status'=> 'success', 'message' =>  'se optienen los datos', 'result'=> $resultado);
-}
     }
+public function disable_usuario($usu_id){
+    $conectar = parent::conexion();
+    parent::set_names();
 
+    $fecha_elim = date('Y-m-d H:i:s'); // Get current date and time
+    $estado = 0; // Assuming 0 is the value for 'disabled'
+
+    $sql = "UPDATE tm_usuario SET estado = :estado, fecha_elim = :fecha_elim WHERE usu_id = :usu_id";
+    $consulta = $conectar->prepare($sql);
+    $consulta->bindParam(':estado', $estado);
+    $consulta->bindParam(':fecha_elim', $fecha_elim);
+    $consulta->bindParam(':usu_id', $usu_id);
+    $consulta->execute();
+
+    if ($consulta->rowCount() == 1) {
+        return array('status' => 'success', 'message' => 'Usuario desactivado con éxito');
+    } else {
+        return array('status' => 'info', 'message' => 'No se realizó ningún cambio');
+    }
+}
     
+}
 ?>
