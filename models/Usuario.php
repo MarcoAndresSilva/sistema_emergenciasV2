@@ -244,6 +244,8 @@ public function get_full_usuarios(){
     $conectar = parent::conexion();
     parent::set_names();
     $sql = 'SELECT 
+            	usu.usu_id as "usu_id",
+            	usu.estado as "estado",
             	usu.usu_nom as "Nombre",
                 usu.usu_ape as "Apellido",
                 tp.usu_tipo_nom as "Tipo",
