@@ -125,5 +125,18 @@ if (isset($_GET["op"])) {
             $data = $usuario->enable_usuario($usu_id);
             echo json_encode($data);
         break;
+
+        case "update_usuario":
+            $usu_id = $_POST['usu_id'];
+            $usu_nom = $_POST['usu_nom'];
+            $usu_ape = $_POST['usu_ape'];
+            $usu_correo = $_POST['usu_correo'];
+            $usu_telefono = $_POST['usu_telefono'];
+            $usu_name = $_POST['usu_name'];
+            $usu_tipo = $_POST['usu_tipo'];
+        
+            $data = $usuario->update_usuario($usu_id, $usu_nom, $usu_ape, $usu_correo, $usu_telefono, $usu_name, $usu_tipo);
+            echo json_encode($data);
+        break;
     }
 }
