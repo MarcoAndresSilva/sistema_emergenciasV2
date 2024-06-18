@@ -120,5 +120,10 @@ if (isset($_GET["op"])) {
             $data = $usuario->disable_usuario($usu_id);
             echo json_encode($data);
         break;
+        case "enable_usuario":
+            $usu_id = $_POST['usu_id'];
+            $data = $usuario->enable_usuario($usu_id);
+            echo json_encode($data);
+        break;
     }
 }
