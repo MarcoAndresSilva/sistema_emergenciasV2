@@ -43,6 +43,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 
 <div class="container">
     <h2>Información del Usuario</h2>
+<a href="../CrearUsuario/" class="btn btn-success">Crear usuario</a>
     <div id="userInfo" class="row justify-content-center">
         <div class="spinner-border text-primary mt-5" role="status">
             <span class="sr-only">Cargando...</span>
