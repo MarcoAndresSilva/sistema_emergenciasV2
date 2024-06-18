@@ -150,7 +150,7 @@ function fetchData(op, postData, sendAsJson = false) {
                 row.appendChild(createStatusBadge(user.estado));
                 row.appendChild(createTableCell(user.Correo));
                 row.appendChild(createTableCell(user.Usuario));
-                row.appendChild(createActionButtons(user.usu_id));
+                row.appendChild(createActionButtons(user.usu_id, user.estado));
 
                 tbody.appendChild(row);
             });
@@ -189,47 +189,42 @@ function fetchData(op, postData, sendAsJson = false) {
             return cell;
         }
 
-        function createActionButtons(userId) {
-            const cell = document.createElement('td');
 
-            const editButton = document.createElement('button');
-            editButton.className = 'btn btn-primary btn-sm mr-2';
-            editButton.textContent = 'Editar';
-            editButton.onclick = () => editUser(userId);
+function createActionButtons(userId, status) {
+    const cell = document.createElement('td');
 
-            const deactivateButton = document.createElement('button');
-            deactivateButton.className = 'btn btn-danger btn-sm';
-            deactivateButton.textContent = 'Desactivar';
-            deactivateButton.onclick = () => deactivateUser(userId);
+    const editButton = document.createElement('button');
+    editButton.className = 'btn btn-primary btn-sm mr-2';
+    editButton.textContent = 'Editar';
+    editButton.onclick = () => editUser(userId);
 
-            cell.appendChild(editButton);
-            cell.appendChild(deactivateButton);
+    const actionButton = document.createElement('button');
+    actionButton.className = `btn btn-sm ${status === 0 ? 'btn-secondary' : 'btn-danger'}`;
+    actionButton.textContent = status === 0 ? 'Activar' : 'Desactivar';
+    actionButton.onclick = () => toggleUserStatus(userId, status);
 
-            return cell;
-        }
+    cell.appendChild(editButton);
+    cell.appendChild(actionButton);
 
-        function editUser(userId) {
-            // Aquí se puede agregar la lógica para editar el usuario
-            console.log('Editar usuario:', userId);
-            Swal.fire('Editar', `Editar usuario con ID: ${userId}`, 'info');
-        }
+    return cell;
+}
 
-        function deactivateUser(userId) {
-            // Aquí se puede agregar la lógica para desactivar el usuario
-            console.log('Desactivar usuario:', userId);
+function toggleUserStatus(userId, currentStatus) {
+    const action = currentStatus === 0 ? 'activar' : 'desactivar';
+    const actionOp = currentStatus === 0 ? 'enable_usuario' : 'disabled_usuario';
+    const confirmButtonText = currentStatus === 0 ? 'Sí, activarlo!' : 'Sí, desactivarlo!';
 
-function deactivateUser(userId) {
     Swal.fire({
-        title: '¿Estás seguro?',
+        title: `¿Estás seguro de que quieres ${action} este usuario?`,
         text: "No podrás revertir esto!",
         icon: 'warning',
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Sí, desactivarlo!'
+        confirmButtonText: confirmButtonText
     }).then((result) => {
         if (result.isConfirmed) {
-            fetchData('disabled_usuario', { usu_id: userId })
+            fetchData(actionOp, { usu_id: userId })
             .then(data => {
                 // Aquí puedes manejar la respuesta si es necesario
                 if (data.status === 'success') {
@@ -238,7 +233,7 @@ function deactivateUser(userId) {
                 }
             })
             .catch(error => {
-                console.error('Error al desactivar el usuario:', error);
+                console.error(`Error al ${action} el usuario:`, error);
             });
         }
     });
