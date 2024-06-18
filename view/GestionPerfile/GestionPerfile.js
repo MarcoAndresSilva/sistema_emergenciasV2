@@ -250,3 +250,11 @@ function createStatusBadge(status) {
     cell.appendChild(badge);
     return cell;
 }
+function createInput(label, id, type, placeholder, value) {
+    return `
+<div class="form-floating mb-3">
+    <input type="${type}" id="${id}" class="form-control" placeholder="${placeholder}" value="${value}">
+    <label for="${id}">${label}</label>
+</div>
+    `;
+}
