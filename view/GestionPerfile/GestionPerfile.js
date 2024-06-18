@@ -274,3 +274,56 @@ function createSelect(id, selectedValue) {
 </div>`;
     return selectHTML;
 }
+function editUser(userId) {
+    const userRow = document.querySelector(`tr[data-user-id="${userId}"]`);
+    const nombre = userRow.querySelector('td:nth-child(2)').textContent;
+    const apellido = userRow.querySelector('td:nth-child(3)').textContent;
+    const correo = userRow.querySelector('td:nth-child(7)').textContent;
+    const telefono = userRow.querySelector('td:nth-child(5)').textContent;
+    const usuario = userRow.querySelector('td:nth-child(8)').textContent;
+    const tipo = userRow.querySelector('td:nth-child(4) select').value;
+
+    // Mostrar el SweetAlert con el formulario de edición
+    Swal.fire({
+        title: 'Editar Usuario',
+        html: `
+            ${createInput('Nombre', 'usu_nom', 'text', 'Nombre', nombre)}
+            ${createInput('Apellido', 'usu_ape', 'text', 'Apellido', apellido)}
+            ${createInput('Correo', 'usu_correo', 'email', 'Correo', correo)}
+            ${createInput('Teléfono', 'usu_telefono', 'text', 'Teléfono', telefono)}
+            ${createInput('Usuario', 'usu_name', 'text', 'Usuario', usuario)}
+            ${createSelect('usu_tipo', tipo)}
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Guardar',
+        preConfirm: () => {
+            const usu_nom = document.getElementById('usu_nom').value;
+            const usu_ape = document.getElementById('usu_ape').value;
+            const usu_correo = document.getElementById('usu_correo').value;
+            const usu_telefono = document.getElementById('usu_telefono').value;
+            const usu_name = document.getElementById('usu_name').value;
+            const usu_tipo = document.getElementById('usu_tipo').value;
+            return { usu_nom, usu_ape, usu_correo, usu_telefono, usu_name, usu_tipo };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const { usu_nom, usu_ape, usu_correo, usu_telefono, usu_name, usu_tipo } = result.value;
+            fetchData('update_usuario', {
+                usu_id: userId,
+                usu_nom,
+                usu_ape,
+                usu_correo,
+                usu_telefono,
+                usu_name,
+                usu_tipo
+            }).then(data => {
+                if (data.status === 'success') {
+                    // Actualizar la tabla o volver a cargar los usuarios
+                    FnOpetenerUsuarios();
+                }
+            }).catch(error => {
+                console.error('Error al actualizar el usuario:', error);
+            });
+        }
+    });
+}
