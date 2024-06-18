@@ -258,3 +258,19 @@ function createInput(label, id, type, placeholder, value) {
 </div>
     `;
 }
+function createSelect(id, selectedValue) {
+    const options = [
+        { value: 1, text: 'Emergencias' },
+        { value: 2, text: 'Informática' },
+        { value: 3, text: 'Territorial' }
+    ];
+    let selectHTML = `<div class="form-floating">
+<select class="form-select" id="${id}" aria-label="Floating label select example">`;
+    options.forEach(opt => {
+        selectHTML += `<option value="${opt.value}" ${selectedValue == opt.value ? 'selected' : ''}>${opt.text}</option>`;
+    });
+    selectHTML += `</select>
+<label for="${id}">Tipo</label>
+</div>`;
+    return selectHTML;
+}
