@@ -284,6 +284,26 @@ public function disable_usuario($usu_id){
         return array('status' => 'info', 'message' => 'No se realizó ningún cambio');
     }
 }
+public function enable_usuario($usu_id){
+    $conectar = parent::conexion();
+    parent::set_names();
+
+    $estado = 1; // Assuming 1 is the value for 'enabled'
+    $fecha_elim = null; // Set 'fecha_elim' to null
+
+    $sql = "UPDATE tm_usuario SET estado = :estado, fecha_elim = :fecha_elim WHERE usu_id = :usu_id";
+    $consulta = $conectar->prepare($sql);
+    $consulta->bindParam(':estado', $estado);
+    $consulta->bindParam(':fecha_elim', $fecha_elim);
+    $consulta->bindParam(':usu_id', $usu_id);
+    $consulta->execute();
+
+    if ($consulta->rowCount() == 1) {
+        return array('status' => 'success', 'message' => 'Usuario activado con éxito');
+    } else {
+        return array('status' => 'info', 'message' => 'No se realizó ningún cambio');
+    }
+}
     
 }
 ?>
