@@ -142,6 +142,7 @@ function fetchData(op, postData, sendAsJson = false) {
             users.forEach(user => {
                 const row = document.createElement('tr');
 
+                row.setAttribute('data-user-id', user.usu_id);
                 row.appendChild(createTableCell(user.usu_id));
                 row.appendChild(createTableCell(user.Nombre));
                 row.appendChild(createTableCell(user.Apellido));
