@@ -9,24 +9,27 @@ $RegistroLog= new RegistroLog();
 if (isset($_GET["op"])) {
     switch ($_GET["op"]) {
         case "add_usuario":
-            $datos = $usuario->add_usuario($_POST['usu_nom'],
+            $datos = $usuario->add_usuario(
+            $_POST['usu_nom'],
             $_POST['usu_ape'],
             $_POST['usu_correo'],
             $_POST['usu_name'],
             $_POST['usu_pass'],
             $_POST['fecha_crea'],
             $_POST['estado'],
-            $_POST['usu_tipo']);
-            if ($datos == true) {
-                $seguridadPassword = new  SeguridadPassword();
-                $seguridadPassword->add_password_info($_POST['usu_correo'],$_POST['usu_name'], $_POST['usu_pass']);
-                echo 1;
-                $RegistroLog->add_log_registro($_SESSION["usu_id"],$_GET['op'],"el usuario {$_SESSION['usu_nom']} crea al usuario {$_POST['usu_name']}");
+            $_POST['usu_tipo'],
+            $_POST['usu_telefono']
+            );
+            if ($datos['status'] === 'success') {
+                $seguridadPassword = new SeguridadPassword();
+                $seguridadPassword->add_password_info($_POST['usu_correo'], $_POST['usu_name'], $_POST['usu_pass']);
+                echo json_encode($datos);
+                $RegistroLog->add_log_registro($_SESSION["usu_id"], $_GET['op'], "El usuario {$_SESSION['usu_nom']} crea al usuario {$_POST['usu_name']}");
             } else {
-                echo 0;
-                $RegistroLog->add_log_registro($_SESSION["usu_id"],$_GET['op'],"el usuario {$_SESSION['usu_nom']} intenta crear usuario: {$_POST['usu_name']} operaccion fallida");
+                echo json_encode($datos);
+                $RegistroLog->add_log_registro($_SESSION["usu_id"], $_GET['op'], "El usuario {$_SESSION['usu_nom']} intenta crear usuario: {$_POST['usu_name']} operación fallida");
             }
-            break;
+        break;
 
         case "get_tipo":
 
