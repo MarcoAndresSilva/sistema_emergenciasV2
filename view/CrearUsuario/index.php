@@ -9,6 +9,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 <?php require_once("../MainHead/head.php"); ?>
 <link rel="stylesheet" href="./estilopersonal.css">
 <title>Sistema Emergencia</title>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body class="with-side-menu">
