@@ -71,7 +71,8 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 	</script>
 
 <?php
-
+echo ' <script  src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>';
+echo '<script defer src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.js"></script>';
 }else{
 	header("location:".Conectar::ruta()."index.php");
 }
