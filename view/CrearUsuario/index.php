@@ -66,8 +66,15 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
                             <input type="text" class="form-control" id="usuario" placeholder="Usuario">
                         </fieldset>
                     </div>
-                    
-                    <div class="col-lg-5">
+                      <div class="col-lg-5">
+                                <label class="form-label semibold" for="exampleInput">Telefono</label>
+                          <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                  <span class="input-group-text">+56</span>
+                              </div>
+                              <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Nuevo número de teléfono" required>
+                          </div>
+                        </div>                  <div class="col-lg-5">
                         <fieldset class="form-group">
                             <label class="form-label semibold" for="exampleInput"> Contrase&ntilde;a </label>
                             <input type="password" class="form-control" id="contrasena" placeholder="*********">
