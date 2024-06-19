@@ -1,141 +1,139 @@
-
-
 $(document).ready(function() {
-    
-    //Funcion para cargar los datos de la tabla categoria
-    $.post("../../controller/usuario.php?op=get_todos_usuarios",function(data,status){
-
+    // Función para cargar los datos de la tabla categoría
+    $.post("../../controller/usuario.php?op=get_todos_usuarios", function(data) {
         $('#usu_tipo').html(data);
-
     });
-
-    
 });
 
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-//ID para realizar una correcta asignación de tipo de usuario al usuario
-var usu_tipo;
-var alerta = true;
-//Activacion del boton guardar
 $('#btnGuardar').off('click').on('click', function() {
     if (validarFormulario()) {
-        // Llama a la función pasa add_evento 
         add_usuario();
-        
-        // insert_asignacion_unidades(ev_id, cat_id);
-
-        if(alerta){
-            swal(" Usuario Registrado", "Se creo el usuario de forma correcta", "success");
-        }else{
-            swal("Algo Salio Mal", "No se logro registrar al usuario", "error");
-        }
     }
 });
 
-//Funcion para tomar datos y concretar funcion add_evento
-function add_usuario(){
+function add_usuario() {
+    const usuarioData = {
+        usu_nom: $('#nombre').val(),
+        usu_ape: $('#apellido').val(),
+        usu_correo: $('#mail').val(),
+        usu_name: $('#usuario').val(),
+        usu_pass: $('#contrasena').val(),
+        usu_telefono: $('#telefono').val(),
+        estado: 1,
+        fecha_crea: getFormattedDate(),
+        usu_tipo: $('#usu_tipo').val()
+    };
 
-    var usu_nom =$('#nombre').val();
-    var usu_ape = $('#apellido').val();
-    var usu_correo = $('#mail').val();
-    var usu_name = $('#usuario').val();
-    var usu_pass = $('#contrasena').val();
-    
-    var estado = 1;
-    
-    //Fecha y Hora
-    var ev_inicio = new Date();
-    var año = ev_inicio.getFullYear();
-    var mes = ev_inicio.getMonth() + 1; // Mes en JavaScript es 0-indexado, así que suma 1
-    var dia = ev_inicio.getDate();
-    var horas = ev_inicio.getHours();
-    var minutos = ev_inicio.getMinutes();
-    var segundos = ev_inicio.getSeconds();
-    // Formatear la fecha y hora como desees
-    var fechaFormateada = año + '-' + mes + '-' + dia + ' ' + horas + ':' + minutos + ':' + segundos;
-    var fecha_crea = fechaFormateada;
-    
-    //Variable Categoría
-    usu_tipo = $('#usu_tipo').val();
-    
-    $.post("../../controller/usuario.php?op=add_usuario",{usu_nom:usu_nom,usu_ape:usu_ape,usu_correo:usu_correo,usu_name:usu_name,usu_pass:usu_pass,fecha_crea:fecha_crea,estado:estado, usu_tipo:usu_tipo},function(data,status){
-        if(data == 1){
-            
-            $('#nombre').val('');
-            $('#mail').val('');
-            $('#assignation').val('');
-            $('#address').val('');
-            $('#cat_id').val(1);
-            
-        }else {
-            alerta == false;
+    fetchData('add_usuario', usuarioData).then(data => {
+        if (data.status === 'success') {
+            limpiarFormulario();
         }
     });
+}
 
-    
-    
-    
-   
-};
+function getFormattedDate() {
+    const ev_inicio = new Date();
+    const año = ev_inicio.getFullYear();
+    const mes = (ev_inicio.getMonth() + 1).toString().padStart(2, '0');
+    const dia = ev_inicio.getDate().toString().padStart(2, '0');
+    const horas = ev_inicio.getHours().toString().padStart(2, '0');
+    const minutos = ev_inicio.getMinutes().toString().padStart(2, '0');
+    const segundos = ev_inicio.getSeconds().toString().padStart(2, '0');
+    return `${año}-${mes}-${dia} ${horas}:${minutos}:${segundos}`;
+}
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Validación del formulario
+function limpiarFormulario() {
+    $('#nombre').val('');
+    $('#apellido').val('');
+    $('#mail').val('');
+    $('#usuario').val('');
+    $('#contrasena').val('');
+    $('#telefono').val('');
+    $('#usu_tipo').val(1);
+}
+
 function validarFormulario() {
-    return (
-        validarCampoNombre('#nombre', 'Debes ingresar un nombre sin caracteres especiales') &&
-        validarCampoNombre('#apellido', 'Debes ingresar un apellido sin caracteres especiales') &&
-        validarEmail('#mail', 'Debes ingresar una dirección de correo electrónico válida.') &&
-        validarCampoVacio('#usuario', 'Debes ingresar un nombre de usuario.') &&
-        validarCampoVacio('#contrasena', 'Debes ingresar una contraseña.')
-    );
+    const campos = [
+        { selector: '#nombre', mensaje: 'Debes ingresar un nombre sin caracteres especiales', validacion: validarNombre },
+        { selector: '#apellido', mensaje: 'Debes ingresar un apellido sin caracteres especiales', validacion: validarNombre },
+        { selector: '#mail', mensaje: 'Debes ingresar una dirección de correo electrónico válida', validacion: validarEmail },
+        { selector: '#usuario', mensaje: 'Debes ingresar un nombre de usuario', validacion: validarCampoVacio },
+        { selector: '#contrasena', mensaje: 'Debes ingresar una contraseña', validacion: validarCampoVacio }
+    ];
+
+    return campos.every(campo => {
+        const valor = $(campo.selector).val().trim();
+        if (!campo.validacion(valor)) {
+            mostrarMensajeError(campo.mensaje);
+            return false;
+        }
+        return true;
+    });
 }
 
-function validarCampoNombre(selector, mensajeError) {
-    var valor = $(selector).val().trim();
-    
-    // Expresión regular que permite letras, espacios y tildes
-    var regexNombre = /^[A-Za-zÁ-Úá-ú\s]+$/;
-
-    if (valor === "" || !regexNombre.test(valor)) {
-        mostrarMensajeError(mensajeError);
-        return false;
-    }
-    
-    return true;
-}
-function validarCampoVacio(selector, mensajeError) {
-    var valor = $(selector).val().trim();
-    if (valor === "") {
-        mostrarMensajeError(mensajeError);
-        return false;
-    }
-    return true;
-}
-function validarCampoVacioDireccion(selector, mensajeError) {
-    var valor = $(selector).val().trim();
-    if (valor === "" & (coordsUser.lat === "" || coordsUser.lng === "")) {
-        mostrarMensajeError(mensajeError);
-        return false;
-    }
-    return true;
+function validarNombre(nombre) {
+    const regexNombre = /^[A-Za-zÁ-Úá-ú\s]+$/;
+    return regexNombre.test(nombre);
 }
 
-function validarEmail(selector, mensajeError) {
-    var email = $(selector).val();
-    var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-        mostrarMensajeError(mensajeError);
-        return false;
-    }
-    return true;
+function validarCampoVacio(valor) {
+    return valor !== "";
+}
+
+function validarEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
 }
 
 function mostrarMensajeError(mensaje) {
-    // Aquí puedes mostrar el mensaje de error en algún elemento específico o en la consola del navegador.
     console.error(mensaje);
-    swal( "Validación de formulario",mensaje, "error" ) ;
+    swal("Validación de formulario", mensaje, "error");
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+function fetchData(op, postData, sendAsJson = false) {
+    const url = '../../controller/usuario.php';
+    const params = new URLSearchParams({ op });
+    const fetchUrl = `${url}?${params}`;
+
+    let formData;
+    let contentType;
+    if (sendAsJson) {
+        formData = JSON.stringify(postData);
+        contentType = 'application/json';
+    } else {
+        formData = new URLSearchParams(postData).toString();
+        contentType = 'application/x-www-form-urlencoded';
+    }
+
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': contentType },
+        body: formData
+    };
+
+    Swal.fire({
+        title: 'Cargando...',
+        allowEscapeKey: false,
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading()
+    });
+
+    return fetch(fetchUrl, requestOptions)
+        .then(response => {
+            if (!response.ok) throw new Error('Error en la solicitud.');
+            return response.json();
+        })
+        .then(data => {
+            Swal.close();
+            const alertType = data.status === 'success' ? 'success' :
+                              data.status === 'error' ? 'error' :
+                              data.status === 'warning' ? 'warning' : 'info';
+            Swal.fire(data.status.charAt(0).toUpperCase() + data.status.slice(1), data.message, alertType);
+            return data;
+        })
+        .catch(error => {
+            Swal.close();
+            Swal.fire('Error', 'Error al realizar la consulta.', 'error');
+            console.error('Error al realizar la consulta:', error);
+        });
+}
