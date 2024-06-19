@@ -146,7 +146,7 @@ function fetchData(op, postData, sendAsJson = false) {
                 row.appendChild(createTableCell(user.usu_id));
                 row.appendChild(createTableCell(user.Nombre));
                 row.appendChild(createTableCell(user.Apellido));
-                row.appendChild(createTypeCell(user.id_tipo));
+                row.appendChild(createTypeCell(user.id_tipo,user.usu_id));
                 row.appendChild(createTableCell(user.Telefono));
                 row.appendChild(createStatusBadge(user.estado));
                 row.appendChild(createTableCell(user.Correo));
@@ -165,7 +165,7 @@ function fetchData(op, postData, sendAsJson = false) {
             return cell;
         }
 
-        function createTypeCell(id_tipo) {
+        function createTypeCell(id_tipo,userId){
             const cell = document.createElement('td');
             const select = document.createElement('select');
             select.className = 'form-control';
@@ -185,7 +185,9 @@ function fetchData(op, postData, sendAsJson = false) {
                 }
                 select.appendChild(option);
             });
-
+            select.addEventListener('change', () => {
+                handleTypeChange(userId, select.value);
+            });
             cell.appendChild(select);
             return cell;
         }
@@ -327,4 +329,30 @@ function editUser(userId) {
             });
         }
     });
+}
+function handleTypeChange(userId, newType) {
+    fetchData('update_usuario_tipo', { usu_id: userId, usu_tipo: newType })
+        .then(data => {
+            if (data.status === 'success') {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Tipo de usuario actualizado',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error al actualizar el tipo de usuario:', error);
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                title: 'Error al actualizar el tipo de usuario',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
 }
