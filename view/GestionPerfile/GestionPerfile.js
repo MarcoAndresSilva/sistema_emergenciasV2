@@ -355,4 +355,6 @@ function handleTypeChange(userId, newType) {
                 showConfirmButton: false,
                 timer: 3000,
                 timerProgressBar: true,
+            });
+        });
 }
