@@ -107,9 +107,33 @@ function fetchData(op, postData, sendAsJson = false) {
             const userInfo = document.getElementById('userInfo');
             userInfo.innerHTML = '';
 
-            const table = createTable(users);
-            userInfo.appendChild(table);
-        }
+    // Crear contenedores para filtros
+    const filterContainer = document.createElement('div');
+    filterContainer.className = 'mb-3';
+    filterContainer.innerHTML = `
+        <label for="filterEstado" class="ml-3">Filtrar por Estado:</label>
+        <select id="filterEstado" class="form-select d-inline-block w-auto ml-2">
+            <option value="">Todos</option>
+            <option value="Desactivado">Desactivado</option>
+            <option value="Activo">Activo</option>
+        </select>
+    `;
+    userInfo.appendChild(filterContainer);
+
+    const table = createTable(users);
+    userInfo.appendChild(table);
+
+    // Inicializar DataTable
+    const dataTable = $('table').DataTable();
+
+
+
+    // Filtro por Estado
+    $('#filterEstado').on('change', function () {
+        const val = $(this).val();
+        dataTable.column(5).search(val ? `^${val}$` : '', true, false).draw();
+    });
+}
 
         function createTable(users) {
             const table = document.createElement('table');
