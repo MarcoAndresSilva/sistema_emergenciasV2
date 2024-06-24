@@ -232,10 +232,13 @@ public function get_info_usuario($usu_id){
                 tp.usu_tipo_nom as "Tipo",
                 usu.usu_telefono as "Telefono",
                 usu.usu_correo as "Correo",
+                unid.unid_nom as "Unidad",
                 usu.usu_name as "Usuario"
             FROM `tm_usuario` as usu
             JOIN tm_udu_tipo as tp
             ON(tp.usu_tipo_id=usu.usu_tipo)
+            JOIN tm_unidad as unid
+            ON (usu.usu_unidad=unid.unid_id)
             WHERE usu.usu_id=:usu_id;';
     $consulta = $conectar->prepare($sql);
     $consulta->bindParam(':usu_id',$usu_id);
