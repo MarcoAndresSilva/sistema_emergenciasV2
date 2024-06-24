@@ -90,7 +90,13 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
                             </select>
                         </fieldset>
                     </div>
-
+                    <div class="col-lg-5">
+                        <fieldset class="form-group">
+                            <label class="form-label semibold" for="exampleInput">unidad</label>
+                            <select id="usu_unidad" class="form-control" >
+                            </select>
+                        </fieldset>
+                    </div>
                     <div class="col-lg-10">
                         <button type="button" class="btn btn-round btn-inline btn-primary" id="btnGuardar">Guardar</button>
                     </div>
