@@ -118,7 +118,7 @@ require_once 'RegistroLog.php';
         }
 
 
-public function add_usuario($usu_nom, $usu_ape, $usu_correo, $usu_name, $usu_pass, $fecha_crea, $estado, $usu_tipo, $usu_telefono) {
+public function add_usuario($usu_nom, $usu_ape, $usu_correo, $usu_name, $usu_pass, $fecha_crea, $estado, $usu_tipo, $usu_telefono,$usu_unidad) {
     try {
         $conectar = parent::conexion();
         parent::set_names();
@@ -132,7 +132,7 @@ public function add_usuario($usu_nom, $usu_ape, $usu_correo, $usu_name, $usu_pas
             return array('status' => 'warning', 'message' => 'El usuario ya existe con ese nombre de usuario');
         }
 
-        $sql = "INSERT INTO tm_usuario (usu_nom, usu_ape, usu_correo, usu_name, usu_pass, fecha_crea, estado, usu_tipo, usu_telefono) VALUES (:usu_nom, :usu_ape, :usu_correo, :usu_name, :usu_pass, :fecha_crea, :estado, :usu_tipo, :usu_telefono)";
+        $sql = "INSERT INTO tm_usuario (usu_nom, usu_ape, usu_correo, usu_name, usu_pass, fecha_crea, estado, usu_tipo, usu_telefono,usu_unidad) VALUES (:usu_nom, :usu_ape, :usu_correo, :usu_name, :usu_pass, :fecha_crea, :estado, :usu_tipo, :usu_telefono, :usu_unidad)";
 
         $pass_cifrado = md5($usu_pass);
         $consulta = $conectar->prepare($sql);
@@ -145,6 +145,7 @@ public function add_usuario($usu_nom, $usu_ape, $usu_correo, $usu_name, $usu_pas
         $consulta->bindParam(':estado', $estado);
         $consulta->bindParam(':usu_tipo', $usu_tipo);
         $consulta->bindParam(':usu_telefono', $usu_telefono);
+        $consulta->bindParam(':usu_unidad', $usu_unidad);
 
         $consulta->execute();
 

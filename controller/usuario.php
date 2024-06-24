@@ -18,7 +18,8 @@ if (isset($_GET["op"])) {
             $_POST['fecha_crea'],
             $_POST['estado'],
             $_POST['usu_tipo'],
-            $_POST['usu_telefono']
+            $_POST['usu_telefono'],
+            $_POST['usu_unidad']
             );
             if ($datos['status'] === 'success') {
                 $seguridadPassword = new SeguridadPassword();
