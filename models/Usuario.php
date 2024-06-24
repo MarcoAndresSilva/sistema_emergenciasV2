@@ -227,8 +227,7 @@ public function get_info_usuario($usu_id){
     $conectar = parent::conexion();
     parent::set_names();
     $sql = 'SELECT 
-            	usu.usu_nom as "Nombre",
-                usu.usu_ape as "Apellido",
+                CONCAT(usu.usu_nom, " ", usu.usu_ape) AS "Nombre Completo",
                 tp.usu_tipo_nom as "Tipo",
                 usu.usu_telefono as "Telefono",
                 usu.usu_correo as "Correo",
