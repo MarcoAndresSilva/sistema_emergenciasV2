@@ -34,6 +34,7 @@ function add_usuario() {
         usu_pass: $('#contrasena').val(),
         usu_telefono: $('#telefono').val(),
         estado: 1,
+        usu_unidad: $('#usu_unidad').val(),
         fecha_crea: getFormattedDate(),
         usu_tipo: $('#usu_tipo').val()
     };
