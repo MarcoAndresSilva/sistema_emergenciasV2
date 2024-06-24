@@ -3,6 +3,20 @@ $(document).ready(function() {
     $.post("../../controller/usuario.php?op=get_todos_usuarios", function(data) {
         $('#usu_tipo').html(data);
     });
+
+    
+$.post("../../controller/unidad.php?unidad=listar", function(data) {
+    const unidades = JSON.parse(data);
+    const selectElement = document.getElementById("usu_unidad");
+
+    unidades.forEach((unidad) => {
+        const option = document.createElement("option");
+        option.value = unidad.unid_id;
+        option.textContent = unidad.unid_nom;
+        selectElement.appendChild(option);
+    });
+});
+
 });
 
 $('#btnGuardar').off('click').on('click', function() {
