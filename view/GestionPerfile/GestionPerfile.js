@@ -148,7 +148,7 @@ function fetchData(op, postData, sendAsJson = false) {
         function createTableHeader() {
             const thead = document.createElement('thead');
             const headerRow = document.createElement('tr');
-            const headers = ['ID', 'Nombre', 'Apellido', 'Tipo', 'Teléfono','Estado' ,'Correo', 'Usuario', 'Acciones'];
+            const headers = ['ID', 'Nombre', 'Apellido', 'Tipo', 'Unidad' ,'Teléfono','Estado' ,'Correo', 'Usuario', 'Acciones'];
 
             headers.forEach(headerText => {
                 const th = document.createElement('th');
@@ -171,6 +171,7 @@ function fetchData(op, postData, sendAsJson = false) {
                 row.appendChild(createTableCell(user.Nombre));
                 row.appendChild(createTableCell(user.Apellido));
                 row.appendChild(createTypeCell(user.id_tipo,user.usu_id));
+                row.appendChild(createTableCell(user.Unidad));
                 row.appendChild(createTableCell(user.Telefono));
                 row.appendChild(createStatusBadge(user.estado));
                 row.appendChild(createTableCell(user.Correo));
@@ -301,12 +302,46 @@ function createSelect(id, selectedValue) {
 </div>`;
     return selectHTML;
 }
+// Definir la variable selectedUnidad con los datos precargados
+var selectedUnidad = [
+    {"unid_id":1,"unid_nom":"DGA","unid_est":2,"responsable_rut":20879105,"reemplazante_rut":20879105},
+    {"unid_id":2,"unid_nom":"Seguridad Publica","unid_est":1,"responsable_rut":20879105,"reemplazante_rut":20879105},
+    {"unid_id":3,"unid_nom":"Carabineros","unid_est":1,"responsable_rut":20879105,"reemplazante_rut":20879105},
+    {"unid_id":4,"unid_nom":"Bomberos","unid_est":1,"responsable_rut":20879105,"reemplazante_rut":20879105},
+    {"unid_id":5,"unid_nom":"Ambulancia","unid_est":3,"responsable_rut":20879105,"reemplazante_rut":20879105}
+];
+
+// Definir la función createSelectUnidad utilizando selectedUnidad
+function createSelectUnidad(nombreUnidad) {
+    try {
+        const data = selectedUnidad;
+
+        const options = data.map(unidad => ({
+            value: unidad.unid_id,
+            text: unidad.unid_nom
+        }));
+
+        let selectHTML = `<div class="form-floating">
+<select class="form-select" id="unidadSelect" aria-label="Floating label select example">`;
+        options.forEach(opt => {
+            selectHTML += `<option value="${opt.value}" ${nombreUnidad === opt.text ? 'selected' : ''}>${opt.text}</option>`;
+        });
+        selectHTML += `</select>
+<label for="unidadSelect">Tipo</label>
+</div>`;
+        return selectHTML;
+    } catch (error) {
+        console.error('Error creating select HTML:', error);
+        return '<div>Error loading data</div>';
+    }
+}
 function editUser(userId) {
     const userRow = document.querySelector(`tr[data-user-id="${userId}"]`);
     const nombre = userRow.querySelector('td:nth-child(2)').textContent;
     const apellido = userRow.querySelector('td:nth-child(3)').textContent;
     const correo = userRow.querySelector('td:nth-child(7)').textContent;
-    const telefono = userRow.querySelector('td:nth-child(5)').textContent;
+    const unidad = userRow.querySelector('td:nth-child(5)').textContent;
+    const telefono = userRow.querySelector('td:nth-child(6)').textContent;
     const usuario = userRow.querySelector('td:nth-child(8)').textContent;
     const tipo = userRow.querySelector('td:nth-child(4) select').value;
 
@@ -317,6 +352,7 @@ function editUser(userId) {
             ${createInput('Nombre', 'usu_nom', 'text', 'Nombre', nombre)}
             ${createInput('Apellido', 'usu_ape', 'text', 'Apellido', apellido)}
             ${createInput('Correo', 'usu_correo', 'email', 'Correo', correo)}
+            ${createSelectUnidad(unidad)}
             ${createInput('Teléfono', 'usu_telefono', 'text', 'Teléfono', telefono)}
             ${createInput('Usuario', 'usu_name', 'text', 'Usuario', usuario)}
             ${createSelect('usu_tipo', tipo)}
@@ -328,9 +364,10 @@ function editUser(userId) {
             const usu_ape = document.getElementById('usu_ape').value;
             const usu_correo = document.getElementById('usu_correo').value;
             const usu_telefono = document.getElementById('usu_telefono').value;
+            const usu_unidad = document.getElementById('usu_unidad').value;
             const usu_name = document.getElementById('usu_name').value;
             const usu_tipo = document.getElementById('usu_tipo').value;
-            return { usu_nom, usu_ape, usu_correo, usu_telefono, usu_name, usu_tipo };
+            return { usu_nom, usu_ape, usu_correo, usu_telefono, usu_unidad, usu_name, usu_tipo };
         }
     }).then((result) => {
         if (result.isConfirmed) {
@@ -340,6 +377,7 @@ function editUser(userId) {
                 usu_nom,
                 usu_ape,
                 usu_correo,
+                usu_unidad,
                 usu_telefono,
                 usu_name,
                 usu_tipo
