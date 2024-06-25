@@ -371,7 +371,7 @@ function editUser(userId) {
         }
     }).then((result) => {
         if (result.isConfirmed) {
-            const { usu_nom, usu_ape, usu_correo, usu_telefono, usu_name, usu_tipo } = result.value;
+            const { usu_nom, usu_ape, usu_correo, usu_telefono, usu_name, usu_tipo, usu_unidad} = result.value;
             fetchData('update_usuario', {
                 usu_id: userId,
                 usu_nom,
