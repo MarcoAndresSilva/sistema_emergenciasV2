@@ -317,8 +317,8 @@ public function enable_usuario($usu_id){
     }
 }
     
-public function update_usuario($usu_id, $usu_nom, $usu_ape, $usu_correo, $usu_telefono, $usu_name, $usu_tipo){
-    if(empty($usu_nom) || empty($usu_ape) || empty($usu_correo) || empty($usu_telefono) || empty($usu_name) || empty($usu_tipo)) {
+public function update_usuario($usu_id, $usu_nom, $usu_ape, $usu_correo, $usu_telefono, $usu_name, $usu_tipo, $usu_unidad){
+    if(empty($usu_nom) || empty($usu_ape) || empty($usu_correo) || empty($usu_telefono) || empty($usu_name) || empty($usu_tipo)|| empty($usu_unidad)) {
         return array('status' => 'warning', 'message' => 'Todos los campos son obligatorios');
     }
 
@@ -341,7 +341,7 @@ public function update_usuario($usu_id, $usu_nom, $usu_ape, $usu_correo, $usu_te
     }
 
     // Proceed with the update if username is not being used by another user
-    $sql = "UPDATE tm_usuario SET usu_nom = :usu_nom, usu_ape = :usu_ape, usu_correo = :usu_correo, usu_telefono = :usu_telefono, usu_name = :usu_name, usu_tipo = :usu_tipo WHERE usu_id = :usu_id";
+    $sql = "UPDATE tm_usuario SET usu_nom = :usu_nom, usu_ape = :usu_ape, usu_correo = :usu_correo, usu_telefono = :usu_telefono, usu_name = :usu_name, usu_tipo = :usu_tipo, usu_unidad = :usu_unidad WHERE usu_id = :usu_id";
     $consulta = $conectar->prepare($sql);
     $consulta->bindParam(':usu_nom', $usu_nom);
     $consulta->bindParam(':usu_ape', $usu_ape);
@@ -350,6 +350,7 @@ public function update_usuario($usu_id, $usu_nom, $usu_ape, $usu_correo, $usu_te
     $consulta->bindParam(':usu_name', $usu_name);
     $consulta->bindParam(':usu_tipo', $usu_tipo);
     $consulta->bindParam(':usu_id', $usu_id);
+    $consulta->bindParam(':usu_unidad', $usu_unidad);
     $consulta->execute();
 
     if ($consulta->rowCount() > 0) {
