@@ -138,8 +138,9 @@ if (isset($_GET["op"])) {
             $usu_telefono = $_POST['usu_telefono'];
             $usu_name = $_POST['usu_name'];
             $usu_tipo = $_POST['usu_tipo'];
+            $usu_unidad = $_POST['usu_unidad'];
         
-            $data = $usuario->update_usuario($usu_id, $usu_nom, $usu_ape, $usu_correo, $usu_telefono, $usu_name, $usu_tipo);
+            $data = $usuario->update_usuario($usu_id, $usu_nom, $usu_ape, $usu_correo, $usu_telefono, $usu_name, $usu_tipo, $usu_unidad);
             echo json_encode($data);
         break;
         case "update_usuario_tipo":
