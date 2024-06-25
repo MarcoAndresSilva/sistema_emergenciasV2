@@ -261,10 +261,13 @@ public function get_full_usuarios(){
                 tp.usu_tipo_id as "id_tipo",
                 usu.usu_telefono as "Telefono",
                 usu.usu_correo as "Correo",
+                unid.unid_nom as "Unidad",
                 usu.usu_name as "Usuario"
             FROM `tm_usuario` as usu
             JOIN tm_udu_tipo as tp
-            ON(tp.usu_tipo_id=usu.usu_tipo);';
+            ON(tp.usu_tipo_id=usu.usu_tipo)
+            JOIN tm_unidad as unid
+            ON (usu.usu_unidad=unid.unid_id);';
     $consulta = $conectar->prepare($sql);
     $consulta->execute();
     $resultado = $consulta->fetchAll(PDO::FETCH_ASSOC);
