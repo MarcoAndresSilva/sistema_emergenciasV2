@@ -322,7 +322,7 @@ function createSelectUnidad(nombreUnidad) {
         }));
 
         let selectHTML = `<div class="form-floating">
-<select class="form-select" id="unidadSelect" aria-label="Floating label select example">`;
+<select class="form-select" id="usu_unidad" aria-label="Floating label select example">`;
         options.forEach(opt => {
             selectHTML += `<option value="${opt.value}" ${nombreUnidad === opt.text ? 'selected' : ''}>${opt.text}</option>`;
         });
