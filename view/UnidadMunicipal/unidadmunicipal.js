@@ -123,6 +123,19 @@ const columnConfig = {
   acciones: 'Acciones'
 };
 
+// Transformaciones para ciertas columnas
+const transformValue = (key, value) => {
+  switch (key) {
+    case 'unid_est':
+      return transformStatus(value);
+    case 'responsable_rut':
+    case 'reemplazante_rut':
+      return formatRUT(value);
+    default:
+      return value;
+  }
+};
+
 function createTable(data) {
   const table = document.createElement('table');
   table.className = 'table table-striped';
