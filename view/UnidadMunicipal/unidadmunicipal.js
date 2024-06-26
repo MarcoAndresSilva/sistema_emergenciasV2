@@ -160,6 +160,22 @@ const calculateDV = (rut) => {
   return dv === 11 ? '0' : dv === 10 ? 'K' : dv.toString();
 };
 
+// Función para formatear el RUT con puntos y guion
+const formatRUT = (rut) => {
+  const dv = calculateDV(rut);
+  const rutStr = rut.toString();
+  let formattedRUT = '';
+
+  for (let i = rutStr.length - 1, j = 1; i >= 0; i--, j++) {
+    formattedRUT = rutStr.charAt(i) + formattedRUT;
+    if (j % 3 === 0 && i > 0) {
+      formattedRUT = '.' + formattedRUT;
+    }
+  }
+
+  return `${formattedRUT}-${dv}`;
+};
+
 function createTable(data) {
   const table = document.createElement('table');
   table.className = 'table table-striped';
