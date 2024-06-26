@@ -192,22 +192,37 @@ function createTable(data) {
   table.className = 'table table-striped';
 
   // Crear el encabezado de la tabla
-  const headers = Object.keys(data[0]);
+  const headers = Object.keys(columnConfig);
   const headerRow = document.createElement('tr');
-  headers.forEach(headerText => {
+  headers.forEach(headerKey => {
     const header = document.createElement('th');
-    header.textContent = headerText;
+    header.textContent = columnConfig[headerKey];
     headerRow.appendChild(header);
   });
   table.appendChild(headerRow);
 
   // Crear filas con los datos de las unidades
   data.forEach(item => {
-    let row = document.createElement('tr'); 
+    let row = document.createElement('tr');
     row.id = `unidad_${item.unid_id}`;
     headers.forEach(key => {
       const cell = document.createElement('td');
-      cell.textContent = item[key];
+      if (key === 'acciones') {
+        const editButton = document.createElement('button');
+        editButton.className = 'btn btn-primary btn-sm';
+        editButton.textContent = 'Editar';
+        editButton.onclick = () => editItem(item.unid_id);
+
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'btn btn-danger btn-sm ml-2';
+        deleteButton.textContent = 'Eliminar';
+        deleteButton.onclick = () => deleteItem(item.unid_id);
+
+        cell.appendChild(editButton);
+        cell.appendChild(deleteButton);
+      } else {
+        cell.textContent = transformValue(key, item[key]);
+      }
       row.appendChild(cell);
     });
     table.appendChild(row);
