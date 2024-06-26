@@ -8,7 +8,7 @@ class Unidad extends Conectar {
             $sql = "SELECT * FROM tm_unidad ";
             $sql = $conectar->prepare($sql);
             $sql->execute();
-            $resultado = $sql->fetchAll();
+            $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
             
             if (is_array($resultado) && count($resultado) > 0) {
                 return $resultado;
