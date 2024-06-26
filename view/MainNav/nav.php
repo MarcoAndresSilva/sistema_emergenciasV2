@@ -116,7 +116,11 @@
                         <span class="glyphicon glyphicon-asterisk"></span>
                         <span class="lbl">Nivel Categoria </span>
                     </a>
-                   
+                    <a class="" href="../GestionMotivo/">
+                        <span class="glyphicon glyphicon-asterisk"></span>
+                        <span class="lbl">Gestionar Motivos </span>
+                    </a>
+
                 </div>
             </div>
         </li>
