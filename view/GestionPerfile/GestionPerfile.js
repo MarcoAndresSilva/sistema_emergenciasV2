@@ -303,13 +303,31 @@ function createSelect(id, selectedValue) {
     return selectHTML;
 }
 // Definir la variable selectedUnidad con los datos precargados
-var selectedUnidad = [
-    {"unid_id":1,"unid_nom":"DGA","unid_est":2,"responsable_rut":20879105,"reemplazante_rut":20879105},
-    {"unid_id":2,"unid_nom":"Seguridad Publica","unid_est":1,"responsable_rut":20879105,"reemplazante_rut":20879105},
-    {"unid_id":3,"unid_nom":"Carabineros","unid_est":1,"responsable_rut":20879105,"reemplazante_rut":20879105},
-    {"unid_id":4,"unid_nom":"Bomberos","unid_est":1,"responsable_rut":20879105,"reemplazante_rut":20879105},
-    {"unid_id":5,"unid_nom":"Ambulancia","unid_est":3,"responsable_rut":20879105,"reemplazante_rut":20879105}
-];
+var selectedUnidad = [];
+
+// Función para obtener los datos de la API y asignarlos a la variable selectedUnidad
+function fetchUnidades() {
+    var request = new XMLHttpRequest();
+    request.open('GET', '../../controller/unidad.php?unidad=listar', false); // false para sincrónico
+    request.onload = function() {
+        if (request.status >= 200 && request.status < 400) {
+            // Éxito en la solicitud
+            selectedUnidad = JSON.parse(request.responseText);
+            console.log('Datos recibidos:', selectedUnidad);
+        } else {
+            // Error en la solicitud
+            console.error('Error en la solicitud:', request.status);
+        }
+    };
+    request.onerror = function() {
+        // Error en la conexión
+        console.error('Hubo un problema con la solicitud fetch.');
+    };
+    request.send();
+}
+
+// Llamada a la función fetchUnidades para obtener los datos
+fetchUnidades();
 
 // Definir la función createSelectUnidad utilizando selectedUnidad
 function createSelectUnidad(nombreUnidad) {
