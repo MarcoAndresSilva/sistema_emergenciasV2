@@ -146,6 +146,20 @@ const transformStatus = (status) => {
   return statuses[status] || 'Desconocido';
 };
 
+// Función para calcular el DV del RUT
+const calculateDV = (rut) => {
+  let suma = 0;
+  let multiplicador = 2;
+
+  for (let i = rut.toString().length - 1; i >= 0; i--) {
+    suma += rut.toString().charAt(i) * multiplicador;
+    multiplicador = multiplicador < 7 ? multiplicador + 1 : 2;
+  }
+
+  const dv = 11 - (suma % 11);
+  return dv === 11 ? '0' : dv === 10 ? 'K' : dv.toString();
+};
+
 function createTable(data) {
   const table = document.createElement('table');
   table.className = 'table table-striped';
