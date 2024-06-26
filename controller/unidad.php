@@ -100,3 +100,30 @@ if (isset($_GET["unidad"])) {
             break;
     }
 }
+
+if (isset($_GET["op"])) { 
+  switch ($_GET["op"]) {
+
+    case 'add_unidad':
+     $resultado = $unidad->add_unidad();
+    break;
+    
+case 'get_unidad':
+  $resultado = $unidad->get_unidad();
+  if (!empty($resultado)) {
+    $json = array(
+      "status" => "success",
+      "result" => $resultado
+    );
+  } else {
+    $json = array(
+      "status" => "error",
+      "message" => "No se encontraron datos de unidades."
+    );
+  }
+  header('Content-Type: application/json');
+  echo json_encode($json);
+  break;
+
+  }
+}
