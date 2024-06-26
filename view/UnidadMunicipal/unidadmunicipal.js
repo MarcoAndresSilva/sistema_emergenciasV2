@@ -113,6 +113,16 @@ function renderTable(unidad) {
     unidadInfo.appendChild(table);
 
 }
+// Mapeo de nombres de columnas y transformaciones
+const columnConfig = {
+  unid_id: 'ID',
+  unid_nom: 'Nombre',
+  unid_est: 'Estado',
+  responsable_rut: 'Responsable RUT',
+  reemplazante_rut: 'Reemplazante RUT',
+  acciones: 'Acciones'
+};
+
 function createTable(data) {
   const table = document.createElement('table');
   table.className = 'table table-striped';
