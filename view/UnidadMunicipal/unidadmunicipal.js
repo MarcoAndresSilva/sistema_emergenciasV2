@@ -176,6 +176,17 @@ const formatRUT = (rut) => {
   return `${formattedRUT}-${dv}`;
 };
 
+// Funciones para editar y eliminar
+const editItem = (id) => {
+  console.log(`Editar item con ID: ${id}`);
+  // Implementar lógica de edición aquí
+};
+
+const deleteItem = (id) => {
+  console.log(`Eliminar item con ID: ${id}`);
+  // Implementar lógica de eliminación aquí
+};
+
 function createTable(data) {
   const table = document.createElement('table');
   table.className = 'table table-striped';
