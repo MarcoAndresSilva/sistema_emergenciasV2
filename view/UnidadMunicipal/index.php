@@ -9,6 +9,8 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 	<?php require_once("../MainHead/head.php") ?>
 <link rel="stylesheet" href="estilopersonal.css">
 <title>Sistema Emergencia</title>
+<script defer src="../../public/js/sweetaler2v11-11-0.js"></script>
+<script defer type="text/javascript" src="unidadmunicipal.js"></script>
 </head>
 
 <body class="with-side-menu">
@@ -36,7 +38,11 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 			</header>
 
 			<h5 class="m-t-lg with-border">Informaci&oacute;n de Unidades</h5>
-
+      <div id="unidadInfo" class="row justify-content-center">
+          <div class="spinner-border text-primary mt-5" role="status">
+            <span class="sr-only">Cargando...</span>
+          </div>
+      </div>
 			
         </div><!--.container-fluid-->
     </div><!--.page-content-->
@@ -44,7 +50,6 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 	<?php require_once("../MainFooter/footer.php"); ?>
 	
 </body>
-	<script type="text/javascript" src="unidadmunicipal.js"></script>
 	<script>
 		document.getElementById('show-hide-sidebar-toggle').addEventListener('click', function(e) {
 			e.preventDefault();
