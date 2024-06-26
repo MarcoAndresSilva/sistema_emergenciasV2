@@ -136,6 +136,16 @@ const transformValue = (key, value) => {
   }
 };
 
+// Función para transformar el estado
+const transformStatus = (status) => {
+  const statuses = {
+    1: 'En servicio',
+    2: 'En proceso',
+    3: 'Sin servicio'
+  };
+  return statuses[status] || 'Desconocido';
+};
+
 function createTable(data) {
   const table = document.createElement('table');
   table.className = 'table table-striped';
