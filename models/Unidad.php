@@ -28,8 +28,9 @@ class Unidad extends Conectar {
         try {
             $conectar = parent::conexion();
             parent::set_names();
-            $sql = "SELECT * FROM tm_unidad where unid_id = ". $unid_id ." ";
+            $sql = "SELECT * FROM tm_unidad where unid_id = :unid_id";
             $sql = $conectar->prepare($sql);
+            $sql->bindParam(':unid_id', $unid_id);
             $sql->execute();
             $resultado = $sql->fetchAll();
             
@@ -51,7 +52,8 @@ class Unidad extends Conectar {
         try {
             $conectar = parent::conexion();
             parent::set_names();
-            $sql = "SELECT * FROM tm_unidad where unid_est = '". $unid_est ."' ";
+            $sql = "SELECT * FROM tm_unidad where unid_est = :unid_est ";
+            $sql->bindParam(':unid_est', $unid_est);
             $sql = $conectar->prepare($sql);
             $sql->execute();
             $resultado = $sql->fetchAll();
