@@ -2,7 +2,6 @@ $(document).ready(function() {
 
     // Obtener el elemento <a> por su ID
     var enlace = document.querySelector('.ControlEventos');
-
     // Añadir una clase al enlace
     enlace.classList.add('selected');
 
