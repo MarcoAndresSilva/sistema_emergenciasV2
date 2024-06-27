@@ -220,8 +220,8 @@ const editItem = (id) => {
         .then(data => {
           if (data.status !== 'success') {
             throw new Error(data.message || 'Error al actualizar la unidad');
-          }
-          return data;
+          } 
+          return FnOpetenerUnidad();
         })
         .catch(error => {
           Swal.fire('Error', error.message || 'Error al actualizar la unidad', 'error');
