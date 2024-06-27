@@ -125,5 +125,25 @@ case 'get_unidad':
   echo json_encode($json);
   break;
 
+case 'delete_unidad':
+  $unid_id = $_POST["unid_id"];
+  $resultado = $unidad->delete_unidad($unid_id);
+  
+  // Verificar el resultado y construir la respuesta JSON en base al status y message
+  if (!empty($resultado)) {
+    $json = array(
+      "status" => $resultado['status'],  // Utiliza el status devuelto por la función
+      "message" => $resultado['message'] // Utiliza el message devuelto por la función
+    );
+  } else {
+    $json = array(
+      "status" => "error",
+      "message" => "No se encontraron datos de unidades."
+    );
+  }
+  
+  header('Content-Type: application/json');
+  echo json_encode($json);
+  break;
   }
 }
