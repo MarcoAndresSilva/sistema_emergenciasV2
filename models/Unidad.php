@@ -128,27 +128,56 @@ class Unidad extends Conectar {
 	}
 
     //delete_unidad segun id
-	public function delete_unidad($unid_id) {
-		try {
-			$conectar = parent::conexion();
-			parent::set_names();
-			$sql = "DELETE FROM tm_unidad WHERE unid_id=" . $unid_id . " " ;
-			$consulta = $conectar->prepare($sql);
+	
 
-            $consulta->execute();
-			
-			if ($consulta->rowCount() > 0) {
-                return true;
+public function delete_unidad($unid_id) {
+    try {
+        $conectar = parent::conexion();
+        parent::set_names();
+
+        // Verificar si la unidad está en uso en la tabla tm_ev_tm_unid
+        $sql_check_evun = "SELECT * FROM tm_ev_tm_unid WHERE unid_id = :unid_id";
+        $consulta_check_evun = $conectar->prepare($sql_check_evun);
+        $consulta_check_evun->bindParam(':unid_id', $unid_id, PDO::PARAM_INT);
+        $consulta_check_evun->execute();
+
+        // Verificar si la unidad está en uso en la tabla tm_usuario
+        $sql_check_usuario = "SELECT * FROM tm_usuario WHERE usu_unidad = :unid_id";
+        $consulta_check_usuario = $conectar->prepare($sql_check_usuario);
+        $consulta_check_usuario->bindParam(':unid_id', $unid_id, PDO::PARAM_INT);
+        $consulta_check_usuario->execute();
+
+        if ($consulta_check_evun->rowCount() > 0 || $consulta_check_usuario->rowCount() > 0) {
+            return [
+                'status' => 'warning',
+                'message' => 'La unidad no se puede eliminar porque está en uso en otros registros.'
+            ];
+        } else {
+            // La unidad no está en uso, proceder a eliminarla
+            $sql_delete = "DELETE FROM tm_unidad WHERE unid_id = :unid_id";
+            $consulta_delete = $conectar->prepare($sql_delete);
+            $consulta_delete->bindParam(':unid_id', $unid_id, PDO::PARAM_INT);
+            $consulta_delete->execute();
+
+            if ($consulta_delete->rowCount() > 0) {
+                return [
+                    'status' => 'success',
+                    'message' => 'Unidad eliminada correctamente.'
+                ];
             } else {
-                ?> <script>console.log("No se logro borrar la unidad")</script><?php
-                return 0;
+                return [
+                    'status' => 'warning',
+                    'message' => 'No se logró borrar la unidad.'
+                ];
             }
-			
-		} catch (Exception $e) {
-			?> 
-            <script>console.log("Error catch     delete_unidad")</script>
-            <?php
-            throw $e;
         }
-	}
+    } catch (Exception $e) {
+        return [
+            'status' => 'error',
+            'message' => 'Ocurrió un error al intentar eliminar la unidad: ' . $e->getMessage()
+        ];
+    }
+}
+
+
 }
