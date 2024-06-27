@@ -178,8 +178,61 @@ const formatRUT = (rut) => {
 
 // Funciones para editar y eliminar
 const editItem = (id) => {
-  console.log(`Editar item con ID: ${id}`);
-  // Implementar lógica de edición aquí
+  // Obtener la fila correspondiente a la unidad
+  const row = document.getElementById(`unidad_${id}`);
+  const cells = row.getElementsByTagName('td');
+
+  // Mostrar la alerta de SweetAlert2 para editar
+  Swal.fire({
+    title: 'Editar Unidad',
+    html:
+      `<input id="editUnidNom" class="swal2-input" value="${cells[1].textContent}" placeholder="Nombre" required>` +
+      `<select id="editUnidEst" class="swal2-input">
+         <option value="1" ${cells[2].textContent === 'En servicio' ? 'selected' : ''}>En servicio</option>
+         <option value="2" ${cells[2].textContent === 'En proceso' ? 'selected' : ''}>En proceso</option>
+         <option value="3" ${cells[2].textContent === 'Sin servicio' ? 'selected' : ''}>Sin servicio</option>
+       </select>` +
+      `<input id="editResponsableRut" class="swal2-input" value="${cells[3].textContent.split('-')[0].replace(/\./g, '')}" placeholder="Responsable RUT" required>` +
+      `<input id="editReemplazanteRut" class="swal2-input" value="${cells[4].textContent.split('-')[0].replace(/\./g, '')}" placeholder="Reemplazante RUT" required>`,
+    focusConfirm: false,
+    preConfirm: () => {
+      const nombre = document.getElementById('editUnidNom').value;
+      const estado = document.getElementById('editUnidEst').value;
+      const responsableRut = document.getElementById('editResponsableRut').value;
+      const reemplazanteRut = document.getElementById('editReemplazanteRut').value;
+
+      // Validar los datos si es necesario antes de enviar
+      if (!nombre || !estado || !responsableRut || !reemplazanteRut) {
+        Swal.showValidationMessage('Todos los campos son obligatorios');
+        return false;
+      }
+
+      const postData = {
+        unid_id: id,
+        unid_nom: nombre,
+        unid_est: estado,
+        responsable_rut: responsableRut,
+        reemplazante_rut: reemplazanteRut
+      };
+
+      // Realizar la solicitud para actualizar los datos
+      return fetchData('edit_unidad', postData, true)
+        .then(data => {
+          if (data.status !== 'success') {
+            throw new Error(data.message || 'Error al actualizar la unidad');
+          }
+          return data;
+        })
+        .catch(error => {
+          Swal.fire('Error', error.message || 'Error al actualizar la unidad', 'error');
+        });
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Swal.fire('¡Actualizado!', 'La unidad ha sido actualizada correctamente', 'success');
+      // Aquí podrías actualizar la fila de la tabla si lo deseas
+    }
+  });
 };
 
 const deleteItem = (id) => {
