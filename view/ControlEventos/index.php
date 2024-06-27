@@ -126,7 +126,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
                 <span class="glyphicon glyphicon-remove CerrarModalMap"></span>
             </div>
 
-			<div id="selector-cerrar" class="modal-overlay modalBox" style="z-index: 1000">
+			<div id="selector-cerrar" class="modal-overlay modalBox" style="z-index: 1001">
 				<div class="btn-cancelar">
 					<button id="btn"type='button' class='btn btn-inline btn-danger btn-sm ladda-button btnCancelarCerrar'> <i class='fa fa-close'></i>
 					</button>
