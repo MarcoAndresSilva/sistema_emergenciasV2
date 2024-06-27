@@ -99,33 +99,53 @@ class Unidad extends Conectar {
     }
 
     //update_unidad segun id
-	public function update_unidad($unid_id,$unid_nom,$unid_est,$responsable_rut,$reemplazante_rut) {
-		try {
-			$conectar = parent::conexion();
-			parent::set_names();
-			$sql = "UPDATE tm_unidad SET  unid_nom=:unid_nom ,unid_est=:unid_est, responsable_rut=:responsable_rut, reemplazante_rut=:reemplazante_rut WHERE unid_id = " . $unid_id . " ";
-			$consulta = $conectar->prepare($sql);
-
-            $consulta->bindParam(':unid_nom',$unid_nom);
-			$consulta->bindParam(':unid_est',$unid_est);
-            $consulta->bindParam(':responsable_rut',$responsable_rut);
-			$consulta->bindParam(':reemplazante_rut',$reemplazante_rut);
-
-            $consulta->execute();
-			
-			if ($consulta->rowCount() > 0) {
-                return true;
-            } else {
-                ?> <script>console.log("No se logro actualizar la unidad")</script><?php
-                return 0;
-            }
-        } catch (Exception $e) {
-			?> 
-            <script>console.log("Error catch     update_unidad")</script>
-            <?php
-            throw $e;
+public function update_unidad($unid_id, $unid_nom, $unid_est, $responsable_rut, $reemplazante_rut) {
+    try {
+        // Validar que no falten datos
+        if (empty($unid_id) || empty($unid_nom) || empty($unid_est) || empty($responsable_rut) || empty($reemplazante_rut)) {
+            return [
+                'status' => 'warning',
+                'message' => 'Todos los campos son obligatorios.'
+            ];
         }
-	}
+
+        $conectar = parent::conexion();
+        parent::set_names();
+
+        $sql = "UPDATE tm_unidad SET 
+                    unid_nom = :unid_nom, 
+                    unid_est = :unid_est, 
+                    responsable_rut = :responsable_rut, 
+                    reemplazante_rut = :reemplazante_rut 
+                WHERE unid_id = :unid_id";
+        $consulta = $conectar->prepare($sql);
+
+        $consulta->bindParam(':unid_id', $unid_id, PDO::PARAM_INT);
+        $consulta->bindParam(':unid_nom', $unid_nom);
+        $consulta->bindParam(':unid_est', $unid_est);
+        $consulta->bindParam(':responsable_rut', $responsable_rut);
+        $consulta->bindParam(':reemplazante_rut', $reemplazante_rut);
+
+        $consulta->execute();
+
+        if ($consulta->rowCount() > 0) {
+            return [
+                'status' => 'success',
+                'message' => 'Unidad actualizada correctamente.'
+            ];
+        } else {
+            return [
+                'status' => 'warning',
+                'message' => 'No se logró actualizar la unidad o no hubo cambios en los datos.'
+            ];
+        }
+    } catch (Exception $e) {
+        return [
+            'status' => 'error',
+            'message' => 'Ocurrió un error al intentar actualizar la unidad: ' . $e->getMessage()
+        ];
+    }
+}
 
     //delete_unidad segun id
 	
