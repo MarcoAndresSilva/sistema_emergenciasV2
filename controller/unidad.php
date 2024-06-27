@@ -145,5 +145,29 @@ case 'delete_unidad':
   header('Content-Type: application/json');
   echo json_encode($json);
   break;
+  case 'update_unidad':
+    $unid_id = $_POST["unid_id"];
+    $unid_nom = $_POST["unid_nom"];
+    $unid_est = $_POST["unid_est"];
+    $responsable_rut = $_POST["responsable_rut"];
+    $reemplazante_rut = $_POST["reemplazante_rut"];
+
+    $resultado = $unidad->update_unidad($unid_id, $unid_nom, $unid_est, $responsable_rut, $reemplazante_rut);
+
+    // Verificar el resultado y construir la respuesta JSON en base al status y message
+    if (!empty($resultado)) {
+      $json = array(
+        "status" => $resultado['status'],  // Utiliza el status devuelto por la función
+        "message" => $resultado['message'] // Utiliza el message devuelto por la función
+      );
+    } else {
+      $json = array(
+        "status" => "error",
+        "message" => "No se encontraron datos de unidades."
+      );
+    }
+    header('Content-Type: application/json');
+    echo json_encode($json);
+  break;
   }
 }
