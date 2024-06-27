@@ -183,8 +183,26 @@ const editItem = (id) => {
 };
 
 const deleteItem = (id) => {
-  console.log(`Eliminar item con ID: ${id}`);
-  // Implementar lógica de eliminación aquí
+  Swal.fire({
+    title: '¿Estás seguro?',
+    text: "¡No podrás revertir esto!",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Sí, eliminarlo!',
+    cancelButtonText: 'Cancelar'
+  }).then((result) => {
+    if (result.isConfirmed) {
+      fetchData('delete_unidad', { unid_id: id })
+        .then(data => {
+          if (data.status === 'success') {
+            // Actualizar la tabla o realizar alguna acción adicional
+            document.getElementById(`unidad_${id}`).remove();
+          }
+        });
+    }
+  });
 };
 
 function createTable(data) {
