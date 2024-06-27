@@ -216,7 +216,7 @@ const editItem = (id) => {
       };
 
       // Realizar la solicitud para actualizar los datos
-      return fetchData('edit_unidad', postData, true)
+      return fetchData('update_unidad', postData)
         .then(data => {
           if (data.status !== 'success') {
             throw new Error(data.message || 'Error al actualizar la unidad');
