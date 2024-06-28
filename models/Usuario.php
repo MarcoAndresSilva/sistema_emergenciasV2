@@ -117,40 +117,268 @@ require_once 'RegistroLog.php';
             }
         }
 
-        //add_categoria (Insert categoria)
-        public function add_usuario($usu_nom,$usu_ape,$usu_correo,$usu_name,$usu_pass,$fecha_crea,$estado,$usu_tipo) {
-            try {
-                $conectar = parent::conexion();
-                parent::set_names();
-                $sql = "INSERT INTO tm_usuario (usu_nom, usu_ape, usu_correo, usu_name,usu_pass, fecha_crea, estado,usu_tipo,usu_telefono) VALUES (:usu_nom, :usu_ape, :usu_correo, :usu_name,:usu_pass, :fecha_crea, :estado,:usu_tipo,:usu_telefono)";
 
-                $consulta = $conectar->prepare($sql);
-                $numero = 12345678;
-                $consulta->bindParam(':usu_nom',$usu_nom);
-                $consulta->bindParam(':usu_ape',$usu_ape);
-                $consulta->bindParam(':usu_correo',$usu_correo);
-                $consulta->bindParam(':usu_name',$usu_name);
-                $consulta->bindParam(':usu_pass',md5($usu_pass));
-                $consulta->bindParam(':fecha_crea',$fecha_crea);
-                $consulta->bindParam(':estado',$estado);
-                $consulta->bindParam(':usu_tipo',$usu_tipo);
-                $consulta->bindParam(':usu_telefono',$numero);
+public function add_usuario($usu_nom, $usu_ape, $usu_correo, $usu_name, $usu_pass, $fecha_crea, $estado, $usu_tipo, $usu_telefono,$usu_unidad) {
+    try {
+        $conectar = parent::conexion();
+        parent::set_names();
 
-                $consulta->execute();
-                
-                if ($consulta->rowCount() > 0) {
-                    return true;
-                } else {
-                    ?> <script>console.log("No se agrego el usuario ". $usu_nom ." ")</script><?php
-                    return false;
-                }
-            } catch (Exception $e) {
-                ?> <script> console.log("Error catch    add_usuario") </script>  <?php
-                throw $e;
-            }
+        $sql_check = "SELECT usu_name FROM tm_usuario WHERE usu_name = :usu_name";
+        $consulta_check = $conectar->prepare($sql_check);
+        $consulta_check->bindParam(':usu_name', $usu_name);
+        $consulta_check->execute();
 
+        if ($consulta_check->rowCount() > 0) {
+            return array('status' => 'warning', 'message' => 'El usuario ya existe con ese nombre de usuario');
         }
+
+        $sql = "INSERT INTO tm_usuario (usu_nom, usu_ape, usu_correo, usu_name, usu_pass, fecha_crea, estado, usu_tipo, usu_telefono,usu_unidad) VALUES (:usu_nom, :usu_ape, :usu_correo, :usu_name, :usu_pass, :fecha_crea, :estado, :usu_tipo, :usu_telefono, :usu_unidad)";
+
+        $pass_cifrado = md5($usu_pass);
+        $consulta = $conectar->prepare($sql);
+        $consulta->bindParam(':usu_nom', $usu_nom);
+        $consulta->bindParam(':usu_ape', $usu_ape);
+        $consulta->bindParam(':usu_correo', $usu_correo);
+        $consulta->bindParam(':usu_name', $usu_name);
+        $consulta->bindParam(':usu_pass', $pass_cifrado);
+        $consulta->bindParam(':fecha_crea', $fecha_crea);
+        $consulta->bindParam(':estado', $estado);
+        $consulta->bindParam(':usu_tipo', $usu_tipo);
+        $consulta->bindParam(':usu_telefono', $usu_telefono);
+        $consulta->bindParam(':usu_unidad', $usu_unidad);
+
+        $consulta->execute();
+
+        if ($consulta->rowCount() > 0) {
+            return array('status' => 'success', 'message' => 'Usuario agregado correctamente');
+        } else {
+            return array('status' => 'error', 'message' => 'No se pudo agregar el usuario');
+        }
+    } catch (Exception $e) {
+        return array('status' => 'error', 'message' => 'Error al agregar el usuario');
+    }
+}
+
+public function update_password($old_pass, $new_pass, $usu_id){
+    $conectar = parent::conexion();
+    parent::set_names();
+
+    $hashed_old_pass = md5($old_pass);
+    $sql = "SELECT usu_pass FROM tm_usuario WHERE usu_id = :usu_id AND usu_pass = :old_pass";
+    $consulta = $conectar->prepare($sql);
+    $consulta->bindParam(':usu_id', $usu_id);
+    $consulta->bindParam(':old_pass', $hashed_old_pass);
+    $consulta->execute();
+    $user = $consulta->fetch();
+
+    // Verificar si la contraseña antigua es correcta
+    if (!$user) {
+        return array('status' => 'warning', 'message' => 'La contraseña antigua no coincide');
     }
 
+    // Verificar si la nueva contraseña es igual a la antigua
+    if ($user['usu_pass'] == md5($new_pass)) {
+        return array('status' => 'info', 'message' => 'La nueva contraseña debe ser distinta a la antigua');
+    }
+
+    // Actualizar la contraseña
+    $hashed_new_pass = md5($new_pass); // Almacenar el resultado de md5($new_pass) en una variable
+    $sql = "UPDATE tm_usuario SET usu_pass = :new_pass WHERE usu_id = :usu_id";
+    $consulta = $conectar->prepare($sql);
+    $consulta->bindParam(':new_pass', $hashed_new_pass); // Pasar la variable a bindParam
+    $consulta->bindParam(':usu_id', $usu_id);
+    $consulta->execute();
+
+    // Verificar si la contraseña se actualizó correctamente
+    if ($consulta->rowCount() == 1) {
+        return array('status' => 'success', 'message' => 'Contraseña actualizada con éxito');
+    } else {
+        return array('status' => 'info', 'message' => 'No se realizó ningún cambio');
+    }
+}
+
+public function update_phone($new_phone, $usu_id){
+    $conectar = parent::conexion();
+    parent::set_names();
+
+    // Limpiar el número de teléfono y dejar solo los números
+    $clean_phone = preg_replace('/\D/', '', $new_phone);
+
+    // Verificar si la longitud del número de teléfono es correcta
+    if (strlen($clean_phone) != 9) {
+        return array('status' => 'warning', 'message' => 'La longitud del número de teléfono no es correcta');
+    }
+
+    $sql = "UPDATE tm_usuario SET usu_telefono = :new_phone WHERE usu_id = :usu_id";
+    $consulta = $conectar->prepare($sql);
+    $consulta->bindParam(':new_phone', $clean_phone);
+    $consulta->bindParam(':usu_id', $usu_id);
+    $consulta->execute();
+
+    // Verificar si el número de teléfono se actualizó correctamente
+    if ($consulta->rowCount() == 1) {
+        return array('status' => 'success', 'message' => 'Número de teléfono actualizado con éxito');
+    } else {
+        return array('status' => 'info', 'message' => 'No se realizó ningún cambio');
+    }
+}
+
+public function get_info_usuario($usu_id){
+    $conectar = parent::conexion();
+    parent::set_names();
+    $sql = 'SELECT 
+                CONCAT(usu.usu_nom, " ", usu.usu_ape) AS "Nombre Completo",
+                tp.usu_tipo_nom as "Tipo",
+                usu.usu_telefono as "Telefono",
+                usu.usu_correo as "Correo",
+                unid.unid_nom as "Unidad",
+                usu.usu_name as "Usuario"
+            FROM `tm_usuario` as usu
+            JOIN tm_udu_tipo as tp
+            ON(tp.usu_tipo_id=usu.usu_tipo)
+            JOIN tm_unidad as unid
+            ON (usu.usu_unidad=unid.unid_id)
+            WHERE usu.usu_id=:usu_id;';
+    $consulta = $conectar->prepare($sql);
+    $consulta->bindParam(':usu_id',$usu_id);
+    $consulta->execute();
+    $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
+    if ($consulta->rowCount()!=1){
+        return array('status' => 'error', 'message' => 'No se puede optener los datos');
+    }
+    return array('status'=> 'success', 'message' =>  'se optienen los datos', 'result'=> $resultado);
+}
+
+public function get_full_usuarios(){
+    $conectar = parent::conexion();
+    parent::set_names();
+    $sql = 'SELECT 
+            	usu.usu_id as "usu_id",
+            	usu.estado as "estado",
+            	usu.usu_nom as "Nombre",
+                usu.usu_ape as "Apellido",
+                tp.usu_tipo_nom as "Tipo",
+                tp.usu_tipo_id as "id_tipo",
+                usu.usu_telefono as "Telefono",
+                usu.usu_correo as "Correo",
+                unid.unid_nom as "Unidad",
+                usu.usu_name as "Usuario"
+            FROM `tm_usuario` as usu
+            JOIN tm_udu_tipo as tp
+            ON(tp.usu_tipo_id=usu.usu_tipo)
+            JOIN tm_unidad as unid
+            ON (usu.usu_unidad=unid.unid_id);';
+    $consulta = $conectar->prepare($sql);
+    $consulta->execute();
+    $resultado = $consulta->fetchAll(PDO::FETCH_ASSOC);
+    if ($consulta->rowCount()<=0){
+        return array('status' => 'error', 'message' => 'No se puede optener los datos');
+    }
+    return array('status'=> 'success', 'message' =>  'se optienen los datos', 'result'=> $resultado);
+    }
+public function disable_usuario($usu_id){
+    $conectar = parent::conexion();
+    parent::set_names();
+
+    $fecha_elim = date('Y-m-d H:i:s'); // Get current date and time
+    $estado = 0; // Assuming 0 is the value for 'disabled'
+
+    $sql = "UPDATE tm_usuario SET estado = :estado, fecha_elim = :fecha_elim WHERE usu_id = :usu_id";
+    $consulta = $conectar->prepare($sql);
+    $consulta->bindParam(':estado', $estado);
+    $consulta->bindParam(':fecha_elim', $fecha_elim);
+    $consulta->bindParam(':usu_id', $usu_id);
+    $consulta->execute();
+
+    if ($consulta->rowCount() == 1) {
+        return array('status' => 'success', 'message' => 'Usuario desactivado con éxito');
+    } else {
+        return array('status' => 'info', 'message' => 'No se realizó ningún cambio');
+    }
+}
+public function enable_usuario($usu_id){
+    $conectar = parent::conexion();
+    parent::set_names();
+
+    $estado = 1; // Assuming 1 is the value for 'enabled'
+    $fecha_elim = null; // Set 'fecha_elim' to null
+
+    $sql = "UPDATE tm_usuario SET estado = :estado, fecha_elim = :fecha_elim WHERE usu_id = :usu_id";
+    $consulta = $conectar->prepare($sql);
+    $consulta->bindParam(':estado', $estado);
+    $consulta->bindParam(':fecha_elim', $fecha_elim);
+    $consulta->bindParam(':usu_id', $usu_id);
+    $consulta->execute();
+
+    if ($consulta->rowCount() == 1) {
+        return array('status' => 'success', 'message' => 'Usuario activado con éxito');
+    } else {
+        return array('status' => 'info', 'message' => 'No se realizó ningún cambio');
+    }
+}
     
+public function update_usuario($usu_id, $usu_nom, $usu_ape, $usu_correo, $usu_telefono, $usu_name, $usu_tipo, $usu_unidad){
+    if(empty($usu_nom) || empty($usu_ape) || empty($usu_correo) || empty($usu_telefono) || empty($usu_name) || empty($usu_tipo)|| empty($usu_unidad)) {
+        return array('status' => 'warning', 'message' => 'Todos los campos son obligatorios');
+    }
+
+    if(empty($usu_nom)) {
+        return array('status' => 'warning', 'message' => 'El campo nombre no puede estar vacío');
+    }
+
+    $conectar = parent::conexion();
+    parent::set_names();
+
+    // Check if the username is being used by another user
+    $sql_check = "SELECT * FROM tm_usuario WHERE usu_name = :usu_name AND usu_id != :usu_id";
+    $consulta_check = $conectar->prepare($sql_check);
+    $consulta_check->bindParam(':usu_name', $usu_name);
+    $consulta_check->bindParam(':usu_id', $usu_id);
+    $consulta_check->execute();
+
+    if($consulta_check->rowCount() > 0) {
+        return array('status' => 'warning', 'message' => 'El nombre de usuario ya está siendo utilizado por otro usuario');
+    }
+
+    // Proceed with the update if username is not being used by another user
+    $sql = "UPDATE tm_usuario SET usu_nom = :usu_nom, usu_ape = :usu_ape, usu_correo = :usu_correo, usu_telefono = :usu_telefono, usu_name = :usu_name, usu_tipo = :usu_tipo, usu_unidad = :usu_unidad WHERE usu_id = :usu_id";
+    $consulta = $conectar->prepare($sql);
+    $consulta->bindParam(':usu_nom', $usu_nom);
+    $consulta->bindParam(':usu_ape', $usu_ape);
+    $consulta->bindParam(':usu_correo', $usu_correo);
+    $consulta->bindParam(':usu_telefono', $usu_telefono);
+    $consulta->bindParam(':usu_name', $usu_name);
+    $consulta->bindParam(':usu_tipo', $usu_tipo);
+    $consulta->bindParam(':usu_id', $usu_id);
+    $consulta->bindParam(':usu_unidad', $usu_unidad);
+    $consulta->execute();
+
+    if ($consulta->rowCount() > 0) {
+        return array('status' => 'success', 'message' => 'Usuario actualizado con éxito');
+    } else {
+        return array('status' => 'info', 'message' => 'No se realizó ningún cambio');
+    }
+}
+
+public function update_usuario_tipo($usu_id, $usu_tipo){
+    if(empty($usu_tipo)) {
+        return array('status' => 'warning', 'message' => 'El tipo de usuario es obligatorio');
+    }
+
+    $conectar = parent::conexion();
+    parent::set_names();
+
+    $sql = "UPDATE tm_usuario SET usu_tipo = :usu_tipo WHERE usu_id = :usu_id";
+    $consulta = $conectar->prepare($sql);
+    $consulta->bindParam(':usu_tipo', $usu_tipo);
+    $consulta->bindParam(':usu_id', $usu_id);
+    $consulta->execute();
+
+    if ($consulta->rowCount() > 0) {
+        return array('status' => 'success', 'message' => 'Tipo de usuario actualizado con éxito');
+    } else {
+        return array('status' => 'info', 'message' => 'No se realizó ningún cambio');
+    }
+}
+}
 ?>

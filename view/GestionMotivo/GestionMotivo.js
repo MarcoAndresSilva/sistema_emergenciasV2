@@ -239,6 +239,8 @@ function actualizarTabla(data) {
         let imgDelete = document.createElement('img');
         imgDelete.src = "../../public/img/trash.svg";
         buttondelete.appendChild(imgDelete);
+        let textoDelete = document.createTextNode("Eliminar");
+        buttondelete.appendChild(textoDelete);
         buttondelete.onclick = function(){
             fn_delete_motivo(item.mov_id)
         }
@@ -256,9 +258,12 @@ function actualizarTabla(data) {
     tabla.appendChild(tbody);
     $('#miTabla').DataTable({
         "columns": [
-            { "width": "408.031px" },
-            { "width": "414.969px" }
-        ]
+            { "width": "50%" },
+            { "width": "50%" }
+        ],
+        "language":{
+            "url":'../registrosLog/spanishDatatable.json'
+        },
     });
 }
 

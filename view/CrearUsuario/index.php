@@ -9,6 +9,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 <?php require_once("../MainHead/head.php"); ?>
 <link rel="stylesheet" href="./estilopersonal.css">
 <title>Sistema Emergencia</title>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body class="with-side-menu">
@@ -66,8 +67,15 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
                             <input type="text" class="form-control" id="usuario" placeholder="Usuario">
                         </fieldset>
                     </div>
-                    
-                    <div class="col-lg-5">
+                      <div class="col-lg-5">
+                                <label class="form-label semibold" for="exampleInput">Telefono</label>
+                          <div class="input-group mb-3">
+                              <div class="input-group-prepend">
+                                  <span class="input-group-text">+56</span>
+                              </div>
+                              <input type="text" class="form-control" id="telefono" name="telefono" placeholder="Nuevo número de teléfono" required>
+                          </div>
+                        </div>                  <div class="col-lg-5">
                         <fieldset class="form-group">
                             <label class="form-label semibold" for="exampleInput"> Contrase&ntilde;a </label>
                             <input type="password" class="form-control" id="contrasena" placeholder="*********">
@@ -82,7 +90,13 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
                             </select>
                         </fieldset>
                     </div>
-
+                    <div class="col-lg-5">
+                        <fieldset class="form-group">
+                            <label class="form-label semibold" for="exampleInput">unidad</label>
+                            <select id="usu_unidad" class="form-control" >
+                            </select>
+                        </fieldset>
+                    </div>
                     <div class="col-lg-10">
                         <button type="button" class="btn btn-round btn-inline btn-primary" id="btnGuardar">Guardar</button>
                     </div>
