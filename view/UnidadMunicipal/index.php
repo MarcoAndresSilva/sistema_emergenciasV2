@@ -39,6 +39,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 			</header>
 
 			<h5 class="m-t-lg with-border">Informaci&oacute;n de Unidades</h5>
+			<button class="btn btn-success" id="addButton" onclick="fn_agregar_unidad()">Agregar motivo</button>
       <div id="unidadInfo" class="row justify-content-center">
           <div class="spinner-border text-primary mt-5" role="status">
             <span class="sr-only">Cargando...</span>

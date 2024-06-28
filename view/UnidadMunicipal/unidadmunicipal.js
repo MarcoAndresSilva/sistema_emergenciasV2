@@ -301,3 +301,54 @@ function createTable(data) {
 
   return table;
 }
+function fn_agregar_unidad() {
+  Swal.fire({
+    title: 'Agregar Nueva Unidad',
+    html:
+      `<input id="addUnidNom" class="swal2-input" placeholder="Nombre" required>` +
+      `<select id="addUnidEst" class="swal2-input">
+         <option value="1">En servicio</option>
+         <option value="2">En proceso</option>
+         <option value="3">Sin servicio</option>
+       </select>` +
+      `<input id="addResponsableRut" class="swal2-input" placeholder="Responsable RUT" required>` +
+      `<input id="addReemplazanteRut" class="swal2-input" placeholder="Reemplazante RUT" required>`,
+    focusConfirm: false,
+    preConfirm: () => {
+      const nombre = document.getElementById('addUnidNom').value;
+      const estado = document.getElementById('addUnidEst').value;
+      let responsableRut = document.getElementById('addResponsableRut').value;
+      let reemplazanteRut = document.getElementById('addReemplazanteRut').value;
+
+      // Validar los datos si es necesario antes de enviar
+      if (!nombre || !estado || !responsableRut || !reemplazanteRut) {
+        Swal.showValidationMessage('Todos los campos son obligatorios');
+        return false;
+      }
+
+      const postData = {
+        unid_nom: nombre,
+        unid_est: estado,
+        responsable_rut: responsableRut,
+        reemplazante_rut: reemplazanteRut
+      };
+
+      // Realizar la solicitud para agregar la nueva unidad
+      return fetchData('add_unidad', postData)
+        .then(data => {
+          if (data.status !== 'success') {
+            throw new Error(data.message || 'Error al agregar la unidad');
+          }
+          return FnOpetenerUnidad(); // Actualizar la tabla después de agregar
+        })
+        .catch(error => {
+          Swal.fire('Error', error.message || 'Error al agregar la unidad', 'error');
+        });
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Swal.fire('¡Agregada!', 'La unidad ha sido agregada correctamente', 'success');
+      // Aquí podrías realizar alguna acción adicional si lo deseas
+    }
+  });
+}
