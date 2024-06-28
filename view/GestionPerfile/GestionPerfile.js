@@ -345,7 +345,7 @@ function createSelectUnidad(nombreUnidad) {
             selectHTML += `<option value="${opt.value}" ${nombreUnidad === opt.text ? 'selected' : ''}>${opt.text}</option>`;
         });
         selectHTML += `</select>
-<label for="unidadSelect">Tipo</label>
+<label for="unidadSelect">Unidad</label>
 </div>`;
         return selectHTML;
     } catch (error) {
