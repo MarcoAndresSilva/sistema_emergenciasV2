@@ -71,32 +71,32 @@ class Unidad extends Conectar {
 
     }
 
-    public function add_unidad($unid_nom,$unid_est,$responsable_rut,$reemplazante_rut) {
-        try{
-            $conectar = parent::conexion();
-            parent::set_names();
-            $sql = "INSERT INTO tm_unidad (unid_nom,unid_est,responsable_rut,reemplazante_rut) VALUES ( :unid_nom, :unid_est,:responsable_rut,:reemplazante_rut)";
-            
-            $consulta  = $conectar->prepare($sql);
-        
-            $consulta->bindParam(':unid_nom', $unid_nom);
-            $consulta->bindParam(':unid_est', $unid_est);
-            $consulta->bindParam(':responsable_rut', $responsable_rut);
-            $consulta->bindParam(':reemplazante_rut', $reemplazante_rut);
-            
-            $consulta->execute();
-
-            if ($consulta->rowCount() > 0) {
-                return true;
-            } else {
-                ?> <script>console.log("No se encontraron unidades")</script><?php
-                return 0;
-            }
-        } catch (Exception $e) {
-            ?> <script>console.log("Error catch     add_unidad")</script> <?php
-            throw $e;
+public function add_unidad($unid_nom, $unid_est, $responsable_rut, $reemplazante_rut) {
+        if (empty($unid_nom) || empty($unid_est) || empty($responsable_rut) || empty($reemplazante_rut)) {
+            return ['status' => 'warning','message' => 'Todos los campos son obligatorios.'
+            ];
         }
-    }
+        $conectar = parent::conexion();
+        parent::set_names();
+        $sql = "INSERT INTO tm_unidad (unid_nom, unid_est, responsable_rut, reemplazante_rut) VALUES (:unid_nom, :unid_est, :responsable_rut, :reemplazante_rut)";
+        $consulta = $conectar->prepare($sql);
+        $consulta->bindParam(':unid_nom', $unid_nom);
+        $consulta->bindParam(':unid_est', $unid_est);
+        $consulta->bindParam(':responsable_rut', $responsable_rut);
+        $consulta->bindParam(':reemplazante_rut', $reemplazante_rut);
+        $consulta->execute();
+        if ($consulta->rowCount() > 0) {
+            return ['status' => 'success','message' => 'Unidad agregada exitosamente.'
+            ];
+        } else {
+            ?> <script>console.log("No se encontraron unidades")</script><?php
+            return [
+                'status' => 'error',
+                'message' => 'No se pudo agregar la unidad.'
+            ];
+        }
+    
+  }
 
     //update_unidad segun id
 public function update_unidad($unid_id, $unid_nom, $unid_est, $responsable_rut, $reemplazante_rut) {
