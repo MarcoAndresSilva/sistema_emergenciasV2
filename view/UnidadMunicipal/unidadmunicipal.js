@@ -301,6 +301,18 @@ function createTable(data) {
 
   return table;
 }
+// Función para limpiar el formato del Rut (elimina puntos, guión y dígito verificador)
+
+function limpiarRut(rut) {
+  // Eliminar puntos y guion
+  rut = rut.replace(/[.-]/g, '');
+
+  // Eliminar dígito verificador al final (si existe)
+  rut = rut.replace(/\d{1,1}$/, '');
+
+  return rut;
+}
+
 function fn_agregar_unidad() {
   Swal.fire({
     title: 'Agregar Nueva Unidad',
@@ -319,6 +331,8 @@ function fn_agregar_unidad() {
       const estado = document.getElementById('addUnidEst').value;
       let responsableRut = document.getElementById('addResponsableRut').value;
       let reemplazanteRut = document.getElementById('addReemplazanteRut').value;
+      responsableRut = limpiarRut(responsableRut);
+      reemplazanteRut = limpiarRut(reemplazanteRut);
 
       // Validar los datos si es necesario antes de enviar
       if (!nombre || !estado || !responsableRut || !reemplazanteRut) {
