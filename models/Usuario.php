@@ -1,5 +1,6 @@
 <?php
 require_once 'RegistroLog.php';
+require_once 'SeguridadPassword.php';
     class Usuario extends Conectar {
 
         public function login() {
@@ -128,6 +129,12 @@ public function add_usuario($usu_nom, $usu_ape, $usu_correo, $usu_name, $usu_pas
         $consulta_check->bindParam(':usu_name', $usu_name);
         $consulta_check->execute();
 
+        $seguridad = new SeguridadPassword();
+        $passSegura = $seguridad->PasswordSegura($usu_pass);
+        if (!$passSegura["mayuscula"] || !$passSegura["minuscula"] || !$passSegura["numero"] || !$passSegura["especiales"] || !$passSegura["largo"]) {
+            return ["status" => "warning", "message" => "La contraseña no cumple con todos los requisitos de seguridad."];
+        }
+
         if ($consulta_check->rowCount() > 0) {
             return array('status' => 'warning', 'message' => 'El usuario ya existe con ese nombre de usuario');
         }
@@ -180,7 +187,11 @@ public function update_password($old_pass, $new_pass, $usu_id){
     if ($user['usu_pass'] == md5($new_pass)) {
         return array('status' => 'info', 'message' => 'La nueva contraseña debe ser distinta a la antigua');
     }
-
+    $seguridad = new SeguridadPassword();
+    $passSegura = $seguridad->PasswordSegura($new_pass);
+    if (!$passSegura["mayuscula"] || !$passSegura["minuscula"] || !$passSegura["numero"] || !$passSegura["especiales"] || !$passSegura["largo"]) {
+        return ["status" => "warning", "message" => "La contraseña no cumple con todos los requisitos de seguridad."];
+    }
     // Actualizar la contraseña
     $hashed_new_pass = md5($new_pass); // Almacenar el resultado de md5($new_pass) en una variable
     $sql = "UPDATE tm_usuario SET usu_pass = :new_pass WHERE usu_id = :usu_id";
