@@ -226,11 +226,17 @@ function createActionButtons(userId, status) {
     editButton.textContent = 'Editar';
     editButton.onclick = () => editUser(userId);
 
+    const changedPasswordButton = document.createElement('button');
+    changedPasswordButton.className = 'btn btn-info btn-sm mr-2';
+    changedPasswordButton.textContent = 'Cambiar Contraseña';
+    changedPasswordButton.onclick = () => ChangedPasswordUser(userId);
+
     const actionButton = document.createElement('button');
     actionButton.className = `btn btn-sm ${status === 0 ? 'btn-secondary' : 'btn-danger'}`;
     actionButton.textContent = status === 0 ? 'Activar' : 'Desactivar';
     actionButton.onclick = () => toggleUserStatus(userId, status);
 
+    cell.appendChild(changedPasswordButton);
     cell.appendChild(editButton);
     cell.appendChild(actionButton);
 
@@ -352,6 +358,51 @@ function createSelectUnidad(nombreUnidad) {
         console.error('Error creating select HTML:', error);
         return '<div>Error loading data</div>';
     }
+}
+function ChangedPasswordUser(userId) {
+    Swal.fire({
+        title: 'Cambiar Contraseña',
+        html: `
+             <div style="display: flex; flex-direction: column; align-items: center;">
+                <input id="new_password" type="password" class="swal2-input mb-2" placeholder="Nueva Contraseña">
+                <div>
+                    <input id="show_password" class="form-check-input" type="checkbox" style="margin-right: 8px; display:block;">
+                    <label for="show_password">Mostrar contraseña</label>
+                </div>
+            </div>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Cambiar',
+        preConfirm: () => {
+            const new_password = document.getElementById('new_password').value;
+            return new_password;
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const new_password = result.value;
+            fetchData('update_password_force', { usu_id: userId, new_pass: new_password })
+                .then(data => {
+                    if (data.status === 'success') {
+                        Swal.fire({ icon: 'success', title: 'Contraseña Cambiada', text: 'La contraseña ha sido cambiada exitosamente.' });
+                    } else {
+                        Swal.fire({ icon: 'error', title: 'Error', text: data.message });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al cambiar la contraseña:', error);
+                    Swal.fire({ icon: 'error', title: 'Error', text: 'Error al cambiar la contraseña.' });
+                });
+        }
+    });
+    const showPasswordCheckbox = document.getElementById('show_password');
+    const newPasswordInput = document.getElementById('new_password');
+    showPasswordCheckbox.addEventListener('change', function() {
+        if (this.checked) {
+            newPasswordInput.type = 'text';
+        } else {
+            newPasswordInput.type = 'password';
+        }
+    });
 }
 function editUser(userId) {
     const userRow = document.querySelector(`tr[data-user-id="${userId}"]`);
