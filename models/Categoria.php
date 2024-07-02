@@ -2,16 +2,16 @@
 class Categoria extends Conectar
 {
     //add_categoria (Insert categoria)
-    public function add_categoria($cat_nom,$est) {
+    public function add_categoria($cat_nom,$nivel) {
         try {
             $conectar = parent::conexion();
             parent::set_names();
-            $sql = "INSERT INTO tm_categoria (cat_nom, est) VALUES (:cat_nom, :est)";
+            $sql = "INSERT INTO tm_categoria (cat_nom, nivel) VALUES (:cat_nom, :nivel)";
 
             $consulta = $conectar->prepare($sql);
 
             $consulta->bindParam(':cat_nom',$cat_nom);
-			$consulta->bindParam(':est',$est);
+			$consulta->bindParam(':nivel',$nivel);
 
             $consulta->execute();
             
@@ -63,15 +63,15 @@ class Categoria extends Conectar
     }
 
     //update_categoria segun id
-	public function update_categoria($cat_id, $cat_nom,$est) {
+	public function update_categoria($cat_id, $cat_nom,$nivel) {
 		try {
 			$conectar = parent::conexion();
 			parent::set_names();
-			$sql = "UPDATE tm_categoria SET  cat_nom=:cat_nom, est=:est WHERE cat_id = " . $cat_id . " ";
+      $sql = "UPDATE tm_categoria SET  cat_nom=:cat_nom, nivel=:nivel WHERE cat_id = :cat_id";
 			$consulta = $conectar->prepare($sql);
 
             $consulta->bindParam(':cat_nom',$cat_nom);
-			$consulta->bindParam(':est',$est);
+			$consulta->bindParam(':nivel',$nivel);
 
             $consulta->execute();
 			
@@ -141,7 +141,7 @@ class Categoria extends Conectar
          try {
              $conectar = parent::conexion();
              parent::set_names();
-             $sql = "SELECT * FROM tm_categoria as cat INNER JOIN tm_ev_niv niv ON(cat.est=niv.ev_niv_id);";
+             $sql = "SELECT * FROM tm_categoria as cat INNER JOIN tm_ev_niv niv ON(cat.nivel=niv.ev_niv_id);";
              $consulta = $conectar->prepare($sql);
              $consulta->execute();
              $resultado = $consulta->fetchAll();
