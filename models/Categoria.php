@@ -95,11 +95,10 @@ class Categoria extends Conectar
 		try {
 			$conectar = parent::conexion();
 			parent::set_names();
-			$sql = "DELETE FROM tm_categoria WHERE cat_id= :cat_id";
-      $consulta->bindParam(':cat_id',$cat_id);
+			$sql = "DELETE FROM tm_categoria WHERE cat_id=:cat_id";
 			$consulta = $conectar->prepare($sql);
-
-            $consulta->execute();
+      $consulta->bindParam(':cat_id',$cat_id);
+      $consulta->execute();
 			
 			if ($consulta->rowCount() > 0) {
                 return true;
