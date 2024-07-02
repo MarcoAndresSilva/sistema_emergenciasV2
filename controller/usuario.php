@@ -142,6 +142,12 @@ if (isset($_GET["op"])) {
         
             $data = $usuario->update_usuario($usu_id, $usu_nom, $usu_ape, $usu_correo, $usu_telefono, $usu_name, $usu_tipo, $usu_unidad);
             echo json_encode($data);
+      break;
+        case "update_password_force":
+            $usu_id = $_POST['usu_id'];
+            $new_pass = $_POST['new_pass'];
+            $data = $usuario->update_password_force($new_pass,$usu_id);
+            echo json_encode($data);
         break;
         case "update_usuario_tipo":
             $usu_id = $_POST['usu_id'];
