@@ -71,6 +71,7 @@ class Categoria extends Conectar
 			$consulta = $conectar->prepare($sql);
 
             $consulta->bindParam(':cat_nom',$cat_nom);
+      $consulta->bindParam(':cat_id',$cat_id);
 			$consulta->bindParam(':nivel',$nivel);
 
             $consulta->execute();
@@ -94,7 +95,8 @@ class Categoria extends Conectar
 		try {
 			$conectar = parent::conexion();
 			parent::set_names();
-			$sql = "DELETE FROM tm_categoria WHERE cat_id=" . $cat_id . " " ;
+			$sql = "DELETE FROM tm_categoria WHERE cat_id= :cat_id";
+      $consulta->bindParam(':cat_id',$cat_id);
 			$consulta = $conectar->prepare($sql);
 
             $consulta->execute();
