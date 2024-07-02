@@ -30,7 +30,7 @@
 							<?php 
 								if ($_SESSION["usu_tipo"] == 1){
 							?> 
-              <a class="dropdown-item" href="../Perfile"><span
+              <a class="dropdown-item" href="../Perfil"><span
 							class="font-icon glyphicon glyphicon-cog"></span>Editar Perfil</a>
 							<a class="dropdown-item" href="../CrearUsuario/index.php"><span
 							class="font-icon glyphicon glyphicon-plus"></span>Crear Usuario</a>
