@@ -70,8 +70,8 @@ class Categoria extends Conectar
       $sql = "UPDATE tm_categoria SET  cat_nom=:cat_nom, nivel=:nivel WHERE cat_id = :cat_id";
 			$consulta = $conectar->prepare($sql);
 
-            $consulta->bindParam(':cat_nom',$cat_nom);
       $consulta->bindParam(':cat_id',$cat_id);
+      $consulta->bindParam(':cat_nom',$cat_nom);
 			$consulta->bindParam(':nivel',$nivel);
 
             $consulta->execute();
