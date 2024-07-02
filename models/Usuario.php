@@ -208,6 +208,34 @@ public function update_password($old_pass, $new_pass, $usu_id){
     }
 }
 
+public function update_password_force($new_pass, $usu_id) {
+    $conectar = parent::conexion();
+    parent::set_names();
+
+    // Verificar seguridad de la nueva contraseña
+    $seguridad = new SeguridadPassword();
+    $passSegura = $seguridad->PasswordSegura($new_pass);
+    if (!$passSegura["mayuscula"] || !$passSegura["minuscula"] || !$passSegura["numero"] || !$passSegura["especiales"] || !$passSegura["largo"]) {
+        return ["status" => "warning", "message" => "La contraseña no cumple con todos los requisitos de seguridad.", "passSegura" =>$passSegura];
+    }
+
+    // Actualizar la contraseña
+    $hashed_new_pass = md5($new_pass);
+    $sql = "UPDATE tm_usuario SET usu_pass = :new_pass WHERE usu_id = :usu_id";
+    $consulta = $conectar->prepare($sql);
+    $consulta->bindParam(':new_pass', $hashed_new_pass);
+    $consulta->bindParam(':usu_id', $usu_id);
+    $consulta->execute();
+
+    // Verificar si la contraseña se actualizó correctamente
+    if ($consulta->rowCount() == 1) {
+        return array('status' => 'success', 'message' => 'Contraseña actualizada con éxito');
+    } else {
+        return array('status' => 'info', 'message' => 'No se realizó ningún cambio');
+    }
+}
+
+
 public function update_phone($new_phone, $usu_id){
     $conectar = parent::conexion();
     parent::set_names();
