@@ -75,37 +75,37 @@ function fetchData(op, postData, sendAsJson = false) {
             console.error('Error al realizar la consulta:', error);
         });
 }
- document.addEventListener('DOMContentLoaded', FnOpetenerUsuarios);
+document.addEventListener('DOMContentLoaded', FnOpetenerUsuarios);
 
-        function FnOpetenerUsuarios() {
-            const url = '../../controller/usuario.php';
-            const params = new URLSearchParams({ op: 'get_full_info_usuario' });
-            const fetchUrl = `${url}?${params}`;
+function FnOpetenerUsuarios() {
+    const url = '../../controller/usuario.php';
+    const params = new URLSearchParams({ op: 'get_full_info_usuario' });
+    const fetchUrl = `${url}?${params}`;
 
-            const requestOptions = {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({})
-            };
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({})
+        };
 
-            fetch(fetchUrl, requestOptions)
-                .then(response => response.ok ? response.json() : Promise.reject('Error en la solicitud.'))
-                .then(data => {
-                    if (data.status === 'success') {
-                        renderTable(data.result);
-                    } else {
-                        Swal.fire('Error', data.message, 'error');
-                    }
-                })
-                .catch(error => {
-                    Swal.fire('Error', 'Error al realizar la consulta.', 'error');
-                    console.error('Error al obtener la información de los usuarios:', error);
-                });
-        }
+    fetch(fetchUrl, requestOptions)
+       .then(response => response.ok ? response.json() : Promise.reject('Error en la solicitud.'))
+       .then(data => {
+           if (data.status === 'success') {
+               renderTable(data.result);
+           } else {
+               Swal.fire('Error', data.message, 'error');
+           }
+           })
+           .catch(error => {
+                Swal.fire('Error', 'Error al realizar la consulta.', 'error');
+                console.error('Error al obtener la información de los usuarios:', error);
+           });
+}
 
-        function renderTable(users) {
-            const userInfo = document.getElementById('userInfo');
-            userInfo.innerHTML = '';
+function renderTable(users) {
+    const userInfo = document.getElementById('userInfo');
+    userInfo.innerHTML = '';
 
     // Crear contenedores para filtros
     const filterContainer = document.createElement('div');
@@ -135,87 +135,86 @@ function fetchData(op, postData, sendAsJson = false) {
     });
 }
 
-        function createTable(users) {
-            const table = document.createElement('table');
-            table.className = 'table table-striped';
+function createTable(users) {
+    const table = document.createElement('table');
+    table.className = 'table table-striped';
 
-            table.appendChild(createTableHeader());
-            table.appendChild(createTableBody(users));
+    table.appendChild(createTableHeader());
+    table.appendChild(createTableBody(users));
 
-            return table;
+    return table;
+}
+
+function createTableHeader() {
+    const thead = document.createElement('thead');
+    const headerRow = document.createElement('tr');
+    const headers = ['ID', 'Nombre', 'Apellido', 'Tipo', 'Unidad' ,'Teléfono','Estado' ,'Correo', 'Usuario', 'Acciones'];
+
+    headers.forEach(headerText => {
+        const th = document.createElement('th');
+        th.textContent = headerText;
+        headerRow.appendChild(th);
+    });
+
+    thead.appendChild(headerRow);
+    return thead;
+}
+
+function createTableBody(users) {
+    const tbody = document.createElement('tbody');
+
+    users.forEach(user => {
+        const row = document.createElement('tr');
+
+        row.setAttribute('data-user-id', user.usu_id);
+        row.appendChild(createTableCell(user.usu_id));
+        row.appendChild(createTableCell(user.Nombre));
+        row.appendChild(createTableCell(user.Apellido));
+        row.appendChild(createTypeCell(user.id_tipo,user.usu_id));
+        row.appendChild(createTableCell(user.Unidad));
+        row.appendChild(createTableCell(user.Telefono));
+        row.appendChild(createStatusBadge(user.estado));
+        row.appendChild(createTableCell(user.Correo));
+        row.appendChild(createTableCell(user.Usuario));
+        row.appendChild(createActionButtons(user.usu_id, user.estado));
+
+        tbody.appendChild(row);
+    });
+
+    return tbody;
+}
+
+function createTableCell(content) {
+    const cell = document.createElement('td');
+    cell.textContent = content;
+    return cell;
+}
+
+function createTypeCell(id_tipo,userId){
+    const cell = document.createElement('td');
+    const select = document.createElement('select');
+    select.className = 'form-control';
+    const options = [
+       { value: 1, text: 'Emergencias' },
+       { value: 2, text: 'Informática' },
+       { value: 3, text: 'Territorial' }
+    ];
+
+    options.forEach(optionData => {
+        const option = document.createElement('option');
+        option.value = optionData.value;
+        option.textContent = optionData.text;
+        if (id_tipo === optionData.value) {
+            option.selected = true;
         }
-
-        function createTableHeader() {
-            const thead = document.createElement('thead');
-            const headerRow = document.createElement('tr');
-            const headers = ['ID', 'Nombre', 'Apellido', 'Tipo', 'Unidad' ,'Teléfono','Estado' ,'Correo', 'Usuario', 'Acciones'];
-
-            headers.forEach(headerText => {
-                const th = document.createElement('th');
-                th.textContent = headerText;
-                headerRow.appendChild(th);
-            });
-
-            thead.appendChild(headerRow);
-            return thead;
-        }
-
-        function createTableBody(users) {
-            const tbody = document.createElement('tbody');
-
-            users.forEach(user => {
-                const row = document.createElement('tr');
-
-                row.setAttribute('data-user-id', user.usu_id);
-                row.appendChild(createTableCell(user.usu_id));
-                row.appendChild(createTableCell(user.Nombre));
-                row.appendChild(createTableCell(user.Apellido));
-                row.appendChild(createTypeCell(user.id_tipo,user.usu_id));
-                row.appendChild(createTableCell(user.Unidad));
-                row.appendChild(createTableCell(user.Telefono));
-                row.appendChild(createStatusBadge(user.estado));
-                row.appendChild(createTableCell(user.Correo));
-                row.appendChild(createTableCell(user.Usuario));
-                row.appendChild(createActionButtons(user.usu_id, user.estado));
-
-                tbody.appendChild(row);
-            });
-
-            return tbody;
-        }
-
-        function createTableCell(content) {
-            const cell = document.createElement('td');
-            cell.textContent = content;
-            return cell;
-        }
-
-        function createTypeCell(id_tipo,userId){
-            const cell = document.createElement('td');
-            const select = document.createElement('select');
-            select.className = 'form-control';
-
-            const options = [
-                { value: 1, text: 'Emergencias' },
-                { value: 2, text: 'Informática' },
-                { value: 3, text: 'Territorial' }
-            ];
-
-            options.forEach(optionData => {
-                const option = document.createElement('option');
-                option.value = optionData.value;
-                option.textContent = optionData.text;
-                if (id_tipo === optionData.value) {
-                    option.selected = true;
-                }
-                select.appendChild(option);
-            });
-            select.addEventListener('change', () => {
-                handleTypeChange(userId, select.value);
-            });
-            cell.appendChild(select);
-            return cell;
-        }
+            select.appendChild(option);
+    });
+    select.addEventListener('change', () => {
+        handleTypeChange(userId, select.value);
+    });
+    cell.appendChild(select);
+    return cell;
+}
 
 
 function createActionButtons(userId, status) {
