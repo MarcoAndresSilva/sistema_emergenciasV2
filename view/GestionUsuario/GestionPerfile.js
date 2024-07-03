@@ -124,8 +124,9 @@ function renderTable(users) {
     userInfo.appendChild(table);
 
     // Inicializar DataTable
-    const dataTable = $('table').DataTable();
-
+    const dataTable = $('table').DataTable({
+        responsive: true
+    });
 
 
     // Filtro por Estado
