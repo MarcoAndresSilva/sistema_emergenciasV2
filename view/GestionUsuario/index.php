@@ -9,7 +9,8 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 	<?php require_once("../MainHead/head.php") ?>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css">
 <link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.2/css/responsive.dataTables.css">
-<link rel="stylesheet" href="./nivelCateogiraStyle.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.2/css/responsive.bootstrap5.css"> 
+<link rel="stylesheet" href="./gestionUsuario.css">
 <title>Sistema Emergencia</title>
 <script defer type="text/javascript" src="./GestionPerfile.js"></script>
 <script src="../../public/js/sweetaler2v11-11-0.js"></script>

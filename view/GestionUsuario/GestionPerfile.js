@@ -211,7 +211,7 @@ function createTableCell(content) {
 function createTypeCell(id_tipo,userId){
     const cell = document.createElement('td');
     const select = document.createElement('select');
-    select.className = 'form-control';
+    select.className = 'form-select select-fixed-size';
     const options = [
        { value: 1, text: 'Emergencias' },
        { value: 2, text: 'Informática' },
