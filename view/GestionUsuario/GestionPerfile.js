@@ -128,11 +128,28 @@ function renderTable(users) {
         responsive: true
     });
 
+    // Delegación de eventos para manejar los clics en los botones
+    userInfo.addEventListener('click', function(event) {
+        const target = event.target;
+
+        if (target.matches('button.btn-primary')) {
+            const userId = target.dataset.userId;
+            editUser(userId);
+        } else if (target.matches('button.btn-info')) {
+            const userId = target.dataset.userId;
+            ChangedPasswordUser(userId);
+        } else if (target.matches('button.btn-sm')) {
+            const userId = target.dataset.userId;
+            const currentStatus = target.dataset.status === 'active' ? 1 : 0;
+            toggleUserStatus(userId, currentStatus);
+        }
+    });
 
     // Filtro por Estado
-    $('#filterEstado').on('change', function () {
-        const val = $(this).val();
-        dataTable.column(5).search(val ? `^${val}$` : '', true, false).draw();
+    const filterEstado = document.getElementById('filterEstado');
+    filterEstado.addEventListener('change', function () {
+        const val = this.value;
+        dataTable.column(6).search(val ? `^${val}$` : '', true, false).draw();
     });
 }
 
@@ -217,24 +234,24 @@ function createTypeCell(id_tipo,userId){
     return cell;
 }
 
-
 function createActionButtons(userId, status) {
     const cell = document.createElement('td');
 
     const editButton = document.createElement('button');
     editButton.className = 'btn btn-primary btn-sm mr-2';
     editButton.textContent = 'Editar';
-    editButton.onclick = () => editUser(userId);
+    editButton.dataset.userId = userId;
 
     const changedPasswordButton = document.createElement('button');
     changedPasswordButton.className = 'btn btn-info btn-sm mr-2';
     changedPasswordButton.textContent = 'Cambiar Contraseña';
-    changedPasswordButton.onclick = () => ChangedPasswordUser(userId);
+    changedPasswordButton.dataset.userId = userId;
 
     const actionButton = document.createElement('button');
     actionButton.className = `btn btn-sm ${status === 0 ? 'btn-secondary' : 'btn-danger'}`;
     actionButton.textContent = status === 0 ? 'Activar' : 'Desactivar';
-    actionButton.onclick = () => toggleUserStatus(userId, status);
+    actionButton.dataset.userId = userId;
+    actionButton.dataset.status = status === 0 ? 'inactive' : 'active';
 
     cell.appendChild(changedPasswordButton);
     cell.appendChild(editButton);
@@ -260,15 +277,20 @@ function toggleUserStatus(userId, currentStatus) {
         if (result.isConfirmed) {
             fetchData(actionOp, { usu_id: userId })
             .then(data => {
-                // Aquí puedes manejar la respuesta si es necesario
                 if (data.status === 'success') {
-                    // Volver a cargar los usuarios o actualizar la tabla
+                    const actionButton = document.querySelector(`button[data-user-id="${userId}"][data-status="${currentStatus === 0 ? 'inactive' : 'active'}"]`);
+                    actionButton.textContent = currentStatus === 0 ? 'Activar' : 'Desactivar';
+                    actionButton.className = `btn btn-sm ${currentStatus === 0 ? 'btn-danger' : 'btn-secondary'}`;
+                    actionButton.dataset.status = currentStatus === 0 ? 'active' : 'inactive';
+                    Swal.fire('Cambiado!', 'El usuario ha sido cambiado correctamente.', 'success');
                     FnOpetenerUsuarios();
-                }
-            })
-            .catch(error => {
-                console.error(`Error al ${action} el usuario:`, error);
-            });
+                } else {
+                        Swal.fire('Error', 'Hubo un problema al cambiar el estado del usuario.', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al cambiar el estado del usuario:', error);
+                });
         }
     });
 }
