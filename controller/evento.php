@@ -188,13 +188,13 @@ if (isset($_GET["op"])) {
                     // Hora de Apertura
                     $recorrido .= "<td>" . $row['ev_inicio'] . "</td>";
                     
-                    // boton derivar
-                    $recorrido .= "<td> <button id='btnPanelDerivar' type='button' class='btn btn-inline btn-primary btn-sm ladda-button modal-btn'> <i class='fa-solid fa-up-right-from-square'></i> </button>
-                    </td>";
-
-                     // boton cerrar
-                     $recorrido .= "<td> <button id='btnPanelCerrar' type='button' class='btn btn-inline btn-danger btn-sm ladda-button  modal-btn'> <i class='fa-solid fa-square-xmark'></i> </button>
+                     // boton derivar
+                     $recorrido .= "<td> <button id='btn' type='button' class='btn btn-inline btn-primary btn-sm ladda-button btnMostrarDatos modal-btn'> <i class='fa-solid fa-up-right-from-square'></i> </button>
                      </td>";
+ 
+                      // boton cerrar
+                      $recorrido .= "<td> <button id='btn' type='button' class='btn btn-inline btn-danger btn-sm ladda-button btnPanelCerrar modal-btn'> <i class='fa-solid fa-square-xmark'></i> </button>
+                      </td>";
 
                     $recorrido .= "</tr>";
 
