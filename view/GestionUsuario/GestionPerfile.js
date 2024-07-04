@@ -130,8 +130,8 @@ function renderTable(users) {
 
     // Delegación de eventos para manejar los clics en los botones
     userInfo.addEventListener('click', function(event) {
-        const target = event.target;
-
+        const target = event.target.closest('button');
+    if (target) {
         if (target.matches('button.btn-primary')) {
             const userId = target.dataset.userId;
             editUser(userId);
@@ -143,6 +143,7 @@ function renderTable(users) {
             const currentStatus = target.dataset.status === 'active' ? 1 : 0;
             toggleUserStatus(userId, currentStatus);
         }
+    }
     });
 
     // Filtro por Estado
