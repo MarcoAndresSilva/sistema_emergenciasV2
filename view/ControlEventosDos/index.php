@@ -41,8 +41,6 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
             
             <h5 class="m-t-lg with-border">Informaci&oacute;n Actual</h5>
             <div class="box-typical box-typical-padding table table-responsive-sm">
-<!-- 
-            <button type="button" class="btn btn-primary" id="btnDerivar" data-bs-toggle="modal" data-bs-target="#modalDerivar" data-bs-whatever="@fat">Derivar</button> -->
 
                 <!-- tabla de asuntos inmediatos (Alto) -->
                 <table class="table tabla-media tabla-basica table-bordered table-striped table-vcenter js-dataTable-js">
