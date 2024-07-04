@@ -76,7 +76,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 echo ' <script  src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>';
 echo '<script defer src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.js"></script>';
 echo '<script defer src=" https://cdn.datatables.net/responsive/3.0.2/js/dataTables.responsive.js"></script>';
-echo '<script defer src="cdn.datatables.net/responsive/3.0.2/js/responsive.datatables.js"></script>';
+echo '<script defer src="https://cdn.datatables.net/responsive/3.0.2/js/responsive.datatables.js"></script>';
  
 }else{
 	header("location:".Conectar::ruta()."index.php");
