@@ -11,8 +11,8 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 <link rel="stylesheet" href="./nivelCateogiraStyle.css">
 <title>Sistema Emergencia</title>
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap5.css" />
-<script async src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
-<script async src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.js"></script>
+<script  src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
+<script defer src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.js"></script>
 <script defer type="text/javascript" src="./GestionMotivo.js"></script>
 <script src="../../public/js/sweetaler2v11-11-0.js"></script>
 </head>
