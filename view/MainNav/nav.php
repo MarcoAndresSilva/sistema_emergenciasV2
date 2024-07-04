@@ -69,6 +69,10 @@
                         <span class="glyphicon glyphicon-asterisk"></span>
                         <span class="lbl"> Seguridad contrase&ntilde;a</span>
                     </a>
+                    <a class="" href="../GestionPerfile/">
+                        <span class="glyphicon glyphicon-asterisk"></span>
+                        <span class="lbl">Gestionar Usuarios</span>
+                    </a>
                 </div>
             </div>
         </li>

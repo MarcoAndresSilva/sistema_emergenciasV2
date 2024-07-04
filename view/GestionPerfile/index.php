@@ -7,11 +7,12 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 <!DOCTYPE html>
 <html>
 	<?php require_once("../MainHead/head.php") ?>
-<link rel="stylesheet" href="estilopersonal.css">
-<title>Sistema Emergencia</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css">
-<script defer src="../../public/js/sweetaler2v11-11-0.js"></script>
-<script defer type="text/javascript" src="unidadmunicipal.js"></script>
+<link rel="stylesheet" href="./nivelCateogiraStyle.css">
+<title>Sistema Emergencia</title>
+<script defer type="text/javascript" src="./GestionPerfile.js"></script>
+<script src="../../public/js/sweetaler2v11-11-0.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
 </head>
 
 <body class="with-side-menu">
@@ -28,24 +29,27 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 				<div class="tbl">
 					<div class="tbl-row">
 						<div class="tbl-cell">
-							<h3>Unidades Municipales</h3>
+							<h3>Instituciones de Emergencias</h3>
 							<ol class="breadcrumb breadcrumb-simple">
 								<li><a href="#">Registro</a></li>
-								<li class="active">Unidades</li>
+								<li class="active">Instituciones</li>
 							</ol>
 						</div>
 					</div>
 				</div>
 			</header>
 
-			<h5 class="m-t-lg with-border">Informaci&oacute;n de Unidades</h5>
-			<button class="btn btn-success" id="addButton" onclick="fn_agregar_unidad()">Agregar motivo</button>
-      <div id="unidadInfo" class="row justify-content-center">
-          <div class="spinner-border text-primary mt-5" role="status">
+			<h5 class="m-t-lg with-border">Informaci&oacute;n de Instituciones de Emergencias</h5>
+
+<div class="container">
+    <h2>Información del Usuario</h2>
+<a href="../CrearUsuario/" class="btn btn-success">Crear usuario</a>
+    <div id="userInfo" class="row justify-content-center">
+        <div class="spinner-border text-primary mt-5" role="status">
             <span class="sr-only">Cargando...</span>
-          </div>
-      </div>
-			
+        </div>
+    </div>
+</div>
         </div><!--.container-fluid-->
     </div><!--.page-content-->
 
@@ -67,7 +71,8 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 	</script>
 
 <?php
-
+echo ' <script  src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>';
+echo '<script defer src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.js"></script>';
 }else{
 	header("location:".Conectar::ruta()."index.php");
 }
