@@ -239,19 +239,49 @@ function createActionButtons(userId, status) {
 
     const editButton = document.createElement('button');
     editButton.className = 'btn btn-primary btn-sm mr-2';
-    editButton.textContent = 'Editar';
     editButton.dataset.userId = userId;
+
+    const editIcon = document.createElement('i');
+    editIcon.className = 'fas fa-edit';
+    editIcon.style.marginRight = '5px'; // Espacio adicional entre el icono y el texto
+
+    const editButtonText = document.createElement('span');
+    editButtonText.className = 'button-text d-none d-md-inline-block'; // Oculta en dispositivos móviles
+    editButtonText.textContent = 'Editar';
+
+    editButton.appendChild(editIcon);
+    editButton.appendChild(editButtonText);
 
     const changedPasswordButton = document.createElement('button');
     changedPasswordButton.className = 'btn btn-info btn-sm mr-2';
-    changedPasswordButton.textContent = 'Cambiar Contraseña';
     changedPasswordButton.dataset.userId = userId;
+
+    const passwordIcon = document.createElement('i');
+    passwordIcon.className = 'fas fa-key';
+    passwordIcon.style.marginRight = '5px'; // Espacio adicional entre el icono y el texto
+
+    const passwordButtonText = document.createElement('span');
+    passwordButtonText.className = 'button-text d-none d-md-inline-block'; // Oculta en dispositivos móviles
+    passwordButtonText.textContent = 'Cambiar';
+
+    changedPasswordButton.appendChild(passwordIcon);
+    changedPasswordButton.appendChild(passwordButtonText);
 
     const actionButton = document.createElement('button');
     actionButton.className = `btn btn-sm ${status === 0 ? 'btn-secondary' : 'btn-danger'}`;
-    actionButton.textContent = status === 0 ? 'Activar' : 'Desactivar';
     actionButton.dataset.userId = userId;
     actionButton.dataset.status = status === 0 ? 'inactive' : 'active';
+
+    const actionIcon = document.createElement('i');
+    actionIcon.className = 'fas fa-power-off';
+    actionIcon.style.marginRight = '5px'; // Espacio adicional entre el icono y el texto
+
+    const actionButtonText = document.createElement('span');
+    actionButtonText.className = 'button-text d-none d-md-inline-block'; // Oculta en dispositivos móviles
+    actionButtonText.textContent = status === 0 ? 'Activar' : 'Desactivar';
+
+    actionButton.appendChild(actionIcon);
+    actionButton.appendChild(actionButtonText);
 
     cell.appendChild(changedPasswordButton);
     cell.appendChild(editButton);
