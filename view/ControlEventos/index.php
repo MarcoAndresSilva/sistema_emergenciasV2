@@ -109,11 +109,6 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 									<span><i class="fa-solid fa-arrow-up-from-bracket"></i> </span>
 								</button>		
 							</div>
-							<!-- <div class="btn-box">
-								<button id="btn"type='button' class='btn btn-inline btn-warning btn-sm ladda-button btnCerrarEvento close-btn'>Cerrar Evento <span> <i class="fa-regular fa-circle-xmark"></i></span>
-					 			</button>
-							</div> -->
-
 						</fieldset>	
 					</div>
 				</div>
