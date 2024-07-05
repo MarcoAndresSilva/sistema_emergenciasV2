@@ -39,7 +39,7 @@ $(document).on("click", "#btnPanelDerivar", function(e) {
     //Llamar a la función para consultar el nivel de peligro
     consultarNivelPeligro($id_evento);
      //Llamar a la función para consultar las unidades disponibles
-     consultarUnidadDisponible($id_evento);
+    consultarUnidadDisponible($id_evento);
 });
 
 $(document).on("click", "#btnPanelCerrar", function(e) {
@@ -57,6 +57,10 @@ function mostrarModal(modalId) {
     }
 }
 
+// Función para obtener el id del evento y mostrarlo en el label
+function mostrarIdEvento(ev_id) {
+    $('#ev_id').text(ev_id);
+}
 
 // Función para mostrar el cat_nom en el label
 function consultarCategoria(ev_id) {
@@ -74,12 +78,6 @@ function consultarCategoria(ev_id) {
     });
 }
 
-// Función para obtener el id del evento y mostrarlo en el label
-function mostrarIdEvento(ev_id) {
-    $('#ev_id').text(ev_id);
-}
-
-
 function consultarNivelPeligro($id_evento) {
     var id_evento = $id_evento; // Obtén el ID del evento
     
@@ -92,7 +90,7 @@ function consultarNivelPeligro($id_evento) {
     });
     
     // Obtener unidades asignadas al evento
-    $.post("../../controller/evento.php?op=get_evento_id", { id_evento: id_evento }, function(asignadas, status) {
+    $.post("../../controller/eventoDos.php?op=get_evento_id", { id_evento: id_evento }, function(asignadas, status) {
         
         // Marcar como seleccionado el nivel de peligro del evento
         if (typeof asignadas[0]['ev_niv'] !== 'undefined') {
@@ -142,15 +140,25 @@ function consultarUnidadDisponible($id_evento) {
     }, 'json');
 }
 
+
 //Funcion para Modificar las unidades y nivel de peligro de un evento
 //Activar el boton para modificar todo
-$('.btnActualizarTodos').off('click').on('click',function(){
-    //Llama a la funcion para modificar las unidades y el nivel de peligro de un evento
-    console.log("click")
+// $('.btnActualizarTodos').off('click').on('click',function(){
+//     //Llama a la funcion para modificar las unidades y el nivel de peligro de un evento
+//     console.log("click")
+//     ActualizarTodo($id_evento);
+// });
+
+$(document).on("click", ".btnActualizarTodos", function() {
+    console.log('Button actualizar clicked');
     ActualizarTodo($id_evento);
 });
 
+
+
 function ActualizarTodo($id_evento){
+    console.log("actualizar todod clicked");
+    mostrarIdEvento($id_evento);
     //Variables
     var errorActualizar = 0;
     var unid_ids = []; 
