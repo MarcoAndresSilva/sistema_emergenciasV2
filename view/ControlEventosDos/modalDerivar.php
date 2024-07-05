@@ -35,7 +35,6 @@
               </fieldset>
 
               <fieldset class="form-group box-selection" id="buttons-group">
-                <label class="form-label semibold" id="asignaciones-title" for="id_nivel_peligro">Seleccionar</label>
                 <div class="btn-box">
                   <button id="btn"type='button' class='btn btn-inline btn-success btn-sm ladda-button btnActualizarTodos'> Derivar
                     <span><i class="fa-solid fa-arrow-up-from-bracket"></i> </span>
