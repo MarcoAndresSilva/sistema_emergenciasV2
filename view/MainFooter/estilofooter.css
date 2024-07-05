@@ -91,6 +91,9 @@
     transition: .3s ease all;
     line-height: 60px;
 }
+.redes__enlaces  i{
+    line-height: 60px;
+}
 
 
 /* .redes_enlaces{
