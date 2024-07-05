@@ -263,7 +263,7 @@ function createActionButtons(userId, status) {
 
     const passwordButtonText = document.createElement('span');
     passwordButtonText.className = 'button-text d-none d-md-inline-block'; // Oculta en dispositivos móviles
-    passwordButtonText.textContent = 'Cambiar';
+    passwordButtonText.textContent = 'contraseña';
 
     changedPasswordButton.appendChild(passwordIcon);
     changedPasswordButton.appendChild(passwordButtonText);
