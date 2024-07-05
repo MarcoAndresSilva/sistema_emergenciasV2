@@ -57,21 +57,23 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
         </div><!--.container-fluid-->
     </div><!--.page-content-->
 
-	<?php require_once("../MainFooter/footer.php"); ?>
 	
+	<?php require_once("../MainFooter/footer.php"); ?>
 </body>
-	<script>
-		document.getElementById('show-hide-sidebar-toggle').addEventListener('click', function(e) {
-			e.preventDefault();
-			
-			var body = document.body;
-			
-			if (!body.classList.contains('sidebar-hidden')) {
-				body.classList.add('sidebar-hidden');
-			} else {
-				body.classList.remove('sidebar-hidden');
-			}
-		});
+<?php
+require_once("../MainJs/js.php");?>
+<script>
+	document.getElementById('show-hide-sidebar-toggle').addEventListener('click', function(e) {
+		e.preventDefault();
+		
+		var body = document.body;
+		
+		if (!body.classList.contains('sidebar-hidden')) {
+			body.classList.add('sidebar-hidden');
+		} else {
+			body.classList.remove('sidebar-hidden');
+		}
+	});
 	</script>
 
 <?php
