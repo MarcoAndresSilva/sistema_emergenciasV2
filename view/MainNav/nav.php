@@ -43,6 +43,11 @@
             <div class="collapse-personal" id="collapseParametria"  >
                 <div class="card card-body" style="padding-left: 5px; border: none" style="padding-left: 5px; border: none">
 
+                    <a class="Unidad-Municipal" href="../UnidadMunicipal/">
+                        <span class="glyphicon glyphicon-asterisk"></span>
+                        <span class="lbl">Unidades Municipales</span>
+                    </a>
+
                     <a class="" href="../NivelCategoria/">
                         <span class="glyphicon glyphicon-asterisk"></span>
                         <span class="lbl">Nivel Categoria </span>
@@ -69,7 +74,7 @@
                         <span class="glyphicon glyphicon-asterisk"></span>
                         <span class="lbl"> Seguridad contrase&ntilde;a</span>
                     </a>
-                    <a class="" href="../GestionPerfile/">
+                    <a class="" href="../GestionUsuario/">
                         <span class="glyphicon glyphicon-asterisk"></span>
                         <span class="lbl">Gestionar Usuarios</span>
                     </a>

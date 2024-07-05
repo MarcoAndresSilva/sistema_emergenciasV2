@@ -264,6 +264,7 @@ function actualizarTabla(data) {
         "language":{
             "url":'../registrosLog/spanishDatatable.json'
         },
+        "responsive": true
     });
 }
 

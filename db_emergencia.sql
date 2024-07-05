@@ -118,15 +118,15 @@ INSERT INTO `tm_camb_asig` (`camb_asig_id`, `ev_id`, `antigua_asig`, `nueva_asig
 
 CREATE TABLE `tm_categoria` (
   `cat_id` int(11) NOT NULL,
-  `cat_nom` varchar(20) NOT NULL,
-  `est` int(11) NOT NULL
+  `cat_nom` varchar(50) NOT NULL,
+  `nivel` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 --
 -- Volcado de datos para la tabla `tm_categoria`
 --
 
-INSERT INTO `tm_categoria` (`cat_id`, `cat_nom`, `est`) VALUES
+INSERT INTO `tm_categoria` (`cat_id`, `cat_nom`, `nivel`) VALUES
 (1, 'Incendios', 1),
 (2, 'Asaltos', 1),
 (3, 'Accidente Vehicular', 1),
@@ -439,7 +439,7 @@ INSERT INTO `tm_comuna` (`comuna_id`, `comuna_nom`, `region_id`) VALUES
 (273, 'Coyhaique', 13),
 (274, 'Guaitecas', 13),
 (275, 'Lago Verde', 13),
-(276, 'O\'Higgins', 13),
+(276, "O\'Higgins", 13),
 (277, 'Río Ibáñez', 13),
 (278, 'Tortel', 13),
 (279, 'Antártica', 14),

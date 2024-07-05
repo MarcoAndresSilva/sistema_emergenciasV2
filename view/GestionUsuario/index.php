@@ -8,7 +8,9 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 <html>
 	<?php require_once("../MainHead/head.php") ?>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css">
-<link rel="stylesheet" href="./nivelCateogiraStyle.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.2/css/responsive.dataTables.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.2/css/responsive.bootstrap5.css"> 
+<link rel="stylesheet" href="./gestionUsuario.css">
 <title>Sistema Emergencia</title>
 <script defer type="text/javascript" src="./GestionPerfile.js"></script>
 <script src="../../public/js/sweetaler2v11-11-0.js"></script>
@@ -43,7 +45,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 
 <div class="container">
     <h2>Información del Usuario</h2>
-<a href="../CrearUsuario/" class="btn btn-success">Crear usuario</a>
+    <a href="../CrearUsuario/" class="btn btn-success">Crear usuario</a>
     <div id="userInfo" class="row justify-content-center">
         <div class="spinner-border text-primary mt-5" role="status">
             <span class="sr-only">Cargando...</span>
@@ -73,6 +75,9 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 <?php
 echo ' <script  src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>';
 echo '<script defer src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.js"></script>';
+echo '<script defer src=" https://cdn.datatables.net/responsive/3.0.2/js/dataTables.responsive.js"></script>';
+echo '<script defer src="https://cdn.datatables.net/responsive/3.0.2/js/responsive.datatables.js"></script>';
+ 
 }else{
 	header("location:".Conectar::ruta()."index.php");
 }
