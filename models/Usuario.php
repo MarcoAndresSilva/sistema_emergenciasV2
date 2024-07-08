@@ -400,25 +400,26 @@ public function update_usuario($usu_id, $usu_nom, $usu_ape, $usu_correo, $usu_te
     }
 }
 
+
 public function update_usuario_tipo($usu_id, $usu_tipo){
-    if(empty($usu_tipo)) {
+    if (empty($usu_tipo)) {
         return array('status' => 'warning', 'message' => 'El tipo de usuario es obligatorio');
     }
 
-    $conectar = parent::conexion();
-    parent::set_names();
-
     $sql = "UPDATE tm_usuario SET usu_tipo = :usu_tipo WHERE usu_id = :usu_id";
-    $consulta = $conectar->prepare($sql);
-    $consulta->bindParam(':usu_tipo', $usu_tipo);
-    $consulta->bindParam(':usu_id', $usu_id);
-    $consulta->execute();
+    $params = [
+        ':usu_tipo' => $usu_tipo,
+        ':usu_id' => $usu_id
+    ];
 
-    if ($consulta->rowCount() > 0) {
+    $resultado = $this->ejecutarAccion($sql, $params);
+
+    if ($resultado) {
         return array('status' => 'success', 'message' => 'Tipo de usuario actualizado con éxito');
     } else {
         return array('status' => 'info', 'message' => 'No se realizó ningún cambio');
     }
 }
+
 }
 ?>
