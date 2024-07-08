@@ -320,43 +320,47 @@ public function get_full_usuarios(){
     return array('status' => 'success', 'message' => 'Se obtienen los datos', 'result' => $resultado);
 }
 
+public function disable_usuario($usu_id){
     $fecha_elim = date('Y-m-d H:i:s'); // Get current date and time
     $estado = 0; // Assuming 0 is the value for 'disabled'
 
     $sql = "UPDATE tm_usuario SET estado = :estado, fecha_elim = :fecha_elim WHERE usu_id = :usu_id";
-    $consulta = $conectar->prepare($sql);
-    $consulta->bindParam(':estado', $estado);
-    $consulta->bindParam(':fecha_elim', $fecha_elim);
-    $consulta->bindParam(':usu_id', $usu_id);
-    $consulta->execute();
+    $params = [
+        ':estado' => $estado,
+        ':fecha_elim' => $fecha_elim,
+        ':usu_id' => $usu_id
+    ];
 
-    if ($consulta->rowCount() == 1) {
+    $resultado = $this->ejecutarAccion($sql, $params);
+
+    if ($resultado) {
         return array('status' => 'success', 'message' => 'Usuario desactivado con éxito');
     } else {
         return array('status' => 'info', 'message' => 'No se realizó ningún cambio');
     }
 }
-public function enable_usuario($usu_id){
-    $conectar = parent::conexion();
-    parent::set_names();
 
+public function enable_usuario($usu_id){
     $estado = 1; // Assuming 1 is the value for 'enabled'
     $fecha_elim = null; // Set 'fecha_elim' to null
 
     $sql = "UPDATE tm_usuario SET estado = :estado, fecha_elim = :fecha_elim WHERE usu_id = :usu_id";
-    $consulta = $conectar->prepare($sql);
-    $consulta->bindParam(':estado', $estado);
-    $consulta->bindParam(':fecha_elim', $fecha_elim);
-    $consulta->bindParam(':usu_id', $usu_id);
-    $consulta->execute();
+    $params = [
+        ':estado' => $estado,
+        ':fecha_elim' => $fecha_elim,
+        ':usu_id' => $usu_id
+    ];
 
-    if ($consulta->rowCount() == 1) {
+    $resultado = $this->ejecutarAccion($sql, $params);
+
+    if ($resultado) {
         return array('status' => 'success', 'message' => 'Usuario activado con éxito');
     } else {
         return array('status' => 'info', 'message' => 'No se realizó ningún cambio');
     }
 }
-    
+ 
+
 public function update_usuario($usu_id, $usu_nom, $usu_ape, $usu_correo, $usu_telefono, $usu_name, $usu_tipo, $usu_unidad){
     if (empty($usu_nom) || empty($usu_ape) || empty($usu_correo) || empty($usu_telefono) || empty($usu_name) || empty($usu_tipo) || empty($usu_unidad)) {
         return array('status' => 'warning', 'message' => 'Todos los campos son obligatorios');
