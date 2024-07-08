@@ -171,19 +171,17 @@ public function add_usuario($usu_nom, $usu_ape, $usu_correo, $usu_name, $usu_pas
 }
 
 
+
 public function update_password($old_pass, $new_pass, $usu_id){
-    $conectar = parent::conexion();
-    parent::set_names();
+    $hashed_old_pass = md5($old_pass); 
 
-    $hashed_old_pass = md5($old_pass);
     $sql = "SELECT usu_pass FROM tm_usuario WHERE usu_id = :usu_id AND usu_pass = :old_pass";
-    $consulta = $conectar->prepare($sql);
-    $consulta->bindParam(':usu_id', $usu_id);
-    $consulta->bindParam(':old_pass', $hashed_old_pass);
-    $consulta->execute();
-    $user = $consulta->fetch();
+    $params = [
+        ':usu_id' => $usu_id,
+        ':old_pass' => $hashed_old_pass
+    ];
+    $user = $this->ejecutarConsulta($sql, $params, false);
 
-    // Verificar si la contraseña antigua es correcta
     if (!$user) {
         return array('status' => 'warning', 'message' => 'La contraseña antigua no coincide');
     }
@@ -192,21 +190,25 @@ public function update_password($old_pass, $new_pass, $usu_id){
     if ($user['usu_pass'] == md5($new_pass)) {
         return array('status' => 'info', 'message' => 'La nueva contraseña debe ser distinta a la antigua');
     }
+
+    // Verificar seguridad de la nueva contraseña
     $seguridad = new SeguridadPassword();
     $passSegura = $seguridad->PasswordSegura($new_pass);
     if (!$passSegura["mayuscula"] || !$passSegura["minuscula"] || !$passSegura["numero"] || !$passSegura["especiales"] || !$passSegura["largo"]) {
         return ["status" => "warning", "message" => "La contraseña no cumple con todos los requisitos de seguridad."];
     }
+
     // Actualizar la contraseña
-    $hashed_new_pass = md5($new_pass); // Almacenar el resultado de md5($new_pass) en una variable
+    $hashed_new_pass = md5($new_pass);
     $sql = "UPDATE tm_usuario SET usu_pass = :new_pass WHERE usu_id = :usu_id";
-    $consulta = $conectar->prepare($sql);
-    $consulta->bindParam(':new_pass', $hashed_new_pass); // Pasar la variable a bindParam
-    $consulta->bindParam(':usu_id', $usu_id);
-    $consulta->execute();
+    $params = [
+        ':new_pass' => $hashed_new_pass,
+        ':usu_id' => $usu_id
+    ];
+    $resultado = $this->ejecutarAccion($sql, $params);
 
     // Verificar si la contraseña se actualizó correctamente
-    if ($consulta->rowCount() == 1) {
+    if ($resultado) {
         return array('status' => 'success', 'message' => 'Contraseña actualizada con éxito');
     } else {
         return array('status' => 'info', 'message' => 'No se realizó ningún cambio');
