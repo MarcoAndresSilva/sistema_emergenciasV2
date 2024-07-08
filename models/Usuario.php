@@ -296,12 +296,10 @@ public function get_info_usuario($usu_id){
 }
 
 public function get_full_usuarios(){
-    $conectar = parent::conexion();
-    parent::set_names();
     $sql = 'SELECT 
-            	usu.usu_id as "usu_id",
-            	usu.estado as "estado",
-            	usu.usu_nom as "Nombre",
+                usu.usu_id as "usu_id",
+                usu.estado as "estado",
+                usu.usu_nom as "Nombre",
                 usu.usu_ape as "Apellido",
                 tp.usu_tipo_nom as "Tipo",
                 tp.usu_tipo_id as "id_tipo",
@@ -314,17 +312,13 @@ public function get_full_usuarios(){
             ON(tp.usu_tipo_id=usu.usu_tipo)
             JOIN tm_unidad as unid
             ON (usu.usu_unidad=unid.unid_id);';
-    $consulta = $conectar->prepare($sql);
-    $consulta->execute();
-    $resultado = $consulta->fetchAll(PDO::FETCH_ASSOC);
-    if ($consulta->rowCount()<=0){
-        return array('status' => 'error', 'message' => 'No se puede optener los datos');
+
+    $resultado = $this->ejecutarConsulta($sql);
+    if (empty($resultado)) {
+        return array('status' => 'error', 'message' => 'No se puede obtener los datos');
     }
-    return array('status'=> 'success', 'message' =>  'se optienen los datos', 'result'=> $resultado);
-    }
-public function disable_usuario($usu_id){
-    $conectar = parent::conexion();
-    parent::set_names();
+    return array('status' => 'success', 'message' => 'Se obtienen los datos', 'result' => $resultado);
+}
 
     $fecha_elim = date('Y-m-d H:i:s'); // Get current date and time
     $estado = 0; // Assuming 0 is the value for 'disabled'
