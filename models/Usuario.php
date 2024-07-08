@@ -358,42 +358,43 @@ public function enable_usuario($usu_id){
 }
     
 public function update_usuario($usu_id, $usu_nom, $usu_ape, $usu_correo, $usu_telefono, $usu_name, $usu_tipo, $usu_unidad){
-    if(empty($usu_nom) || empty($usu_ape) || empty($usu_correo) || empty($usu_telefono) || empty($usu_name) || empty($usu_tipo)|| empty($usu_unidad)) {
+    if (empty($usu_nom) || empty($usu_ape) || empty($usu_correo) || empty($usu_telefono) || empty($usu_name) || empty($usu_tipo) || empty($usu_unidad)) {
         return array('status' => 'warning', 'message' => 'Todos los campos son obligatorios');
     }
 
-    if(empty($usu_nom)) {
+    if (empty($usu_nom)) {
         return array('status' => 'warning', 'message' => 'El campo nombre no puede estar vacío');
     }
 
-    $conectar = parent::conexion();
-    parent::set_names();
-
     // Check if the username is being used by another user
     $sql_check = "SELECT * FROM tm_usuario WHERE usu_name = :usu_name AND usu_id != :usu_id";
-    $consulta_check = $conectar->prepare($sql_check);
-    $consulta_check->bindParam(':usu_name', $usu_name);
-    $consulta_check->bindParam(':usu_id', $usu_id);
-    $consulta_check->execute();
+    $params_check = [
+        ':usu_name' => $usu_name,
+        ':usu_id' => $usu_id
+    ];
 
-    if($consulta_check->rowCount() > 0) {
+    $resultado_check = $this->ejecutarConsulta($sql_check, $params_check, false);
+
+    if (!empty($resultado_check)) {
         return array('status' => 'warning', 'message' => 'El nombre de usuario ya está siendo utilizado por otro usuario');
     }
 
     // Proceed with the update if username is not being used by another user
     $sql = "UPDATE tm_usuario SET usu_nom = :usu_nom, usu_ape = :usu_ape, usu_correo = :usu_correo, usu_telefono = :usu_telefono, usu_name = :usu_name, usu_tipo = :usu_tipo, usu_unidad = :usu_unidad WHERE usu_id = :usu_id";
-    $consulta = $conectar->prepare($sql);
-    $consulta->bindParam(':usu_nom', $usu_nom);
-    $consulta->bindParam(':usu_ape', $usu_ape);
-    $consulta->bindParam(':usu_correo', $usu_correo);
-    $consulta->bindParam(':usu_telefono', $usu_telefono);
-    $consulta->bindParam(':usu_name', $usu_name);
-    $consulta->bindParam(':usu_tipo', $usu_tipo);
-    $consulta->bindParam(':usu_id', $usu_id);
-    $consulta->bindParam(':usu_unidad', $usu_unidad);
-    $consulta->execute();
+    $params = [
+        ':usu_nom' => $usu_nom,
+        ':usu_ape' => $usu_ape,
+        ':usu_correo' => $usu_correo,
+        ':usu_telefono' => $usu_telefono,
+        ':usu_name' => $usu_name,
+        ':usu_tipo' => $usu_tipo,
+        ':usu_unidad' => $usu_unidad,
+        ':usu_id' => $usu_id
+    ];
 
-    if ($consulta->rowCount() > 0) {
+    $resultado = $this->ejecutarAccion($sql, $params);
+
+    if ($resultado) {
         return array('status' => 'success', 'message' => 'Usuario actualizado con éxito');
     } else {
         return array('status' => 'info', 'message' => 'No se realizó ningún cambio');
