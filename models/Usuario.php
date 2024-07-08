@@ -3,46 +3,51 @@ require_once 'RegistroLog.php';
 require_once 'SeguridadPassword.php';
     class Usuario extends Conectar {
 
-        public function login() {
-            $conectar = parent::conexion();
-            parent::set_names();
-            if (isset($_POST["enviar"])) {
-                $name = $_POST["usu_name"];
-                $pass = $_POST["usu_pass"];
-                $log= new RegistroLog;
-                $ipCliente = $this->GetIpCliente();
-                if (empty($name) and empty($pass) and empty($usu_tipo)) {
-                    header("Location:".conectar::ruta()."index.php?m=2");
-                    exit();
-                }else{
-                    $sql ="SELECT * FROM tm_usuario WHERE usu_name= ? and usu_pass= ? and estado=1 ";
-                    $stmt=$conectar->prepare($sql);
-                    $stmt->bindValue(1, $name);
-                    $stmt->bindValue(2, md5($pass)); // cifrando a md5 la pass
-                    $stmt->execute();
-                    //se agrega variable para almacenar el usuario
-                    $resultado = $stmt->fetch();
-                    if (is_array($resultado) and count($resultado) > 0) {
-                        $_SESSION["usu_id"] = $resultado["usu_id"];
-                        $_SESSION["usu_nom"] = $resultado["usu_nom"];
-                        $_SESSION["usu_ape"] = $resultado["usu_ape"];
-                        $_SESSION["usu_tipo"] = $resultado["usu_tipo"];
-                        $_SESSION["usu_correo"] = $resultado["usu_correo"];
-                        $_SESSION["usu_telefono"] = $resultado["usu_telefono"];
-                        header("Location:".Conectar::ruta()."view/Home/");
-                        $mensaje="el usuario {$_SESSION['usu_nom']} {$_SESSION['usu_ape']} inició sesión desde la IP: $ipCliente";
-                        $log->add_log_registro( $_SESSION["usu_id"],'Inicio sesion',$mensaje); 
-                        exit();
-                     }else{ 
-                        $mensaje="el usuario {$_POST['usu_name']} intento iniciar sesion, ip: $ipCliente";
-                        $log->add_log_registro( 0,'Inicio sesion',$mensaje); 
-                        header("Location:".Conectar::ruta()."index.php?m=1");
-                        exit();
-                    }
-                
-                }
-            }
+public function login() {
+    if (isset($_POST["enviar"])) {
+        $name = $_POST["usu_name"];
+        $pass = $_POST["usu_pass"];
+
+        if (empty($name) || empty($pass)) {
+            header("Location:".Conectar::ruta()."index.php?m=2");
+            exit();
         }
+
+        $hashedPass = md5($pass);
+        $sql = "SELECT * FROM tm_usuario WHERE usu_name = :usu_name AND usu_pass = :usu_pass AND estado = 1";
+        $params = [
+            ':usu_name' => $name,
+            ':usu_pass' => $hashedPass
+        ];
+
+        $resultado = $this->ejecutarConsulta($sql, $params, false); // No fetchAll, solo fetch
+
+        if ($resultado) {
+            $_SESSION["usu_id"] = $resultado["usu_id"];
+            $_SESSION["usu_nom"] = $resultado["usu_nom"];
+            $_SESSION["usu_ape"] = $resultado["usu_ape"];
+            $_SESSION["usu_tipo"] = $resultado["usu_tipo"];
+            $_SESSION["usu_correo"] = $resultado["usu_correo"];
+            $_SESSION["usu_telefono"] = $resultado["usu_telefono"];
+
+            $log = new RegistroLog();
+            $ipCliente = $this->GetIpCliente();
+            $mensaje = "El usuario {$_SESSION['usu_nom']} {$_SESSION['usu_ape']} inició sesión desde la IP: $ipCliente";
+            $log->add_log_registro($_SESSION["usu_id"], 'Inicio sesion', $mensaje);
+
+            header("Location:".Conectar::ruta()."view/Home/");
+            exit();
+        } else {
+            $log = new RegistroLog();
+            $ipCliente = $this->GetIpCliente();
+            $mensaje = "El usuario $name intentó iniciar sesión, IP: $ipCliente";
+            $log->add_log_registro(0, 'Inicio sesion', $mensaje);
+
+            header("Location:".Conectar::ruta()."index.php?m=1");
+            exit();
+        }
+    }
+}
         private function GetIpCliente() {
             /**
             * Obtener la dirección IP del cliente.
