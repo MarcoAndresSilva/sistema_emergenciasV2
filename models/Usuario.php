@@ -268,9 +268,8 @@ public function update_phone($new_phone, $usu_id){
     }
 }
 
+
 public function get_info_usuario($usu_id){
-    $conectar = parent::conexion();
-    parent::set_names();
     $sql = 'SELECT 
                 CONCAT(usu.usu_nom, " ", usu.usu_ape) AS "Nombre Completo",
                 tp.usu_tipo_nom as "Tipo",
@@ -283,15 +282,17 @@ public function get_info_usuario($usu_id){
             ON(tp.usu_tipo_id=usu.usu_tipo)
             JOIN tm_unidad as unid
             ON (usu.usu_unidad=unid.unid_id)
-            WHERE usu.usu_id=:usu_id;';
-    $consulta = $conectar->prepare($sql);
-    $consulta->bindParam(':usu_id',$usu_id);
-    $consulta->execute();
-    $resultado = $consulta->fetch(PDO::FETCH_ASSOC);
-    if ($consulta->rowCount()!=1){
-        return array('status' => 'error', 'message' => 'No se puede optener los datos');
+            WHERE usu.usu_id = :usu_id';
+
+    $params = [':usu_id' => $usu_id];
+
+    $resultado = $this->ejecutarConsulta($sql, $params, false);
+
+    if (!$resultado) {
+        return array('status' => 'error', 'message' => 'No se puede obtener los datos');
     }
-    return array('status'=> 'success', 'message' =>  'se optienen los datos', 'result'=> $resultado);
+
+    return array('status' => 'success', 'message' => 'Se obtienen los datos', 'result' => $resultado);
 }
 
 public function get_full_usuarios(){
