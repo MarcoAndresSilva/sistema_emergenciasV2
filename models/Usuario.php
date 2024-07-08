@@ -62,67 +62,51 @@ require_once 'SeguridadPassword.php';
             }
             return $ip;
         }
-        public function get_tipo($usu_id){
-            $conectar = parent::conexion();
-            parent::set_names();
-            $sql ="SELECT * FROM tm_usuario where usu_id = ? ";
-            $stmt=$conectar->prepare($sql);
-            $stmt->bindValue(1, $usu_id);
-            $stmt->execute();
-            //se agrega variable para almacenar el usuario
-            $resultado = $stmt->fetchAll();
-            if (is_array($resultado) and count($resultado) > 0) {
-                return $resultado;
-            }else {
-                return false;
-            }
-        }
 
-        public function get_datos_contacto($usu_id){
-            try {
-                $conectar = parent::conexion();
-                parent::set_names();
-                $sql = "SELECT usu_nom, usu_ape, usu_telefono, usu_correo FROM tm_usuario WHERE usu_id = ?";
-                $stmt = $conectar->prepare($sql);
-                $stmt->bindValue(1, $usu_id);
-                $stmt->execute();
-                $resultado = $stmt->fetchAll();
-                
-                if (is_array($resultado) && count($resultado) > 0) {
-                    return $resultado;
-                } else {
-                    // No se encontraron datos
-                    return null;
-                }
-            } catch (PDOException $e) {
-                // Error al ejecutar la consulta
-                error_log('Error en get_datos_contacto(): ' . $e->getMessage());
-                return null;
-            }
-        }
+public function get_tipo($usu_id) {
+    $sql = "SELECT * FROM tm_usuario WHERE usu_id = :usu_id";
+    $params = [':usu_id' => $usu_id];
+    $resultado = $this->ejecutarConsulta($sql, $params);
 
-        public function get_todos_usuarios()
-        {
-            $conectar = parent::conexion();
-            parent::set_names();
-            $sql = "SELECT * FROM tm_udu_tipo";
-            $sql = $conectar->prepare($sql);
-            $sql->execute();
-            $resultado = $sql ->fetchAll();
-
-            if(is_array($resultado) and count($resultado) > 0){
-                return $resultado;
-            }else {
-                ?> <script>console.log("No se encontraron Eventos")</script><?php
-                return 0;
-            }
-        }
+    if (is_array($resultado) && count($resultado) > 0) {
+        return $resultado;
+    } else {
+        return false;
+    }
+}
 
 
-public function add_usuario($usu_nom, $usu_ape, $usu_correo, $usu_name, $usu_pass, $fecha_crea, $estado, $usu_tipo, $usu_telefono,$usu_unidad) {
+
+public function get_datos_contacto($usu_id) {
     try {
-        $conectar = parent::conexion();
-        parent::set_names();
+        $sql = "SELECT usu_nom, usu_ape, usu_telefono, usu_correo FROM tm_usuario WHERE usu_id = :usu_id";
+        $params = [':usu_id' => $usu_id];
+        $resultado = $this->ejecutarConsulta($sql, $params);
+
+        if (is_array($resultado) && count($resultado) > 0) {
+            return $resultado;
+        } else {
+            // No se encontraron datos
+            return null;
+        }
+    } catch (PDOException $e) {
+        // Error al ejecutar la consulta
+        error_log('Error en get_datos_contacto(): ' . $e->getMessage());
+        return null;
+    }
+}
+
+public function get_todos_usuarios() {
+    $sql = "SELECT * FROM tm_udu_tipo";
+    $resultado = $this->ejecutarConsulta($sql);
+
+    if (is_array($resultado) && count($resultado) > 0) {
+        return $resultado;
+    } else {
+        echo '<script>console.log("No se encontraron Eventos")</script>';
+        return 0;
+    }
+}
 
 public function add_usuario($usu_nom, $usu_ape, $usu_correo, $usu_name, $usu_pass, $fecha_crea, $estado, $usu_tipo, $usu_telefono, $usu_unidad) {
     try {
