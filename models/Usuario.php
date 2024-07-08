@@ -124,39 +124,43 @@ public function add_usuario($usu_nom, $usu_ape, $usu_correo, $usu_name, $usu_pas
         $conectar = parent::conexion();
         parent::set_names();
 
+public function add_usuario($usu_nom, $usu_ape, $usu_correo, $usu_name, $usu_pass, $fecha_crea, $estado, $usu_tipo, $usu_telefono, $usu_unidad) {
+    try {
+        // Verificar si el nombre de usuario ya existe
         $sql_check = "SELECT usu_name FROM tm_usuario WHERE usu_name = :usu_name";
-        $consulta_check = $conectar->prepare($sql_check);
-        $consulta_check->bindParam(':usu_name', $usu_name);
-        $consulta_check->execute();
+        $params_check = [':usu_name' => $usu_name];
+        $usuario_existente = $this->ejecutarConsulta($sql_check, $params_check, false);
 
+        if ($usuario_existente) {
+            return array('status' => 'warning', 'message' => 'El usuario ya existe con ese nombre de usuario');
+        }
+
+        // Verificar seguridad de la contraseña
         $seguridad = new SeguridadPassword();
         $passSegura = $seguridad->PasswordSegura($usu_pass);
         if (!$passSegura["mayuscula"] || !$passSegura["minuscula"] || !$passSegura["numero"] || !$passSegura["especiales"] || !$passSegura["largo"]) {
             return ["status" => "warning", "message" => "La contraseña no cumple con todos los requisitos de seguridad."];
         }
 
-        if ($consulta_check->rowCount() > 0) {
-            return array('status' => 'warning', 'message' => 'El usuario ya existe con ese nombre de usuario');
-        }
-
-        $sql = "INSERT INTO tm_usuario (usu_nom, usu_ape, usu_correo, usu_name, usu_pass, fecha_crea, estado, usu_tipo, usu_telefono,usu_unidad) VALUES (:usu_nom, :usu_ape, :usu_correo, :usu_name, :usu_pass, :fecha_crea, :estado, :usu_tipo, :usu_telefono, :usu_unidad)";
-
+        // Insertar nuevo usuario
+        $sql = "INSERT INTO tm_usuario (usu_nom, usu_ape, usu_correo, usu_name, usu_pass, fecha_crea, estado, usu_tipo, usu_telefono, usu_unidad) VALUES (:usu_nom, :usu_ape, :usu_correo, :usu_name, :usu_pass, :fecha_crea, :estado, :usu_tipo, :usu_telefono, :usu_unidad)";
         $pass_cifrado = md5($usu_pass);
-        $consulta = $conectar->prepare($sql);
-        $consulta->bindParam(':usu_nom', $usu_nom);
-        $consulta->bindParam(':usu_ape', $usu_ape);
-        $consulta->bindParam(':usu_correo', $usu_correo);
-        $consulta->bindParam(':usu_name', $usu_name);
-        $consulta->bindParam(':usu_pass', $pass_cifrado);
-        $consulta->bindParam(':fecha_crea', $fecha_crea);
-        $consulta->bindParam(':estado', $estado);
-        $consulta->bindParam(':usu_tipo', $usu_tipo);
-        $consulta->bindParam(':usu_telefono', $usu_telefono);
-        $consulta->bindParam(':usu_unidad', $usu_unidad);
+        $params = [
+            ':usu_nom' => $usu_nom,
+            ':usu_ape' => $usu_ape,
+            ':usu_correo' => $usu_correo,
+            ':usu_name' => $usu_name,
+            ':usu_pass' => $pass_cifrado,
+            ':fecha_crea' => $fecha_crea,
+            ':estado' => $estado,
+            ':usu_tipo' => $usu_tipo,
+            ':usu_telefono' => $usu_telefono,
+            ':usu_unidad' => $usu_unidad
+        ];
 
-        $consulta->execute();
+        $resultado = $this->ejecutarAccion($sql, $params);
 
-        if ($consulta->rowCount() > 0) {
+        if ($resultado) {
             return array('status' => 'success', 'message' => 'Usuario agregado correctamente');
         } else {
             return array('status' => 'error', 'message' => 'No se pudo agregar el usuario');
@@ -165,6 +169,7 @@ public function add_usuario($usu_nom, $usu_ape, $usu_correo, $usu_name, $usu_pas
         return array('status' => 'error', 'message' => 'Error al agregar el usuario');
     }
 }
+
 
 public function update_password($old_pass, $new_pass, $usu_id){
     $conectar = parent::conexion();
