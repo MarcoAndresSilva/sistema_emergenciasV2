@@ -75,8 +75,29 @@ function fetchData(op, postData, sendAsJson = false) {
             console.error('Error al realizar la consulta:', error);
         });
 }
-document.addEventListener('DOMContentLoaded', FnOpetenerUsuarios);
+document.addEventListener('DOMContentLoaded', () => {
+    loadUserTypes();
+    FnOpetenerUsuarios(); 
+});
 
+let tiposDeUsuarios = [];
+
+// Función para cargar los tipos de usuarios una vez al cargar la página
+function loadUserTypes() {
+    fetch('../../controller/usuario.php?op=get_tipo_usuarios')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            tiposDeUsuarios = data;
+        })
+        .catch(error => {
+            console.error('Error fetching user types:', error);
+        });
+}
 function FnOpetenerUsuarios() {
     const url = '../../controller/usuario.php';
     const params = new URLSearchParams({ op: 'get_full_info_usuario' });
@@ -209,28 +230,29 @@ function createTableCell(content) {
     return cell;
 }
 
-function createTypeCell(id_tipo,userId){
+function createTypeCell(id_tipo, userId) {
     const cell = document.createElement('td');
     const select = document.createElement('select');
     select.className = 'form-select select-fixed-size';
-    const options = [
-       { value: 1, text: 'Emergencias' },
-       { value: 2, text: 'Informática' },
-       { value: 3, text: 'Territorial' }
-    ];
 
-    options.forEach(optionData => {
-        const option = document.createElement('option');
-        option.value = optionData.value;
-        option.textContent = optionData.text;
-        if (id_tipo === optionData.value) {
-            option.selected = true;
-        }
+    try {
+        tiposDeUsuarios.forEach(optionData => {
+            const option = document.createElement('option');
+            option.value = optionData.usu_tipo_id;
+            option.textContent = optionData.usu_tipo_nom;
+            if (id_tipo === optionData.usu_tipo_id) {
+                option.selected = true;
+            }
             select.appendChild(option);
-    });
+        });
+    } catch (error) {
+        console.error('Error creating select options:', error);
+    }
+
     select.addEventListener('change', () => {
         handleTypeChange(userId, select.value);
     });
+
     cell.appendChild(select);
     return cell;
 }
@@ -345,22 +367,19 @@ function createInput(label, id, type, placeholder, value) {
 </div>
     `;
 }
+
 function createSelect(id, selectedValue) {
-    const options = [
-        { value: 1, text: 'Emergencias' },
-        { value: 2, text: 'Informática' },
-        { value: 3, text: 'Territorial' }
-    ];
     let selectHTML = `<div class="form-floating">
 <select class="form-select" id="${id}" aria-label="Floating label select example">`;
-    options.forEach(opt => {
-        selectHTML += `<option value="${opt.value}" ${selectedValue == opt.value ? 'selected' : ''}>${opt.text}</option>`;
+    tiposDeUsuarios.forEach(optionData => {
+        selectHTML += `<option value="${optionData.usu_tipo_id}" ${selectedValue == optionData.usu_tipo_id ? 'selected' : ''}>${optionData.usu_tipo_nom}</option>`;
     });
     selectHTML += `</select>
 <label for="${id}">Tipo</label>
 </div>`;
     return selectHTML;
 }
+
 // Definir la variable selectedUnidad con los datos precargados
 var selectedUnidad = [];
 
