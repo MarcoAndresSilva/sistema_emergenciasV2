@@ -79,6 +79,10 @@ if (isset($_GET["op"])) {
                 }
                 echo $html;
             }
+      break;
+      case "get_tipo_usuarios":
+            $datos = $usuario->get_todos_usuarios();
+            echo json_encode($datos);
         break;
 
         case "update_password":
