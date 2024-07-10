@@ -188,6 +188,11 @@ public function cumpleCriteriosSeguridad($unidad, $passNoCifrado) {
             throw $e;
         }
     }
+    public function get_robuste_seguridad_unidad() {
+      $query_rob_unidad = "select * from tm_rob_unidad;";
+      $result = $this->ejecutarConsulta($query_rob_unidad);
+      return $result;
+    }
 
 }
 
