@@ -55,10 +55,3 @@
 
 
 
-
-<div id="modal-mapa" class="modal-overlay">
-    <div class="vista-mapa" id="map">
-    </div>
-    <button id='btn' type='button' class='btn btn-inline btn-primary btn-sm ladda-button btnCrearRuta' > Ir </button>
-    <span class="glyphicon glyphicon-remove CerrarModalMap"></span>
-</div>
