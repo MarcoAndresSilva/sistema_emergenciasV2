@@ -1135,6 +1135,24 @@ CREATE TABLE tm_rob_pass (
     PRIMARY KEY (`rob_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 --
+--  Estructura de robusted que debe cumplir una undiad
+--
+CREATE TABLE tm_rob_unidad(
+	`rob_id` INT NOT NUll auto_increment,
+  `usu_unidad` INT NOT NULL unique,
+  `mayuscula` BOOLEAN NOT NULL,
+  `minuscula` BOOLEAN NOT NULL,
+  `especiales` BOOLEAN NOT NULL,
+  `numeros` BOOLEAN NOT NULL,
+  `largo` INT NOT NULL,
+  `camb_dias` INT NOT NULL,
+  `fecha_modi` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`rob_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO tm_rob_unidad (usu_unidad, mayuscula, minuscula, especiales, numeros, largo, camb_dias)
+VALUES (1, 1, 1, 0, 1,8, 60);
+--
 -- volcado de datos para la tabla tm_rob_pass
 --
 insert into tm_rob_pass(`usu_id`,`mayuscula`,`minuscula`,`especiales`,`numeros`,`largo`,`fecha_modi`) values
