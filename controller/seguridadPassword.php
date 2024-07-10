@@ -7,12 +7,12 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 $RegistroLog= new RegistroLog();
 
 if (isset($_POST["op"])) {
+    $passSeg = new SeguridadPassword;
     switch ($_POST["op"]) {
         case "password_status":
-            $passSeg = new SeguridadPassword;
             $response = $passSeg->get_usuarios_status_passwords(); 
             echo json_encode($response);
-        break;
+        break; 
         }
     }
 }
