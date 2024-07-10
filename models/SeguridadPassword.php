@@ -56,6 +56,44 @@ public function add_password_info($email, $usu_name, $pass) {
         );
         return $jsonPass;
     }
+
+public function getCriteriosSeguridadPorUnidad($unidad = 0) {
+    try {
+        $sql = "SELECT mayuscula, minuscula, numeros, especiales, largo FROM tm_rob_unidad WHERE usu_unidad = :unidad";
+        $params = [":unidad" => $unidad];
+
+        $resultado = $this->ejecutarConsulta($sql, $params);
+
+        if ($resultado) {
+            $criterios = $resultado[0];
+            return [
+                "mayuscula" => (bool) $criterios['mayuscula'],
+                "minuscula" => (bool) $criterios['minuscula'],
+                "numero" => (bool) $criterios['numeros'],
+                "especiales" => (bool) $criterios['especiales'],
+                "largo" => (int) $criterios['largo']  // Convertir a entero si es necesario
+            ];
+        } else {
+            return [
+                "mayuscula" => false,
+                "minuscula" => false,
+                "numero" => false,
+                "especiales" => false,
+                "largo" => false
+            ];
+        }
+    } catch (PDOException $e) {
+        error_log('Error en getCriteriosSeguridadPorUnidad(): ' . $e->getMessage());
+        return [
+            "mayuscula" => false,
+            "minuscula" => false,
+            "numero" => false,
+            "especiales" => false,
+            "largo" => false
+        ];
+    }
+}
+
     public function update_password_info($usu_id, $pass) : bool {
     try {
         $seguridad = $this->PasswordSegura($pass);
