@@ -72,20 +72,29 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
                 </table>
             </div>
 
+            
+<div id="modal-mapa" class="modal-overlay">
+    <div class="vista-mapa" id="map">
+    </div>
+    <button id='btn' type='button' class='btn btn-inline btn-primary btn-sm ladda-button btnCrearRuta' > Ir </button>
+    <span class="glyphicon glyphicon-remove CerrarModalMap"></span>
+</div>
+
+
 
         </div>
     </div><!--.page-content-->
 
     <?php require_once("../MainFooter/footer.php"); ?>
 
-    <script type="text/javascript" src="./controleventosdos.js"></script>
-<?php
+    <?php
 require_once('modalDerivar.php');
 require_once('modalCerrar.php');
 require_once("../MainJs/js.php");
 ?>
 </body>
 
+<script type="text/javascript" src="./controleventosdos.js"></script>
 </html>
 
 <?php
