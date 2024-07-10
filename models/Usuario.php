@@ -125,9 +125,10 @@ public function add_usuario($usu_nom, $usu_ape, $usu_correo, $usu_name, $usu_pas
 
         // Verificar seguridad de la contraseña
         $seguridad = new SeguridadPassword();
-        $passSegura = $seguridad->PasswordSegura($usu_pass);
-        if (!$passSegura["mayuscula"] || !$passSegura["minuscula"] || !$passSegura["numero"] || !$passSegura["especiales"] || !$passSegura["largo"]) {
-            return ["status" => "warning", "message" => "La contraseña no cumple con todos los requisitos de seguridad."];
+        $cumpleCriterios = $seguridad->cumpleCriteriosSeguridad($usu_unidad, $usu_pass);
+
+        if (!$cumpleCriterios) {
+            return ["status" => "warning", "message" => "La contraseña no cumple con todos los requisitos de seguridad para esta unidad."];
         }
 
         // Insertar nuevo usuario
@@ -181,9 +182,10 @@ public function update_password($old_pass, $new_pass, $usu_id){
 
     // Verificar seguridad de la nueva contraseña
     $seguridad = new SeguridadPassword();
-    $passSegura = $seguridad->PasswordSegura($new_pass);
-    if (!$passSegura["mayuscula"] || !$passSegura["minuscula"] || !$passSegura["numero"] || !$passSegura["especiales"] || !$passSegura["largo"]) {
-        return ["status" => "warning", "message" => "La contraseña no cumple con todos los requisitos de seguridad."];
+    $cumpleCriterios = $seguridad->cumpleCriteriosSeguridad($usu_unidad, $usu_pass);
+
+    if (!$cumpleCriterios) {
+        return ["status" => "warning", "message" => "La contraseña no cumple con todos los requisitos de seguridad para esta unidad."];
     }
 
     // Actualizar la contraseña
@@ -207,9 +209,10 @@ public function update_password($old_pass, $new_pass, $usu_id){
 public function update_password_force($new_pass, $usu_id){
     // Verificar seguridad de la nueva contraseña
     $seguridad = new SeguridadPassword();
-    $passSegura = $seguridad->PasswordSegura($new_pass);
-    if (!$passSegura["mayuscula"] || !$passSegura["minuscula"] || !$passSegura["numero"] || !$passSegura["especiales"] || !$passSegura["largo"]) {
-        return ["status" => "warning", "message" => "La contraseña no cumple con todos los requisitos de seguridad.", "passSegura" => $passSegura];
+    $cumpleCriterios = $seguridad->cumpleCriteriosSeguridad($usu_unidad, $usu_pass);
+
+    if (!$cumpleCriterios) {
+        return ["status" => "warning", "message" => "La contraseña no cumple con todos los requisitos de seguridad para esta unidad."];
     }
 
     // Actualizar la contraseña
