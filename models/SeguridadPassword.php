@@ -94,6 +94,38 @@ public function getCriteriosSeguridadPorUnidad($unidad = 0) {
     }
 }
 
+
+public function cumpleCriteriosSeguridad($unidad, $passNoCifrado) {
+    try {
+        // Obtener los criterios de seguridad de la unidad desde la base de datos
+        $criterios = $this->getCriteriosSeguridadPorUnidad($unidad);
+
+        // Si no se obtuvieron criterios válidos, retornar false
+        if (empty($criterios) || !isset($criterios['mayuscula']) || !isset($criterios['minuscula']) ||
+            !isset($criterios['numero']) || !isset($criterios['especiales']) || !isset($criterios['largo'])) {
+            return false;
+        }
+
+        // Evaluar la contraseña con los criterios activos
+        $passSegura = $this->PasswordSegura($passNoCifrado);
+
+        // Asegurar que el criterio 'largo' siempre se cumpla
+        $largoCumple = strlen($passNoCifrado) >= $criterios['largo'];
+
+        // Comparar los criterios activos con la contraseña proporcionada
+        return (
+            (!$criterios['mayuscula'] || $passSegura['mayuscula']) &&
+            (!$criterios['minuscula'] || $passSegura['minuscula']) &&
+            (!$criterios['numero'] || $passSegura['numero']) &&
+            (!$criterios['especiales'] || $passSegura['especiales']) &&
+            $largoCumple
+        );
+    } catch (PDOException $e) {
+        // Manejo de errores
+        error_log('Error en cumpleCriteriosSeguridad(): ' . $e->getMessage());
+        return false;
+    }
+}
     public function update_password_info($usu_id, $pass) : bool {
     try {
         $seguridad = $this->PasswordSegura($pass);
