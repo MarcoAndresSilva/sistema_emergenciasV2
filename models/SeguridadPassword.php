@@ -193,8 +193,44 @@ public function cumpleCriteriosSeguridad($unidad, $passNoCifrado) {
       $result = $this->ejecutarConsulta($query_rob_unidad);
       return $result;
     }
+public function update_robuste_unidad($rob_id,$usu_unidad,$mayuscula,$minuscula,$especiales,$numeros,$largo,$camb_dias) {
+    try {
+        $sql = "UPDATE tm_rob_unidad SET
+                  usu_unidad=:usu_unidad,
+                  mayuscula=:mayuscula,
+                  minuscula=:minuscula,
+                  especiales=:especiales,
+                  numeros=:numeros,
+                  largo=:largo,
+                  camb_dias=:camb_dias,
+                  fecha_modi=:fecha_modi
+              WHERE rob_id = :rob_id";
 
+        $fechaModi = date('Y-m-d H:i:s');
+        // Parámetros para la consulta
+        $params = [
+            ':rob_id' => $rob_id,
+            ':usu_unidad' => $usu_unidad,
+            ':mayuscula' => $mayuscula,
+            ':minuscula' => $minuscula,
+            ':especiales' => $especiales,
+            ':numeros' => $numeros,
+            ':largo' => $largo,
+            ':camb_dias' => $camb_dias,
+            ':fecha_modi' => $fechaModi
+        ];
+
+        // Ejecutar la acción
+        $success = $this->ejecutarAccion($sql, $params);
+
+        return $success;
+    } catch (PDOException $e) {
+        // Manejo de errores
+        error_log('Error en update_unidad_info(): ' . $e->getMessage());
+        return false;
+    }
+
+  }
 }
-
 
 ?>
