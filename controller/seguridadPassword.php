@@ -13,6 +13,15 @@ if (isset($_POST["op"])) {
             $response = $passSeg->get_usuarios_status_passwords(); 
             echo json_encode($response);
         break; 
+    case "get_seguridad_unidad":
+    try {
+        $result = $passSeg->get_robuste_seguridad_unidad();
+        if ($result !== false) {
+            echo json_encode($result);
+        } else {
+            throw new Exception("Error al obtener la seguridad de la unidad.");
         }
+    } catch (Exception $e) {
+        echo json_encode(array("error" => $e->getMessage()));
     }
 }
