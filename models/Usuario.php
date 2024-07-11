@@ -164,7 +164,7 @@ public function add_usuario($usu_nom, $usu_ape, $usu_correo, $usu_name, $usu_pas
 public function update_password($old_pass, $new_pass, $usu_id){
     $hashed_old_pass = md5($old_pass); 
 
-    $sql = "SELECT usu_pass FROM tm_usuario WHERE usu_id = :usu_id AND usu_pass = :old_pass";
+    $sql = "SELECT usu_pass, usu_unidad FROM tm_usuario WHERE usu_id = :usu_id AND usu_pass = :old_pass";
     $params = [
         ':usu_id' => $usu_id,
         ':old_pass' => $hashed_old_pass
@@ -182,7 +182,7 @@ public function update_password($old_pass, $new_pass, $usu_id){
 
     // Verificar seguridad de la nueva contraseña
     $seguridad = new SeguridadPassword();
-    $cumpleCriterios = $seguridad->cumpleCriteriosSeguridad($usu_unidad, $usu_pass);
+    $cumpleCriterios = $seguridad->cumpleCriteriosSeguridad($user['usu_unidad'], $new_pass);
 
     if (!$cumpleCriterios) {
         return ["status" => "warning", "message" => "La contraseña no cumple con todos los requisitos de seguridad para esta unidad."];
