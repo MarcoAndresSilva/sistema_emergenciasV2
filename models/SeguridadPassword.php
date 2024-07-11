@@ -165,7 +165,7 @@ public function cumpleCriteriosSeguridad($unidad, $passNoCifrado) {
                         usu.usu_nom as 'nombre', 
                         usu.usu_ape as 'apellido',
                         usu.usu_correo as 'correo',
-                        DATEDIFF(NOW(), fecha_crea) DIV 30 AS 'fecha',
+                        DATEDIFF(NOW(), rb.fecha_modi)) DIV 30 AS 'fecha',
                         rb.mayuscula as 'mayuscula',
                         rb.minuscula as 'minuscula',
                         rb.numeros as 'numero',
