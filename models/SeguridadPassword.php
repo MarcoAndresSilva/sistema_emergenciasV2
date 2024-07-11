@@ -3,46 +3,44 @@ class SeguridadPassword extends Conectar {
     // Insertar datos de contraseña robusta (Insert tm_rb_pass)
     
 public function add_password_info($email, $usu_name, $pass) {
-    try {
-        // Verificar la seguridad de la contraseña
-        $seguridad = $this->PasswordSegura($pass);
-        
-        // Obtener el ID del usuario basado en el correo electrónico y el nombre de usuario
-        $sql_get_id = "SELECT usu_id FROM tm_usuario WHERE usu_correo = :email AND usu_name = :usu_name";
-        $usuario_id = $this->ejecutarConsulta($sql_get_id, [':email' => $email, ':usu_name' => $usu_name]);
-        
-        if ($usuario_id) {
-            $usu_id = $usuario_id[0]['usu_id'];
+            $conectar = parent::conexion();
+            parent::set_names();
+            
+            // Verificar la seguridad de la contraseña
+            $seguridad = $this->PasswordSegura($pass);
+            
+            // Obtener el ID del usuario basado en el correo electrónico y el nombre de usuario
+            $sql_get_id = "SELECT usu_id FROM tm_usuario WHERE usu_correo = :email AND usu_name = :usu_name";
+            $consulta_get_id = $conectar->prepare($sql_get_id);
+            $consulta_get_id->bindParam(':email', $email);
+            $consulta_get_id->bindParam(':usu_name', $usu_name);
+            $consulta_get_id->execute();
+            
+            // Obtener el ID del usuario
+            $fila = $consulta_get_id->fetch(PDO::FETCH_ASSOC);
+            $usu_id = $fila['usu_id'];
 
             $sql_insert_pass = "INSERT INTO tm_rob_pass(usu_id, mayuscula, minuscula, especiales, numeros, largo) VALUES (:usu_id, :mayuscula, :minuscula, :especiales, :numeros, :largo)";
             
-            // Parámetros de seguridad
-            $params = [
-                ':usu_id' => $usu_id,
-                ':mayuscula' => $seguridad['mayuscula'],
-                ':minuscula' => $seguridad['minuscula'],
-                ':especiales' => $seguridad['especiales'],
-                ':numeros' => $seguridad['numero'],
-                ':largo' => $seguridad['largo']
-            ];
+            $consulta_insert_pass = $conectar->prepare($sql_insert_pass);
 
-            // Ejecutar la acción
-            $success = $this->ejecutarAccion($sql_insert_pass, $params);
+            // Bind de los parámetros
+            $consulta_insert_pass->bindParam(':usu_id', $usu_id);
+            $consulta_insert_pass->bindParam(':mayuscula', $seguridad['mayuscula'], PDO::PARAM_BOOL);
+            $consulta_insert_pass->bindParam(':minuscula', $seguridad['minuscula'], PDO::PARAM_BOOL);
+            $consulta_insert_pass->bindParam(':especiales', $seguridad['especiales'], PDO::PARAM_BOOL);
+            $consulta_insert_pass->bindParam(':numeros', $seguridad['numero'], PDO::PARAM_BOOL);
+            $consulta_insert_pass->bindParam(':largo', $seguridad['largo'], PDO::PARAM_BOOL);
 
-            if ($success) {
+            $consulta_insert_pass->execute();
+            
+            if ($consulta_insert_pass->rowCount() > 0) {
                 return true;
             } else {
                 return 0;
             }
-        } else {
-            return false; // Usuario no encontrado
-        }
-    } catch (PDOException $e) {
-        // Manejo de errores
-        error_log('Error en add_password_info(): ' . $e->getMessage());
-        return false;
+
     }
-}
     
     // Función para verificar la seguridad de la contraseña
     function PasswordSegura($pass) {
