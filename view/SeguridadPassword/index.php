@@ -11,6 +11,9 @@ if (isset($_SESSION["usu_id"])) {
 <title>Sistema Emergencia</title>
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap5.css" />
 <link rel="stylesheet" href="./StyleSeguridadPassword.css">
+<script src="https://cdn.datatables.net/2.0.7/js/dataTables.js" defer></script>
+<script src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.js" defer></script>
+<script defer type="text/javascript" src="./searchpass.js"></script>
 </head>
 
 <body class="with-side-menu">
@@ -66,11 +69,6 @@ if (isset($_SESSION["usu_id"])) {
         
     <?php
        require_once("../MainJs/js.php"); 
-echo ' <script  src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>';
-echo '<script defer type="text/javascript" src="./searchpass.js"></script>';
-echo '<script defer type="text/javascript" src="./mesesExpiracion.js"></script>';
-echo '<script defer src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.js"></script>';
-
       
     }else{
         header("Location:". Conectar::ruta () ."index.php");
