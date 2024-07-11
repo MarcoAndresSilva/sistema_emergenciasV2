@@ -45,7 +45,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Unidad de Usuario</th>
+                        <th>Unidad</th>
                         <th>Mayúsculas</th>
                         <th>Minúsculas</th>
                         <th>Especiales</th>
