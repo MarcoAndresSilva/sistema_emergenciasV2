@@ -9,11 +9,11 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css">
 <link rel="stylesheet" href="./seguridadUnidad.css">
 <title>Sistema Emergencia</title>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+<link rel="stylesheet" href="../../public/css/datatable/jquery.1.11.5.dataTables.min.css">
+<link rel="stylesheet" href="../../public/css/datatable/responsive.2.2.9.dataTables.min.css">
+<script src="../../public/js/jqueryV3.5.1.min.js"></script>
+<script src="../../public/js/datatable/jquery.1.11.5.jquery.dataTables.min.js"></script>
+<script src="../../public/js/datatable/dataTables.2.2.9.responsive.min.js"></script>
 <script src="../../public/js/sweetaler2v11-11-0.js"></script>
 <script defer type="text/javascript" src="./seguridadUnidad.js"></script>
 </head>
