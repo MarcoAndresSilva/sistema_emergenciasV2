@@ -229,6 +229,29 @@ public function update_robuste_unidad($rob_id,$usu_unidad,$mayuscula,$minuscula,
     }
 
   }
+ public function create_password_Configuracion_a_ultima_unidad() {
+    $query_unidad = "SELECT * FROM tm_unidad ORDER BY unid_id DESC LIMIT 1";
+    $unidad = $this->ejecutarConsulta($query_unidad);
+    $unidad_id = $unidad[0]['unid_id'];
+
+    $sql = "INSERT INTO tm_rob_unidad (usu_unidad, mayuscula, minuscula, especiales, numeros, largo, camb_dias, fecha_modi)
+          VALUES (:usu_unidad, :mayuscula, :minuscula, :especiales, :numeros, :largo, :camb_dias, :fecha_modi)";
+
+    $fecha_modi = date('Y-m-d H:i:s');
+
+    $params = [
+        ':usu_unidad' => $unidad_id,
+        ':mayuscula' => 1,
+        ':minuscula' => 0,
+        ':especiales' => 0
+        ':numeros' => 0,
+        ':largo' => 8,
+        ':camb_dias' => 90,
+        ':fecha_modi' => $fecha_modi
+    ];
+    $success = $this->ejecutarAccion($sql, $params);
+    return $success;
+ }
 }
 
 ?>
