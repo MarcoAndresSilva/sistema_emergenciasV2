@@ -69,25 +69,25 @@ public function getCriteriosSeguridadPorUnidad($unidad = 0) {
                 "minuscula" => (bool) $criterios['minuscula'],
                 "numero" => (bool) $criterios['numeros'],
                 "especiales" => (bool) $criterios['especiales'],
-                "largo" => (int) $criterios['largo']  // Convertir a entero si es necesario
+                "largo" => (int) $criterios['largo']
             ];
         } else {
             return [
-                "mayuscula" => false,
+                "mayuscula" => True,
                 "minuscula" => false,
                 "numero" => false,
                 "especiales" => false,
-                "largo" => false
+                "largo" => 8
             ];
         }
     } catch (PDOException $e) {
         error_log('Error en getCriteriosSeguridadPorUnidad(): ' . $e->getMessage());
         return [
-            "mayuscula" => false,
+            "mayuscula" => True,
             "minuscula" => false,
             "numero" => false,
             "especiales" => false,
-            "largo" => false
+            "largo" => 8
         ];
     }
 }
