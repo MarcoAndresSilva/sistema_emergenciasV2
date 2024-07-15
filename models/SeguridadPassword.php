@@ -243,7 +243,7 @@ public function update_robuste_unidad($rob_id,$usu_unidad,$mayuscula,$minuscula,
         ':usu_unidad' => $unidad_id,
         ':mayuscula' => 1,
         ':minuscula' => 0,
-        ':especiales' => 0
+        ':especiales' => 0,
         ':numeros' => 0,
         ':largo' => 8,
         ':camb_dias' => 90,
