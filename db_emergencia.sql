@@ -1151,7 +1151,11 @@ CREATE TABLE tm_rob_unidad(
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 INSERT INTO tm_rob_unidad (usu_unidad, mayuscula, minuscula, especiales, numeros, largo, camb_dias)
-VALUES (1, 1, 1, 0, 1,8, 60);
+VALUES (1, 1, 1, 0, 1,8, 60),
+(2, 1, 1, 0, 1,8, 60),
+(3, 1, 1, 0, 1,8, 60),
+(4, 1, 1, 0, 1,8, 60),
+(5, 1, 1, 0, 1,8, 60);
 --
 -- volcado de datos para la tabla tm_rob_pass
 --
