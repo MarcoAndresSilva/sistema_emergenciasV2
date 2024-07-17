@@ -28,17 +28,6 @@ if (isset($_SESSION["usu_id"])) {
         <div class="container-fluid">
             <div class="box-typical box-typical-padding table-responsive-sm" id="tabla-password">
                     <div class="input-group rounded">
-                        <div class="form-floating">
-                            <select class="form-select" id="selectStatus" >
-                                <option value="" selected>Todos</option>
-                                <option value="Vulnerable">Vulnerable</option>
-                                <option value="Seguro">Seguro</option>
-                            </select>
-                            <label for="floatingSelect">Estado de seguridad</label>
-                        </div>
-                        <div class="input-group rounded">
-                            <input class="form-control rounded" type="number" name="meses" placeholder="Numeros de meses" id="mesesexpiracion">
-                        </div>
                     </div> <!-- .input-group -->
                     
                     
