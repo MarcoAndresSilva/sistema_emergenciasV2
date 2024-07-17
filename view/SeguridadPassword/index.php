@@ -49,7 +49,9 @@ if (isset($_SESSION["usu_id"])) {
             <th>Apellido</th>
             <th>Correo</th>
             <th>estado</th>
-            <th>meses</th>
+            <th>Unidad</th>
+            <th>Dias antiguedad</th>
+            <th>Dias limite</th>
             <th>Detalle</th>
         </tr>
     </thead>
