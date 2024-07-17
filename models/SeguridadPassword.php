@@ -163,16 +163,22 @@ public function cumpleCriteriosSeguridad($unidad, $passNoCifrado) {
                         usu.usu_nom as 'nombre', 
                         usu.usu_ape as 'apellido',
                         usu.usu_correo as 'correo',
-                        DATEDIFF(NOW(), rb.fecha_modi) DIV 30 AS 'fecha',
+                        DATEDIFF(NOW(), rb.fecha_modi) AS 'fecha',
                         rb.mayuscula as 'mayuscula',
                         rb.minuscula as 'minuscula',
                         rb.numeros as 'numero',
                         rb.especiales as 'especiales',
-                        rb.largo as 'largo'
-                    FROM tm_rob_pass as rb
-                    JOIN tm_usuario as usu
-                    ON(usu.usu_id=rb.usu_id)
-                    WHERE usu.fecha_elim IS NULL";
+                        rb.largo as 'largo',
+                        runi.camb_dias AS 'dias_cambio',
+                        uni.unid_nom as 'unidad'
+                    FROM tm_rob_pass AS rb
+                    JOIN tm_usuario AS usu
+                    ON (usu.usu_id = rb.usu_id)
+                    JOIN tm_rob_unidad AS runi
+                    ON (runi.rob_id = usu.usu_unidad)
+                    JOIN tm_unidad as uni
+                    on (uni.unid_id = usu.usu_unidad)
+                    WHERE  usu.fecha_elim IS NULL;";
             $userAll = $this->ejecutarConsulta($sql);
 
        
