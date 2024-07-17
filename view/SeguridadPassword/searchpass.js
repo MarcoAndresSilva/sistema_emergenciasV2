@@ -19,33 +19,59 @@ $.post('../../controller/seguridadPassword.php', { op: 'password_status' }, func
     }
 
     console.log(data);
+  const calculateSecurityLevel = (mayuscula, minuscula, numero, especiales, largo) => {
+      let score = 0;
+      if (mayuscula) score++;
+      if (minuscula) score++;
+      if (numero) score++;
+      if (especiales) score++;
+      if (largo) score++;
+  
+      switch (score) {
+          case 5:
+              return 'Muy Robusta';
+          case 4:
+              return 'Robusta';
+          case 3:
+              return 'Aceptable';
+          case 2:
+              return 'Débil';
+          default:
+              return 'Muy Débil';
+      }
+  };
     const transformedData = data.map(item => {
-        const { nombre, apellido, correo, mayuscula, minuscula, numero, especiales, largo, fecha } = item;
-        let estado = 'seguro';
+        const { nombre, apellido, correo, mayuscula, minuscula, numero, especiales, largo, fecha, unidad, dias_cambio } = item;
+        const estado = calculateSecurityLevel(mayuscula, minuscula, numero, especiales, largo);
         let detalles = [];
 
-        if (!mayuscula || !minuscula || !numero || !especiales || !largo) {
-            estado = 'Vulnerable';
-            if (!mayuscula) detalles.push(fn_img('mayúsculas', 'mayúsculas'));
-            if (!minuscula) detalles.push(fn_img('minúsculas', 'minúsculas'));
-            if (!numero) detalles.push(fn_img('números', 'números'));
-            if (!especiales) detalles.push(fn_img('caracteres especiales', 'caracteres especiales'));
-            if (!largo) detalles.push(fn_img('longitud mínima', 'longitud mínima'));
-        }
+        if (!mayuscula) detalles.push(fn_img('mayúsculas', 'mayúsculas'));
+        if (!minuscula) detalles.push(fn_img('minúsculas', 'minúsculas'));
+        if (!numero) detalles.push(fn_img('números', 'números'));
+        if (!especiales) detalles.push(fn_img('caracteres especiales', 'caracteres especiales'));
+        if (!largo) detalles.push(fn_img('longitud mínima', 'longitud mínima'));
 
-        let detalle = detalles.length > 0 ? detalles.join('') : fn_img('seguro','La contraseña robusta') ;
-        return { nombre, apellido, correo, estado, detalle, fecha };
+        const detalle = detalles.length > 0 ? detalles.join('') : fn_img('seguro', 'La contraseña es robusta');
+
+        return { nombre, apellido, correo, estado, detalle, fecha, unidad, dias_cambio };
     });
 
     var tableBody = $('#table-data tbody');
     console.table(transformedData);
     transformedData.forEach(function(rowData) {
         var row = $('<tr>');
+        if (rowData.fecha > rowData.dias_cambio) {
+            row.addClass('table-danger');
+        } else {
+            row.addClass('table-success');
+        }
         row.append($('<td>').text(rowData.nombre));
         row.append($('<td>').text(rowData.apellido));
         row.append($('<td>').text(rowData.correo));
         row.append($('<td>').text(rowData.estado));
+        row.append($('<td>').text(rowData.unidad));
         row.append($('<td>').text(rowData.fecha));
+        row.append($('<td>').text(rowData.dias_cambio));
         row.append($('<td>').html(rowData.detalle));
         tableBody.append(row);
     });
