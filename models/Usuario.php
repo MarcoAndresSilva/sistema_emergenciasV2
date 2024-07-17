@@ -29,6 +29,7 @@ public function login() {
             $_SESSION["usu_tipo"] = $resultado["usu_tipo"];
             $_SESSION["usu_correo"] = $resultado["usu_correo"];
             $_SESSION["usu_telefono"] = $resultado["usu_telefono"];
+            $_SESSION["usu_unidad"] = $resultado["usu_unidad"];
 
             $log = new RegistroLog();
             $ipCliente = $this->GetIpCliente();
