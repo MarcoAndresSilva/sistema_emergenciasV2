@@ -207,9 +207,11 @@ public function update_password($old_pass, $new_pass, $usu_id){
 
 
 public function update_password_force($new_pass, $usu_id){
+    $user = $this->get_info_usuario($usu_id);
+    $usu_unidad = $user['result']['Unidad'];
     // Verificar seguridad de la nueva contraseña
     $seguridad = new SeguridadPassword();
-    $cumpleCriterios = $seguridad->cumpleCriteriosSeguridad($usu_unidad, $usu_pass);
+    $cumpleCriterios = $seguridad->cumpleCriteriosSeguridad($usu_unidad, $new_pass);
 
     if (!$cumpleCriterios) {
         return ["status" => "warning", "message" => "La contraseña no cumple con todos los requisitos de seguridad para esta unidad."];
