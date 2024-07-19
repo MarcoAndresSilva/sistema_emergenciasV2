@@ -77,6 +77,7 @@ $.post('../../controller/seguridadPassword.php', { op: 'password_status' }, func
     });
 
     table = $('#table-data').DataTable({
+        responsive: true,
         language:{
             url:'../registrosLog/spanishDatatable.json'
         }

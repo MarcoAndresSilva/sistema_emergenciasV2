@@ -9,9 +9,18 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 	<?php require_once("../MainHead/head.php") ?>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css">
 <link rel="stylesheet" href="./nivelCateogiraStyle.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.2/css/responsive.dataTables.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.2/css/responsive.bootstrap5.css"> 
 <title>Sistema Emergencia</title>
 <script defer type="text/javascript" src="./NivelCategoria.js"></script>
 <script src="../../public/js/sweetaler2v11-11-0.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+<script defer src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
+<script defer src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.js"></script>
+<script defer src="https://cdn.datatables.net/responsive/3.0.2/js/dataTables.responsive.min.js"></script>
+<script defer src="https://cdn.datatables.net/responsive/3.0.2/js/responsive.dataTables.min.js"></script>
+
 </head>
 
 <body class="with-side-menu">
@@ -40,7 +49,9 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 
 			<h5 class="m-t-lg with-border">Informaci&oacute;n de Instituciones de Emergencias</h5>
 			<button class="btn btn-success" id="addButton">Agregar Categoría</button>
-					<table id="miTabla" class="table table-bordered table-responsive table-striped table-vcenter js-dataTable-js">
+
+<div class="container">
+					<table id="miTabla" class="table display table-bordered table-responsive table-striped table-vcenter js-dataTable-js">
 						<thead>
 							<tr>
 							<th>ID Categoría</th>
@@ -56,7 +67,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 
         </div><!--.container-fluid-->
     </div><!--.page-content-->
-
+</div>
 	<?php require_once("../MainFooter/footer.php"); ?>
 	
 </body>

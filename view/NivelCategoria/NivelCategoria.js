@@ -245,3 +245,28 @@ $("body").on("click", "#buttonedit", function() {
         }
     });
 });
+// jquery document ready para tranformar tabla en datatable
+$(document).ready(function() {
+    $('#miTabla').DataTable({
+        responsive: true,
+        "order": [[0, "asc"]],
+        "columnDefs": [
+            {
+                "targets": [0],
+                "orderable": false
+            },
+            {
+                "targets": [1],
+                "orderable": false
+            },
+            {
+                "targets": [2],
+                "orderable": false
+            }, 
+            {
+                "targets": [3],
+                "orderable": false
+            }
+        ]
+    });
+}); 
