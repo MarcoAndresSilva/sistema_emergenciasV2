@@ -92,8 +92,9 @@ function actualizarTabla() {
 // Función para agregar el evento change a los selects
 $("body").on("change", ".form-select", function() {
     let tr = $(this).closest("tr");
-    let cat_id = tr.find("td").eq(0).text();
-    let cat_nom = tr.find("td").eq(1).text();
+    let data = table.row(tr).data();
+    let cat_id = data[0]; // Suponiendo que cat_id está en la primera columna
+    let cat_nom = data[1]; // Suponiendo que cat_nom está en la segunda columna
     let ev_niv_id = $(this).val();
     let postData = {
         op: "update_categoria",
@@ -169,8 +170,10 @@ $('#addButton').on('click', function() {
 });
 
 // Función para manejar el evento de clic en el botón de borrar
-$("body").on("click", "#buttondelete", function() {
-    let cat_id = $(this).closest("tr").find("td:eq(0)").text();
+$("body").on("click", ".buttondelete", function() {
+    let tr = $(this).closest("tr");
+    let data = table.row(tr).data();
+    let cat_id = data[0];
 
     Swal.fire({
         title: '¿Estás seguro?',
