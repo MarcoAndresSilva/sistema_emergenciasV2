@@ -79,6 +79,9 @@ function actualizarTabla() {
 
                     tbody.append(tr);
                 });
+
+                // Actualizar DataTable
+                table.clear().rows.add(tbody.find('tr')).draw();
             } else {
                 console.error("Datos categoría inválidos:", data);
             }
