@@ -102,9 +102,7 @@ $("body").on("change", ".form-select", function() {
         ev_niv_id: ev_niv_id
     };
 
-    // Enviar datos mediante una solicitud POST
     $.post("../../controller/categoria.php", data , function(response) {
-        // Manejar la respuesta del servidor
         if (response.status === "success") {
             Toast.fire({
                 icon: 'success',
@@ -159,7 +157,6 @@ $('#addButton').on('click', function() {
             }, function(response) {
                 if (response.status === 'success') {
                     Swal.fire('¡Categoría Agregada!', '', 'success');
-                    // Actualizar la tabla después de agregar la categoría
                     actualizarTabla();
                 } else {
                     Swal.fire('Error al agregar la categoría', response.mensaje, 'error');
@@ -189,7 +186,6 @@ $("body").on("click", "#buttondelete", function() {
                 function(response) {
                     if (response.status === "success") {
                         Swal.fire('¡Eliminado!', 'La categoría ha sido eliminada.', 'success');
-                        // Actualizar la tabla después de eliminar la categoría
                         actualizarTabla();
                     } else {
                         Swal.fire('Error', response.mensaje, 'error');
@@ -239,7 +235,6 @@ $("body").on("click", "#buttonedit", function() {
             }, function(response) {
                 if (response.status === 'success') {
                     Swal.fire('¡Categoría Actualizada!', '', 'success');
-                    // Actualizar la tabla después de editar la categoría
                     actualizarTabla();
                 } else {
                     Swal.fire('Error al editar la categoría', response.mensaje, 'error');
