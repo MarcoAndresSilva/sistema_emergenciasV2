@@ -95,14 +95,14 @@ $("body").on("change", ".form-select", function() {
     let cat_id = tr.find("td").eq(0).text();
     let cat_nom = tr.find("td").eq(1).text();
     let ev_niv_id = $(this).val();
-    let data ={
-        op:"update_categoria",
+    let postData = {
+        op: "update_categoria",
         cat_id: cat_id,
         cat_nom: cat_nom,
         ev_niv_id: ev_niv_id
     };
 
-    $.post("../../controller/categoria.php", data , function(response) {
+    $.post("../../controller/categoria.php", postData, function(response) {
         if (response.status === "success") {
             Toast.fire({
                 icon: 'success',
