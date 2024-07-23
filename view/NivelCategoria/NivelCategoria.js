@@ -200,11 +200,12 @@ $("body").on("click", "#buttondelete", function() {
 });
 
 // Función para manejar el evento de clic en el botón de editar
-$("body").on("click", "#buttonedit", function() {
+$("body").on("click", ".buttonedit", function() {
     let tr = $(this).closest("tr");
-    let cat_id = tr.find("td:eq(0)").text();
-    let cat_nom = tr.find("td:eq(1)").text();
-    let ev_niv_id = tr.find("select").val();
+    let data = table.row(tr).data();
+    let cat_id = data[0]; 
+    let cat_nom = data[1]; 
+    let ev_niv_id = $(this).siblings("select").val();
 
     Swal.fire({
         title: 'Editar Categoría',
