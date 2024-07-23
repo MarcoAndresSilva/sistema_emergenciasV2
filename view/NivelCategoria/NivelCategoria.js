@@ -194,7 +194,7 @@ $("body").on("click", ".buttondelete", function() {
                         Swal.fire('¡Eliminado!', 'La categoría ha sido eliminada.', 'success');
                         actualizarTabla();
                     } else {
-                        Swal.fire('Error', response.mensaje, 'error');
+                        Swal.fire('Cuidado', response.mensaje, 'warning');
                     }
                 },
                 "json"
