@@ -72,8 +72,8 @@ function actualizarTabla() {
                     tr.append($("<td></td>").append(selectHtml));
 
                     // Crear los botones de editar y borrar
-                    const buttonedit   ='<button id="buttonedit"   class="btn btn-warning" type="button"><img src="../../public/img/edit.svg"></button>';
-                    const buttondelete ='<button id="buttondelete" class="btn btn-danger" type="button"><img src="../../public/img/trash.svg"></button>';
+                    const buttonedit = '<button class="btn btn-warning buttonedit" type="button"><img src="../../public/img/edit.svg"></button>';
+                    const buttondelete = '<button class="btn btn-danger buttondelete" type="button"><img src="../../public/img/trash.svg"></button>';
                     const buttons = buttonedit + buttondelete;
                     tr.append($("<td></td>").append(buttons));
 
