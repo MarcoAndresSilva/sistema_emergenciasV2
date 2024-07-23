@@ -219,7 +219,7 @@ $("body").on("click", ".buttonedit", function() {
             <input type="hidden" id="edit_cat_id" value="${cat_id}">
             <input type="text" id="edit_cat_nom" class="swal2-input" value="${cat_nom}">
             <select id="edit_ev_niv_id" class="swal2-select">
-                ${nivelPeligro.map(item => `<option value="${item.ev_niv_id}" ${item.ev_niv_id === ev_niv_id ? 'selected' : ''}>${item.ev_niv_nom}</option>`).join('')}
+                ${nivelPeligro.map(item => `<option value="${item.ev_niv_id}" ${item.ev_niv_id == ev_niv_id ? 'selected' : ''}>${item.ev_niv_nom}</option>`).join('')}
             </select>
         `,
         showCancelButton: true,
