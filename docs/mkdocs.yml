@@ -14,6 +14,7 @@ nav:
         - Unidad: controllers/unidad.md
         - Usuario: controllers/usuario.md
         - RegistroLog: controllers/registroLog.md 
+        - Seguridad Password: controllers/seguridadPassword.md
     - Models:
         - Datos Geográficos: models/datosGeograficos.md
         - Categoría: models/categoria.md
