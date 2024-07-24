@@ -3,3 +3,4 @@ weasyprint==61.2
 mkdocs-material==9.5.30
 mkdocs==1.6.0
 mkdocs-with-pdf==0.9.3
+mkdocs-mermaid2-plugin==1.1.1
