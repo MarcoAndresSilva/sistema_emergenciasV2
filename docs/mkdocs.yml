@@ -33,7 +33,7 @@ nav:
         - public: public/public.md
     - Docker:
         - Docker File: docker/dockerFile.md
-        - Docker Container: docker/dockerContainer.md
+        - Docker Compose: docker/dockerContainer.md
     - View:
         - Atender Emergencia: view/atenderEmergencia.md
         - Categorías Emergencias: view/categoriasEmergencias.md
