@@ -283,22 +283,6 @@ if (isset($_GET["op"])) {
                     }
         
                     $direccion = $row['ev_direc'];
-                    // Dividir la cadena en texto y coordenadas
-                    $parts = explode(" , ", $direccion);
-                    
-                    // Si hay coordenadas, eliminarlas y agregar el botón
-                    if ($parts[1] !== "No hay coordenadas") {
-                        // Eliminar las coordenadas
-                        $texto = $parts[0];
-                        // Agregar el botón después del texto de la dirección
-                        $direccion = $texto;
-                    }else {
-                        $direccion = $parts[0];
-                    }
-        
-                    // Si no hay coordenadas, eliminar el texto que indica su ausencia
-                    $direccion = str_replace("No hay coordenadas", "", $direccion);
-        
                     $recorrido .= "<td>" . $direccion . "</td>";
                     
                     $recorrido .= "<td>" . $row['ev_inicio'] . "</td>";
