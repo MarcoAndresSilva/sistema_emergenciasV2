@@ -564,50 +564,50 @@ INSERT INTO `tm_est_unidad` (`est_un_id`, `est_un_nom`) VALUES
 
 CREATE TABLE `tm_evento` (
   `ev_id` int(11) NOT NULL,
-  `ev_nom` varchar(30) NOT NULL,
-  `ev_apellido` varchar(50) NOT NULL,
-  `ev_mail` varchar(50) NOT NULL,
+  `usu_id` int(11) NOT NULL,
   `ev_desc` varchar(50) NOT NULL,
   `ev_est` int(11) NOT NULL,
   `ev_inicio` datetime NOT NULL,
   `ev_final` datetime DEFAULT NULL,
   `ev_direc` varchar(100) NOT NULL,
+  `ev_latitud`  DOUBLE NOT NULL,
+  `ev_longitud` DOUBLE NOT NULL,
   `cat_id` int(11) NOT NULL,
   `ev_niv` int(11) NOT NULL,
-  `ev_img` blob DEFAULT NULL,
-  `ev_telefono` int(11) NOT NULL
+  `ev_img` varchar(123) ,
+  `ev_telefono` int(11)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `tm_evento`
 --
 
-INSERT INTO `tm_evento` (`ev_id`, `ev_nom`, `ev_apellido`, `ev_mail`, `ev_desc`, `ev_est`, `ev_inicio`, `ev_final`, `ev_direc`, `cat_id`, `ev_niv`, `ev_img`, `ev_telefono`) VALUES
-(10, 'Bastian Cerda', '', 'bastianalen3@gmail.com', 'Descripcion', 2, '2024-01-08 12:09:06', NULL, 'Anita Fresno 327 , No hay coordenadas', 9, 1, NULL, 0),
-(16, 'Peligro constante', '', 'mail@mail.com', 'Descripcion', 2, '2024-01-08 17:03:26', NULL, 'loica parcela 7 , No hay coordenadas', 1, 3, NULL, 0),
-(19, 'Catastrofe', '', 'mail@mail.com', 'Descripcion', 2, '2024-01-11 12:53:31', NULL, 'Colonial 2 , No hay coordenadas', 7, 1, NULL, 0),
-(21, 'Explision', '', 'bas.cerda@duocuc.cl', 'Descripcion', 2, '2024-01-15 13:11:52', NULL, 'Libertad 2031 , No hay coordenadas', 5, 3, NULL, 0),
-(22, 'Bastian Cerda', '', 'bast.cerda@duocuc.cl', 'Constado de carretera km18', 2, '2024-01-16 18:44:15', NULL, 'Ruta 78 , No hay coordenadas', 1, 3, NULL, 0),
-(24, 'Bastian Cerda', '', 'mail@mail.com', 'Costado de Carretera direccion santiago', 2, '2024-01-16 19:21:18', NULL, 'Ruta 78 , No hay coordenadas', 1, 2, NULL, 0),
-(85, 'denfred', '', 'isabelmartinezr1968@gmail.com', 'Planta interior ', 2, '2024-01-21 20:35:37', NULL, 'Anita Fresno 327 , -33.7413118,-71.1809286', 1, 2, NULL, 0),
-(114, 'cristian', '', 'cristian@munimelipilla.cl', 'caso de incendio en la villa colonial', 2, '2024-01-31 09:13:23', '2024-05-24 15:48:12', 'colonial 13 , -33.6855421,-71.2171669', 1, 1, '', 0),
-(141, 'martin', '', 'Bastianalen3@gmail.com', 'Planta interior ', 2, '2024-02-02 08:18:52', '2024-02-06 10:45:59', 'Plaza cardenales , No hay coordenadas', 1, 1, '', 0),
-(143, 'denfred', '', 'Bastianalen3@gmail.com', 'Planta interior ', 2, '2024-02-06 11:26:10', '2024-02-15 11:27:38', 'Sin dirección , -33.6855446,-71.2171806', 1, 0, '', 0),
-(144, 'marco', '', 'marco.silvaponce10@gmail.com', 'Asalto', 2, '2024-02-15 11:30:32', '2024-05-24 10:19:11', 'cunco2207 , -33.67798948680299,-71.17433681528627', 1, 2, '', 0),
-(145, 'marquito', '', 'mmmmm@mmmm.cl', 'evento test', 2, '2024-02-16 09:29:05', '2024-05-24 12:13:39', 'muni melipilla , -33.6855441,-71.2171793', 4, 2, '', 0),
-(146, '', '', 'marco.silva@mujnimelipill.cl', 'gdfhfgdh', 2, '2024-03-21 17:21:00', '2024-03-22 11:17:20', 'gfhfdghhggh , No hay coordenadas', 9, 3, '', 35346),
-(147, '', '', 'marco.silva@mujnimelipill.cl', 'se cayo un arbol', 2, '2024-03-22 09:37:49', '2024-05-24 10:03:19', 'Sin dirección , -33.685643491757574,-71.22309704448853', 7, 0, 0x2e2e2f7075626c69632f696d672f696d6167656e65734576656e746f732f436170747572612064652070616e74616c6c6120323032342d30332d3034203133303932332e706e67, 123124324),
-(148, '', '', 'marco.silva@mujnimelipill.cl', 'asaltacion', 2, '2024-03-22 16:10:33', '2024-05-24 15:49:22', 'Sin dirección , -33.6855738,-71.2172411', 2, 1, '', 133),
-(149, '', '', 'marco.silva@mujnimelipill.cl', 'efsdfsdfds', 2, '2024-03-25 16:50:19', '2024-05-24 12:13:42', 'Sin dirección , -33.6855794,-71.2172355', 9, 2, '', 123242355),
-(150, '', '', 'marco.silva@mujnimelipill.cl', 'barristas quemando neumaticos', 2, '2024-03-26 10:08:15', '2024-05-24 15:49:19', 'centro de melipila , -33.68604932337804,-71.21500190209962', 4, 1, '', 133434343),
-(151, 'dsfdsf', 'fadsfdasf', 'marco.silva@mujnimelipill.cl', 'barristas quemando neumaticos', 2, '2024-05-22 10:08:15', '2024-05-24 15:39:45', 'centro de melipila , -33.68604932337804,-71.21500190209962', 4, 1, NULL, 46545454),
-(152, 'Admin', 'admin', 'admin@mail.com', 'dfsafdsrgde', 2, '2024-05-22 23:27:39', '2024-05-24 15:07:47', 'Sin dirección , -33.6779712,-71.1745988', 2, 1, '', 961718297),
-(153, 'Admin', 'admin', 'admin@mail.com', 'accidente arma corta', 2, '2024-05-24 09:56:27', '2024-05-24 10:03:30', 'Sin dirección , -33.68095711878329,-71.21664931640625', 2, 0, '', 961718297),
-(154, 'Admin', 'admin', 'admin@mail.com', 'barricadas', 2, '2024-05-24 10:01:55', '2024-05-24 10:03:33', 'mackena #5465 , -33.4521,-70.6536', 4, 0, '', 961718297),
-(155, 'Admin', 'admin', 'admin@mail.com', 'casa habitacion', 2, '2024-05-24 10:02:36', '2024-05-24 10:03:36', 'bernardo leigthon 87687 , -33.4521,-70.6536', 1, 0, '', 961718297),
-(156, 'Cristian', 'Suazo', 'crhiiss26@gmail.com', 'casa habitacion', 1, '2024-05-24 15:50:11', NULL, 'los jazmines 342 , -33.4521,-70.6536', 1, 0, '', 968093527),
-(157, 'Marco', 'Silva', 'marco.silvaponce10@gmail.com', 'niño intoxicado', 1, '2024-05-24 15:50:49', NULL, 'colegio melipilla , No hay coordenadas', 9, 0, '', 997827161),
-(158, 'Admin', 'admin', 'admin@mail.com', 'caída de árbol obstruye la vía ', 1, '2024-05-27 09:21:28', NULL, 'el paico , -33.69524053580763,-71.0546009765625', 7, 2, '', 961718297);
+INSERT INTO `tm_evento` (`ev_id`, `usu_id`, `ev_desc`, `ev_est`, `ev_inicio`, `ev_final`, `ev_direc`, `ev_latitud`, `ev_longitud`, `cat_id`, `ev_niv`, `ev_img`, `ev_telefono`) VALUES
+(10, 1, 'Descripcion', 2, '2024-01-08 12:09:06', NULL, 'Anita Fresno 327', 0, 0, 9, 1, NULL, 0),
+(16, 1, 'Descripcion', 2, '2024-01-08 17:03:26', NULL, 'loica parcela 7', 0, 0, 1, 3, NULL, 0),
+(19, 1, 'Descripcion', 2, '2024-01-11 12:53:31', NULL, 'Colonial 2', 0, 0, 7, 1, NULL, 0),
+(21, 1, 'Descripcion', 2, '2024-01-15 13:11:52', NULL, 'Libertad 2031', 0, 0, 5, 3, NULL, 0),
+(22, 1, 'Constado de carretera km18', 2, '2024-01-16 18:44:15', NULL, 'Ruta 78', 0, 0, 1, 3, NULL, 0),
+(24, 1, 'Costado de Carretera direccion santiago', 2, '2024-01-16 19:21:18', NULL, 'Ruta 78', 0, 0, 1, 2, NULL, 0),
+(85, 1, 'Planta interior', 2, '2024-01-21 20:35:37', NULL, 'Anita Fresno 327', -33.7413118, -71.1809286, 1, 2, NULL, 0),
+(114, 2, 'caso de incendio en la villa colonial', 2, '2024-01-31 09:13:23', '2024-05-24 15:48:12', 'colonial 13', -33.6855421, -71.2171669, 1, 1, '', 0),
+(141, 2, 'Planta interior', 2, '2024-02-02 08:18:52', '2024-02-06 10:45:59', 'Plaza cardenales', 0, 0, 1, 1, '', 0),
+(143, 2, 'Planta interior', 2, '2024-02-06 11:26:10', '2024-02-15 11:27:38', 'Sin dirección', -33.6855446, -71.2171806, 1, 0, '', 0),
+(144, 2, 'Asalto', 2, '2024-02-15 11:30:32', '2024-05-24 10:19:11', 'cunco2207', -33.67798948680299, -71.17433681528627, 1, 2, '', 0),
+(145, 2, 'evento test', 2, '2024-02-16 09:29:05', '2024-05-24 12:13:39', 'muni melipilla', -33.6855441, -71.2171793, 4, 2, '', 0),
+(146, 2, 'gdfhfgdh', 2, '2024-03-21 17:21:00', '2024-03-22 11:17:20', 'gfhfdghhggh', 0, 0, 9, 3, '', 35346),
+(147, 2, 'se cayo un arbol', 2, '2024-03-22 09:37:49', '2024-05-24 10:03:19', 'Sin dirección', -33.685643491757574, -71.22309704448853, 7, 0, '', 123124324),
+(148, 2, 'asaltacion', 2, '2024-03-22 16:10:33', '2024-05-24 15:49:22', 'Sin dirección', -33.6855738, -71.2172411, 2, 1, '', 133),
+(149, 2, 'efsdfsdfds', 2, '2024-03-25 16:50:19', '2024-05-24 12:13:42', 'Sin dirección', -33.6855794, -71.2172355, 9, 2, '', 123242355),
+(150, 2, 'barristas quemando neumaticos', 2, '2024-03-26 10:08:15', '2024-05-24 15:49:19', 'centro de melipila', -33.68604932337804, -71.21500190209962, 4, 1, '', 133434343),
+(151, 2, 'barristas quemando neumaticos', 2, '2024-05-22 10:08:15', '2024-05-24 15:39:45', 'centro de melipila', -33.68604932337804, -71.21500190209962, 4, 1, NULL, 46545454),
+(152, 3, 'dfsafdsrgde', 2, '2024-05-22 23:27:39', '2024-05-24 15:07:47', 'Sin dirección', -33.6779712, -71.1745988, 2, 1, '', 961718297),
+(153, 3, 'accidente arma corta', 2, '2024-05-24 09:56:27', '2024-05-24 10:03:30', 'Sin dirección', -33.68095711878329, -71.21664931640625, 2, 0, '', 961718297),
+(154, 3, 'barricadas', 2, '2024-05-24 10:01:55', '2024-05-24 10:03:33', 'mackena #5465', -33.4521, -70.6536, 4, 0, '', 961718297),
+(155, 3, 'casa habitacion', 2, '2024-05-24 10:02:36', '2024-05-24 10:03:36', 'bernardo leigthon 87687', -33.4521, -70.6536, 1, 0, '', 961718297),
+(156, 3, 'casa habitacion', 1, '2024-05-24 15:50:11', NULL, 'los jazmines 342', -33.4521, -70.6536, 1, 0, '', 968093527),
+(157, 3, 'niño intoxicado', 1, '2024-05-24 15:50:49', NULL, 'colegio melipilla', 0, 0, 9, 0, '', 997827161),
+(158, 3, 'caída de árbol obstruye la vía', 1, '2024-05-24 15:51:40', NULL, 'Av. Loreto', 0, 0, 1, 1, '', 0);
 
 -- --------------------------------------------------------
 
