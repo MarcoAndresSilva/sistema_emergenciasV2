@@ -6,7 +6,33 @@ class Evento extends Conectar {
         try {
             $conectar = parent::conexion();
             parent::set_names();
-            $sql = "SELECT * FROM tm_evento tme inner join tm_categoria tmc on tmc.cat_id=tme.cat_id inner join tm_ev_niv ten on tme.ev_niv=ten.ev_niv_id inner join tm_estado te on te.est_id=tme.ev_est ORDER BY ev_id desc";
+            $sql = 'SELECT
+                        us.usu_name as "ev_nom", us.usu_ape as "ev_ape",
+                        tme.ev_direc as "ev_direc",
+                        tmc.cat_nom as "cat_nom",
+                        tme.ev_desc as "ev_desc",
+                        tme.ev_inicio as "ev_inicio",
+                        tmc.cat_id as "cat_id",
+                        tme.ev_direc as "ev_direc",
+                        tme.ev_id as "ev_id",
+                        ten.ev_niv_id as "ev_niv_id",
+                        tme.ev_est as "ev_est",
+                        tme.ev_final as "ev_final",
+                        tme.ev_latitud as "ev_latitud",
+                        tme.ev_longitud as "ev_longitud"
+                    FROM
+                        tm_evento tme
+                    INNER JOIN tm_categoria tmc ON
+                        tmc.cat_id = tme.cat_id
+                    INNER JOIN tm_ev_niv ten ON
+                        tme.ev_niv = ten.ev_niv_id
+                    INNER JOIN tm_estado te ON
+                        te.est_id = tme.ev_est
+                    INNER JOIN tm_usuario us
+                    on us.usu_id=tme.usu_id
+                    ORDER BY
+                        ev_id
+                    DESC;';
             $sql = $conectar->prepare($sql);
             $sql->execute();
             $resultado = $sql->fetchAll();
