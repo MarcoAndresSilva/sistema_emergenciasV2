@@ -141,24 +141,17 @@ if (isset($_GET["op"])) {
                     }
 
                     $direccion = $row['ev_direc'];
-                    // Dividir la cadena en texto y coordenadas
-                    $parts = explode(" , ", $direccion);
+                    $ev_latitud = $row['ev_latitud'];
+                    $ev_longitud = $row['ev_longitud'];
 
-                    // Si hay coordenadas, eliminarlas y agregar el botón
-                    if ($parts[1] !== "No hay coordenadas") {
-                        // Eliminar las coordenadas
-                        $texto = $parts[0];
-                        // Agregar el botón después del texto de la dirección
-                        $direccion = $texto . " <button id='btn' type='button' class='btn btn-inline btn-primary btn-sm ladda-button btnDireccionarMapa modal-btn' id='btnDireccionarMapa'> <i class='fa-solid fa-location-dot'></i> </button>";
-                    }else {
-                        $direccion = $parts[0];
-                    }
-
-                    // Si no hay coordenadas, eliminar el texto que indica su ausencia
-                    $direccion = str_replace("No hay coordenadas", "", $direccion);
-                    $direccion = str_replace("Sin dirección", "", $direccion);
-
-                    $recorrido .= "<td> " . $direccion . " </td>";
+                    $direccion .= " <button id='btn' type='button' 
+                                        class='btn btn-inline btn-primary btn-sm ladda-button btnDireccionarMapa modal-btn'  
+                                        id='btnDireccionarMapa' 
+                                        data-latitud='$ev_latitud' 
+                                        data-longitud='$ev_longitud'> 
+                                        <i class='fa-solid fa-location-dot'></i> 
+                                    </button>";
+                   $recorrido .= "<td> " . $direccion . " </td>";
 
                     //Llama a la funcion get_datos_eventounidad para obtener los nombres de las unidades asignadas
                     $datos_asignaciones = $eventounidad->get_datos_eventoUnidad($row['ev_id']);
