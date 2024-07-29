@@ -83,15 +83,13 @@ if (isset($_SESSION["usu_id"])) {
                                 <input type="text" class="form-control" id="descripcion" placeholder="Descripción">
                             </fieldset>
                         </div>     
-                        <div class="col-lg-5">
-                            <fieldset class="form-group">
-                                <label class="form-label semibold" for="exampleInput">Desea adjuntar una imagen de la emergencia?</label>
-                                <input type="file" id="imagen" name="imagen" accept="image/*">
-                                <button id="btnCargarArchivo" class="btn btn-round btn-inline btn-primary">Cargar Archivo</button>
-                                <label id="archivoAdjuntado">No hay archivo adjunto (.JPG/.JPEG/.PNG)</label>
-                            </fieldset>
-                        </div>
-                    </div>                  
+                    <div class="col-lg-5">
+                        <fieldset class="form-group">
+                            <label class="form-label semibold" for="formFile">Desea adjuntar una imagen de la emergencia?</label>
+                            <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*">
+                            <small id="archivoAdjuntado" class="form-text text-muted">No hay archivo adjunto (.JPG/.JPEG/.PNG)</small>
+                        </fieldset>
+                    </div>
 
                     <div class="group-ident">
                         <div class="col-lg-5" id="select-ubicacion">
