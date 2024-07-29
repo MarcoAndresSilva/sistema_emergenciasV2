@@ -131,6 +131,8 @@ if (isset($_SESSION["usu_id"])) {
                             <div id="map">
                                 <!-- Aquí se muestra el mapa utilizando la API de Google Maps -->
                             </div>
+                <input type="hidden" id="ev_latitud"> 
+                <input type="hidden" id="ev_longitud"> 
                         </div>
                     </div>
 
