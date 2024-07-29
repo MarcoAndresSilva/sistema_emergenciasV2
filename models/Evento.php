@@ -195,39 +195,56 @@ class Evento extends Conectar {
         }
     }
         
-    public function add_evento($ev_nom, $ev_apellido, $ev_mail, $ev_desc, $ev_est, $ev_inicio, $ev_direc, $cat_id, $ev_niv, $ev_img, $ev_telefono) {
-        try {
-            $conectar = parent::conexion();
-            parent::set_names();
-            $sql = "INSERT INTO tm_evento (ev_nom, ev_apellido, ev_mail, ev_desc, ev_est, ev_inicio, ev_final, ev_direc, cat_id, ev_niv, ev_img, ev_telefono) 
-            VALUES (:ev_nom, :ev_apellido, :ev_mail, :ev_desc, :ev_est, :ev_inicio, NULL, :ev_direc, :cat_id, :ev_niv, :ev_img, :ev_telefono)";
-            $consulta  = $conectar->prepare($sql);
-            $consulta->bindParam(':ev_nom', $ev_nom);
-            $consulta->bindParam(':ev_apellido', $ev_apellido);
-            $consulta->bindParam(':ev_mail', $ev_mail);
-            $consulta->bindParam(':ev_desc', $ev_desc);
-            $consulta->bindParam(':ev_est', $ev_est);
-            $consulta->bindParam(':ev_inicio', $ev_inicio);
-            $consulta->bindParam(':ev_direc', $ev_direc);
-            $consulta->bindParam(':cat_id', $cat_id);
-            $consulta->bindParam(':ev_niv', $ev_niv);
-            $consulta->bindParam(':ev_img', $ev_img);
-            $consulta->bindParam(':ev_telefono', $ev_telefono);
-            try {
-                $consulta->execute();
-            } catch (PDOException $e) {
-                echo "Error al ejecutar la consulta: " . $e->getMessage();
-            }            
-            if ($consulta->rowCount() > 0) {
-                return true;
-            } else { 
-                return false;
-            }
-        } catch (Exception $e) {
-            echo "Error catch add_evento: " . $e->getMessage();
-            throw $e;
-        }
+ 
+public function add_evento($usu_id, $ev_desc, $ev_est, $ev_inicio, $ev_direc, $ev_latitud, $ev_longitud, $cat_id, $ev_niv, $ev_img, $ev_telefono) {
+    if (empty($usu_id) || empty($ev_desc) || empty($ev_est) || empty($ev_inicio) || empty($ev_direc) || empty($cat_id)) {
+        return [
+            'status' => 'warning',
+            'message' => 'Faltan datos obligatorios. Por favor, asegúrate de completar todos los campos necesarios.'
+        ];
     }
+  
+    try {
+        $conectar = parent::conexion();
+        parent::set_names();
+  
+        $sql = "INSERT INTO tm_evento (usu_id, ev_desc, ev_est, ev_inicio, ev_final, ev_direc, ev_latitud, ev_longitud, cat_id, ev_niv, ev_img, ev_telefono) 
+        VALUES (:usu_id, :ev_desc, :ev_est, :ev_inicio, NULL, :ev_direc, :ev_latitud, :ev_longitud, :cat_id, :ev_niv, :ev_img, :ev_telefono)";
+  
+        $consulta = $conectar->prepare($sql);
+  
+        $consulta->bindParam(':usu_id', $usu_id);
+        $consulta->bindParam(':ev_desc', $ev_desc);
+        $consulta->bindParam(':ev_est', $ev_est);
+        $consulta->bindParam(':ev_inicio', $ev_inicio);
+        $consulta->bindParam(':ev_direc', $ev_direc);
+        $consulta->bindParam(':ev_latitud', $ev_latitud);
+        $consulta->bindParam(':ev_longitud', $ev_longitud);
+        $consulta->bindParam(':cat_id', $cat_id);
+        $consulta->bindParam(':ev_niv', $ev_niv);
+        $consulta->bindParam(':ev_img', $ev_img);
+        $consulta->bindParam(':ev_telefono', $ev_telefono);
+  
+        try {
+            $consulta->execute();
+            return [
+                'status' => 'success',
+                'message' => 'Evento agregado exitosamente.'
+            ];
+        } catch (PDOException $e) {
+            return [
+                'status' => 'error',
+                'message' => 'Error al ejecutar la consulta: ' . $e->getMessage()
+            ];
+        }
+  
+    } catch (Exception $e) {
+        return [
+            'status' => 'error',
+            'message' => 'Error catch add_evento: ' . $e->getMessage()
+        ];
+    }
+} 
 
     //update_imagen_evento segun id
 	public function update_imagen_evento($ev_id, $ev_img) {
