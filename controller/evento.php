@@ -87,32 +87,6 @@ if (isset($_GET["op"])) {
             echo json_encode($datos);
         break;
 
-        case "carga-imagen":
-            //verificar si se obtuvo el ID del evento
-            if (isset($_POST['ev_id'])){
-                // Verificar si se envió un archivo y no hubo errores
-                if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
-                    // Ruta donde se almacenará la imagen 
-                    $ruta_destino = '../public/img/imagenesEventos/' . $_FILES['imagen']['name'];
-                    // Mover la imagen del directorio temporal al destino final
-                    if (move_uploaded_file($_FILES['imagen']['tmp_name'], $ruta_destino)) {
-                        // Actualizar la columna ev_img en la base de datos con la ruta de la imagen
-                        $datos = $evento->update_imagen_evento($_POST['ev_id'], $ruta_destino);
-                        if ($datos == true) {
-                            echo 1;
-                        } else {
-                            echo 0;
-                        }
-                    } else {
-                        echo "Error al mover el archivo.";
-                    }
-                } else {
-                    echo "Error al recibir la imagen.";
-                }
-            }else {
-                echo "Error al recibir el ID del evento.";
-            }
-        break;
         case "carga-imagen-cierre":
             //verificar si se obtuvo el ID del evento
             if (isset($_POST['ev_id'])){
