@@ -10,6 +10,7 @@ if (isset($_SESSION["usu_id"])) {
 
 <link rel="stylesheet" href="./estilopersonal.css">
 <title>Sistema Emergencia</title>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQrYCFSz7Q-a-WONxo4yymu9SAPgmaA6c&libraries=places&callback=initMap"></script>
 </head>
 
 <body class="with-side-menu">
