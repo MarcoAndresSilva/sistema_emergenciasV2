@@ -11,6 +11,36 @@ $categoria = new Categoria();
 $unidad = new Unidad();
 $estado = new Estado();
 $eventounidad = new EventoUnidad();
+
+function guardarImagen($archivo, $carpeta) {
+    if (!isset($archivo) || $archivo['error'] !== UPLOAD_ERR_OK) {
+        return "Error al recibir la imagen: " . $archivo['error'];
+    }
+
+    $directorio_destino = __DIR__ . "/../public/img/{$carpeta}/";
+
+    $extension = pathinfo($archivo['name'], PATHINFO_EXTENSION);
+    $nombre_archivo = uniqid('', true) . '.' . $extension;
+    $ruta_destino = $directorio_destino . $nombre_archivo;
+
+    if (!is_dir($directorio_destino)) {
+        if (!mkdir($directorio_destino, 0775, true)) {
+            return "No se pudo crear el directorio: " . $directorio_destino;
+        }
+    }
+
+    if (!is_writable($directorio_destino)) {
+        return "El directorio no tiene permisos de escritura: " . $directorio_destino;
+    }
+
+    if (!move_uploaded_file($archivo['tmp_name'], $ruta_destino)) {
+        return "Error al mover el archivo a: " . $ruta_destino;
+    }
+
+    $ruta_relativa = "/img/{$carpeta}/" . $nombre_archivo;
+    return $ruta_relativa;
+}
+
 if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_tipo"] == 2)) {
 if (isset($_GET["op"])) {
     switch ($_GET["op"]) {
