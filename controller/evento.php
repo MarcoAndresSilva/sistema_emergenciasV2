@@ -45,33 +45,46 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 if (isset($_GET["op"])) {
     switch ($_GET["op"]) {
         case "add_evento":
-            // Obtener datos de la sesión del usuario
-            $usu_id = $_SESSION["usu_id"];
-            $usu_nom = $_SESSION["usu_nom"];
-            $usu_ape = $_SESSION["usu_ape"];
-            $usu_mail = $_SESSION["usu_correo"];
-            $usu_telefono = $_SESSION["usu_telefono"];
+            $usu_id = $_SESSION["usu_id"]; 
+            $ev_telefono = $_SESSION['usu_telefono'];
+            $ev_desc = $_POST['ev_desc'];
+            $ev_est = $_POST['ev_est'];
+            $ev_inicio = $_POST['ev_inicio'];
+            $ev_direc = $_POST['ev_direc'];
+            $ev_latitud = $_POST['ev_latitud'];
+            $ev_longitud = $_POST['ev_longitud'];
+            $cat_id = $_POST['cat_id'];
+            $ev_niv = $_POST['ev_niv'];
+        
+            $ev_img = null;
+
+            if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+                $carpeta = 'imagenesEventos';
+                $url_imagen = guardarImagen($_FILES['imagen'], $carpeta);
+        
+                if ($url_imagen === "Error al recibir la imagen." || $url_imagen === "Error al mover el archivo.") {
+                    echo $url_imagen;
+                    break;
+                  }
+                $ev_img = $url_imagen;
+        
+            }
         
             $datos = $evento->add_evento(
-                // $usu_id,
-                $usu_nom, // Llenar con el nom del usuario en sesión
-                $usu_ape, // Llenar con el ape del usuario en sesión
-                $usu_mail, // Llenar con el correo del usuario en sesión
-                $_POST['ev_desc'],
-                $_POST['ev_est'],
-                $_POST['ev_inicio'],
-                $_POST['ev_direc'],
-                $_POST['cat_id'],
-                $_POST['ev_niv'],
-                $_POST['ev_img'],
-                $usu_telefono // Llenar con el teléfono del usuario en sesión
+                $usu_id,
+                $ev_desc,
+                $ev_est,
+                $ev_inicio,
+                $ev_direc,
+                $ev_latitud,
+                $ev_longitud,
+                $cat_id,
+                $ev_niv,
+                $ev_img,
+                $ev_telefono
             );
-        
-            if ($datos == true) {
-                echo 1;
-            } else {
-                echo 0;
-            }
+            header('Content-Type: application/json');
+            echo json_encode($datos);
         break;
 
         case "carga-imagen":
