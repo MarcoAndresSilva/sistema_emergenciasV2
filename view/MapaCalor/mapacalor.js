@@ -62,9 +62,6 @@ function filterCategory(category, button) {
     if (isVisible) {
       button.classList.remove('btn-success');
     } else {
-      document.querySelectorAll('.btn').forEach(btn => {
-        btn.classList.remove('btn-success');
-      });
       button.classList.add('btn-success');
     }
   }
