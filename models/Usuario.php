@@ -8,16 +8,18 @@ require_once 'RegistroLog.php';
             if (isset($_POST["enviar"])) {
                 $name = $_POST["usu_name"];
                 $pass = $_POST["usu_pass"];
+                $tipo = $_POST["usu_tipo"];
                 $log= new RegistroLog;
                 $ipCliente = $this->GetIpCliente();
                 if (empty($name) and empty($pass) and empty($usu_tipo)) {
                     header("Location:".conectar::ruta()."index.php?m=2");
                     exit();
                 }else{
-                    $sql ="SELECT * FROM tm_usuario WHERE usu_name= ? and usu_pass= ? and estado=1 ";
+                    $sql ="SELECT * FROM tm_usuario WHERE usu_name= ? and usu_pass= ? and usu_tipo=? and estado=1 ";
                     $stmt=$conectar->prepare($sql);
                     $stmt->bindValue(1, $name);
                     $stmt->bindValue(2, md5($pass)); // cifrando a md5 la pass
+                    $stmt->bindValue(3, $tipo);
                     $stmt->execute();
                     //se agrega variable para almacenar el usuario
                     $resultado = $stmt->fetch();
