@@ -226,7 +226,6 @@ function togglePOIs() {
   const poIsButton = document.getElementById('togglePOIs');
 
   if (poIsButton) {
-    const icon = poIsButton.querySelector('i');
 
     if (showPOIs) {
       poIsButton.textContent = '';
