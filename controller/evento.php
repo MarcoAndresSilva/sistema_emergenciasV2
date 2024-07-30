@@ -743,6 +743,12 @@ if (isset($_GET["op"])) {
             $datos = $evento->datos_categorias_eventos($fecha_inicio);
             echo json_encode($datos);
             break;
+      case "get_evento_lat_lon":
+          $datos = $evento->get_eventos_categoria_latitud_longitud();
+          header('Content-Type: application/json');
+          echo json_encode($datos);
+      break;
+
 
     }
 
