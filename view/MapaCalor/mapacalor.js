@@ -37,7 +37,7 @@ function initMap() {
 }
 
 function addHeatmapLayers(categories) {
-  Object.keys(categories).forEach(function(category) {
+  Object.keys(categories).forEach(category => {
     if (!categoryColors[category]) {
       categoryColors[category] = getRandomColor();
     }
@@ -61,7 +61,7 @@ function addHeatmapLayers(categories) {
 }
 
 function addMarkers(categories) {
-  Object.keys(categories).forEach(function(category) {
+  Object.keys(categories).forEach(category => {
     if (disabledCategories.includes(category)) {
       return;
     }
