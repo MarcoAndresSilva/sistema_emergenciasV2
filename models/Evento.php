@@ -510,5 +510,14 @@ public function datos_categorias_eventos($fecha_inicio) {
         throw $e;
     }
 }
+  public function get_eventos_categoria_latitud_longitud(){
+    $sql = 'SELECT ev.ev_latitud as "latitud",
+              		ev.ev_longitud as "longitud",
+                      cat.cat_nom as "categoria"
+              FROM tm_evento as ev
+              JOIN tm_categoria as cat
+              ON (ev.cat_id=cat.cat_id);';
+    return $this->ejecutarConsulta($sql);
+  }
 
 }
