@@ -82,7 +82,7 @@ function addMarkers(categories) {
       });
 
       marker.addListener('click', function() {
-        showInfoWindow(marker.getPosition(), category);
+        showInfoWindow(marker.getPosition(), category, item.detalles, item.img);
       });
 
       return marker;
@@ -90,8 +90,12 @@ function addMarkers(categories) {
   });
 }
 
-function showInfoWindow(latLng, category) {
-  var content = '<strong>Detalles de ' + category + ':</strong><br>Descripción del evento...';
+function showInfoWindow(latLng, category, details = 'Sin detalles', img = '') {
+  let content = `<div><strong>Categoria:</strong> ${category}<br><strong>Detalles:</strong> ${details}</div>`;
+  if (img) {
+    content += `<div><img src="../../public/${img}" alt="Imagen" style="max-width: 200px; max-height: 150px;"></div>`;
+  }
+
   infoWindow.setContent(content);
   infoWindow.setPosition(latLng);
   infoWindow.open(map);
