@@ -38,17 +38,15 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
                 </div>
             </header>
 
-
-
+<button id="toggleMapView" class="btn btn-warning">
+  <i class="fas fa-map-marker-alt"></i> Cambiar Vista
+</button>
+<button id="togglePOIs" class="btn btn-warning btn-inactive">
+  <i class="fas fa-eye btn-icon"></i> Mostrar Puntos de Interés
+</button>
 <div id="controls" class="btn-group" role="group" aria-label="Controles de mapa">
   <!-- Aquí se insertarán los botones de categorías -->
 </div>
-<button id="toggleMapView" class="btn btn-primary">
-  <i class="fas fa-map-marker-alt"></i> Cambiar Vista
-</button>
-<button id="togglePOIs" class="btn btn-outline-secondary btn-inactive">
-  <i class="fas fa-eye btn-icon"></i> Mostrar Puntos de Interés
-</button>
 <!-- Contenedor del mapa -->
   <div id="map"></div>
 
