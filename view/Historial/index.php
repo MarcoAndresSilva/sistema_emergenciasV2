@@ -58,10 +58,11 @@ if (isset($_SESSION["usu_id"])) {
                         <thead>
                             <tr>
                                 <th style="width:10%">ID</th>
-                                <th style="width:25%">Categor&iacute;a</th>
-                                <th style="width:40%">Direcci&oacute;n</th>
-                                <th style="width:20%">Fecha Apertura</th>
-                                <th style="width:10%">Detalle</th>
+                                <th style="width:20%">Categor&iacute;a</th>
+                                <th style="width:25%">Direcci&oacute;n</th>
+                                <th style="width:10%">Estado</th>
+                                <th style="width:30%">Fecha Apertura</th>
+                                <th style="width:5%">Detalle</th>
 							</tr>
                         </thead>
                         <tbody id="datos-generales">
