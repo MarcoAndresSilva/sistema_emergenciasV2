@@ -186,6 +186,7 @@ document.getElementById('updatePhoneForm').addEventListener('submit', function(e
         }
     });
 });
+
 function fetchUserInfo() {
     fetch('../../controller/usuario.php?op=get_info_usuario')
         .then(response => response.json())
