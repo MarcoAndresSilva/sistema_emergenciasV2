@@ -11,65 +11,82 @@ $categoria = new Categoria();
 $unidad = new Unidad();
 $estado = new Estado();
 $eventounidad = new EventoUnidad();
+
+function guardarImagen($archivo, $carpeta) {
+    if (!isset($archivo) || $archivo['error'] !== UPLOAD_ERR_OK) {
+        return "Error al recibir la imagen: " . $archivo['error'];
+    }
+
+    $directorio_destino = __DIR__ . "/../public/img/{$carpeta}/";
+
+    $extension = pathinfo($archivo['name'], PATHINFO_EXTENSION);
+    $nombre_archivo = uniqid('', true) . '.' . $extension;
+    $ruta_destino = $directorio_destino . $nombre_archivo;
+
+    if (!is_dir($directorio_destino)) {
+        if (!mkdir($directorio_destino, 0775, true)) {
+            return "No se pudo crear el directorio: " . $directorio_destino;
+        }
+    }
+
+    if (!is_writable($directorio_destino)) {
+        return "El directorio no tiene permisos de escritura: " . $directorio_destino;
+    }
+
+    if (!move_uploaded_file($archivo['tmp_name'], $ruta_destino)) {
+        return "Error al mover el archivo a: " . $ruta_destino;
+    }
+
+    $ruta_relativa = "/img/{$carpeta}/" . $nombre_archivo;
+    return $ruta_relativa;
+}
+
 if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_tipo"] == 2)) {
 if (isset($_GET["op"])) {
     switch ($_GET["op"]) {
         case "add_evento":
-            // Obtener datos de la sesión del usuario
-            $usu_id = $_SESSION["usu_id"];
-            $usu_nom = $_SESSION["usu_nom"];
-            $usu_ape = $_SESSION["usu_ape"];
-            $usu_mail = $_SESSION["usu_correo"];
-            $usu_telefono = $_SESSION["usu_telefono"];
+            $usu_id = $_SESSION["usu_id"]; 
+            $ev_telefono = $_SESSION['usu_telefono'];
+            $ev_desc = $_POST['ev_desc'];
+            $ev_est = $_POST['ev_est'];
+            $ev_inicio = $_POST['ev_inicio'];
+            $ev_direc = $_POST['ev_direc'];
+            $ev_latitud = $_POST['ev_latitud'];
+            $ev_longitud = $_POST['ev_longitud'];
+            $cat_id = $_POST['cat_id'];
+            $ev_niv = $_POST['ev_niv'];
+        
+            $ev_img = null;
+
+            if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+                $carpeta = 'imagenesEventos';
+                $url_imagen = guardarImagen($_FILES['imagen'], $carpeta);
+        
+                if ($url_imagen === "Error al recibir la imagen." || $url_imagen === "Error al mover el archivo.") {
+                    echo $url_imagen;
+                    break;
+                  }
+                $ev_img = $url_imagen;
+        
+            }
         
             $datos = $evento->add_evento(
-                // $usu_id,
-                $usu_nom, // Llenar con el nom del usuario en sesión
-                $usu_ape, // Llenar con el ape del usuario en sesión
-                $usu_mail, // Llenar con el correo del usuario en sesión
-                $_POST['ev_desc'],
-                $_POST['ev_est'],
-                $_POST['ev_inicio'],
-                $_POST['ev_direc'],
-                $_POST['cat_id'],
-                $_POST['ev_niv'],
-                $_POST['ev_img'],
-                $usu_telefono // Llenar con el teléfono del usuario en sesión
+                $usu_id,
+                $ev_desc,
+                $ev_est,
+                $ev_inicio,
+                $ev_direc,
+                $ev_latitud,
+                $ev_longitud,
+                $cat_id,
+                $ev_niv,
+                $ev_img,
+                $ev_telefono
             );
-        
-            if ($datos == true) {
-                echo 1;
-            } else {
-                echo 0;
-            }
+            header('Content-Type: application/json');
+            echo json_encode($datos);
         break;
 
-        case "carga-imagen":
-            //verificar si se obtuvo el ID del evento
-            if (isset($_POST['ev_id'])){
-                // Verificar si se envió un archivo y no hubo errores
-                if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
-                    // Ruta donde se almacenará la imagen 
-                    $ruta_destino = '../public/img/imagenesEventos/' . $_FILES['imagen']['name'];
-                    // Mover la imagen del directorio temporal al destino final
-                    if (move_uploaded_file($_FILES['imagen']['tmp_name'], $ruta_destino)) {
-                        // Actualizar la columna ev_img en la base de datos con la ruta de la imagen
-                        $datos = $evento->update_imagen_evento($_POST['ev_id'], $ruta_destino);
-                        if ($datos == true) {
-                            echo 1;
-                        } else {
-                            echo 0;
-                        }
-                    } else {
-                        echo "Error al mover el archivo.";
-                    }
-                } else {
-                    echo "Error al recibir la imagen.";
-                }
-            }else {
-                echo "Error al recibir el ID del evento.";
-            }
-        break;
         case "carga-imagen-cierre":
             //verificar si se obtuvo el ID del evento
             if (isset($_POST['ev_id'])){
@@ -124,24 +141,17 @@ if (isset($_GET["op"])) {
                     }
 
                     $direccion = $row['ev_direc'];
-                    // Dividir la cadena en texto y coordenadas
-                    $parts = explode(" , ", $direccion);
+                    $ev_latitud = $row['ev_latitud'];
+                    $ev_longitud = $row['ev_longitud'];
 
-                    // Si hay coordenadas, eliminarlas y agregar el botón
-                    if ($parts[1] !== "No hay coordenadas") {
-                        // Eliminar las coordenadas
-                        $texto = $parts[0];
-                        // Agregar el botón después del texto de la dirección
-                        $direccion = $texto . " <button id='btn' type='button' class='btn btn-inline btn-primary btn-sm ladda-button btnDireccionarMapa modal-btn' id='btnDireccionarMapa'> <i class='fa-solid fa-location-dot'></i> </button>";
-                    }else {
-                        $direccion = $parts[0];
-                    }
-
-                    // Si no hay coordenadas, eliminar el texto que indica su ausencia
-                    $direccion = str_replace("No hay coordenadas", "", $direccion);
-                    $direccion = str_replace("Sin dirección", "", $direccion);
-
-                    $recorrido .= "<td> " . $direccion . " </td>";
+                    $direccion .= " <button id='btn' type='button' 
+                                        class='btn btn-inline btn-primary btn-sm ladda-button btnDireccionarMapa modal-btn'  
+                                        id='btnDireccionarMapa' 
+                                        data-latitud='$ev_latitud' 
+                                        data-longitud='$ev_longitud'> 
+                                        <i class='fa-solid fa-location-dot'></i> 
+                                    </button>";
+                   $recorrido .= "<td> " . $direccion . " </td>";
 
                     //Llama a la funcion get_datos_eventounidad para obtener los nombres de las unidades asignadas
                     $datos_asignaciones = $eventounidad->get_datos_eventoUnidad($row['ev_id']);
@@ -266,22 +276,6 @@ if (isset($_GET["op"])) {
                     }
         
                     $direccion = $row['ev_direc'];
-                    // Dividir la cadena en texto y coordenadas
-                    $parts = explode(" , ", $direccion);
-                    
-                    // Si hay coordenadas, eliminarlas y agregar el botón
-                    if ($parts[1] !== "No hay coordenadas") {
-                        // Eliminar las coordenadas
-                        $texto = $parts[0];
-                        // Agregar el botón después del texto de la dirección
-                        $direccion = $texto;
-                    }else {
-                        $direccion = $parts[0];
-                    }
-        
-                    // Si no hay coordenadas, eliminar el texto que indica su ausencia
-                    $direccion = str_replace("No hay coordenadas", "", $direccion);
-        
                     $recorrido .= "<td>" . $direccion . "</td>";
                     
                     $recorrido .= "<td>" . $row['ev_inicio'] . "</td>";
@@ -749,6 +743,12 @@ if (isset($_GET["op"])) {
             $datos = $evento->datos_categorias_eventos($fecha_inicio);
             echo json_encode($datos);
             break;
+      case "get_evento_lat_lon":
+          $datos = $evento->get_eventos_categoria_latitud_longitud();
+          header('Content-Type: application/json');
+          echo json_encode($datos);
+      break;
+
 
     }
 

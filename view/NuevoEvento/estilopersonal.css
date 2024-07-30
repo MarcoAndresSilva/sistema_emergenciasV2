@@ -4,9 +4,7 @@
     height: 250px;
     display: none;
 }
-#imagen {
-    display: none;
-}
+
 #btnCargarArchivo{
     width: 40%;
 }

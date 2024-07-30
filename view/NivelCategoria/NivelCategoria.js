@@ -14,6 +14,11 @@ const Toast = Swal.mixin({
     }
 });
 
+// Inicializar DataTable
+let table = $('#miTabla').DataTable({
+    responsive: true
+});
+
 // Obtener los niveles de peligro y luego actualizar la tabla
 $.get("../../controller/nivelPeligro.php", { op: "get_nivel_peligro_json" },
     function (data, textStatus, jqXHR) {
@@ -67,13 +72,16 @@ function actualizarTabla() {
                     tr.append($("<td></td>").append(selectHtml));
 
                     // Crear los botones de editar y borrar
-                    const buttonedit   ='<button id="buttonedit"   class="btn btn-warning" type="button"><img src="../../public/img/edit.svg"></button>';
-                    const buttondelete ='<button id="buttondelete" class="btn btn-danger" type="button"><img src="../../public/img/trash.svg"></button>';
+                    const buttonedit = '<button class="btn btn-warning buttonedit" type="button"><img src="../../public/img/edit.svg"></button>';
+                    const buttondelete = '<button class="btn btn-danger buttondelete" type="button"><img src="../../public/img/trash.svg"></button>';
                     const buttons = buttonedit + buttondelete;
                     tr.append($("<td></td>").append(buttons));
 
                     tbody.append(tr);
                 });
+
+                // Actualizar DataTable
+                table.clear().rows.add(tbody.find('tr')).draw();
             } else {
                 console.error("Datos categoría inválidos:", data);
             }
@@ -87,19 +95,18 @@ function actualizarTabla() {
 // Función para agregar el evento change a los selects
 $("body").on("change", ".form-select", function() {
     let tr = $(this).closest("tr");
-    let cat_id = tr.find("td").eq(0).text();
-    let cat_nom = tr.find("td").eq(1).text();
+    let data = table.row(tr).data();
+    let cat_id = data[0]; // Suponiendo que cat_id está en la primera columna
+    let cat_nom = data[1]; // Suponiendo que cat_nom está en la segunda columna
     let ev_niv_id = $(this).val();
-    let data ={
-        op:"update_categoria",
+    let postData = {
+        op: "update_categoria",
         cat_id: cat_id,
         cat_nom: cat_nom,
         ev_niv_id: ev_niv_id
     };
 
-    // Enviar datos mediante una solicitud POST
-    $.post("../../controller/categoria.php", data , function(response) {
-        // Manejar la respuesta del servidor
+    $.post("../../controller/categoria.php", postData, function(response) {
         if (response.status === "success") {
             Toast.fire({
                 icon: 'success',
@@ -154,7 +161,6 @@ $('#addButton').on('click', function() {
             }, function(response) {
                 if (response.status === 'success') {
                     Swal.fire('¡Categoría Agregada!', '', 'success');
-                    // Actualizar la tabla después de agregar la categoría
                     actualizarTabla();
                 } else {
                     Swal.fire('Error al agregar la categoría', response.mensaje, 'error');
@@ -167,8 +173,10 @@ $('#addButton').on('click', function() {
 });
 
 // Función para manejar el evento de clic en el botón de borrar
-$("body").on("click", "#buttondelete", function() {
-    let cat_id = $(this).closest("tr").find("td:eq(0)").text();
+$("body").on("click", ".buttondelete", function() {
+    let tr = $(this).closest("tr");
+    let data = table.row(tr).data();
+    let cat_id = data[0];
 
     Swal.fire({
         title: '¿Estás seguro?',
@@ -184,10 +192,9 @@ $("body").on("click", "#buttondelete", function() {
                 function(response) {
                     if (response.status === "success") {
                         Swal.fire('¡Eliminado!', 'La categoría ha sido eliminada.', 'success');
-                        // Actualizar la tabla después de eliminar la categoría
                         actualizarTabla();
                     } else {
-                        Swal.fire('Error', response.mensaje, 'error');
+                        Swal.fire('Cuidado', response.mensaje, 'warning');
                     }
                 },
                 "json"
@@ -199,11 +206,12 @@ $("body").on("click", "#buttondelete", function() {
 });
 
 // Función para manejar el evento de clic en el botón de editar
-$("body").on("click", "#buttonedit", function() {
+$("body").on("click", ".buttonedit", function() {
     let tr = $(this).closest("tr");
-    let cat_id = tr.find("td:eq(0)").text();
-    let cat_nom = tr.find("td:eq(1)").text();
-    let ev_niv_id = tr.find("select").val();
+    let data = table.row(tr).data();
+    let cat_id = data[0]; 
+    let cat_nom = data[1]; 
+    let ev_niv_id = $(this).siblings("select").val();
 
     Swal.fire({
         title: 'Editar Categoría',
@@ -211,7 +219,7 @@ $("body").on("click", "#buttonedit", function() {
             <input type="hidden" id="edit_cat_id" value="${cat_id}">
             <input type="text" id="edit_cat_nom" class="swal2-input" value="${cat_nom}">
             <select id="edit_ev_niv_id" class="swal2-select">
-                ${nivelPeligro.map(item => `<option value="${item.ev_niv_id}" ${item.ev_niv_id === ev_niv_id ? 'selected' : ''}>${item.ev_niv_nom}</option>`).join('')}
+                ${nivelPeligro.map(item => `<option value="${item.ev_niv_id}" ${item.ev_niv_id == ev_niv_id ? 'selected' : ''}>${item.ev_niv_nom}</option>`).join('')}
             </select>
         `,
         showCancelButton: true,
@@ -234,7 +242,6 @@ $("body").on("click", "#buttonedit", function() {
             }, function(response) {
                 if (response.status === 'success') {
                     Swal.fire('¡Categoría Actualizada!', '', 'success');
-                    // Actualizar la tabla después de editar la categoría
                     actualizarTabla();
                 } else {
                     Swal.fire('Error al editar la categoría', response.mensaje, 'error');

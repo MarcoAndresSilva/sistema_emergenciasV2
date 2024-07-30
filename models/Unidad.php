@@ -1,4 +1,5 @@
 <?php
+require_once "SeguridadPassword.php";
 class Unidad extends Conectar
 {
      // get_unidad
@@ -41,6 +42,8 @@ class Unidad extends Conectar
         ];
 
         if ($this->ejecutarAccion($sql, $params)) {
+            $seguridad = new SeguridadPassword();
+            $seguridad->create_password_Configuracion_a_ultima_unidad();
             return ['status' => 'success', 'message' => 'Unidad agregada exitosamente.'];
         } else {
             return ['status' => 'error', 'message' => 'No se pudo agregar la unidad.'];

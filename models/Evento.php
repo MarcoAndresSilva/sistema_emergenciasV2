@@ -6,7 +6,33 @@ class Evento extends Conectar {
         try {
             $conectar = parent::conexion();
             parent::set_names();
-            $sql = "SELECT * FROM tm_evento tme inner join tm_categoria tmc on tmc.cat_id=tme.cat_id inner join tm_ev_niv ten on tme.ev_niv=ten.ev_niv_id inner join tm_estado te on te.est_id=tme.ev_est ORDER BY ev_id desc";
+            $sql = 'SELECT
+                        us.usu_name as "ev_nom", us.usu_ape as "ev_ape",
+                        tme.ev_direc as "ev_direc",
+                        tmc.cat_nom as "cat_nom",
+                        tme.ev_desc as "ev_desc",
+                        tme.ev_inicio as "ev_inicio",
+                        tmc.cat_id as "cat_id",
+                        tme.ev_direc as "ev_direc",
+                        tme.ev_id as "ev_id",
+                        ten.ev_niv_id as "ev_niv_id",
+                        tme.ev_est as "ev_est",
+                        tme.ev_final as "ev_final",
+                        tme.ev_latitud as "ev_latitud",
+                        tme.ev_longitud as "ev_longitud"
+                    FROM
+                        tm_evento tme
+                    INNER JOIN tm_categoria tmc ON
+                        tmc.cat_id = tme.cat_id
+                    INNER JOIN tm_ev_niv ten ON
+                        tme.ev_niv = ten.ev_niv_id
+                    INNER JOIN tm_estado te ON
+                        te.est_id = tme.ev_est
+                    INNER JOIN tm_usuario us
+                    on us.usu_id=tme.usu_id
+                    ORDER BY
+                        ev_id
+                    DESC;';
             $sql = $conectar->prepare($sql);
             $sql->execute();
             $resultado = $sql->fetchAll();
@@ -169,39 +195,56 @@ class Evento extends Conectar {
         }
     }
         
-    public function add_evento($ev_nom, $ev_apellido, $ev_mail, $ev_desc, $ev_est, $ev_inicio, $ev_direc, $cat_id, $ev_niv, $ev_img, $ev_telefono) {
-        try {
-            $conectar = parent::conexion();
-            parent::set_names();
-            $sql = "INSERT INTO tm_evento (ev_nom, ev_apellido, ev_mail, ev_desc, ev_est, ev_inicio, ev_final, ev_direc, cat_id, ev_niv, ev_img, ev_telefono) 
-            VALUES (:ev_nom, :ev_apellido, :ev_mail, :ev_desc, :ev_est, :ev_inicio, NULL, :ev_direc, :cat_id, :ev_niv, :ev_img, :ev_telefono)";
-            $consulta  = $conectar->prepare($sql);
-            $consulta->bindParam(':ev_nom', $ev_nom);
-            $consulta->bindParam(':ev_apellido', $ev_apellido);
-            $consulta->bindParam(':ev_mail', $ev_mail);
-            $consulta->bindParam(':ev_desc', $ev_desc);
-            $consulta->bindParam(':ev_est', $ev_est);
-            $consulta->bindParam(':ev_inicio', $ev_inicio);
-            $consulta->bindParam(':ev_direc', $ev_direc);
-            $consulta->bindParam(':cat_id', $cat_id);
-            $consulta->bindParam(':ev_niv', $ev_niv);
-            $consulta->bindParam(':ev_img', $ev_img);
-            $consulta->bindParam(':ev_telefono', $ev_telefono);
-            try {
-                $consulta->execute();
-            } catch (PDOException $e) {
-                echo "Error al ejecutar la consulta: " . $e->getMessage();
-            }            
-            if ($consulta->rowCount() > 0) {
-                return true;
-            } else { 
-                return false;
-            }
-        } catch (Exception $e) {
-            echo "Error catch add_evento: " . $e->getMessage();
-            throw $e;
-        }
+ 
+public function add_evento($usu_id, $ev_desc, $ev_est, $ev_inicio, $ev_direc, $ev_latitud, $ev_longitud, $cat_id, $ev_niv, $ev_img, $ev_telefono) {
+    if (empty($usu_id) || empty($ev_desc) || empty($ev_est) || empty($ev_inicio) || empty($ev_direc) || empty($cat_id)) {
+        return [
+            'status' => 'warning',
+            'message' => 'Faltan datos obligatorios. Por favor, asegúrate de completar todos los campos necesarios.'
+        ];
     }
+  
+    try {
+        $conectar = parent::conexion();
+        parent::set_names();
+  
+        $sql = "INSERT INTO tm_evento (usu_id, ev_desc, ev_est, ev_inicio, ev_final, ev_direc, ev_latitud, ev_longitud, cat_id, ev_niv, ev_img, ev_telefono) 
+        VALUES (:usu_id, :ev_desc, :ev_est, :ev_inicio, NULL, :ev_direc, :ev_latitud, :ev_longitud, :cat_id, :ev_niv, :ev_img, :ev_telefono)";
+  
+        $consulta = $conectar->prepare($sql);
+  
+        $consulta->bindParam(':usu_id', $usu_id);
+        $consulta->bindParam(':ev_desc', $ev_desc);
+        $consulta->bindParam(':ev_est', $ev_est);
+        $consulta->bindParam(':ev_inicio', $ev_inicio);
+        $consulta->bindParam(':ev_direc', $ev_direc);
+        $consulta->bindParam(':ev_latitud', $ev_latitud);
+        $consulta->bindParam(':ev_longitud', $ev_longitud);
+        $consulta->bindParam(':cat_id', $cat_id);
+        $consulta->bindParam(':ev_niv', $ev_niv);
+        $consulta->bindParam(':ev_img', $ev_img);
+        $consulta->bindParam(':ev_telefono', $ev_telefono);
+  
+        try {
+            $consulta->execute();
+            return [
+                'status' => 'success',
+                'message' => 'Evento agregado exitosamente.'
+            ];
+        } catch (PDOException $e) {
+            return [
+                'status' => 'error',
+                'message' => 'Error al ejecutar la consulta: ' . $e->getMessage()
+            ];
+        }
+  
+    } catch (Exception $e) {
+        return [
+            'status' => 'error',
+            'message' => 'Error catch add_evento: ' . $e->getMessage()
+        ];
+    }
+} 
 
     //update_imagen_evento segun id
 	public function update_imagen_evento($ev_id, $ev_img) {
@@ -467,5 +510,16 @@ public function datos_categorias_eventos($fecha_inicio) {
         throw $e;
     }
 }
+  public function get_eventos_categoria_latitud_longitud(){
+    $sql = 'SELECT ev.ev_latitud as "latitud",
+              		ev.ev_longitud as "longitud",
+              		ev.ev_desc as "detalles",
+              		ev.ev_img as "img",
+                      cat.cat_nom as "categoria"
+              FROM tm_evento as ev
+              JOIN tm_categoria as cat
+              ON (ev.cat_id=cat.cat_id);';
+    return $this->ejecutarConsulta($sql);
+  }
 
 }

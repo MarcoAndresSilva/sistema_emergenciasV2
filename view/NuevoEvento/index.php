@@ -10,6 +10,7 @@ if (isset($_SESSION["usu_id"])) {
 
 <link rel="stylesheet" href="./estilopersonal.css">
 <title>Sistema Emergencia</title>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQrYCFSz7Q-a-WONxo4yymu9SAPgmaA6c&libraries=places&callback=initMap"></script>
 </head>
 
 <body class="with-side-menu">
@@ -83,15 +84,13 @@ if (isset($_SESSION["usu_id"])) {
                                 <input type="text" class="form-control" id="descripcion" placeholder="Descripción">
                             </fieldset>
                         </div>     
-                        <div class="col-lg-5">
-                            <fieldset class="form-group">
-                                <label class="form-label semibold" for="exampleInput">Desea adjuntar una imagen de la emergencia?</label>
-                                <input type="file" id="imagen" name="imagen" accept="image/*">
-                                <button id="btnCargarArchivo" class="btn btn-round btn-inline btn-primary">Cargar Archivo</button>
-                                <label id="archivoAdjuntado">No hay archivo adjunto (.JPG/.JPEG/.PNG)</label>
-                            </fieldset>
-                        </div>
-                    </div>                  
+                    <div class="col-lg-5">
+                        <fieldset class="form-group">
+                            <label class="form-label semibold" for="formFile">Desea adjuntar una imagen de la emergencia?</label>
+                            <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*">
+                            <small id="archivoAdjuntado" class="form-text text-muted">No hay archivo adjunto (.JPG/.JPEG/.PNG)</small>
+                        </fieldset>
+                    </div>
 
                     <div class="group-ident">
                         <div class="col-lg-5" id="select-ubicacion">
@@ -132,6 +131,8 @@ if (isset($_SESSION["usu_id"])) {
                             <div id="map">
                                 <!-- Aquí se muestra el mapa utilizando la API de Google Maps -->
                             </div>
+                <input type="hidden" id="ev_latitud"> 
+                <input type="hidden" id="ev_longitud"> 
                         </div>
                     </div>
 
