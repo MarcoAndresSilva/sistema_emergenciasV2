@@ -220,9 +220,34 @@ function togglePOIs() {
   });
 
   const poIsButton = document.getElementById('togglePOIs');
-  poIsButton.textContent = showPOIs ? 'Ocultar Puntos de Interés' : 'Mostrar Puntos de Interés';
-  poIsButton.classList.toggle('btn-active', showPOIs);
-  poIsButton.classList.toggle('btn-inactive', !showPOIs);
+
+  if (poIsButton) {
+    const icon = poIsButton.querySelector('i');
+
+    if (showPOIs) {
+      poIsButton.textContent = '';
+      poIsButton.appendChild(createIcon('fa-eye-slash'));
+      poIsButton.appendChild(document.createTextNode(' Ocultar Puntos de Interés'));
+
+      poIsButton.classList.add('btn-active');
+      poIsButton.classList.remove('btn-inactive');
+    } else {
+      poIsButton.textContent = '';
+      poIsButton.appendChild(createIcon('fa-eye'));
+      poIsButton.appendChild(document.createTextNode(' Mostrar Puntos de Interés'));
+
+      poIsButton.classList.add('btn-inactive');
+      poIsButton.classList.remove('btn-active');
+    }
+  } else {
+    console.error('Botón con ID togglePOIs no encontrado.');
+  }
+}
+
+function createIcon(iconClass) {
+  const icon = document.createElement('i');
+  icon.className = `fas ${iconClass} btn-icon`;
+  return icon;
 }
 
 function getRandomColor() {
