@@ -11,12 +11,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 <?php require_once("../MainHead/head.php"); ?>
 <title>Sistema Emergencia</title>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQrYCFSz7Q-a-WONxo4yymu9SAPgmaA6c&libraries=visualization"></script>
-  <style>
-    #map {
-      height: 500px; 
-      width: 100%;     
-      }
-  </style>
+  <link rel="stylesheet" href="./stylemapacalor.css">
 </head>
 
 <body class="with-side-menu">
