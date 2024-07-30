@@ -283,11 +283,29 @@ if (isset($_GET["op"])) {
                     $direccion = str_replace("No hay coordenadas", "", $direccion);
         
                     $recorrido .= "<td>" . $direccion . "</td>";
-                    
+
+                    //Llama a la funcion get_datos_estado para obtener el estado
+                    $dato_estado = $estado->get_datos_estado($row['ev_est']);
+                        foreach ($dato_estado as $row_estado) {
+                           if ($row_estado['est_nom'] == "En Proceso") {
+                               $recorrido .= "<td><span class='label label-pill label-warning'>" . $row_estado['est_nom'] . "</span></td>";
+                           } else if ($row_estado['est_nom'] == "Finalizado") {
+                               $recorrido .= "<td><span class='label label-pill label-success'>" . $row_estado['est_nom'] . "</span></td>";
+                           } else {
+                               $recorrido .= "<td>" . $row_estado['est_nom'] . "</td>";
+                           }
+                    }
+                    // fecha y hora apertura
                     $recorrido .= "<td>" . $row['ev_inicio'] . "</td>";
+
+                    //btn modal
                     $recorrido .= "<td> <button id='btn' type='button' class='btn btn-inline btn-primary btn-sm ladda-button btnInfoEmergencia '> <i class='fa fa-search'></i></button>
                     </td>";
+
                     $recorrido .= "</tr>";
+
+                   
+
                     //Filtro de filas por nivel de peligro
                     if($row['ev_est'] == 1){
                         if($row['ev_niv_id'] == 1){
