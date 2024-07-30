@@ -126,3 +126,26 @@ function createCategoryButtons(categories) {
 
 // Inicializa el mapa cuando el documento está listo
 document.addEventListener("DOMContentLoaded", initMap);
+function togglePOIs() {
+  showPOIs = !showPOIs;
+  map.setOptions({
+    styles: [
+      {
+        featureType: 'poi',
+        elementType: 'labels',
+        stylers: [{ visibility: showPOIs ? 'on' : 'off' }]
+      },
+      {
+        featureType: 'poi.business',
+        elementType: 'labels',
+        stylers: [{ visibility: showPOIs ? 'on' : 'off' }]
+      }
+    ]
+  });
+
+  // Actualizar el texto y la clase del botón
+  const poIsButton = document.getElementById('togglePOIs');
+  poIsButton.textContent = showPOIs ? 'Ocultar Puntos de Interés' : 'Mostrar Puntos de Interés';
+  poIsButton.classList.toggle('btn-active', showPOIs);
+  poIsButton.classList.toggle('btn-inactive', !showPOIs);
+}
