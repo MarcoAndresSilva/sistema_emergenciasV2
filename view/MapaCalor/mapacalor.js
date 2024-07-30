@@ -3,6 +3,7 @@ var currentView = 'heatmap'; // Puede ser 'heatmap' o 'markers'
 var categoryColors = {}; // Almacenará los colores asignados a cada categoría
 var showPOIs = false; // Estado de visibilidad de los puntos de interés
 const disabledCategories = ['last_tiendas', 'otros']; // Lista de categorías a desactivar
+const activeCategories = new Set(); // Almacena las categorías activas
 
 function initMap() {
   // Configuración inicial del mapa
@@ -124,18 +125,37 @@ function filterCategory(category, button) {
     } else {
       button.classList.add('btn-success');
     }
+  if (disabledCategories.includes(category)) {
+    return; // No aplicar filtros a categorías desactivadas
   }
 
   // Muestra u oculta los marcadores según la categoría seleccionada
-  if (markers[category] && currentView === 'markers') {
-    var areVisible = markers[category][0].getMap();
-    markers[category].forEach(marker => marker.setMap(areVisible ? null : map)); // Alternar entre mostrar y ocultar
+  if (currentView === 'heatmap') {
+    if (heatmaps[category]) {
+      const isVisible = heatmaps[category].getMap();
+      heatmaps[category].setMap(isVisible ? null : map); // Alternar entre mostrar y ocultar
 
-    // Alternar la clase active del botón y añadir/remover btn-success
-    if (areVisible) {
-      button.classList.remove('btn-success');
-    } else {
-      button.classList.add('btn-success');
+      if (isVisible) {
+        activeCategories.delete(category); // Eliminar de categorías activas
+        button.classList.remove('btn-success');
+      } else {
+        activeCategories.add(category); // Añadir a categorías activas
+        button.classList.add('btn-success');
+      }
+    }
+  }
+  if (currentView === 'markers') {
+    if (markers[category]) {
+      const areVisible = markers[category][0].getMap();
+      markers[category].forEach(marker => marker.setMap(areVisible ? null : map)); // Alternar entre mostrar y ocultar
+
+      if (areVisible) {
+        activeCategories.delete(category); // Eliminar de categorías activas
+        button.classList.remove('btn-success');
+      } else {
+        activeCategories.add(category); // Añadir a categorías activas
+        button.classList.add('btn-success');
+      }
     }
   }
 }
@@ -196,6 +216,9 @@ function toggleView() {
   Object.keys(heatmaps).forEach(category => {
     if (currentView === 'heatmap') {
       heatmaps[category].setMap(map);
+      if (activeCategories.has(category)) {
+        heatmaps[category].setMap(map);
+      }
     } else {
       heatmaps[category].setMap(null);
     }
@@ -203,7 +226,9 @@ function toggleView() {
 
   Object.keys(markers).forEach(category => {
     if (currentView === 'markers') {
-      markers[category].forEach(marker => marker.setMap(map));
+      if (activeCategories.has(category)) {
+        markers[category].forEach(marker => marker.setMap(map));
+      }
     } else {
       markers[category].forEach(marker => marker.setMap(null));
     }
