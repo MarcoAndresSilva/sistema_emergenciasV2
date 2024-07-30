@@ -11,35 +11,22 @@ function initMap() {
   // Inicializa el InfoWindow
   infoWindow = new google.maps.InfoWindow();
 
-  // Añade capas de mapa de calor por categorías
-  addHeatmapLayers();
+  // Obtén los datos y añade capas de mapa de calor por categorías
+  fetchAndGroupData().then(groupedData => {
+    addHeatmapLayers(groupedData);
+    createCategoryButtons(groupedData);
+  });
 }
 
-function addHeatmapLayers() {
-  // Datos de ejemplo divididos por categorías
-  var categories = {
-    incendios: [
-      new google.maps.LatLng(-33.6844, -71.2167),
-      new google.maps.LatLng(-33.68620473248334, -71.21801221635748)
-      // Agrega más puntos de incendios según sea necesario
-    ],
-    caidaArbol: [
-      new google.maps.LatLng(-33.68593488576285, -71.21709827911673),
-      new google.maps.LatLng(-33.68468376717178, -71.21650864218722)
-      // Agrega más puntos de caída de árboles según sea necesario
-    ],
-    corteLuz: [
-      new google.maps.LatLng(-33.6869295008119, -71.22583412257963),
-      new google.maps.LatLng(-33.68995340481311, -71.21016191729446)
-      // Agrega más puntos de cortes de luz según sea necesario
-    ]
-  };
-
+function addHeatmapLayers(categories) {
   // Recorre cada categoría y añade capas de mapa de calor correspondientes
   Object.keys(categories).forEach(function(category) {
+    // Convierte los datos de cada categoría a LatLng
+    const points = categories[category].map(item => new google.maps.LatLng(item.latitud, item.longitud));
+
     // Crea una nueva capa de mapa de calor para la categoría
     heatmaps[category] = new google.maps.visualization.HeatmapLayer({
-      data: categories[category],
+      data: points,
       map: null, // Empieza oculta, se mostrará según el filtro
       radius: 20
     });
@@ -71,7 +58,62 @@ function filterCategory(category, button) {
     var isVisible = heatmaps[category].getMap();
     heatmaps[category].setMap(isVisible ? null : map); // Alternar entre mostrar y ocultar
 
-    // Alternar la clase active del botón
-    button.classList.toggle('active', !isVisible);
+    // Alternar la clase active del botón y añadir/remover btn-success
+    if (isVisible) {
+      button.classList.remove('btn-success');
+    } else {
+      document.querySelectorAll('.btn').forEach(btn => {
+        btn.classList.remove('btn-success');
+      });
+      button.classList.add('btn-success');
+    }
   }
 }
+
+async function fetchAndGroupData() {
+  const url = '../../controller/evento.php?op=get_evento_lat_lon';
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data = await response.json();
+
+    // Agrupar datos por categoría
+    const groupedData = data.reduce((acc, item) => {
+      const { categoria } = item;
+      if (!acc[categoria]) {
+        acc[categoria] = [];
+      }
+      acc[categoria].push(item);
+      return acc;
+    }, {});
+
+    return groupedData;
+
+  } catch (error) {
+    console.error('Fetch error:', error);
+    return {};
+  }
+}
+
+function createCategoryButtons(categories) {
+  const controlsDiv = document.getElementById('controls');
+
+  // Limpiar cualquier botón existente
+  controlsDiv.innerHTML = '';
+
+  // Crear un botón por cada categoría
+  Object.keys(categories).forEach(category => {
+    const button = document.createElement('button');
+    button.className = 'btn';
+    button.textContent = category.charAt(0).toUpperCase() + category.slice(1).replace(/([A-Z])/g, ' $1');
+    button.onclick = () => filterCategory(category, button);
+    controlsDiv.appendChild(button);
+  });
+}
+
+// Inicializa el mapa cuando el documento está listo
+document.addEventListener("DOMContentLoaded", initMap);
