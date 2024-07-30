@@ -44,17 +44,23 @@ if (isset($_POST["enviar"]) and $_POST["enviar"] == "si") {
                 </div>
 
                 <div class="login-form-box">
+
+                    
                     <form class="sign-box" action="" method="post" id="login_form">
+                      
+                    <!-- usu_tipo para hacer las veces de rol y jugar con el inicio de sesion   -->
+                      <input type="hidden" id="usu_tipo" name="usu_tipo" value="1">
+
                         <div class="sign-avatar">
                             <img src="public/img/avatar-sign.png" alt="">
                         </div>
-                        <header class="sign-title">Acceder</header>
+                        <header id="lblTitulo" class="sign-title">Usuario Reportador</header>
                         <?php
                         if (isset($_GET["m"])) {
                             switch ($_GET["m"]) {
                                 case "1":
                                     ?>
-                                    <div class="alert alert-danger role=" alert">
+                                    <div class="alert alert-danger role="alert">
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                         </button>
@@ -68,7 +74,7 @@ if (isset($_POST["enviar"]) and $_POST["enviar"] == "si") {
                                 case "2";
                                     ?>
                                     <div>
-                                        <div class="alert alert-danger role=" alert">
+                                        <div class="alert alert-danger role="alert">
                                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
@@ -95,10 +101,13 @@ if (isset($_POST["enviar"]) and $_POST["enviar"] == "si") {
                             <div class="float-right reset">
                                 <a href="reset-password.html">Cambiar contrase&ntilde;a</a>
                             </div>
+                            <div class="float-left reset">
+                                <a href="#" id="btnAdmin">Acceso Administrador</a>
+                            </div>
                         </div>
                         <input type="hidden" name="enviar" class="form-control" value="si">
                         <button type="submit" class="btn btn-rounded">Iniciar Sesi&oacute;n</button>
-                        <p class="sign-note">Necesitas acceder al sistema <a href="sign-up.html">Registrate</a></p>
+                        
 
                     <form>
                 </div>
