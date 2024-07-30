@@ -26,9 +26,6 @@ class Evento extends Conectar {
 
     }
 
-    
-
-    //get_evento segun su estado
     public function get_evento_nivel($ev_niv) {
         try {
             $conectar = parent::conexion();
@@ -53,8 +50,6 @@ class Evento extends Conectar {
 
     }
 
-
-
     public function get_eventos_por_dia() {
         try {
             $conectar = parent::conexion();
@@ -68,6 +63,7 @@ class Evento extends Conectar {
             throw $e;
         }
     }
+
     public function get_cantidad_eventos_por_nivel($ev_niv_array, $fecha_actual, $fecha_mes_anterior) {
         try {
             $conectar = parent::conexion();
@@ -150,7 +146,6 @@ class Evento extends Conectar {
             throw $e;
         }
     }
-
     public function datos_eventos_por_rango($fecha_actual, $fecha_desde_mes_anterior) {
         try {
             $conectar = parent::conexion();
@@ -203,7 +198,6 @@ class Evento extends Conectar {
         }
     }
 
-    //update_imagen_evento segun id
 	public function update_imagen_evento($ev_id, $ev_img) {
 		try {
 			$conectar = parent::conexion();
@@ -228,6 +222,7 @@ class Evento extends Conectar {
         }
         
 	}
+
     public function update_imagen_cierre($ev_id, $ev_img) {
 		try {
 			$conectar = parent::conexion();
@@ -253,8 +248,7 @@ class Evento extends Conectar {
         
 	}
     
-    //update_nivelpeligro_evento segun id
-	public function update_nivelpeligro_evento($ev_id, $ev_niv) {
+    public function update_nivelpeligro_evento($ev_id, $ev_niv) {
 		try {
 			$conectar = parent::conexion();
 			parent::set_names();
@@ -279,7 +273,6 @@ class Evento extends Conectar {
         }
 	}
 
-    //get_evento_id segun disponibilidad
     public function get_evento_id($ev_id) {
         try {
             $conectar = parent::conexion();
@@ -323,7 +316,7 @@ class Evento extends Conectar {
             throw $e;
         }
     }
-    
+
     public function cerrar_evento($ev_id, $ev_final, $ev_est, $detalle_cierre, $motivo_cierre, $usu_id) {
         try {
             $conectar = parent::conexion();
@@ -426,46 +419,109 @@ class Evento extends Conectar {
             throw $e;
         }
     }
-public function get_evento_por_categoria($cat_id){
-    try {
-        $conectar = parent::conexion();
-        parent::set_names();
-        $sql = "SELECT * FROM tm_evento where cat_id=:cat_id";
-        $sql = $conectar->prepare($sql);
-        $sql->bindValue(":cat_id", $cat_id);
-        $sql->execute();
-        $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
 
-        if (is_array($resultado) && count($resultado) > 0) {
-            return $resultado;
-        } else {
-            error_log("No logro obtener eventos por categoria");
-            return array(); // return an empty array instead of 0
+    public function get_evento_por_categoria($cat_id){
+        try {
+            $conectar = parent::conexion();
+            parent::set_names();
+            $sql = "SELECT * FROM tm_evento where cat_id=:cat_id";
+            $sql = $conectar->prepare($sql);
+            $sql->bindValue(":cat_id", $cat_id);
+            $sql->execute();
+            $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+            if (is_array($resultado) && count($resultado) > 0) {
+                return $resultado;
+            } else {
+                error_log("No logro obtener eventos por categoria");
+                return array(); // return an empty array instead of 0
+            }
+        } catch (Exception $e) {
+            error_log("Error catch get_evento: " . $e->getMessage());
+            throw $e;
         }
-    } catch (Exception $e) {
-        error_log("Error catch get_evento: " . $e->getMessage());
-        throw $e;
     }
-}
-public function datos_categorias_eventos($fecha_inicio) {
-    try {
-        $conectar = parent::conexion();
-        parent::set_names();
-        
-        $sql = "SELECT tm_categoria.cat_nom, COUNT(tm_evento.ev_id) as cantidad_eventos 
-                FROM tm_categoria 
-                LEFT JOIN tm_evento ON tm_categoria.cat_id = tm_evento.cat_id AND tm_evento.ev_inicio >= :fecha_inicio
-                GROUP BY tm_categoria.cat_id";
-        
-        $sql = $conectar->prepare($sql);
-        $sql->bindValue(':fecha_inicio', $fecha_inicio);
-        $sql->execute();
-        
-        $resultado = $sql->fetchAll();
-        return $resultado;
-    } catch (Exception $e) {
-        throw $e;
-    }
-}
 
+    public function datos_categorias_eventos($fecha_inicio) {
+        try {
+            $conectar = parent::conexion();
+            parent::set_names();
+            
+            $sql = "SELECT tm_categoria.cat_nom, COUNT(tm_evento.ev_id) as cantidad_eventos 
+                    FROM tm_categoria 
+                    LEFT JOIN tm_evento ON tm_categoria.cat_id = tm_evento.cat_id AND tm_evento.ev_inicio >= :fecha_inicio
+                    GROUP BY tm_categoria.cat_id";
+            
+            $sql = $conectar->prepare($sql);
+            $sql->bindValue(':fecha_inicio', $fecha_inicio);
+            $sql->execute();
+            
+            $resultado = $sql->fetchAll();
+            return $resultado;
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function listar_eventosdetalle_por_evento($ev_id) {
+        try {
+            $conectar = parent::conexion();
+            parent::set_names();
+            
+            $sql = "SELECT 
+            tm_emergencia_detalle.evento_id,
+            tm_emergencia_detalle.ev_desc,
+            tm_emergencia_detalle.fecha_crea,
+            tm_usuario.usu_nom,
+            tm_usuario.usu_ape,
+            tm_usuario.usu_tipo
+            FROM 
+            `tm_emergencia_detalle`
+            INNER JOIN tm_usuario on tm_emergencia_detalle.usu_id = tm_usuario.usu_id
+            WHERE
+            ev_id = ?";
+            
+            $sql = $conectar->prepare($sql);
+            $sql->bindValue(1, $ev_id);
+            $sql->execute();
+            
+            $resultado = $sql->fetchAll();
+            return $resultado;
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function listar_evento_por_id($ev_id) {
+        try {
+            $conectar = parent::conexion();
+            parent::set_names();
+            $sql = "SELECT
+                tm_evento.ev_id,
+                tm_evento.ev_nom,
+                tm_evento.cat_id,
+                tm_evento.ev_desc,
+                tm_evento.ev_est,
+                tm_evento.ev_inicio,
+                tm_usuario.usu_nom,
+                tm_usuario.usu_ape,
+                tm_categoria.cat_nom,
+                tm_unidad.unid_nom
+                FROM
+                tm_evento
+                INNER JOIN tm_categoria ON tm_evento.cat_id = tm_categoria.cat_id
+                INNER JOIN tm_usuario ON tm_evento.ev_nom = tm_usuario.usu_id
+                INNER JOIN tm_unidad ON tm_evento.cat_id = tm_unidad.unid_nom
+                WHERE
+                tm_evento.ev_id = ?";
+            $sql = $conectar->prepare($sql);
+            $sql->bindValue(1, $ev_id);
+            $sql->execute();
+            $resultado = $sql->fetchAll();
+            return $resultado;
+        } catch (PDOException $e) {
+            error_log("Error en listar_evento_por_id: " . $e->getMessage(), 0);
+            return false;
+        }
+    }
 }
