@@ -78,7 +78,7 @@ function addMarkers(categories) {
           strokeWeight: 1,
           scale: 7
         },
-        title: 'Detalles de ' + category
+        title: item.categoria
       });
 
       marker.addListener('click', function() {
