@@ -1,4 +1,8 @@
-var map, heatmaps = {}, infoWindow;
+var map, heatmaps = {}, markers = {}, infoWindow;
+var currentView = 'heatmap'; // Puede ser 'heatmap' o 'markers'
+var categoryColors = {}; // Almacenará los colores asignados a cada categoría
+var showPOIs = false; // Estado de visibilidad de los puntos de interés
+const disabledCategories = ['last_tiendas', 'otros']; // Lista de categorías a desactivar
 
 function initMap() {
   // Configuración inicial del mapa
@@ -26,13 +30,25 @@ function initMap() {
   // Obtén los datos y añade capas de mapa de calor por categorías
   fetchAndGroupData().then(groupedData => {
     addHeatmapLayers(groupedData);
+    addMarkers(groupedData);
     createCategoryButtons(groupedData);
   });
+
+  // Configurar el botón de cambio de vista
+  document.getElementById('toggleMapView').addEventListener('click', toggleView);
+
+  // Configurar el botón para mostrar/ocultar puntos de interés
+  document.getElementById('togglePOIs').addEventListener('click', togglePOIs);
 }
 
 function addHeatmapLayers(categories) {
   // Recorre cada categoría y añade capas de mapa de calor correspondientes
   Object.keys(categories).forEach(function(category) {
+    // Asigna un color automáticamente si no está ya asignado
+    if (!categoryColors[category]) {
+      categoryColors[category] = getRandomColor();
+    }
+
     // Convierte los datos de cada categoría a LatLng
     const points = categories[category].map(item => new google.maps.LatLng(item.latitud, item.longitud));
 
@@ -54,6 +70,38 @@ function addHeatmapLayers(categories) {
   });
 }
 
+function addMarkers(categories) {
+  // Recorre cada categoría y añade marcadores correspondientes
+  Object.keys(categories).forEach(function(category) {
+    // Si la categoría está desactivada, no añadimos los marcadores
+    if (disabledCategories.includes(category)) {
+      return; // No crear marcador para categorías desactivadas
+    }
+
+    markers[category] = categories[category].map(item => {
+      const marker = new google.maps.Marker({
+        position: { lat: item.latitud, lng: item.longitud },
+        map: null, // Empieza oculto, se mostrará según el filtro
+        icon: {
+          path: google.maps.SymbolPath.CIRCLE,
+          fillColor: categoryColors[category],
+          fillOpacity: 0.6,
+          strokeColor: categoryColors[category],
+          strokeWeight: 1,
+          scale: 7
+        },
+        title: 'Detalles de ' + category // Agrega un título o más detalles aquí
+      });
+
+      marker.addListener('click', function() {
+        showInfoWindow(marker.getPosition(), category);
+      });
+
+      return marker;
+    });
+  });
+}
+
 function showInfoWindow(latLng, category) {
   // Crea un infowindow con los detalles específicos de la categoría
   var content = '<strong>Detalles de ' + category + ':</strong><br>Descripción del evento...'; // Agrega detalles específicos aquí
@@ -66,12 +114,25 @@ function showInfoWindow(latLng, category) {
 
 function filterCategory(category, button) {
   // Muestra u oculta la capa de mapa de calor según la categoría seleccionada
-  if (heatmaps[category]) {
+  if (heatmaps[category] && currentView === 'heatmap') {
     var isVisible = heatmaps[category].getMap();
     heatmaps[category].setMap(isVisible ? null : map); // Alternar entre mostrar y ocultar
 
     // Alternar la clase active del botón y añadir/remover btn-success
     if (isVisible) {
+      button.classList.remove('btn-success');
+    } else {
+      button.classList.add('btn-success');
+    }
+  }
+
+  // Muestra u oculta los marcadores según la categoría seleccionada
+  if (markers[category] && currentView === 'markers') {
+    var areVisible = markers[category][0].getMap();
+    markers[category].forEach(marker => marker.setMap(areVisible ? null : map)); // Alternar entre mostrar y ocultar
+
+    // Alternar la clase active del botón y añadir/remover btn-success
+    if (areVisible) {
       button.classList.remove('btn-success');
     } else {
       button.classList.add('btn-success');
@@ -116,16 +177,39 @@ function createCategoryButtons(categories) {
 
   // Crear un botón por cada categoría
   Object.keys(categories).forEach(category => {
+    if (disabledCategories.includes(category)) {
+      return; // No crear botón para categorías desactivadas
+    }
+    
     const button = document.createElement('button');
-    button.className = 'btn';
+    button.className = 'btn btn-outline-primary';
     button.textContent = category.charAt(0).toUpperCase() + category.slice(1).replace(/([A-Z])/g, ' $1');
     button.onclick = () => filterCategory(category, button);
     controlsDiv.appendChild(button);
   });
 }
 
-// Inicializa el mapa cuando el documento está listo
-document.addEventListener("DOMContentLoaded", initMap);
+function toggleView() {
+  currentView = currentView === 'heatmap' ? 'markers' : 'heatmap';
+
+  // Mostrar u ocultar capas según la vista actual
+  Object.keys(heatmaps).forEach(category => {
+    if (currentView === 'heatmap') {
+      heatmaps[category].setMap(map);
+    } else {
+      heatmaps[category].setMap(null);
+    }
+  });
+
+  Object.keys(markers).forEach(category => {
+    if (currentView === 'markers') {
+      markers[category].forEach(marker => marker.setMap(map));
+    } else {
+      markers[category].forEach(marker => marker.setMap(null));
+    }
+  });
+}
+
 function togglePOIs() {
   showPOIs = !showPOIs;
   map.setOptions({
@@ -149,3 +233,16 @@ function togglePOIs() {
   poIsButton.classList.toggle('btn-active', showPOIs);
   poIsButton.classList.toggle('btn-inactive', !showPOIs);
 }
+
+// Generar colores aleatorios para categorías
+function getRandomColor() {
+  const letters = '0123456789ABCDEF';
+  let color = '#';
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
+// Inicializa el mapa al cargar la página
+window.onload = initMap;
