@@ -12,11 +12,10 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 <title>Sistema Emergencia</title>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQrYCFSz7Q-a-WONxo4yymu9SAPgmaA6c&libraries=visualization"></script>
   <style>
-    /* Asegúrate de definir el estilo del contenedor del mapa */
     #map {
-      height: 500px; /* Define la altura del mapa */
-      width: 100%;  /* Define el ancho del mapa */
-    }
+      height: 500px; 
+      width: 100%;     
+      }
   </style>
 </head>
 
