@@ -513,6 +513,8 @@ public function datos_categorias_eventos($fecha_inicio) {
   public function get_eventos_categoria_latitud_longitud(){
     $sql = 'SELECT ev.ev_latitud as "latitud",
               		ev.ev_longitud as "longitud",
+              		ev.ev_desc as "detalles",
+              		ev.ev_img as "img",
                       cat.cat_nom as "categoria"
               FROM tm_evento as ev
               JOIN tm_categoria as cat
