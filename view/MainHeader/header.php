@@ -26,12 +26,12 @@
 							<!-- <a class="dropdown-item" href="#"><span
 							class="font-icon glyphicon glyphicon-question-sign"></span>Ayuda</a> -->
 							<div class="dropdown-divider"></div>
-
+							
+							<a class="dropdown-item" href="../Perfile"><span
+										  class="font-icon glyphicon glyphicon-cog"></span>Editar Perfil</a>
 							<?php 
-								if ($_SESSION["usu_tipo"] == 1){
+								if ($_SESSION["usu_tipo"] == 2){
 							?> 
-              <a class="dropdown-item" href="../Perfile"><span
-							class="font-icon glyphicon glyphicon-cog"></span>Editar Perfil</a>
 							<a class="dropdown-item" href="../CrearUsuario/index.php"><span
 							class="font-icon glyphicon glyphicon-plus"></span>Crear Usuario</a>
 							<?php
@@ -49,6 +49,7 @@
 				
 				<input type="hidden" id="user_idx" value="<?php echo $_SESSION["usu_id"] ?>"><!-- ID del Usuario -->
 				<input type="hidden" id="rol_idx" value="<?php echo $_SESSION["usu_tipo"] ?>"><!-- Rol del Usuario -->
+
 				<div class="site-header-collapsed">
 					<div class="dropdown dropdown-typical">
 						<a href="#" class="dropdown-toggle no-arr">
