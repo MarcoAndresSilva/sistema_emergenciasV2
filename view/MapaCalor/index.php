@@ -46,9 +46,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 
 
    <div id="controls">
-    <button class="btn" onclick="filterCategory('incendios', this)">Incendios</button>
-    <button class="btn" onclick="filterCategory('caidaArbol', this)">Caida de Árbol</button>
-    <button class="btn" onclick="filterCategory('corteLuz', this)">Corte de Luz</button>
+
   </div> <!-- Contenedor del mapa -->
   <div id="map"></div>
 
