@@ -5,7 +5,19 @@ function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     zoom: 13,
     center: { lat: -33.6866, lng: -71.2166 }, // Coordenadas del centro de Melipilla
-    mapTypeId: 'roadmap' // Tipo de mapa (roadmap, satellite, hybrid, terrain)
+    mapTypeId: 'roadmap', // Tipo de mapa (roadmap, satellite, hybrid, terrain)
+    styles: [ // Personaliza el estilo del mapa para ocultar ciertos elementos
+      {
+        featureType: 'poi',
+        elementType: 'labels',
+        stylers: [{ visibility: showPOIs ? 'on' : 'off' }]
+      },
+      {
+        featureType: 'poi.business',
+        elementType: 'labels',
+        stylers: [{ visibility: showPOIs ? 'on' : 'off' }]
+      }
+    ]
   });
 
   // Inicializa el InfoWindow
