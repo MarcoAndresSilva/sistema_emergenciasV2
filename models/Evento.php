@@ -491,10 +491,17 @@ public function add_evento($usu_id, $ev_desc, $ev_est, $ev_inicio, $ev_direc, $e
               		ev.ev_longitud as "longitud",
               		ev.ev_desc as "detalles",
               		ev.ev_img as "img",
-                      cat.cat_nom as "categoria"
+              		ev.ev_inicio as "fecha_inicio",
+              		IFNULL(ev.ev_final, "En Proceso") as "fecha_cierre",
+                  cat.cat_nom as "categoria",
+                  un.unid_nom as "unidad"
               FROM tm_evento as ev
               JOIN tm_categoria as cat
-              ON (ev.cat_id=cat.cat_id);';
+              ON (ev.cat_id=cat.cat_id)
+              JOIN tm_usuario as usu
+              ON (usu.usu_id=ev.usu_id)
+              JOIN tm_unidad as un 
+              ON ( un.unid_id=usu.usu_unidad);';
     return $this->ejecutarConsulta($sql);
 }
 
