@@ -44,6 +44,7 @@ function guardarImagen($archivo, $carpeta) {
 if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_tipo"] == 2)) {
 if (isset($_GET["op"])) {
     switch ($_GET["op"]) {
+
         case "add_evento":
             $usu_id = $_SESSION["usu_id"]; 
             $ev_telefono = $_SESSION['usu_telefono'];
@@ -115,6 +116,7 @@ if (isset($_GET["op"])) {
         break;
 
         case "tabla-general":
+
             $html = "";
             $critico = "";
             $medio = "";
@@ -199,11 +201,11 @@ if (isset($_GET["op"])) {
                     $recorrido .= "<td>" . $row['ev_inicio'] . "</td>";
                     
                      // boton derivar
-                     $recorrido .= "<td> <button id='btn' type='button' class='btn btn-inline btn-primary btn-sm ladda-button btnMostrarDatos modal-btn'> <i class='fa-solid fa-up-right-from-square'></i> </button>
+                     $recorrido .= "<td> <button id='btnPanelDerivar' type='button' class='btn btn-inline btn-primary btn-sm ladda-button modal-btn'> <i class='fa-solid fa-up-right-from-square'></i> </button>
                      </td>";
  
                       // boton cerrar
-                      $recorrido .= "<td> <button id='btn' type='button' class='btn btn-inline btn-danger btn-sm ladda-button btnPanelCerrar modal-btn'> <i class='fa-solid fa-square-xmark'></i> </button>
+                      $recorrido .= "<td> <button id='btnPanelCerrar' type='button' class='btn btn-inline btn-danger btn-sm ladda-button modal-btn'> <i class='fa-solid fa-square-xmark'></i> </button>
                       </td>";
 
                     $recorrido .= "</tr>";
@@ -246,11 +248,9 @@ if (isset($_GET["op"])) {
                 
                 echo json_encode($respuesta);
             }
-            break;
-            
-/*-----------------------------------------------------------------------------------------------------*/
-
+        break;
         case "tabla-general-historial":
+
             $html = "";
             $critico = "";
             $medio = "";
@@ -338,11 +338,10 @@ if (isset($_GET["op"])) {
                 
                 echo json_encode($respuesta);
             }
-            break;
-
-/*-----------------------------------------------------------------------------------------------------*/
+        break;
 
         case "tablas-dashboard":
+
             $html = "";
             $criticoYmedio = "";
             $bajoYcomun = "";
@@ -488,9 +487,10 @@ if (isset($_GET["op"])) {
                 
                 echo json_encode($respuesta);
             }
-            break;
+        break;
 
         case "update_nivelpeligro_evento":
+
             $datos = $evento->update_nivelpeligro_evento($_POST['ev_id'],
             $_POST['ev_niv']);
                 if ($datos == true) {
@@ -498,9 +498,10 @@ if (isset($_GET["op"])) {
             } else {
                 echo 0;
             }
-            break;
+        break;
 
         case "get_evento_id":
+
             $ev_id = $_POST["ev_id"];
             $datos_evento = $evento->get_evento_id($ev_id);
 
@@ -511,9 +512,10 @@ if (isset($_GET["op"])) {
             } else {
                 echo '<script> console.log(Error al obtener evento con la id: ' . $ev_id . ') </script>';
             }
-            break;
-            case "cerrar_evento":
-                $nombre_apellido = $_POST['nombre_apellido'];
+        break;
+
+        case "cerrar_evento":
+            $nombre_apellido = $_POST['nombre_apellido'];
                 list($nombre, $apellido) = explode(' ', $nombre_apellido, 2);
             
                 // Obtener el usu_id basado en el nombre y apellido
@@ -530,7 +532,36 @@ if (isset($_GET["op"])) {
                 } else {
                     echo 0; // No se encontró el usuario
                 }
-                break;
+        break;
+
+        case "carga-imagen-cierre":
+            //verificar si se obtuvo el ID del evento
+            if (isset($_POST['ev_id'])){
+                // Verificar si se envió un archivo y no hubo errores
+                if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+                    // Ruta donde se almacenará la imagen 
+                    $ruta_destino = '../public/img/imagenesCierres/' . $_FILES['imagen']['name'];
+                    // Mover la imagen del directorio temporal al destino final
+                    if (move_uploaded_file($_FILES['imagen']['tmp_name'], $ruta_destino)) {
+                        // Actualizar la columna ev_img en la base de datos con la ruta de la imagen
+                        $datos = $evento->update_imagen_cierre($_POST['ev_id'], $ruta_destino);
+                        if ($datos == true) {
+                            echo 1;
+                        } else {
+                            echo 0;
+                        }
+                    } else {
+                        echo "Error al mover el archivo.";
+                    }
+                } else {
+                    echo "Error al recibir la imagen.";
+                }
+            }else {
+                echo "Error al recibir el ID del evento.";
+            }
+        break;
+
+
         case "cantidad-eventos":
             
             $eventos_abiertos = 0;
@@ -590,8 +621,7 @@ if (isset($_GET["op"])) {
                 'datos_var' => $datos_var
             );
             echo json_encode($respuesta);
-            break;          
-
+        break;          
 
         case "evento-grafico-dashboard":
 
@@ -644,11 +674,9 @@ if (isset($_GET["op"])) {
             // Devolver los resultados como JSON
             echo json_encode($resultado);
         break;
-            
-            // -----------------------------------------------------------------------------------------
-
 
         case "get_eventos":
+
 
             $where = $_POST['where'];
 
@@ -748,24 +776,24 @@ if (isset($_GET["op"])) {
                 
                 echo json_encode($respuesta);
             }
-            break;
+        break;
 
-
-            // -----------------------------------------------------------------------------------------
         case "get_id_ultimo_evento":
             $datos = $evento->get_id_ultimo_evento();
             echo $datos;
-            break;
+        break;
+
         case "get_datos_categoria_eventos_ultimos_30_dias":
             $fecha_inicio = date('Y-m-d', strtotime('-30 days')); // Fecha de inicio hace 30 días
             $datos = $evento->datos_categorias_eventos($fecha_inicio);
             echo json_encode($datos);
-            break;
-      case "get_evento_lat_lon":
+        break;
+
+        case "get_evento_lat_lon":
           $datos = $evento->get_eventos_categoria_latitud_longitud();
           header('Content-Type: application/json');
           echo json_encode($datos);
-      break;
+        break;
 
 
     }
