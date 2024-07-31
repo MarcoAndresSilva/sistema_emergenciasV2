@@ -33,7 +33,7 @@
         
         <!-- Evento -->
         <li class="blue-dirty">
-            <a class="ControlEventos" href="../ControlEventosDos/">
+            <a class="ControlEventos" href="../ControlEventos/">
                 <span class="glyphicon glyphicon-th"></span>
                 <span class="lbl"> Eventos Activos</span>
             </a>
