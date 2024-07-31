@@ -82,7 +82,7 @@ function addMarkers(categories) {
       });
 
       marker.addListener('click', function() {
-        showInfoWindow(marker.getPosition(), category, item.detalles, item.img);
+        showInfoWindow(marker.getPosition(), category, item.detalles, item.img, item.unidad, item.fecha_inicio, item.fecha_cierre);
       });
 
       return marker;
@@ -90,11 +90,13 @@ function addMarkers(categories) {
   });
 }
 
-function showInfoWindow(latLng, category, details = 'Sin detalles', img = '') {
-  let content = `<div><strong>Categoria:</strong> ${category}<br><strong>Detalles:</strong> ${details}</div>`;
+function showInfoWindow(latLng, category, details = 'Sin detalles', img = '', unidad, fecha_inicio, fecha_cierre) {
+  let content = `<div><strong>Unidad:</strong> ${unidad}<br><strong>Categoria:</strong> ${category}<br><strong>Detalles:</strong> ${details}</div>`;
   if (img) {
     content += `<div><img src="../../public/${img}" alt="Imagen" style="max-width: 200px; max-height: 150px;"></div>`;
   }
+  content += `<br> <strong>Fecha Creacion:</strong> ${fecha_inicio}`
+  content += `<br> <strong>Fecha Cierre:</strong> ${fecha_cierre}`
 
   infoWindow.setContent(content);
   infoWindow.setPosition(latLng);
