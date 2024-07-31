@@ -520,7 +520,7 @@ async function mostrarMapa(lat, long) {
     }
 }
 
-//Btn Cerrar evento (Añade hora cierre)
+
 // Redireccionar a Google Maps para crear ruta
 $('.btnCrearRuta').off('click').on('click', function() {
     // Redirecciona a Google Maps
@@ -545,6 +545,9 @@ function initMap() {
         zoom: 8 // Nivel de zoom
     });
 }
+
+
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Cerrar evento
 
@@ -667,6 +670,7 @@ document.getElementById('imagen').addEventListener('change', function() {
 //Btn Cerrar evento (Añade hora cierre)
 $('.btnCerrarEvento').off('click').on('click',function(){
 
+    console.log("boton cerrar click");
     if(validarFormulario()){
          //Llama a la funcion cerrar evento Añade la hora final
     CerrarEvento();

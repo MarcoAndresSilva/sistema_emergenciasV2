@@ -7,7 +7,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 <html>
     <?php require_once("../MainHead/head.php") ?>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css">
-    <link rel="stylesheet" href="./estilopersonaleventos.css">
+    <link rel="stylesheet" href="./historialeventos.css">
     <script src="../../public/js/sweetaler2v11-11-0.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
@@ -29,10 +29,10 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
                 <div class="tbl">
                     <div class="tbl-row">
                         <div class="tbl-cell">
-                            <h3>Eventos</h3>
+                            <h3>Historial de las Emergencias</h3>
                             <ol class="breadcrumb breadcrumb-simple">
-                                <li><a href="#">Eventos</a></li>
-                                <li class="active">En proceso</li>
+                                <li><a href="#">Emergencias</a></li>
+                                <li class="active">Detalle de las Emergencias</li>
                             </ol>
                         </div>
                     </div>
@@ -47,14 +47,13 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
                     <thead>
                         <tr>
                             <th style="width:5%">ID</th>
-                            <th style="width:9.5%">Categor&iacute;a</th>
-                            <th style="width:9.5%">Direcci&oacute;n</th>
+                            <th style="width:10%">Categor&iacute;a</th>
+                            <th style="width:10%">Direcci&oacute;n</th>
                             <th style="width:25%">Asignaci&oacute;n</th>
                             <th style="width:10%">Nivel Peligro</th>
                             <th style="width:10%">Estado</th>
-                            <th style="width:15%">Hora Apertura</th>
-                            <th style="width:5%">Derivar</th>
-                            <th style="width:5%">Cerrar</th>
+                            <th style="width:15%">Fecha Apertura</th>
+                            <th style="width:5%">Ver Detalle</th>
                         </tr>
                     </thead>
                     <tbody id="datos-criticos">
@@ -73,12 +72,12 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
             </div>
 
             
-<div id="modal-mapa" class="modal-overlay">
-    <div class="vista-mapa" id="map">
-    </div>
-    <button id='btn' type='button' class='btn btn-inline btn-primary btn-sm ladda-button btnCrearRuta' > Ir </button>
-    <span class="glyphicon glyphicon-remove CerrarModalMap"></span>
-</div>
+            <div id="modal-mapa" class="modal-overlay">
+                <div class="vista-mapa" id="map">
+                </div>
+                <button id='btn' type='button' class='btn btn-inline btn-primary btn-sm ladda-button btnCrearRuta' > Ir </button>
+                <span class="glyphicon glyphicon-remove CerrarModalMap"></span>
+            </div>
 
 
 
@@ -88,13 +87,12 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
     <?php require_once("../MainFooter/footer.php"); ?>
 
     <?php
-require_once('modalDerivar.php');
-require_once('modalCerrar.php');
+
 require_once("../MainJs/js.php");
 ?>
 </body>
 
-<script type="text/javascript" src="./controleventosdos.js"></script>
+<script type="text/javascript" src="./historialeventos.js"></script>
 </html>
 
 <?php

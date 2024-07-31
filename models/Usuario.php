@@ -7,17 +7,20 @@ public function login() {
     if (isset($_POST["enviar"])) {
         $name = $_POST["usu_name"];
         $pass = $_POST["usu_pass"];
+        $tipo = $_POST["usu_tipo"];
 
-        if (empty($name) || empty($pass)) {
+        if (empty($name) and empty($pass) and empty($usu_tipo)) {
             header("Location:".Conectar::ruta()."index.php?m=2");
             exit();
+
         }
 
         $hashedPass = md5($pass);
-        $sql = "SELECT * FROM tm_usuario WHERE usu_name = :usu_name AND usu_pass = :usu_pass AND estado = 1";
+        $sql = "SELECT * FROM tm_usuario WHERE usu_name = :usu_name AND usu_pass = :usu_pass AND usu_tipo = :usu_tipo AND estado = 1";
         $params = [
             ':usu_name' => $name,
-            ':usu_pass' => $hashedPass
+            ':usu_pass' => $hashedPass,
+            ':usu_tipo'=> $tipo
         ];
 
         $resultado = $this->ejecutarConsulta($sql, $params, false); // No fetchAll, solo fetch
