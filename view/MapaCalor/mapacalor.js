@@ -169,16 +169,24 @@ function createCategoryButtons(categories) {
   const controlsDiv = document.getElementById('controls');
   controlsDiv.innerHTML = '';
 
-  Object.keys(categories).forEach(category => {
+  let row;
+  Object.keys(categories).forEach((category, index) => {
     if (disabledCategories.includes(category)) {
       return;
+    }
+
+    if (index % 3 === 0) {
+      row = document.createElement('div');
+      row.className = 'btn-group mb-2';
+      controlsDiv.appendChild(row);
     }
 
     const button = document.createElement('button');
     button.className = 'btn btn-outline-primary';
     button.textContent = category.charAt(0).toUpperCase() + category.slice(1).replace(/([A-Z])/g, ' $1');
     button.onclick = () => filterCategory(category, button);
-    controlsDiv.appendChild(button);
+
+    row.appendChild(button);
   });
 }
 

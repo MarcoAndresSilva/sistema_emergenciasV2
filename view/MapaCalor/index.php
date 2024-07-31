@@ -44,7 +44,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 <button id="togglePOIs" class="btn btn-warning btn-inactive">
   <i class="fas fa-eye btn-icon"></i> Mostrar Puntos de Interés
 </button>
-<div id="controls" class="btn-group" role="group" aria-label="Controles de mapa">
+<div id="controls" class="row" role="group" aria-label="Controles de mapa">
   <!-- Aquí se insertarán los botones de categorías -->
 </div>
 <!-- Contenedor del mapa -->
