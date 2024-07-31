@@ -249,6 +249,7 @@ if (isset($_GET["op"])) {
                 echo json_encode($respuesta);
             }
         break;
+
         case "tabla-general-historial":
 
             $html = "";
@@ -336,6 +337,132 @@ if (isset($_GET["op"])) {
                     'comun' => $comun
                 );
                 
+                echo json_encode($respuesta);
+            }
+        break;
+
+        case "tabla-historial-eventos": //para cargar la tabla en la ista de historiaEventos
+            $html = "";
+            $critico = "";
+            $medio = "";
+            $bajo = "";
+            $comun = "";
+
+            $datos = $evento->get_evento();
+            if (is_array($datos) == true and count($datos) > 0) {
+
+                //Datos para Tabla comun variable = $html
+                foreach ($datos as $row) {
+                    //Variable temporal para recorrido y almacenamiento
+                    $recorrido = "";
+                    $recorrido .= "<tr>";
+
+                    $recorrido .= "<td id='id_evento_celda' value='" . $row['ev_id'] . "'>" . $row['ev_id'] . "</td>";
+
+                    //Llama a la funcion get_datos_categoria para obtener el nombre de la categoria
+                    $datos_categoria = $categoria->get_datos_categoria($row['cat_id']);
+                    foreach ($datos_categoria as $row_categoria) {
+                        $recorrido .= "<td>". $row_categoria['cat_nom']. "</td>";
+                    }
+
+                    $direccion = $row['ev_direc'];
+                 
+                    $direccion .= " <button id='btn' type='button' class='btn btn-inline btn-primary btn-sm ladda-button btnDireccionarMapa modal-btn' id='btnDireccionarMapa'> <i class='fa-solid fa-location-dot'></i> </button>";
+                   
+
+                    // Si no hay coordenadas, eliminar el texto que indica su ausencia
+                    $direccion = str_replace("No hay coordenadas", "", $direccion);
+                    $direccion = str_replace("Sin dirección", "", $direccion);
+
+                    $recorrido .= "<td> " . $direccion . " </td>";
+
+                    //Llama a la funcion get_datos_eventounidad para obtener los nombres de las unidades asignadas
+                    $datos_asignaciones = $eventounidad->get_datos_eventoUnidad($row['ev_id']);
+                    if (is_array($datos_asignaciones) && count($datos_asignaciones) > 0) { 
+                        $recorrido .= "<td>";
+                        $contar = 0;
+                        foreach ($datos_asignaciones as $row_asignaciones) {
+                            $unid_id = $row_asignaciones['unid_id'];
+                            $datos_unidad = $unidad->get_datos_unidad($unid_id);
+                            foreach ($datos_unidad as $row_unidad ) {
+                                if ($contar == 0) {
+                                    $recorrido .= $row_unidad['unid_nom'];
+                                    $contar += 1;
+                                } else {
+                                    $recorrido .= " - " . $row_unidad['unid_nom'];
+                                }
+                            }
+                        }
+                        $recorrido .= "</td>";
+                    } else {
+                        $recorrido .= "<td>No asignada</td>";
+                    }
+
+                    // Peligro
+                    if ($row['ev_niv_id'] == 1) {
+                        $recorrido .= "<td > <span class='label label-pill label-primary peligro_critico' > Critico </span> </td>";
+                    } else if ($row['ev_niv_id'] == 2) {
+                        $recorrido .= "<td > <span class='label label-pill label-primary peligro_medio' > Medio </span> </td>";
+                    } else if ($row['ev_niv_id'] == 3) {
+                        $recorrido .= "<td > <span class='label label-pill label-primary peligro_bajo' > Bajo </span> </td>";
+                    } else if ($row['ev_niv_id'] == 0) {
+                        $recorrido .= "<td > <span class='label label-pill label-primary peligro_comun' > Comun </span> </td>";
+                    }
+
+                    //Llama a la funcion get_datos_estado para obtener el estado
+                    $dato_estado = $estado->get_datos_estado($row['ev_est']);
+                    foreach ($dato_estado as $row_estado) {
+                        if ($row_estado['est_nom'] == "En Proceso") {
+                            $recorrido .= "<td><span class='label label-pill label-warning'>" . $row_estado['est_nom'] . "</span></td>";
+                        } else if ($row_estado['est_nom'] == "Finalizado") {
+                            $recorrido .= "<td><span class='label label-pill label-success'>" . $row_estado['est_nom'] . "</span></td>";
+                        } else {
+                            $recorrido .= "<td>" . $row_estado['est_nom'] . "</td>";
+                        }
+                    }
+
+                    // Hora de Apertura
+                    $recorrido .= "<td>" . $row['ev_inicio'] . "</td>";
+
+                    // boton ver
+                    $recorrido .= "<td> <button class='btnDetalleEmergencia' data-ev-id='" . $row['ev_id'] . "' type='button' class='btn btn-inline btn-primary btn-sm ladda-button modal-btn'> <i class='fa-solid fa-eye'></i> </button></td>";
+
+                    $recorrido .= "</tr>";
+
+                    //Filtro de filas por nivel de peligro
+                    if ($row['ev_niv_id'] == 1) {
+                        $critico .= $recorrido; 
+                    } else if ($row['ev_niv_id'] == 2) {
+                        $medio .= $recorrido; 
+                    } else if ($row['ev_niv_id'] == 3) {
+                        $bajo .= $recorrido; 
+                    } else if ($row['ev_niv_id'] == 0) {
+                        $comun .= $recorrido;
+                    }
+                    $html .= $recorrido;
+                }
+                $respuesta = array(
+                    'html' => $html,
+                    'critico' => $critico,
+                    'medio' => $medio,
+                    'bajo' => $bajo,
+                    'comun' => $comun
+                );
+                echo json_encode($respuesta);
+            } else {
+                $html = "<tr><td colspan=5>No se encontraron registros</td></tr>";
+                $critico = "<tr><td colspan=5>No se encontraron registros</td></tr>";
+                $medio = "<tr><td colspan=5>No se encontraron registros</td></tr>";
+                $bajo = "<tr><td colspan=5>No se encontraron registros</td></tr>";
+                $comun = "<tr><td colspan=5>No se encontraron registros</td></tr>";
+                $respuesta = array(
+                    'html' => $html,
+                    'critico' => $critico,
+                    'medio' => $medio,
+                    'bajo' => $bajo,
+                    'comun' => $comun
+                );
+
                 echo json_encode($respuesta);
             }
         break;
@@ -533,34 +660,6 @@ if (isset($_GET["op"])) {
                     echo 0; // No se encontró el usuario
                 }
         break;
-
-        case "carga-imagen-cierre":
-            //verificar si se obtuvo el ID del evento
-            if (isset($_POST['ev_id'])){
-                // Verificar si se envió un archivo y no hubo errores
-                if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
-                    // Ruta donde se almacenará la imagen 
-                    $ruta_destino = '../public/img/imagenesCierres/' . $_FILES['imagen']['name'];
-                    // Mover la imagen del directorio temporal al destino final
-                    if (move_uploaded_file($_FILES['imagen']['tmp_name'], $ruta_destino)) {
-                        // Actualizar la columna ev_img en la base de datos con la ruta de la imagen
-                        $datos = $evento->update_imagen_cierre($_POST['ev_id'], $ruta_destino);
-                        if ($datos == true) {
-                            echo 1;
-                        } else {
-                            echo 0;
-                        }
-                    } else {
-                        echo "Error al mover el archivo.";
-                    }
-                } else {
-                    echo "Error al recibir la imagen.";
-                }
-            }else {
-                echo "Error al recibir el ID del evento.";
-            }
-        break;
-
 
         case "cantidad-eventos":
             
