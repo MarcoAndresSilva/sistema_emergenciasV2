@@ -22,49 +22,44 @@ function cargarTablaGeneral() {
     });
 }
 
-//Variable Iid_evento
-$id_evento = 0;
+ //Variable id_evento
+ $id_evento = 0;
 
-//Activar el boton de asignación
-$(document).on('click', '.btnMostrarDatos', function() {
-    
-    //Llamar a la funcion para mostrar u ocultar la pestaña de Unidades Disponibles
-    togglePestana();
-    
+
+//////////btn derivar//////////// 
+$(document).on("click", "#btnPanelDerivar", function(e) {
+    console.log('Button Derivar clicked');
+    mostrarModal('#modalDerivar');
+   
     // Obtener el valor del ID del evento desde la celda
     $id_evento = $(this).closest('tr').find('#id_evento_celda').attr('value');
-
+    // Llama la funcion para mostrar el id
+    mostrarIdEvento($id_evento);
     // Llama la funcion para consultar la categoria
     consultarCategoria($id_evento);
-
-    // Llama la funcion para consultar la categoria
-    mostrarCatIdEvento($id_evento);
-    
-    //Llamar a la función para consultar las unidades disponibles
-    consultarUnidadDisponible($id_evento);
-    
     //Llamar a la función para consultar el nivel de peligro
     consultarNivelPeligro($id_evento);
+     //Llamar a la función para consultar las unidades disponibles
+    consultarUnidadDisponible($id_evento);
 });
 
-// Función para mostrar u ocultar la pestaña Derivar
-function togglePestana() { 
-    $('#selector-unidad').toggle();
+
+function mostrarModal(modalId) {
+    var modal = $(modalId);
+    if (modal.length) {
+        modal.removeClass('fade');
+        modal.modal('show');
+    } else {
+        console.error('Modal not found: ' + modalId);
+    }
 }
 
-// Cancelar actualización
-$('.btnCancelar').off('click').on('click',function(){
-    // Llamar a la función para mostrar u ocultar la pestaña
-    togglePestana();
-});
-  
-
-// Función para obtener el cat_id del evento y mostrarlo en el div cat_id
-function mostrarCatIdEvento(ev_id) {
+// Función para obtener el id del evento y mostrarlo en el label
+function mostrarIdEvento(ev_id) {
     $('#ev_id').text(ev_id);
 }
 
-// Función para mostrar el cat_nom en el div
+// Función para mostrar el cat_nom en el label
 function consultarCategoria(ev_id) {
     $.post("../../controller/categoria.php?op=get_cat_nom_by_ev_id", { ev_id: ev_id }, function(data, status) {
         try {
@@ -78,42 +73,6 @@ function consultarCategoria(ev_id) {
             console.log("Error al analizar la respuesta JSON:", error);
         }
     });
-}
-
-//Funcion para consultar las unidades disponibles
-function consultarUnidadDisponible($id_evento) {
-    var unid_est = 1;
-    var id_evento = $id_evento; // Obtén el ID del evento
-    var est_id = 1;
-    // Limpiar el contenido actual del div
-    $('#unidadOptions').empty();
-    $.post("../../controller/unidad.php?unidad=listar", {est_id: est_id },function(data,status){
-
-
-        // Agregar opciones al div
-        for (var i = 0; i < data.length; i++) {
-
-            var option = '<div class="form-check">' +
-                '<input class="form-check-input" type="checkbox" name="unidad" id="unidad_' + data[i].unid_id + '" value="' + data[i].unid_id + '">' +
-                '<label class="form-check-label" for="unidad_' + data[i].unid_id + '">' + data[i].unid_nom + '</label>' +
-                '</div>';
-
-            $('#unidadOptions').append(option);
-        }
-        //Obtener unidades asignadas al evento
-        $.post("../../controller/eventoUnidad.php?op=get_datos_eventoUnidad", {ev_id: id_evento }, function(asignadas,status){
-            // Verificar si asignadas es un array antes de usar forEach
-            if (Array.isArray(asignadas)) {
-                asignadas.forEach(unidad => {
-                    var unidadID = unidad['unid_id'];
-                    $('#unidad_' + unidadID).prop('checked', true);
-                });
-            } else {
-                console.log("La respuesta recibida no es un array: ", asignadas);
-            }
-        }, 'json');
-        
-    }, 'json');
 }
 
 function consultarNivelPeligro($id_evento) {
@@ -142,161 +101,61 @@ function consultarNivelPeligro($id_evento) {
         }        
     }, 'json');
 }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//Funcion para Modificar las unidades y asignaciones a un evento
-//Activar el boton de asignación
-$('.btnNivelPeligro').off('click').on('click',function(){
-    
-    //Llama a la funcion para modificar las unidades y asignaciones a un evento
-    ActualizarNivelPeligro($id_evento);
-    
-    //Llamar a la funcion para ocultar la pestaña de Unidades Disponibles
-    togglePestana();
-});
+//Funcion para consultar las unidades disponibles y mostrarlas en los check
+function consultarUnidadDisponible($id_evento) {
+    var unid_est = 1;
+    var id_evento = $id_evento; // Obtén el ID del evento
+    var est_id = 1;
+    // Limpiar el contenido actual del div
+    $('#unidadOptions').empty();
+    $.post("../../controller/unidad.php?unidad=listar", {est_id: est_id },function(data,status){
 
-function ActualizarNivelPeligro($id_evento) {
-    var ev_id = $id_evento;
-    
-    // Esto devuelve Id del Nivel de Peligro seleccionado
-    var ev_niv = $('#niv_id').val();
+        // Agregar opciones al div
+        for (var i = 0; i < data.length; i++) {
 
-    $.post("../../controller/evento.php?op=update_nivelpeligro_evento", { ev_id: ev_id, ev_niv: ev_niv }, function(data, status) {
-        if (data == 1) {
-            $('#id_evento').val('');
-            $('#niv_id').val(0);
-            $('#unidadOptions input:checked').prop('checked',false);
+            var option = '<div class="form-check">' +
+                '<input class="form-check-input" type="checkbox" name="unidad" id="unidad_' + data[i].unid_id + '" value="' + data[i].unid_id + '">' +
+                '<label class="form-check-label" for="unidad_' + data[i].unid_id + '">' + data[i].unid_nom + '</label>' +
+                '</div>';
 
-            swal("Actualizado","Nivel de Peligro del evento actualizado correctamente","success");
-        } else {
-            swal("Error: Nivel de peligro del evento no actualizado","Asegurece de realizar algún cambio","error");
+            $('#unidadOptions').append(option);
         }
-    });
-    
-}
-
-
-    //Funcion para Modificar las unidades y asignaciones a un evento
-    //Activar el boton de asignación
-    $('.btnUnidadAsignada').off('click').on('click',function(){
-    
-    //Llama a la funcion para modificar las unidades y asignaciones a un evento
-    ActualizarUnidadAsignada($id_evento);
-    
-    //Llamar a la funcion para ocultar la pestaña de Unidades Disponibles
-    togglePestana();
-    
-    });
-
-function ActualizarUnidadAsignada($id_evento) {
-    var ev_id = $id_evento;
-    var unid_ids = []; 
-    var unid_antiguas = [];
-    var str_antiguo = "";
-    var str_nuevo = "";
-    var error = 0;
-    
-    //Actualizar Asignacion de unidades
-    // Esto devuelve un array con las IDs seleccionadas (Nuevos)
-    $('#unidadOptions input:checked').each(function ( ) {
-        unid_ids.push($(this).val());
-    });
-
-    //Generación de Array de unidades ya asignadas al evento (antiguo)
-    $.post("../../controller/eventoUnidad.php?op=get_datos_eventoUnidad", {ev_id :ev_id}, function(data,status){
-        if (data.error){
-            console.log("No hay unidades antiguas");
-            str_antiguo = "No hay unidades asignadas";
-        }else {
-            console.log(data);
-            console.log(typeof data);
-            // datos = JSON.parse(data);
-                
-            unid_antiguas = data.map(function(item) {
-            return item.unid_id;
-            });
-            
-            str_antiguo = unid_antiguas.join(',');
-            
-            //recorrer array antiguo y asignando cada valor a     antigua_unid_id
-            unid_antiguas.forEach(unid_id => {
-                
-                //Borrar cada valor en la tabla relacionada al ev_id
-                $.post("../../controller/eventoUnidad.php?op=delete_unidad", {ev_id :ev_id, unid_id :unid_id}, function(data,status){
-                    console.log("Array delete unidades asignadas");
-                    console.log(data);
-                    if (data == 0) {
-                        error ++;
-                    }
+        //Obtener unidades asignadas al evento
+        $.post("../../controller/eventoUnidad.php?op=get_datos_eventoUnidad", {ev_id: id_evento }, function(asignadas,status){
+            // Verificar si asignadas es un array antes de usar forEach
+            if (Array.isArray(asignadas)) {
+                asignadas.forEach(unidad => {
+                    var unidadID = unidad['unid_id'];
+                    $('#unidad_' + unidadID).prop('checked', true);
                 });
-                
-            });
-        }
-        
-        str_nuevo = unid_ids.join(',');
-        if(str_nuevo == ""){
-            str_nuevo = "No hay unidades";
-        }
-        //Fecha y Hora
-        var ev_final = new Date();
-        var año = ev_final.getFullYear();
-        var mes = ev_final.getMonth() + 1; // Mes en JavaScript es 0-indexado, así que suma 1
-        var dia = ev_final.getDate();
-        var horas = ev_final.getHours();
-        var minutos = ev_final.getMinutes();
-        var segundos = ev_final.getSeconds();
-        // Formatear la fecha y hora como desees
-        var fechaFormateada = año + '-' + mes + '-' + dia + ' ' + horas + ':' + minutos + ':' + segundos;
-        var fec_cambio = fechaFormateada;
-        
-        $.post("../../controller/eventoUnidad.php?op=reporte_actualizacion", {ev_id :ev_id, str_antiguo :str_antiguo, str_nuevo :str_nuevo,fec_cambio :fec_cambio}, function(data,status){
-            if(data == 0){
-                console.log("Error en insert reporte_actualizacion");
-                error ++;
+            } else {
+                console.log("La respuesta recibida no es un array: ", asignadas);
             }
-        });
+        }, 'json');
         
-        //recorrer array nuevo y asignando cada valor a     unid_id
-        unid_ids.forEach(unid_id => {
-            $.post("../../controller/eventoUnidad.php?op=insert_asignacion_unidades", { ev_id: ev_id, unid_id: unid_id }, function(data,status){
-                if (data == 0) {
-                    error ++;
-                }
-            });
-            
-        });
-
-    },'json' );
-    
-    
-
-    if(error > 0){
-        swal("Error: Unidades no actualizadas","A ocurrido un error en el procesos de actualización","error");
-    }else {
-        $('#id_evento').val('');
-        $('#unidadOptions input:checked').prop('checked',false);
-        $('#niv_id').val(0);
-        swal("Derivación exitosa","Actualizacion de las unidades asignadas exitosa","success");
-    }
-    
+    }, 'json');
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //Funcion para Modificar las unidades y nivel de peligro de un evento
 //Activar el boton para modificar todo
-$('.btnActualizarTodos').off('click').on('click',function(){
-    //Llama a la funcion para modificar las unidades y el nivel de peligro de un evento
-    ActualizarTodo($id_evento);
-    
-    //Llamar a la funcion para ocultar la pestaña de Unidades Disponibles
-    togglePestana();
+// $('.btnActualizarTodos').off('click').on('click',function(){
+//     //Llama a la funcion para modificar las unidades y el nivel de peligro de un evento
+//     console.log("click")
+//     ActualizarTodo($id_evento);
+// });
 
-    
-    
+$(document).on("click", ".btnActualizarTodos", function() {
+    console.log('Button actualizar clicked');
+    ActualizarTodo($id_evento);
 });
 
+
+
 function ActualizarTodo($id_evento){
+    console.log("actualizar todod clicked");
+    mostrarIdEvento($id_evento);
     //Variables
     var errorActualizar = 0;
     var unid_ids = []; 
@@ -414,10 +273,9 @@ function ActualizarTodo($id_evento){
         
     
     
+    
+//////////////////////////////////////////////// Abrir mapa////////////////////////////////////////////////////////////
 
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Abrir mapa
 let lat;
 let long;
 $(document).on('click', '.btnDireccionarMapa', function() {
@@ -428,23 +286,17 @@ $(document).on('click', '.btnDireccionarMapa', function() {
     // Obtener el valor del ID del evento desde la celda
     ev_id = $(this).closest('tr').find('#id_evento_celda').attr('value');
     // ev_id = 85;
-
     consultarEventoMostarMapa(ev_id);
-
 });
 
 function toggleMapa() {
-    
     $('#modal-mapa').toggle();
-
 }
 
 function consultarEventoMostarMapa(ev_id) {
 
     $.post("../../controller/evento.php?op=get_evento_id", {ev_id: ev_id}, function(data, status) {
-        
         var eventos = JSON.parse(data);
-
         var direccion = eventos[0]['ev_direc'];
         
         // Expresión regular para extraer las coordenadas
@@ -520,7 +372,6 @@ async function mostrarMapa(lat, long) {
     }
 }
 
-
 // Redireccionar a Google Maps para crear ruta
 $('.btnCrearRuta').off('click').on('click', function() {
     // Redirecciona a Google Maps
@@ -547,9 +398,48 @@ function initMap() {
 }
 
 
+///////////////////////////////////CERRAR EVENTO/////////////////////////////////////////////////////////
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Cerrar evento
+$(document).on("click", "#btnPanelCerrar", function(e) {
+    console.log('Button Cerrar clicked');
+    mostrarModal('#modalCerrar');
+
+    // Obtener el valor del ID del evento desde la celda
+    var id_evento = $(this).closest('tr').find('#id_evento_celda').attr('value');
+
+    // Llama a la función para consultar la categoría y otros detalles
+    consultarCategoriaCierre(id_evento);
+    mostrarCatIdEventoCierre(id_evento);
+});
+
+// Función para obtener el cat_id del evento y mostrarlo en el div cat_id
+function mostrarCatIdEventoCierre(ev_id) {
+    $('#ev_id_cierre').text(ev_id);
+}
+
+// Función para mostrar el cat_nom_cierre en el div y cargar los motivos de cierre
+function consultarCategoriaCierre(ev_id) {
+    $.post("../../controller/categoria.php?op=get_cat_nom_by_ev_id", { ev_id: ev_id }, function(data, status) {
+        try {
+            var jsonData = JSON.parse(data);
+            if (jsonData && jsonData.cat_nom) {
+                $('#cat_nom_cierre').text(jsonData.cat_nom); // Usar .text() para establecer el contenido del div
+                cargarMotivosCierre(jsonData.cat_nom); // Cargar los motivos de cierre según la categoría
+            } else {
+                console.log("No se encontró el cat_nom correspondiente para el evento con ID: " + ev_id);
+            }
+        } catch (error) {
+            console.log("Error al analizar la respuesta JSON:", error);
+        }
+    });
+}
+
+// Función para normalizar las claves de las categorías
+function normalizarCategoria(categoria) {
+    return categoria
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Eliminar acentos
+        .replace(/ /g, ''); // Eliminar espacios
+}
 
 // Mapeo de motivos de cierre según la categoría
 
@@ -590,54 +480,6 @@ function fillAndGroupByCategory() {
 // Llamar a la función para llenar y agrupar los datos por categoría
 fillAndGroupByCategory();
 
-// Activar el botón de Cerrar Evento
-$(document).on('click', '.btnPanelCerrar', function() {
-    // Llamar a la función para mostrar u ocultar la pestaña 
-    togglePestanaCerrar();
-    
-    // Obtener el valor del ID del evento desde la celda
-    var id_evento = $(this).closest('tr').find('#id_evento_celda').attr('value');
-
-    // Llama a la función para consultar la categoría y otros detalles
-    consultarCategoriaCierre(id_evento);
-    mostrarCatIdEventoCierre(id_evento);
-});
-
-// Función para mostrar u ocultar la pestaña Panel Cerrar
-function togglePestanaCerrar() { 
-    $('#selector-cerrar').toggle();
-}
-
-// Función para obtener el cat_id del evento y mostrarlo en el div cat_id
-function mostrarCatIdEventoCierre(ev_id) {
-    $('#ev_id_cierre').text(ev_id);
-}
-
-// Función para mostrar el cat_nom_cierre en el div y cargar los motivos de cierre
-function consultarCategoriaCierre(ev_id) {
-    $.post("../../controller/categoria.php?op=get_cat_nom_by_ev_id", { ev_id: ev_id }, function(data, status) {
-        try {
-            var jsonData = JSON.parse(data);
-            if (jsonData && jsonData.cat_nom) {
-                $('#cat_nom_cierre').text(jsonData.cat_nom); // Usar .text() para establecer el contenido del div
-                cargarMotivosCierre(jsonData.cat_nom); // Cargar los motivos de cierre según la categoría
-            } else {
-                console.log("No se encontró el cat_nom correspondiente para el evento con ID: " + ev_id);
-            }
-        } catch (error) {
-            console.log("Error al analizar la respuesta JSON:", error);
-        }
-    });
-}
-
-
-// Función para normalizar las claves de las categorías
-function normalizarCategoria(categoria) {
-    return categoria
-        .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Eliminar acentos
-        .replace(/ /g, ''); // Eliminar espacios
-}
-
 // Función para cargar los motivos de cierre en el select
 function cargarMotivosCierre(categoria) {
     var motivos = motivosCierre[categoria] || [];
@@ -667,16 +509,16 @@ document.getElementById('imagen').addEventListener('change', function() {
     }
 });
 
+
 //Btn Cerrar evento (Añade hora cierre)
+
 $('.btnCerrarEvento').off('click').on('click',function(){
 
-    console.log("boton cerrar click");
+    
     if(validarFormulario()){
          //Llama a la funcion cerrar evento Añade la hora final
     CerrarEvento();
-        
-    // Llamar a la función para mostrar u ocultar la pestaña
-    togglePestanaCerrar();   
+          
       // Mostrar mensaje de éxito
     swal({
         title: "Evento Cerrado",
@@ -686,6 +528,7 @@ $('.btnCerrarEvento').off('click').on('click',function(){
         closeOnClickOutside: false,
         closeOnEsc: false
     });
+    $('#modalCerrar').modal('hide');
     cargarTablaGeneral();
     }
 });
@@ -711,7 +554,6 @@ function mostrarMensajeError(mensaje) {
     swal( "Validación de formulario",mensaje, "warning" ) ;
 }
 
-    
 function CerrarEvento() {
     var ev_id = $('#ev_id_cierre').text();
     var detalle_cierre = $('#detalle_cierre').val();
@@ -769,9 +611,3 @@ function CerrarEvento() {
         }
     });
 }
-    
-// Cancelar actualización PAnel Cerrar
-$('.btnCancelarCerrar').off('click').on('click',function(){
-    // Llamar a la función para mostrar u ocultar la pestaña
-    togglePestanaCerrar();
-});
