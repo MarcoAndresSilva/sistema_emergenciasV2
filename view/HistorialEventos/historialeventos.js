@@ -10,7 +10,7 @@ $(document).ready(function() {
 
 function cargarTablaGeneral() {
     // Funcion para cargar los datos de las tablas
-    $.post("../../controller/eventoDos.php?op=tabla-historial-eventos", function(respuesta, status) {
+    $.post("../../controller/evento.php?op=tabla-historial-eventos", function(respuesta, status) {
         // Parsear la respuesta JSON
         var data = JSON.parse(respuesta);
         
