@@ -214,6 +214,13 @@ function toggleView() {
       markers[category].forEach(marker => marker.setMap(null));
     }
   });
+
+  const toggleMapViewButton = document.getElementById('toggleMapView');
+  if (currentView === 'heatmap') {
+    toggleMapViewButton.innerHTML = '<i class="fas fa-map-marker-alt"></i> Mapa de Dispersión';
+  } else {
+    toggleMapViewButton.innerHTML = '<i class="fa fa-bullseye"></i> Mapa de Calor';
+  }
 }
 
 function togglePOIs() {
