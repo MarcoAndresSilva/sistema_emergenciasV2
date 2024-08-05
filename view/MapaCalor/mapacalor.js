@@ -142,6 +142,7 @@ function filterCategory(category, button) {
       }
     }
   }
+  adjustMapBounds();
 }
 
 async function fetchAndGroupData(startDate = null, endDate = null) {
@@ -234,6 +235,7 @@ function toggleView() {
   } else {
     toggleMapViewButton.innerHTML = '<i class="fa fa-bullseye"></i> Mapa de Calor';
   }
+  adjustMapBounds();
 }
 
 function togglePOIs() {
@@ -330,7 +332,18 @@ function restoreActiveCategories() {
 }
 
 function adjustMapBounds() {
-  if (bounds && !bounds.isEmpty()) {
+  const activeMarkers = [];
+  activeCategories.forEach(category => {
+    if (markers[category]) {
+      activeMarkers.push(...markers[category]);
+    }
+  });
+
+  if (activeMarkers.length > 0) {
+    const newBounds = new google.maps.LatLngBounds();
+    activeMarkers.forEach(marker => newBounds.extend(marker.getPosition()));
+    map.fitBounds(newBounds);
+  } else if (bounds && !bounds.isEmpty()) {
     map.fitBounds(bounds);
   }
 }
