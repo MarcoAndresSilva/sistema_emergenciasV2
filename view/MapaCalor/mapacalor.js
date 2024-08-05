@@ -202,6 +202,8 @@ function createCategoryButtons(categories) {
     button.textContent = category.charAt(0).toUpperCase() + category.slice(1).replace(/([A-Z])/g, ' $1');
     button.onclick = () => filterCategory(category, button);
 
+    const icon = createCategoryIcon(categoryColors[category]);
+    button.prepend(icon);
     row.appendChild(button);
   });
 }
@@ -347,5 +349,11 @@ function adjustMapBounds() {
     map.fitBounds(bounds);
   }
 }
-
+function createCategoryIcon(color) {
+  const icon = document.createElement('i');
+  icon.className = 'fa fa-circle';
+  icon.style.color = color;
+  icon.style.marginRight = '5px';
+  return icon;
+}
 window.onload = initMap;
