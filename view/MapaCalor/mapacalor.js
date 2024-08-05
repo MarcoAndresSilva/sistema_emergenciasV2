@@ -77,7 +77,7 @@ function addMarkers(categories) {
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
           fillColor: categoryColors[category],
-          fillOpacity: 0.6,
+          fillOpacity: 0.8,
           strokeColor: categoryColors[category],
           strokeWeight: 1,
           scale: 7
