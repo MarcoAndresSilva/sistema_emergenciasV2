@@ -81,6 +81,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
   <script async defer
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQrYCFSz7Q-a-WONxo4yymu9SAPgmaA6c&libraries=visualization&callback=initMap">
   </script>
+	<?php require_once("../MainFooter/footer.php"); ?>
 </body>
 
 <?php
