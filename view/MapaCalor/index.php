@@ -39,7 +39,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
             </header>
 
 <button id="toggleMapView" class="btn btn-warning">
-  <i class="fas fa-map-marker-alt"></i> Cambiar Vista
+  <i class="fas fa-map-marker-alt"></i> Mapa De Dispersión
 </button>
 <button id="togglePOIs" class="btn btn-warning btn-inactive">
   <i class="fas fa-eye btn-icon"></i> Mostrar Puntos de Interés
