@@ -14,10 +14,10 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 <title>Sistema Emergencia</title>
 <script src="../../public/js/sweetaler2v11-11-0.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
-<script defer src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
-<script defer src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.js"></script>
-<script defer src="https://cdn.datatables.net/responsive/3.0.2/js/dataTables.responsive.min.js"></script>
-<script defer src="https://cdn.datatables.net/responsive/3.0.2/js/responsive.dataTables.min.js"></script>
+<script defer src="https://cdn.datatables.net/1.13.6/js/dataTables.js"></script>
+<script defer src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.js"></script>
+<script defer src="https://cdn.datatables.net/responsive/2.0.3/js/dataTables.responsive.min.js"></script>
+<script defer src="https://cdn.datatables.net/responsive/2.0.3/js/responsive.dataTables.min.js"></script>
 <script defer src="./GestionPerfile.js"></script>
 </head>
 
