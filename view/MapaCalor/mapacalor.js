@@ -139,7 +139,7 @@ function filterCategory(category, button) {
   }
 }
 
-async function fetchAndGroupData() {
+async function fetchAndGroupData(startDate = null, endDate = null) {
   const url = '../../controller/evento.php?op=get_evento_lat_lon';
 
   try {
@@ -150,7 +150,15 @@ async function fetchAndGroupData() {
 
     const data = await response.json();
 
-    const groupedData = data.reduce((acc, item) => {
+    const filteredData = data.filter(item => {
+      const itemDate = new Date(item.fecha_inicio);
+      const start = startDate ? new Date(startDate) : null;
+      const end = endDate ? new Date(endDate) : null;
+
+      return (!start || itemDate >= start) && (!end || itemDate <= end);
+    });
+
+    const groupedData = filteredData.reduce((acc, item) => {
       const { categoria } = item;
       if (!acc[categoria]) {
         acc[categoria] = [];
@@ -282,5 +290,21 @@ function generateColorFromCategory(category) {
   }
   return color;
 }
+function applyDateFilter() {
+  const startDate = document.getElementById('startDate').value;
+  const endDate = document.getElementById('endDate').value;
 
+  fetchAndGroupData(startDate, endDate).then(groupedData => {
+    // Limpiar los datos actuales del mapa
+    Object.keys(heatmaps).forEach(category => heatmaps[category].setMap(null));
+    Object.keys(markers).forEach(category => markers[category].forEach(marker => marker.setMap(null)));
+
+    // Volver a añadir las capas de heatmap y los marcadores con los nuevos datos
+    addHeatmapLayers(groupedData);
+    addMarkers(groupedData);
+    createCategoryButtons(groupedData);
+  });
+}
+
+document.getElementById('applyDateFilter').addEventListener('click', applyDateFilter);
 window.onload = initMap;

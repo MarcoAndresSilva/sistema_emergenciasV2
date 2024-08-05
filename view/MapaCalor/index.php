@@ -44,6 +44,13 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 <button id="togglePOIs" class="btn btn-warning btn-inactive">
   <i class="fas fa-eye btn-icon"></i> Mostrar Puntos de Interés
 </button>
+<div id="date-filters" class="mb-2 row">
+  <label for="startDate">Fecha de Inicio:</label>
+  <input type="date" class="mb-2 form-control" id="startDate" name="startDate">
+  <label for="endDate">Fecha de Cierre:</label>
+  <input type="date" class="mb-2 form-control" id="endDate" name="endDate">
+  <button id="applyDateFilter" class="btn btn-warning ">Aplicar Filtro</button>
+</div>
 <div id="controls" class="row" role="group" aria-label="Controles de mapa">
   <!-- Aquí se insertarán los botones de categorías -->
 </div>
