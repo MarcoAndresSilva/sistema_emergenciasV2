@@ -34,6 +34,7 @@ function initMap() {
 
   document.getElementById('toggleMapView').addEventListener('click', toggleView);
   document.getElementById('togglePOIs').addEventListener('click', togglePOIs);
+  document.getElementById('applyDateFilter').addEventListener('click', applyDateFilter);
 }
 
 function addHeatmapLayers(categories) {
@@ -310,5 +311,4 @@ function clearMapData() {
   });
 }
 
-document.getElementById('applyDateFilter').addEventListener('click', applyDateFilter);
 window.onload = initMap;
