@@ -303,11 +303,24 @@ function applyDateFilter() {
     addHeatmapLayers(groupedData);
     addMarkers(groupedData);
     createCategoryButtons(groupedData);
+
+    // Restaurar el estado de las categorías activas
+    restoreActiveCategories();
+  });
+}
+
 function clearMapData() {
   Object.keys(heatmaps).forEach(category => heatmaps[category].setMap(null));
   Object.keys(markers).forEach(category => markers[category].forEach(marker => marker.setMap(null)));
 }
 
+function restoreActiveCategories() {
+  activeCategories.forEach(category => {
+    if (currentView === 'heatmap' && heatmaps[category]) {
+      heatmaps[category].setMap(map);
+    } else if (currentView === 'markers' && markers[category]) {
+      markers[category].forEach(marker => marker.setMap(map));
+    }
   });
 }
 
