@@ -4,6 +4,7 @@ var categoryColors = {}; // Almacenará los colores asignados a cada categoría
 var showPOIs = false; // Estado de visibilidad de los puntos de interés
 const disabledCategories = ['last_tiendas', 'otros']; // Lista de categorías a desactivar
 const activeCategories = new Set(); // Almacena las categorías activas
+var bounds; // Almacena los límites de los puntos en el mapa
 
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
@@ -30,6 +31,7 @@ function initMap() {
     addHeatmapLayers(groupedData);
     addMarkers(groupedData);
     createCategoryButtons(groupedData);
+    adjustMapBounds();
   });
 
   document.getElementById('toggleMapView').addEventListener('click', toggleView);
@@ -62,6 +64,7 @@ function addHeatmapLayers(categories) {
 }
 
 function addMarkers(categories) {
+  bounds = new google.maps.LatLngBounds();
   Object.keys(categories).forEach(category => {
     if (disabledCategories.includes(category)) {
       return;
@@ -86,6 +89,7 @@ function addMarkers(categories) {
         showInfoWindow(marker.getPosition(), category, item.detalles, item.img, item.unidad, item.fecha_inicio, item.fecha_cierre);
       });
 
+      bounds.extend(marker.getPosition());
       return marker;
     });
   });
@@ -306,6 +310,7 @@ function applyDateFilter() {
 
     // Restaurar el estado de las categorías activas
     restoreActiveCategories();
+    adjustMapBounds(); // Ajustar los límites del mapa
   });
 }
 
@@ -322,6 +327,12 @@ function restoreActiveCategories() {
       markers[category].forEach(marker => marker.setMap(map));
     }
   });
+}
+
+function adjustMapBounds() {
+  if (bounds && !bounds.isEmpty()) {
+    map.fitBounds(bounds);
+  }
 }
 
 window.onload = initMap;
