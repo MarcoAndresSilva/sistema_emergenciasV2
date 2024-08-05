@@ -296,13 +296,17 @@ function applyDateFilter() {
 
   fetchAndGroupData(startDate, endDate).then(groupedData => {
     // Limpiar los datos actuales del mapa
-    Object.keys(heatmaps).forEach(category => heatmaps[category].setMap(null));
-    Object.keys(markers).forEach(category => markers[category].forEach(marker => marker.setMap(null)));
+    clearMapData();
 
     // Volver a añadir las capas de heatmap y los marcadores con los nuevos datos
     addHeatmapLayers(groupedData);
     addMarkers(groupedData);
     createCategoryButtons(groupedData);
+function clearMapData() {
+  Object.keys(heatmaps).forEach(category => heatmaps[category].setMap(null));
+  Object.keys(markers).forEach(category => markers[category].forEach(marker => marker.setMap(null)));
+}
+
   });
 }
 
