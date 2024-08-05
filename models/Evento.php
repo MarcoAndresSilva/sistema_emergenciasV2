@@ -191,7 +191,7 @@ class Evento extends Conectar {
     }
         
  
-public function add_evento($usu_id, $ev_desc, $ev_est, $ev_inicio, $ev_direc, $ev_latitud, $ev_longitud, $cat_id, $ev_niv, $ev_img, $ev_telefono) {
+public function add_evento($usu_id, $ev_desc, $ev_est, $ev_inicio, $ev_direc, $ev_latitud, $ev_longitud, $cat_id, $ev_niv, $ev_img) {
     if (empty($usu_id) || empty($ev_desc) || empty($ev_est) || empty($ev_inicio) || empty($ev_direc) || empty($cat_id)) {
         return [
             'status' => 'warning',
@@ -203,8 +203,8 @@ public function add_evento($usu_id, $ev_desc, $ev_est, $ev_inicio, $ev_direc, $e
         $conectar = parent::conexion();
         parent::set_names();
   
-        $sql = "INSERT INTO tm_evento (usu_id, ev_desc, ev_est, ev_inicio, ev_final, ev_direc, ev_latitud, ev_longitud, cat_id, ev_niv, ev_img, ev_telefono) 
-        VALUES (:usu_id, :ev_desc, :ev_est, :ev_inicio, NULL, :ev_direc, :ev_latitud, :ev_longitud, :cat_id, :ev_niv, :ev_img, :ev_telefono)";
+        $sql = "INSERT INTO tm_evento (usu_id, ev_desc, ev_est, ev_inicio, ev_final, ev_direc, ev_latitud, ev_longitud, cat_id, ev_niv, ev_img) 
+        VALUES (:usu_id, :ev_desc, :ev_est, :ev_inicio, NULL, :ev_direc, :ev_latitud, :ev_longitud, :cat_id, :ev_niv, :ev_img)";
   
         $consulta = $conectar->prepare($sql);
   
@@ -218,8 +218,7 @@ public function add_evento($usu_id, $ev_desc, $ev_est, $ev_inicio, $ev_direc, $e
         $consulta->bindParam(':cat_id', $cat_id);
         $consulta->bindParam(':ev_niv', $ev_niv);
         $consulta->bindParam(':ev_img', $ev_img);
-        $consulta->bindParam(':ev_telefono', $ev_telefono);
-  
+
         try {
             $consulta->execute();
             return [
