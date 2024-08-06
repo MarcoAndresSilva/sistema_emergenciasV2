@@ -57,35 +57,26 @@ if (isset($_POST["enviar"]) and $_POST["enviar"] == "si") {
                         <header id="lblTitulo" class="sign-title">Usuario Reportador</header>
                         <?php
                         if (isset($_GET["m"])) {
-                            switch ($_GET["m"]) {
-                                case "1":
-                                    ?>
-                                    <div class="alert alert-danger role="alert">
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                        <div class="d-flex align-items-center justify-content-start">
-                                            <i class="icon ion-ios-checkmark alert-icon tx-32 mg-t-5 mg-cs-t-0"></i>
-                                            <span>El Usuario y/o Contraseña son incorrectos</span>
-                                        </div>
+                            $messages = [
+                                "datoincorecto" => "El Usuario y/o Contraseña son incorrectos",
+                                "camposvacios" => "Los campos están vacíos"
+                            ];
+
+                            $messageKey = $_GET["m"];
+                            $alertMessage = isset($messages[$messageKey]) ? $messages[$messageKey] : null;
+
+                            if ($alertMessage) {
+                                ?>
+                                <div class="alert alert-danger" role="alert">
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <div class="d-flex align-items-center justify-content-start">
+                                        <i class="icon ion-ios-checkmark alert-icon tx-32 mg-t-5 mg-cs-t-0"></i>
+                                        <span><?php echo $alertMessage; ?></span>
+                                    </div>
                                     </div>
                                     <?php
-                                    break;
-                                case "2";
-                                    ?>
-                                    <div>
-                                        <div class="alert alert-danger role="alert">
-                                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                                <span aria-hidden="true">&times;</span>
-                                            </button>
-                                            <div class="d-flex align-items-center justify-content-start">
-                                                <i class="icon ion-ios-checkmark alert-icon tx-32 mg-t-5 mg-cs-t-0"></i>
-                                                <span>Los campos estas vacios</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <?php
-                                    break;
                             }
                         }
                         ?>

@@ -4,54 +4,62 @@ require_once 'SeguridadPassword.php';
 class Usuario extends Conectar {
 
 public function login() {
-    if (isset($_POST["enviar"])) {
-        $name = $_POST["usu_name"];
-        $pass = $_POST["usu_pass"];
-        $tipo = $_POST["usu_tipo"];
-
-        if (empty($name) and empty($pass) and empty($usu_tipo)) {
-            header("Location:".Conectar::ruta()."index.php?m=2");
-            exit();
-
-        }
-
-        $hashedPass = md5($pass);
-        $sql = "SELECT * FROM tm_usuario WHERE usu_name = :usu_name AND usu_pass = :usu_pass AND usu_tipo = :usu_tipo AND estado = 1";
-        $params = [
-            ':usu_name' => $name,
-            ':usu_pass' => $hashedPass,
-            ':usu_tipo'=> $tipo
-        ];
-
-        $resultado = $this->ejecutarConsulta($sql, $params, false); // No fetchAll, solo fetch
-
-        if ($resultado) {
-            $_SESSION["usu_id"] = $resultado["usu_id"];
-            $_SESSION["usu_nom"] = $resultado["usu_nom"];
-            $_SESSION["usu_ape"] = $resultado["usu_ape"];
-            $_SESSION["usu_tipo"] = $resultado["usu_tipo"];
-            $_SESSION["usu_correo"] = $resultado["usu_correo"];
-            $_SESSION["usu_telefono"] = $resultado["usu_telefono"];
-            $_SESSION["usu_unidad"] = $resultado["usu_unidad"];
-
-            $log = new RegistroLog();
-            $ipCliente = $this->GetIpCliente();
-            $mensaje = "El usuario {$_SESSION['usu_nom']} {$_SESSION['usu_ape']} inició sesión desde la IP: $ipCliente";
-            $log->add_log_registro($_SESSION["usu_id"], 'Inicio sesion', $mensaje);
-
-            header("Location:".Conectar::ruta()."view/Home/");
-            exit();
-        } else {
-            $log = new RegistroLog();
-            $ipCliente = $this->GetIpCliente();
-            $mensaje = "El usuario $name intentó iniciar sesión, IP: $ipCliente";
-            $log->add_log_registro(0, 'Inicio sesion', $mensaje);
-
-            header("Location:".Conectar::ruta()."index.php?m=1");
-            exit();
-        }
+    if (!isset($_POST["enviar"])){
+        return;
     }
+
+    $name = isset($_POST["usu_name"]) ? $_POST["usu_name"] : null;
+    $pass = isset($_POST["usu_pass"]) ? $_POST["usu_pass"] : null;
+    $tipo = isset($_POST["usu_tipo"]) ? $_POST["usu_tipo"] : null;
+
+    $log = new RegistroLog();
+    $ipCliente = $this->GetIpCliente();
+
+    if (is_null($name) || is_null($pass) || is_null($tipo)) {
+        header("Location:" . Conectar::ruta() . "index.php?m=camposvacios");
+        exit();
+    }
+
+    $hashedPass = md5($pass);
+    $info_usuario = $this->get_login_usuario($name, $hashedPass, $tipo);
+
+    if (!$info_usuario) {
+        $mensaje = "El usuario $name intentó iniciar sesión, IP: $ipCliente";
+        $log->add_log_registro(0, 'Inicio sesion', $mensaje);
+
+        header("Location:" . Conectar::ruta() . "index.php?m=datoincorecto");
+        exit();
+    }
+
+    $this->crearSesionUsuario($info_usuario);
+
+    $mensaje = "El usuario {$_SESSION['usu_nom']} {$_SESSION['usu_ape']} inició sesión desde la IP: $ipCliente";
+    $log->add_log_registro($_SESSION["usu_id"], 'Inicio sesion', $mensaje);
+
+    header("Location:" . Conectar::ruta() . "view/Home/");
+    exit();
 }
+
+private function crearSesionUsuario($usuario) {
+    $_SESSION["usu_id"] = $usuario["usu_id"];
+    $_SESSION["usu_nom"] = $usuario["usu_nom"];
+    $_SESSION["usu_ape"] = $usuario["usu_ape"];
+    $_SESSION["usu_tipo"] = $usuario["usu_tipo"];
+    $_SESSION["usu_correo"] = $usuario["usu_correo"];
+    $_SESSION["usu_telefono"] = $usuario["usu_telefono"];
+    $_SESSION["usu_unidad"] = $usuario["usu_unidad"];
+}
+
+private function get_login_usuario($name, $hashedPass, $tipo) {
+    $sql = "SELECT * FROM tm_usuario WHERE usu_name = :usu_name AND usu_pass = :usu_pass AND usu_tipo = :usu_tipo AND estado = 1";
+    $params = [
+        ':usu_name' => $name,
+        ':usu_pass' => $hashedPass,
+        ':usu_tipo' => $tipo
+    ];
+    return $this->ejecutarConsulta($sql, $params, false);
+}
+
 private function GetIpCliente() {
 /**
 * Obtener la dirección IP del cliente.

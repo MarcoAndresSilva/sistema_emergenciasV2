@@ -4,6 +4,7 @@ var categoryColors = {}; // Almacenará los colores asignados a cada categoría
 var showPOIs = false; // Estado de visibilidad de los puntos de interés
 const disabledCategories = ['last_tiendas', 'otros']; // Lista de categorías a desactivar
 const activeCategories = new Set(); // Almacena las categorías activas
+var bounds; // Almacena los límites de los puntos en el mapa
 
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
@@ -30,10 +31,12 @@ function initMap() {
     addHeatmapLayers(groupedData);
     addMarkers(groupedData);
     createCategoryButtons(groupedData);
+    adjustMapBounds();
   });
 
   document.getElementById('toggleMapView').addEventListener('click', toggleView);
   document.getElementById('togglePOIs').addEventListener('click', togglePOIs);
+  document.getElementById('applyDateFilter').addEventListener('click', applyDateFilter);
 }
 
 function addHeatmapLayers(categories) {
@@ -61,6 +64,7 @@ function addHeatmapLayers(categories) {
 }
 
 function addMarkers(categories) {
+  bounds = new google.maps.LatLngBounds();
   Object.keys(categories).forEach(category => {
     if (disabledCategories.includes(category)) {
       return;
@@ -73,7 +77,7 @@ function addMarkers(categories) {
         icon: {
           path: google.maps.SymbolPath.CIRCLE,
           fillColor: categoryColors[category],
-          fillOpacity: 0.6,
+          fillOpacity: 0.8,
           strokeColor: categoryColors[category],
           strokeWeight: 1,
           scale: 7
@@ -82,19 +86,22 @@ function addMarkers(categories) {
       });
 
       marker.addListener('click', function() {
-        showInfoWindow(marker.getPosition(), category, item.detalles, item.img);
+        showInfoWindow(marker.getPosition(), category, item.detalles, item.img, item.unidad, item.fecha_inicio, item.fecha_cierre);
       });
 
+      bounds.extend(marker.getPosition());
       return marker;
     });
   });
 }
 
-function showInfoWindow(latLng, category, details = 'Sin detalles', img = '') {
-  let content = `<div><strong>Categoria:</strong> ${category}<br><strong>Detalles:</strong> ${details}</div>`;
+function showInfoWindow(latLng, category, details = 'Sin detalles', img = '', unidad, fecha_inicio, fecha_cierre) {
+  let content = `<div><strong>Unidad:</strong> ${unidad}<br><strong>Categoria:</strong> ${category}<br><strong>Detalles:</strong> ${details}</div>`;
   if (img) {
     content += `<div><img src="../../public/${img}" alt="Imagen" style="max-width: 200px; max-height: 150px;"></div>`;
   }
+  content += `<br> <strong>Fecha Creacion:</strong> ${fecha_inicio}`
+  content += `<br> <strong>Fecha Cierre:</strong> ${fecha_cierre}`
 
   infoWindow.setContent(content);
   infoWindow.setPosition(latLng);
@@ -135,9 +142,10 @@ function filterCategory(category, button) {
       }
     }
   }
+  adjustMapBounds();
 }
 
-async function fetchAndGroupData() {
+async function fetchAndGroupData(startDate = null, endDate = null) {
   const url = '../../controller/evento.php?op=get_evento_lat_lon';
 
   try {
@@ -148,7 +156,15 @@ async function fetchAndGroupData() {
 
     const data = await response.json();
 
-    const groupedData = data.reduce((acc, item) => {
+    const filteredData = data.filter(item => {
+      const itemDate = new Date(item.fecha_inicio);
+      const start = startDate ? new Date(startDate) : null;
+      const end = endDate ? new Date(endDate) : null;
+
+      return (!start || itemDate >= start) && (!end || itemDate <= end);
+    });
+
+    const groupedData = filteredData.reduce((acc, item) => {
       const { categoria } = item;
       if (!acc[categoria]) {
         acc[categoria] = [];
@@ -169,16 +185,26 @@ function createCategoryButtons(categories) {
   const controlsDiv = document.getElementById('controls');
   controlsDiv.innerHTML = '';
 
-  Object.keys(categories).forEach(category => {
+  let row;
+  Object.keys(categories).forEach((category, index) => {
     if (disabledCategories.includes(category)) {
       return;
+    }
+
+    if (index % 3 === 0) {
+      row = document.createElement('div');
+      row.className = 'btn-group mb-2';
+      controlsDiv.appendChild(row);
     }
 
     const button = document.createElement('button');
     button.className = 'btn btn-outline-primary';
     button.textContent = category.charAt(0).toUpperCase() + category.slice(1).replace(/([A-Z])/g, ' $1');
     button.onclick = () => filterCategory(category, button);
-    controlsDiv.appendChild(button);
+
+    const icon = createCategoryIcon(categoryColors[category]);
+    button.prepend(icon);
+    row.appendChild(button);
   });
 }
 
@@ -204,6 +230,14 @@ function toggleView() {
       markers[category].forEach(marker => marker.setMap(null));
     }
   });
+
+  const toggleMapViewButton = document.getElementById('toggleMapView');
+  if (currentView === 'heatmap') {
+    toggleMapViewButton.innerHTML = '<i class="fas fa-map-marker-alt"></i> Mapa de Dispersión';
+  } else {
+    toggleMapViewButton.innerHTML = '<i class="fa fa-bullseye"></i> Mapa de Calor';
+  }
+  adjustMapBounds();
 }
 
 function togglePOIs() {
@@ -265,5 +299,61 @@ function generateColorFromCategory(category) {
   }
   return color;
 }
+function applyDateFilter() {
+  const startDate = document.getElementById('startDate').value;
+  const endDate = document.getElementById('endDate').value;
 
+  fetchAndGroupData(startDate, endDate).then(groupedData => {
+    // Limpiar los datos actuales del mapa
+    clearMapData();
+
+    // Volver a añadir las capas de heatmap y los marcadores con los nuevos datos
+    addHeatmapLayers(groupedData);
+    addMarkers(groupedData);
+    createCategoryButtons(groupedData);
+
+    // Restaurar el estado de las categorías activas
+    restoreActiveCategories();
+    adjustMapBounds(); // Ajustar los límites del mapa
+  });
+}
+
+function clearMapData() {
+  Object.keys(heatmaps).forEach(category => heatmaps[category].setMap(null));
+  Object.keys(markers).forEach(category => markers[category].forEach(marker => marker.setMap(null)));
+}
+
+function restoreActiveCategories() {
+  activeCategories.forEach(category => {
+    if (currentView === 'heatmap' && heatmaps[category]) {
+      heatmaps[category].setMap(map);
+    } else if (currentView === 'markers' && markers[category]) {
+      markers[category].forEach(marker => marker.setMap(map));
+    }
+  });
+}
+
+function adjustMapBounds() {
+  const activeMarkers = [];
+  activeCategories.forEach(category => {
+    if (markers[category]) {
+      activeMarkers.push(...markers[category]);
+    }
+  });
+
+  if (activeMarkers.length > 0) {
+    const newBounds = new google.maps.LatLngBounds();
+    activeMarkers.forEach(marker => newBounds.extend(marker.getPosition()));
+    map.fitBounds(newBounds);
+  } else if (bounds && !bounds.isEmpty()) {
+    map.fitBounds(bounds);
+  }
+}
+function createCategoryIcon(color) {
+  const icon = document.createElement('i');
+  icon.className = 'fa fa-circle';
+  icon.style.color = color;
+  icon.style.marginRight = '5px';
+  return icon;
+}
 window.onload = initMap;

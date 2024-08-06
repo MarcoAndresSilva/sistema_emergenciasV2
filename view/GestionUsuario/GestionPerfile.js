@@ -142,37 +142,48 @@ function renderTable(users) {
     userInfo.appendChild(filterContainer);
 
     const table = createTable(users);
-    userInfo.appendChild(table);
+    const tableContainer = document.createElement('div');
+    tableContainer.className = 'table-container';
+    tableContainer.appendChild(table);
+    userInfo.appendChild(tableContainer);
 
-    // Inicializar DataTable
-    const dataTable = $('table').DataTable({
-        responsive: true
-    });
+    initializeDataTable();
+}
 
-    // Delegación de eventos para manejar los clics en los botones
-    userInfo.addEventListener('click', function(event) {
-        const target = event.target.closest('button');
-    if (target) {
-        if (target.matches('button.btn-primary')) {
-            const userId = target.dataset.userId;
-            editUser(userId);
-        } else if (target.matches('button.btn-info')) {
-            const userId = target.dataset.userId;
-            ChangedPasswordUser(userId);
-        } else if (target.matches('button.btn-sm')) {
-            const userId = target.dataset.userId;
-            const currentStatus = target.dataset.status === 'active' ? 1 : 0;
-            toggleUserStatus(userId, currentStatus);
+function initializeDataTable() {
+    setTimeout(() => {
+        if ($.fn.dataTable.isDataTable('table')) {
+            $('table').DataTable().destroy();
         }
-    }
-    });
 
-    // Filtro por Estado
-    const filterEstado = document.getElementById('filterEstado');
-    filterEstado.addEventListener('change', function () {
-        const val = this.value;
-        dataTable.column(6).search(val ? `^${val}$` : '', true, false).draw();
-    });
+        const dataTable = $('table').DataTable({
+      responsive: true
+        });
+
+        const userInfo = document.getElementById('userInfo');
+        userInfo.addEventListener('click', function(event) {
+            const target = event.target.closest('button');
+            if (target) {
+                if (target.matches('button.btn-primary')) {
+                    const userId = target.dataset.userId;
+                    editUser(userId);
+                } else if (target.matches('button.btn-info')) {
+                    const userId = target.dataset.userId;
+                    ChangedPasswordUser(userId);
+                } else if (target.matches('button.btn-sm')) {
+                    const userId = target.dataset.userId;
+                    const currentStatus = target.dataset.status === 'active' ? 1 : 0;
+                    toggleUserStatus(userId, currentStatus);
+                }
+            }
+        });
+
+        const filterEstado = document.getElementById('filterEstado');
+        filterEstado.addEventListener('change', function () {
+            const val = this.value;
+            dataTable.column(6).search(val ? `^${val}$` : '', true, false).draw();
+        });
+    }, 0);
 }
 
 function createTable(users) {

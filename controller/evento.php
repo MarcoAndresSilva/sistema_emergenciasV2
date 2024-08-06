@@ -47,7 +47,6 @@ if (isset($_GET["op"])) {
 
         case "add_evento":
             $usu_id = $_SESSION["usu_id"]; 
-            $ev_telefono = $_SESSION['usu_telefono'];
             $ev_desc = $_POST['ev_desc'];
             $ev_est = $_POST['ev_est'];
             $ev_inicio = $_POST['ev_inicio'];
@@ -81,8 +80,7 @@ if (isset($_GET["op"])) {
                 $ev_longitud,
                 $cat_id,
                 $ev_niv,
-                $ev_img,
-                $ev_telefono
+                $ev_img
             );
             header('Content-Type: application/json');
             echo json_encode($datos);
