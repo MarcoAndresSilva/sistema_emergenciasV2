@@ -1264,6 +1264,31 @@ INSERT INTO `tm_motivo_cate` (`cat_id`, `mov_id`, `activo`) VALUES
 
 
 --
+-- estructura de tabla para tm_cierre_motivo
+--
+CREATE TABLE tm_emergencia_detalle(
+	`emergencia_id` INT NOT NUll auto_increment,
+  `ev_id` INT NOT NULL,
+  `usu_id` INT NOT NULL,
+  `ev_desc` VARCHAR(500) NOT NULL, 
+  `ev_inicio` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `ev_est` INT NOT NULL,
+  PRIMARY KEY (`emergencia_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Insercion de datos para tm_cierre_motivo
+--
+
+INSERT INTO `tm_emergencia_detalle`(`emergencia_id`,`ev_id`,`usu_id`,`ev_desc`,`ev_est`) VALUES
+(1,161,1,'Requiero Soporte',1),
+(2,161,2,'Como puedo ayudarte',1),
+(3,161,1,'Requiero su ayuda para cambiar la SSD de mi laptop',1),
+(4,161,2,'No hay problema indicame numero de serie',1),
+(5,161,1,'SN:816511616XX',1);
+
+
+--
 -- Indices de la tabla `tm_camb_asig`
 --
 ALTER TABLE `tm_camb_asig`
