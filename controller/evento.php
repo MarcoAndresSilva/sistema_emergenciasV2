@@ -354,7 +354,7 @@ if (isset($_GET["op"])) {
                 //Datos para Tabla comun variable = $html
                 foreach ($datos as $row) {
                     //Variable temporal para recorrido y almacenamiento
-                    $recorrido = "";
+                    $recorrido = "";    
                     $recorrido .= "<tr>";
 
                     $recorrido .= "<td id='id_evento_celda' value='" . $row['ev_id'] . "'>" . $row['ev_id'] . "</td>";
