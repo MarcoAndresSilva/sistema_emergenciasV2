@@ -52,6 +52,17 @@ public function login() {
         }
     }
 }
+
+private function crearSesionUsuario($usuario) {
+    $_SESSION["usu_id"] = $usuario["usu_id"];
+    $_SESSION["usu_nom"] = $usuario["usu_nom"];
+    $_SESSION["usu_ape"] = $usuario["usu_ape"];
+    $_SESSION["usu_tipo"] = $usuario["usu_tipo"];
+    $_SESSION["usu_correo"] = $usuario["usu_correo"];
+    $_SESSION["usu_telefono"] = $usuario["usu_telefono"];
+    $_SESSION["usu_unidad"] = $usuario["usu_unidad"];
+}
+
 private function GetIpCliente() {
 /**
 * Obtener la dirección IP del cliente.
