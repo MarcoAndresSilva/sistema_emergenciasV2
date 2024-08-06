@@ -63,6 +63,16 @@ private function crearSesionUsuario($usuario) {
     $_SESSION["usu_unidad"] = $usuario["usu_unidad"];
 }
 
+private function get_login_usuario($name, $hashedPass, $tipo) {
+    $sql = "SELECT * FROM tm_usuario WHERE usu_name = :usu_name AND usu_pass = :usu_pass AND usu_tipo = :usu_tipo AND estado = 1";
+    $params = [
+        ':usu_name' => $name,
+        ':usu_pass' => $hashedPass,
+        ':usu_tipo' => $tipo
+    ];
+    return $this->ejecutarConsulta($sql, $params, false);
+}
+
 private function GetIpCliente() {
 /**
 * Obtener la dirección IP del cliente.
