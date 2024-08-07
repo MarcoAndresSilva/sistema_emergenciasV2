@@ -1,6 +1,5 @@
 <?php
 require_once("../../config/conexion.php");
-require_once("../MainJs/js.php");
 if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_tipo"] == 2)) {
 	
 	?>
@@ -81,6 +80,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 
 <?php
 
+require_once("../MainJs/js.php");
 }else{
 	header("location:".Conectar::ruta()."index.php");
 }
