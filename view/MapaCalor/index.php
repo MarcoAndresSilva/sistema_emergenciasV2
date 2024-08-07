@@ -11,6 +11,8 @@ Permisos::redirigirSiNoAutorizado();
 <title>Sistema Emergencia</title>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQrYCFSz7Q-a-WONxo4yymu9SAPgmaA6c&libraries=visualization"></script>
   <link rel="stylesheet" href="./stylemapacalor.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body class="with-side-menu">
@@ -43,13 +45,7 @@ Permisos::redirigirSiNoAutorizado();
 <button id="togglePOIs" class="btn btn-warning btn-inactive">
   <i class="fas fa-eye btn-icon"></i> Mostrar Puntos de Interés
 </button>
-<div id="date-filters" class="mb-2 row">
-  <label for="startDate">Fecha de Inicio:</label>
-  <input type="date" class="mb-2 form-control" id="startDate" name="startDate">
-  <label for="endDate">Fecha de Cierre:</label>
-  <input type="date" class="mb-2 form-control" id="endDate" name="endDate">
-  <button id="applyDateFilter" class="btn btn-warning ">Aplicar Filtro</button>
-</div>
+<button id="dateFilterButton" class="btn btn-warning"><i class="fa fa-calendar btn-icon" aria-hidden="true"></i> Filtrar por Fecha</button>
 <div id="controls" class="row" role="group" aria-label="Controles de mapa">
   <!-- Aquí se insertarán los botones de categorías -->
 </div>
