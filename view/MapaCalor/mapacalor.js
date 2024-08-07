@@ -36,7 +36,30 @@ function initMap() {
 
   document.getElementById('toggleMapView').addEventListener('click', toggleView);
   document.getElementById('togglePOIs').addEventListener('click', togglePOIs);
-  document.getElementById('applyDateFilter').addEventListener('click', applyDateFilter);
+  document.getElementById('dateFilterButton').addEventListener('click', showDateFilterDialog);
+}
+
+function showDateFilterDialog() {
+  Swal.fire({
+    title: 'Filtrar por Fecha',
+    html:
+      '<label for="swal-startDate">Fecha de Inicio:</label>' +
+      '<input type="date" id="swal-startDate" class="swal2-input">' +
+      '<label for="swal-endDate">Fecha de Cierre:</label>' +
+      '<input type="date" id="swal-endDate" class="swal2-input">',
+    showCancelButton: true,
+    confirmButtonText: 'Aplicar Filtro',
+    preConfirm: () => {
+      const startDate = Swal.getPopup().querySelector('#swal-startDate').value;
+      const endDate = Swal.getPopup().querySelector('#swal-endDate').value;
+      return { startDate, endDate };
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const { startDate, endDate } = result.value;
+      applyDateFilter(startDate, endDate);
+    }
+  });
 }
 
 function addHeatmapLayers(categories) {
@@ -299,22 +322,15 @@ function generateColorFromCategory(category) {
   }
   return color;
 }
-function applyDateFilter() {
-  const startDate = document.getElementById('startDate').value;
-  const endDate = document.getElementById('endDate').value;
 
+function applyDateFilter(startDate, endDate) {
   fetchAndGroupData(startDate, endDate).then(groupedData => {
-    // Limpiar los datos actuales del mapa
     clearMapData();
-
-    // Volver a añadir las capas de heatmap y los marcadores con los nuevos datos
     addHeatmapLayers(groupedData);
     addMarkers(groupedData);
     createCategoryButtons(groupedData);
-
-    // Restaurar el estado de las categorías activas
     restoreActiveCategories();
-    adjustMapBounds(); // Ajustar los límites del mapa
+    adjustMapBounds();
   });
 }
 
