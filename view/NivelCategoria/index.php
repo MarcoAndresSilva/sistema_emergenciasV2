@@ -1,6 +1,5 @@
 <?php
 require_once("../../config/conexion.php");
-require_once("../MainJs/js.php");
 if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_tipo"] == 2)) {
 	
 	?>
