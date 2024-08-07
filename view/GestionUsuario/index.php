@@ -56,7 +56,7 @@ Permisos::redirigirSiNoAutorizado();
 	        </div><!--.container-fluid-->
 	    </div><!--.page-content-->
 		<?php require_once("../MainFooter/footer.php"); ?>
-		<?php require_once("../MainJS/js.php"); ?>
+		<?php require_once("../MainJs/js.php"); ?>
 
 		<script>
 			document.getElementById('show-hide-sidebar-toggle').addEventListener('click', function(e) {
