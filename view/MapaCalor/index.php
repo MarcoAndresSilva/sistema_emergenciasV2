@@ -80,6 +80,7 @@ Permisos::redirigirSiNoAutorizado();
   <script async defer
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQrYCFSz7Q-a-WONxo4yymu9SAPgmaA6c&libraries=visualization&callback=initMap">
   </script>
+    <?php require_once("../MainJs/js.php"); ?>
     <?php require_once("../MainFooter/footer.php"); ?>
 </body>
 </html>
