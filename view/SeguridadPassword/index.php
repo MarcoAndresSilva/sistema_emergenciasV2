@@ -1,7 +1,6 @@
 <?php
 require_once("../../models/Permisos.php");
 require_once("../../config/conexion.php");
-require_once("../../models/SeguridadPassword.php");
 Permisos::redirigirSiNoAutorizado();
 ?>
 
