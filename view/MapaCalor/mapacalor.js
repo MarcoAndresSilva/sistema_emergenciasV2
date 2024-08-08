@@ -53,16 +53,37 @@ async function showDateFilterDialog() {
       '<label for="swal-endDate">Fecha de Cierre:</label>' +
       '<input type="date" id="swal-endDate" class="swal2-input">' +
       '<label for="swal-nivel">Nivel:</label>' +
-      `<select id="swal-nivel" class="swal2-input" multiple>${nivelOptions}</select>` +
+      `<select id="swal-nivel" class="swal2-select" multiple>${nivelOptions}</select>` +
       '<label for="swal-unidad">Unidad:</label>' +
-      `<select id="swal-unidad" class="swal2-input" multiple>${unidadOptions}</select>`,
+      `<select id="swal-unidad" class="swal2-select" multiple>${unidadOptions}</select>`,
     showCancelButton: true,
     confirmButtonText: 'Aplicar Filtro',
+    didOpen: () => {
+      // Inicializar Select2 y ajustar el tamaño
+      const $nivelSelect = $('#swal-nivel').select2({
+        placeholder: "Selecciona niveles",
+        width: '100%'
+      }).next('.select2-container').find('.select2-selection').css('min-height', '38px');
+
+      const $unidadSelect = $('#swal-unidad').select2({
+        placeholder: "Selecciona unidades",
+        width: '100%'
+      }).next('.select2-container').find('.select2-selection').css('min-height', '38px');
+
+      // Agregar estilos personalizados para el hover
+      const style = document.createElement('style');
+      style.innerHTML = `
+        .select2-results__option--highlighted {
+          color: blue !important;
+        }
+      `;
+      document.head.appendChild(style);
+    },
     preConfirm: () => {
       const startDate = Swal.getPopup().querySelector('#swal-startDate').value;
       const endDate = Swal.getPopup().querySelector('#swal-endDate').value;
-      const nivelesSeleccionados = Array.from(Swal.getPopup().querySelector('#swal-nivel').selectedOptions).map(option => option.value);
-      const unidadesSeleccionadas = Array.from(Swal.getPopup().querySelector('#swal-unidad').selectedOptions).map(option => option.value);
+      const nivelesSeleccionados = $('#swal-nivel').val();
+      const unidadesSeleccionadas = $('#swal-unidad').val();
 
       return { startDate, endDate, niveles: nivelesSeleccionados, unidades: unidadesSeleccionadas };
     }

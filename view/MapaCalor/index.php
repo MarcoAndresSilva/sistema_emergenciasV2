@@ -10,6 +10,7 @@ Permisos::redirigirSiNoAutorizado();
 <?php require_once("../MainHead/head.php"); ?>
 <title>Sistema Emergencia</title>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQrYCFSz7Q-a-WONxo4yymu9SAPgmaA6c&libraries=visualization"></script>
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="./stylemapacalor.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -45,7 +46,7 @@ Permisos::redirigirSiNoAutorizado();
 <button id="togglePOIs" class="btn btn-warning btn-inactive">
   <i class="fas fa-eye btn-icon"></i> Mostrar Puntos de Interés
 </button>
-<button id="dateFilterButton" class="btn btn-warning"><i class="fa fa-calendar btn-icon" aria-hidden="true"></i> Filtrar por Fecha</button>
+<button id="dateFilterButton" class="btn btn-warning"><i class="fa fa-filter btn-icon" aria-hidden="true"></i> Filtros</button>
 <div id="controls" class="row" role="group" aria-label="Controles de mapa">
   <!-- Aquí se insertarán los botones de categorías -->
 </div>
@@ -77,6 +78,7 @@ Permisos::redirigirSiNoAutorizado();
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQrYCFSz7Q-a-WONxo4yymu9SAPgmaA6c&libraries=visualization&callback=initMap">
   </script>
     <?php require_once("../MainJs/js.php"); ?>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <?php require_once("../MainFooter/footer.php"); ?>
 </body>
 </html>
