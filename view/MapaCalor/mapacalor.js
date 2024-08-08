@@ -39,25 +39,37 @@ function initMap() {
   document.getElementById('dateFilterButton').addEventListener('click', showDateFilterDialog);
 }
 
-function showDateFilterDialog() {
+async function showDateFilterDialog() {
+  const { niveles, unidades } = await fetchFilterOptions();
+
+  const nivelOptions = Array.isArray(niveles) ? niveles.map(nivel => `<option value="${nivel}">${nivel}</option>`).join('') : '';
+  const unidadOptions = Array.isArray(unidades) ? unidades.map(unidad => `<option value="${unidad}">${unidad}</option>`).join('') : '';
+
   Swal.fire({
-    title: 'Filtrar por Fecha',
+    title: 'Filtrar Eventos',
     html:
       '<label for="swal-startDate">Fecha de Inicio:</label>' +
       '<input type="date" id="swal-startDate" class="swal2-input">' +
       '<label for="swal-endDate">Fecha de Cierre:</label>' +
-      '<input type="date" id="swal-endDate" class="swal2-input">',
+      '<input type="date" id="swal-endDate" class="swal2-input">' +
+      '<label for="swal-nivel">Nivel:</label>' +
+      `<select id="swal-nivel" class="swal2-input" multiple>${nivelOptions}</select>` +
+      '<label for="swal-unidad">Unidad:</label>' +
+      `<select id="swal-unidad" class="swal2-input" multiple>${unidadOptions}</select>`,
     showCancelButton: true,
     confirmButtonText: 'Aplicar Filtro',
     preConfirm: () => {
       const startDate = Swal.getPopup().querySelector('#swal-startDate').value;
       const endDate = Swal.getPopup().querySelector('#swal-endDate').value;
-      return { startDate, endDate };
+      const nivelesSeleccionados = Array.from(Swal.getPopup().querySelector('#swal-nivel').selectedOptions).map(option => option.value);
+      const unidadesSeleccionadas = Array.from(Swal.getPopup().querySelector('#swal-unidad').selectedOptions).map(option => option.value);
+
+      return { startDate, endDate, niveles: nivelesSeleccionados, unidades: unidadesSeleccionadas };
     }
   }).then((result) => {
     if (result.isConfirmed) {
-      const { startDate, endDate } = result.value;
-      applyDateFilter(startDate, endDate);
+      const { startDate, endDate, niveles, unidades } = result.value;
+      applyAdvancedFilter(startDate, endDate, niveles, unidades);
     }
   });
 }
