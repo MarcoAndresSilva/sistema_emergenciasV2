@@ -74,6 +74,24 @@ async function showDateFilterDialog() {
   });
 }
 
+async function fetchFilterOptions() {
+  const url = '../../controller/evento.php?op=get_filters_evento_map';
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    return {
+      niveles: Array.isArray(data.niveles) ? data.niveles : [],
+      unidades: Array.isArray(data.unidades) ? data.unidades : []
+    };
+  } catch (error) {
+    console.error('Fetch error:', error);
+    return { niveles: [], unidades: [] }; 
+  }
+}
 function addHeatmapLayers(categories) {
   Object.keys(categories).forEach(category => {
     if (!categoryColors[category]) {
