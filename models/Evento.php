@@ -492,6 +492,7 @@ public function add_evento($usu_id, $ev_desc, $ev_est, $ev_inicio, $ev_direc, $e
               		ev.ev_img as "img",
               		ev.ev_inicio as "fecha_inicio",
               		IFNULL(ev.ev_final, "En Proceso") as "fecha_cierre",
+                  nv.ev_niv_nom as "nivel",
                   cat.cat_nom as "categoria",
                   un.unid_nom as "unidad"
               FROM tm_evento as ev
@@ -499,6 +500,8 @@ public function add_evento($usu_id, $ev_desc, $ev_est, $ev_inicio, $ev_direc, $e
               ON (ev.cat_id=cat.cat_id)
               JOIN tm_usuario as usu
               ON (usu.usu_id=ev.usu_id)
+              JOIN tm_ev_niv as nv
+              ON (ev.ev_niv = nv.ev_niv_id)
               JOIN tm_unidad as un 
               ON ( un.unid_id=usu.usu_unidad);';
     return $this->ejecutarConsulta($sql);
