@@ -92,6 +92,18 @@ async function fetchFilterOptions() {
     return { niveles: [], unidades: [] }; 
   }
 }
+
+function applyAdvancedFilter(startDate, endDate, niveles, unidades) {
+  fetchAndGroupData(startDate, endDate, niveles, unidades).then(groupedData => {
+    clearMapData();
+    addHeatmapLayers(groupedData);
+    addMarkers(groupedData);
+    createCategoryButtons(groupedData);
+    restoreActiveCategories();
+    adjustMapBounds();
+  });
+}
+
 function addHeatmapLayers(categories) {
   Object.keys(categories).forEach(category => {
     if (!categoryColors[category]) {
