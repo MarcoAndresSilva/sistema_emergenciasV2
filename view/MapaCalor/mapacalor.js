@@ -210,7 +210,7 @@ function filterCategory(category, button) {
   adjustMapBounds();
 }
 
-async function fetchAndGroupData(startDate = null, endDate = null) {
+async function fetchAndGroupData(startDate = null, endDate = null, niveles = [], unidades = []) {
   const url = '../../controller/evento.php?op=get_evento_lat_lon';
 
   try {
@@ -221,12 +221,18 @@ async function fetchAndGroupData(startDate = null, endDate = null) {
 
     const data = await response.json();
 
+    const nivelesArr = Array.isArray(niveles) ? niveles.map(nivel => nivel.toLowerCase()) : [];
+    const unidadesArr = Array.isArray(unidades) ? unidades.map(unidad => unidad.toLowerCase()) : [];
+
     const filteredData = data.filter(item => {
       const itemDate = new Date(item.fecha_inicio);
       const start = startDate ? new Date(startDate) : null;
       const end = endDate ? new Date(endDate) : null;
+      const matchesDate = (!start || itemDate >= start) && (!end || itemDate <= end);
+      const matchesNivel = !nivelesArr.length || nivelesArr.some(nivel => item.nivel.toLowerCase().includes(nivel));
+      const matchesUnidad = !unidadesArr.length || unidadesArr.some(unidad => item.unidad.toLowerCase().includes(unidad));
 
-      return (!start || itemDate >= start) && (!end || itemDate <= end);
+      return matchesDate && matchesNivel && matchesUnidad;
     });
 
     const groupedData = filteredData.reduce((acc, item) => {
