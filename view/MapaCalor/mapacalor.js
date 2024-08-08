@@ -31,6 +31,7 @@ function initMap() {
     addHeatmapLayers(groupedData);
     addMarkers(groupedData);
     createCategoryButtons(groupedData);
+    generateSummaryTable(groupedData);
     adjustMapBounds();
   });
 
@@ -121,6 +122,7 @@ function applyAdvancedFilter(startDate, endDate, niveles, unidades) {
     addMarkers(groupedData);
     createCategoryButtons(groupedData);
     restoreActiveCategories();
+    generateSummaryTable(groupedData);
     adjustMapBounds();
   });
 }
@@ -442,3 +444,108 @@ function createCategoryIcon(color) {
   return icon;
 }
 window.onload = initMap;
+
+function generateSummaryTable(groupedData) {
+  // Crear el contenedor de la tabla
+  const tableContainer = document.getElementById('summaryTableContainer');
+  tableContainer.innerHTML = ''; // Limpiar cualquier contenido previo
+
+  // Crear la tabla y sus encabezados
+  const table = document.createElement('table');
+  table.className = 'table table-bordered';
+
+  const thead = document.createElement('thead');
+  const headerRow = document.createElement('tr');
+
+  const headers = [
+    'Categoría', 
+    'Cantidad de Eventos',
+    'Cantidad de Eventos por Nivel',
+    'Cantidad de Eventos Abiertos',
+    'Cantidad de Eventos Cerrados',
+    'Primer Día de Inicio', 
+    'Último Día de Inicio',
+    'Primer Día de Cierre', 
+    'Último Día de Cierre'
+  ];
+
+  headers.forEach(headerText => {
+    const th = document.createElement('th');
+    th.textContent = headerText;
+    headerRow.appendChild(th);
+  });
+
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+
+  // Crear el cuerpo de la tabla
+  const tbody = document.createElement('tbody');
+
+  Object.keys(groupedData).forEach(category => {
+    const events = groupedData[category];
+    const firstStartDate = new Date(Math.min(...events.map(e => new Date(e.fecha_inicio))));
+    const lastStartDate = new Date(Math.max(...events.map(e => new Date(e.fecha_inicio))));
+
+    // Filtrar los eventos que no están en proceso para calcular las fechas de cierre
+    const closedEvents = events.filter(e => e.fecha_cierre !== 'En Proceso');
+    const endDates = closedEvents.map(e => new Date(e.fecha_cierre));
+    const firstEndDate = endDates.length ? new Date(Math.min(...endDates)) : null;
+    const lastEndDate = endDates.length ? new Date(Math.max(...endDates)) : null;
+
+    // Contar eventos cerrados y abiertos
+    const closedEventsCount = closedEvents.length;
+    const openEventsCount = events.length - closedEventsCount;
+
+    // Contar eventos por nivel
+    const eventCountByLevel = events.reduce((acc, event) => {
+      const nivel = event.nivel;
+      if (!acc[nivel]) {
+        acc[nivel] = 0;
+      }
+      acc[nivel]++;
+      return acc;
+    }, {});
+
+    // Crear etiquetas Bootstrap para los eventos por nivel
+    const eventCountByLevelBadges = Object.entries(eventCountByLevel)
+      .map(([nivel, count]) => {
+        const badge = document.createElement('span');
+        badge.className = 'badge bg-primary me-1'; // Estilo y margen derecho
+        badge.textContent = `${nivel}: ${count}`;
+        return badge.outerHTML;
+      })
+      .join(' ');
+
+    const row = document.createElement('tr');
+
+    const cells = [
+      category,
+      events.length,
+      eventCountByLevelBadges, // Mover aquí la cantidad de eventos por nivel
+      openEventsCount,
+      closedEventsCount,
+      formatDate(firstStartDate),
+      formatDate(lastStartDate),
+      formatDate(firstEndDate, 'Sin cierre registrado'),
+      formatDate(lastEndDate, 'Sin cierre registrado')
+    ];
+
+    cells.forEach(cellText => {
+      const td = document.createElement('td');
+      td.innerHTML = cellText; // Usar innerHTML para las etiquetas Bootstrap
+      row.appendChild(td);
+    });
+
+    tbody.appendChild(row);
+  });
+
+  table.appendChild(tbody);
+  tableContainer.appendChild(table);
+}
+
+function formatDate(date, fallbackText = 'Fecha no disponible') {
+  if (!date || isNaN(date.getTime())) {
+    return fallbackText;
+  }
+  return date.toISOString().split('T')[0];
+}

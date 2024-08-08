@@ -52,7 +52,7 @@ Permisos::redirigirSiNoAutorizado();
 </div>
 <!-- Contenedor del mapa -->
   <div id="map"></div>
-
+<div id="summaryTableContainer" class="table-responsive"></div>
   <!-- Controles de filtro por categoría -->
 
         </div><!--.container-fluid-->
