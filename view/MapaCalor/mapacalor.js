@@ -584,6 +584,30 @@ function formatDate(date, fallbackText = 'Fecha no disponible') {
 function getRowNumber(row) {
   return parseInt(row.cells[0].innerText, 10);
 }
+
+function restoreRowPosition(row) {
+  const tbody = row.parentNode;
+  const rowNumber = getRowNumber(row);
+
+  let targetRow = null;
+
+  for (let i = 0; i < tbody.children.length; i++) {
+    const currentRow = tbody.children[i];
+    const currentRowNumber = getRowNumber(currentRow);
+
+    if (currentRowNumber > rowNumber) {
+      targetRow = currentRow;
+      break;
+    }
+  }
+
+  if (targetRow) {
+    tbody.insertBefore(row, targetRow);
+  } else {
+    tbody.appendChild(row);
+  }
+}
+
 function restoreOriginalOrder() {
   const tableContainer = document.getElementById('summaryTableContainer');
   const table = tableContainer.querySelector('table');
