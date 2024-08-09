@@ -276,6 +276,26 @@ function toggleMarkersVisibility(category, button, row) {
   markers[category].forEach(marker => marker.setMap(areVisible ? null : map));
   updateUI(category, button, row, areVisible);
 }
+
+function updateUI(category, button, row, isVisible) {
+  if (isVisible) {
+    activeCategories.delete(category);
+    button.classList.remove('btn-success');
+    if (row) {
+      row.classList.remove('table-success');
+      restoreRowPosition(row);
+    }
+  } else {
+    activeCategories.add(category);
+    button.classList.add('btn-success');
+    if (row) {
+      row.classList.add('table-success');
+      moveRowToTop(row);
+    }
+  }
+
+}
+
 async function fetchAndGroupData(startDate = null, endDate = null, niveles = [], unidades = []) {
   const url = '../../controller/evento.php?op=get_evento_lat_lon';
 
