@@ -265,6 +265,17 @@ function saveOriginalRowPosition(category, row) {
   }
 }
 
+function toggleHeatmapVisibility(category, button, row) {
+  const isVisible = heatmaps[category].getMap();
+  heatmaps[category].setMap(isVisible ? null : map);
+  updateUI(category, button, row, isVisible);
+}
+
+function toggleMarkersVisibility(category, button, row) {
+  const areVisible = markers[category][0].getMap();
+  markers[category].forEach(marker => marker.setMap(areVisible ? null : map));
+  updateUI(category, button, row, areVisible);
+}
 async function fetchAndGroupData(startDate = null, endDate = null, niveles = [], unidades = []) {
   const url = '../../controller/evento.php?op=get_evento_lat_lon';
 
