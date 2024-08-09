@@ -258,6 +258,13 @@ function filterCategory(category, button) {
   adjustMapBounds();
 }
 
+function saveOriginalRowPosition(category, row) {
+  if (!originalRowPositions[category] && row) {
+    const tbody = row.parentNode;
+    originalRowPositions[category] = Array.from(tbody.children).indexOf(row);
+  }
+}
+
 async function fetchAndGroupData(startDate = null, endDate = null, niveles = [], unidades = []) {
   const url = '../../controller/evento.php?op=get_evento_lat_lon';
 
