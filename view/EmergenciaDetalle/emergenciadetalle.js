@@ -13,11 +13,6 @@ $(document).ready(function() {
     console.log(ev_id);
 
     listarDetalle(ev_id);
-
-    $("#ev_desc").summernote({
-        lang: "es-ES",
-        height: 200,
-    });
     
     $("#tic_descripUsu").summernote({
         lang: "es-ES",
@@ -25,6 +20,11 @@ $(document).ready(function() {
     });
     
     $("#tic_descripUsu").summernote("disable");
+
+    $("#ev_desc").summernote({
+        lang: "es-ES",
+        height: 200,
+    });
 
 });
 
@@ -44,23 +44,23 @@ var getUrlParameter = function getUrlParameter(sParam) {
 };
 
 function listarDetalle(ev_id){
-    $.post("../../controller/eventoDos.php?op=listar_detalle_emergencias", {ev_id : ev_id}, function(data) {
+    $.post("../../controller/emergenciaDetalle.php?op=listar_detalle_emergencias", {ev_id : ev_id}, function(data) {
         // console.log(data);
         $('#lblDetalle').html(data);
     });
 
-    $.post("../../controller/eventoDos.php?op=mostrar", {ev_id : ev_id}, function(data) {
+    $.post("../../controller/emergenciaDetalle.php?op=mostrar", {ev_id : ev_id}, function(data) {
         data = JSON.parse(data);
         console.log(data);
+        $("#lblNomIdTicket").html("Trazabilidad Evento Emergencia N° ID: " + data.ev_id);
         $('#lblEstado').html(data.ev_est);
         $('#lblNomUsuario').html(data.usu_nom + ' ' + data.usu_ape);
         $('#lblFechaCrea').html(data.ev_inicio);
-        $("#lblNomIdTicket").html("Trazabilidad Evento Emergencia N° ID: " + data.ev_id);
 
-        ("#cat_nom").val(data.cat_nom);
-        $("#unidadAsignada").val(data.unid_nom);
+        $("#cat_nom").val(data.cat_nom);
+        $("#ev_direc").val(data.ev_direc);
         $("#tic_descripUsu").summernote("code", data.ev_desc);
-      console.log(data.tic_descrip);
+      
 
       
     });
