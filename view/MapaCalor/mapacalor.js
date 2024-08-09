@@ -459,6 +459,7 @@ function generateSummaryTable(groupedData) {
   const headerRow = document.createElement('tr');
 
   const headers = [
+    'N°',
     'Categoría', 
     'Cantidad de Eventos',
     'Cantidad de Eventos por Nivel',
@@ -481,6 +482,8 @@ function generateSummaryTable(groupedData) {
 
   // Crear el cuerpo de la tabla
   const tbody = document.createElement('tbody');
+
+  let rowIndex = 1;
 
   Object.keys(groupedData).forEach(category => {
     const events = groupedData[category];
@@ -520,6 +523,7 @@ function generateSummaryTable(groupedData) {
     const row = document.createElement('tr');
 
     const cells = [
+      rowIndex,
       category,
       events.length,
       eventCountByLevelBadges, // Mover aquí la cantidad de eventos por nivel
@@ -538,6 +542,7 @@ function generateSummaryTable(groupedData) {
     });
 
     tbody.appendChild(row);
+    rowIndex++;
   });
 
   table.appendChild(tbody);
