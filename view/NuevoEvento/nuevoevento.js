@@ -292,7 +292,7 @@ async function add_evento() {
 
       if (data.status === 'success') {
         swal("Éxito", data.message, "success")
-          addNotification("Nuevo Evento", "evento nuevo por derivar", "../HistorialEventos/");
+          addNotification("Nuevo Evento", "evento nuevo por derivar", "../ControlEventos/");
       } else if (data.status === 'error') {
         swal("Error", data.message, "error");
       } else {
