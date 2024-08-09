@@ -25,38 +25,46 @@ if (isset($_GET["op"])) {
                         <article class="activity-line-item box-typical">
         
                             <div class="activity-line-date">
-                            <?php echo date("d/m/Y - H:i:s", strtotime($row["fecha_crea"])); ?>
+                                <?php echo date("d/m/Y - H:i:s", strtotime($row["ev_inicio"])); ?>
                             </div>
         
                             <header class="activity-line-item-header">
-                            <div class="activity-line-item-user">
-                                <div class="activity-line-item-user-photo">
-                                <a href="#">
-                                    <img src="../../public/<?php echo $row['usu_tipo']?>.png" alt="">
-                                </a>
+                                <div class="activity-line-item-user">
+                                    <div class="activity-line-item-user-photo">
+                                        <a href="#">
+                                            <img src="../../public/  <?php echo $row['usu_tipo']?>.png" alt="">
+                                        </a>
+                                    </div>
+
+                                    <div class="activity-line-item-user-name">
+                                        <?php echo $row['usu_nom'] . ' ' . $row['usu_ape']; ?> 
+                                    </div>
+
+                                    <div class="activity-line-item-user-status">
+                                        <?php
+                                            if ($row['usu_tipo'] == 1) {
+                                                echo 'Reportador';
+                                            } else {
+                                                echo 'Administrador';
+                                            }
+                                        ?>
+                                    </div>
                                 </div>
-                                <div class="activity-line-item-user-name"><?php echo $row['usu_nom'] . ' ' . $row['usu_ape']; ?> </div>
-                                <div class="activity-line-item-user-status">
-                                <?php
-                                if ($row['usu_tipo'] == 1) {
-                                    echo 'Reportador';
-                                } else {
-                                    echo 'Administrador';
-                                }
-                                ?></div>
-                            </div>
                             </header>
         
                             <div class="activity-line-action-list">
         
-                            <section class="activity-line-action">
-                                <div class="time"> <?php echo date("H:i:s", strtotime($row["fecha_crea"])); ?></div>
-                                <div class="cont">
-                                <div class="cont-in">
-                                    <p><?php echo $row['ev_desc'] ?> </p>
-                                </div>
-                                </div>
-                            </section>
+                                <section class="activity-line-action">
+                                    <div class="time">
+                                        <?php echo date("H:i:s", strtotime($row["ev_inicio"])); ?>
+                                    </div>
+                                    
+                                    <div class="cont">
+                                        <div class="cont-in">
+                                            <p><?php echo $row['ev_desc'] ?> </p>
+                                        </div>
+                                    </div>
+                                </section>
 
                             </div>
 
@@ -72,17 +80,18 @@ if (isset($_GET["op"])) {
             if (is_array($datos) == true && count($datos) > 0) {
                 foreach ($datos as $row) {
                     $output["ev_id"] = $row["ev_id"];
-                    $output["ev_nom"] = $row["ev_nom"];
-                    $output["cat_id"] = $row["cat_id"];
-                    $output["unid_nom"] = $row["unid_nom"];
-                    $output["ev_desc"] = $row["ev_desc"];
-            
+                    $output["usu_id"] = $row["usu_id"];      
                     if ($row["ev_est"] == 1) {
-                        $output["ev_est"] = '<span class="label label-pill label-success">abierto</span>';
+                        $output["ev_est"] = '<span class="label label-pill label-success">Abierto</span>';
                     } else {
-                        $output["ev_est"] = '<span class="label label-pill label-danger">cerrado</span>';
+                        $output["ev_est"] = '<span class="label label-pill label-danger">Cerrado</span>';
                     }
-            
+                    
+                    $output["cat_id"] = $row["cat_id"];
+                    $output["ev_direc"] = $row["ev_direc"];
+                    $output["ev_desc"] = $row["ev_desc"];  
+
+
                     $output["ev_inicio"] = date("d/m/Y - H:i:s", strtotime($row["ev_inicio"]));
                     $output["usu_nom"] = $row["usu_nom"];
                     $output["usu_ape"] = $row["usu_ape"];
