@@ -71,15 +71,6 @@ async function showDateFilterDialog() {
         placeholder: "Selecciona unidades",
         width: '100%'
       }).next('.select2-container').find('.select2-selection').css('min-height', '38px');
-
-      // Agregar estilos personalizados para el hover
-      const style = document.createElement('style');
-      style.innerHTML = `
-        .select2-results__option--highlighted {
-          color: blue !important;
-        }
-      `;
-      document.head.appendChild(style);
     },
     preConfirm: () => {
       const startDate = Swal.getPopup().querySelector('#swal-startDate').value;

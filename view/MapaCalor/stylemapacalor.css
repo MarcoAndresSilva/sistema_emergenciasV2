@@ -8,6 +8,10 @@
     z-index: 99999999999999;
 }
 
+.select2-results__option--highlighted {
+    color: blue !important;
+}
+
 .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
     background-color: #5897fb;
     color: aqua;
