@@ -5,6 +5,7 @@ var showPOIs = false; // Estado de visibilidad de los puntos de interés
 const disabledCategories = ['last_tiendas', 'otros']; // Lista de categorías a desactivar
 const activeCategories = new Set(); // Almacena las categorías activas
 var bounds; // Almacena los límites de los puntos en el mapa
+var originalRowPositions = {};
 
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
@@ -554,4 +555,19 @@ function formatDate(date, fallbackText = 'Fecha no disponible') {
     return fallbackText;
   }
   return date.toISOString().split('T')[0];
+}
+function restoreOriginalOrder() {
+  const tableContainer = document.getElementById('summaryTableContainer');
+  const table = tableContainer.querySelector('table');
+  const tbody = table.querySelector('tbody');
+
+  const orderedRows = Object.keys(originalRowPositions)
+    .sort((a, b) => originalRowPositions[a] - originalRowPositions[b])
+    .map(category => document.getElementById(`row-${category}`));
+
+  orderedRows.forEach(row => {
+    if (row) {
+      tbody.appendChild(row);
+    }
+  });
 }
