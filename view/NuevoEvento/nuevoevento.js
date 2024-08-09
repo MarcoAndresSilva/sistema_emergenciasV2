@@ -291,9 +291,8 @@ async function add_evento() {
 
 
       if (data.status === 'success') {
-        swal("Éxito", data.message, "success").then(() => {
-          window.location.reload();
-        });
+        swal("Éxito", data.message, "success")
+          addNotification("Nuevo Evento", "evento nuevo por derivar", "../ControlEventos/");
       } else if (data.status === 'error') {
         swal("Error", data.message, "error");
       } else {

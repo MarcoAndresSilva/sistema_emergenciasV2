@@ -5,12 +5,14 @@ require_once("../models/Categoria.php");
 require_once("../models/Unidad.php");
 require_once("../models/Estado.php");
 require_once("../models/EventoUnidad.php");
+require_once("../models/NivelPeligro.php");
 
 $evento = new Evento();
 $categoria = new Categoria();
 $unidad = new Unidad();
 $estado = new Estado();
 $eventounidad = new EventoUnidad();
+$NivelPeligro = new NivelPeligro();
 
 function guardarImagen($archivo, $carpeta) {
     if (!isset($archivo) || $archivo['error'] !== UPLOAD_ERR_OK) {
@@ -891,6 +893,23 @@ if (isset($_GET["op"])) {
           header('Content-Type: application/json');
           echo json_encode($datos);
         break;
+      case "get_filters_evento_map":
+        $datosUnidad= $unidad->get_unidad();
+        $datosNivel = $NivelPeligro->get_nivel_peligro();
+
+        $unidades = array_map(function($item) {
+            return $item['unid_nom'];
+        }, $datosUnidad);
+
+        $niveles = array_map(function($item) {
+            return $item['ev_niv_nom'];
+        }, $datosNivel);
+
+        echo json_encode([
+            'unidades' => $unidades,
+            'niveles' => $niveles
+        ]);
+      break;
 
 
     }

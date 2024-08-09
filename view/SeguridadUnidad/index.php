@@ -1,7 +1,7 @@
 <?php
+require_once("../../models/Permisos.php");
 require_once("../../config/conexion.php");
-require_once("../MainJs/js.php");
-if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_tipo"] == 2)) {
+Permisos::redirigirSiNoAutorizado();
 ?>
 <!DOCTYPE html>
 <html>
@@ -65,12 +65,8 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
         </div><!--.container-fluid-->
     </div><!--.page-content-->
 
+	<?php require_once("../MainJs/js.php"); ?>
 	<?php require_once("../MainFooter/footer.php"); ?>
 	
 </body>
-<?php
-} else {
-	header("location:".Conectar::ruta()."index.php");
-}
-?>
 </html>

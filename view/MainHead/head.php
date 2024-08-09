@@ -37,3 +37,4 @@
 <link rel="javascript" href="../MainNav/nav.js">
 <link rel="stylesheet" href="../MainHeader/estiloheader.css">
 <link rel="stylesheet" href="../MainFooter/estilofooter.css">
+<script src="../../public/js/notificaciones.js"></script>

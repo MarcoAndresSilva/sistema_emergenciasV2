@@ -5,6 +5,7 @@ var showPOIs = false; // Estado de visibilidad de los puntos de interés
 const disabledCategories = ['last_tiendas', 'otros']; // Lista de categorías a desactivar
 const activeCategories = new Set(); // Almacena las categorías activas
 var bounds; // Almacena los límites de los puntos en el mapa
+var originalRowPositions = {};
 
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
@@ -31,12 +32,91 @@ function initMap() {
     addHeatmapLayers(groupedData);
     addMarkers(groupedData);
     createCategoryButtons(groupedData);
+    generateSummaryTable(groupedData);
     adjustMapBounds();
   });
 
   document.getElementById('toggleMapView').addEventListener('click', toggleView);
   document.getElementById('togglePOIs').addEventListener('click', togglePOIs);
-  document.getElementById('applyDateFilter').addEventListener('click', applyDateFilter);
+  document.getElementById('dateFilterButton').addEventListener('click', showDateFilterDialog);
+}
+
+async function showDateFilterDialog() {
+  const { niveles, unidades } = await fetchFilterOptions();
+
+  const nivelOptions = Array.isArray(niveles) ? niveles.map(nivel => `<option value="${nivel}">${nivel}</option>`).join('') : '';
+  const unidadOptions = Array.isArray(unidades) ? unidades.map(unidad => `<option value="${unidad}">${unidad}</option>`).join('') : '';
+
+  Swal.fire({
+    title: 'Filtrar Eventos',
+    html:
+      '<label for="swal-startDate">Fecha de Inicio:</label>' +
+      '<input type="date" id="swal-startDate" class="swal2-input">' +
+      '<label for="swal-endDate">Fecha de Cierre:</label>' +
+      '<input type="date" id="swal-endDate" class="swal2-input">' +
+      '<label for="swal-nivel">Nivel:</label>' +
+      `<select id="swal-nivel" class="swal2-select" multiple>${nivelOptions}</select>` +
+      '<label for="swal-unidad">Unidad:</label>' +
+      `<select id="swal-unidad" class="swal2-select" multiple>${unidadOptions}</select>`,
+    showCancelButton: true,
+    confirmButtonText: 'Aplicar Filtro',
+    didOpen: () => {
+      // Inicializar Select2 y ajustar el tamaño
+      const $nivelSelect = $('#swal-nivel').select2({
+        placeholder: "Selecciona niveles",
+        width: '100%'
+      }).next('.select2-container').find('.select2-selection').css('min-height', '38px');
+
+      const $unidadSelect = $('#swal-unidad').select2({
+        placeholder: "Selecciona unidades",
+        width: '100%'
+      }).next('.select2-container').find('.select2-selection').css('min-height', '38px');
+    },
+    preConfirm: () => {
+      const startDate = Swal.getPopup().querySelector('#swal-startDate').value;
+      const endDate = Swal.getPopup().querySelector('#swal-endDate').value;
+      const nivelesSeleccionados = $('#swal-nivel').val();
+      const unidadesSeleccionadas = $('#swal-unidad').val();
+
+      return { startDate, endDate, niveles: nivelesSeleccionados, unidades: unidadesSeleccionadas };
+    }
+  }).then((result) => {
+    if (result.isConfirmed) {
+      const { startDate, endDate, niveles, unidades } = result.value;
+      applyAdvancedFilter(startDate, endDate, niveles, unidades);
+    }
+  });
+}
+
+async function fetchFilterOptions() {
+  const url = '../../controller/evento.php?op=get_filters_evento_map';
+
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    return {
+      niveles: Array.isArray(data.niveles) ? data.niveles : [],
+      unidades: Array.isArray(data.unidades) ? data.unidades : []
+    };
+  } catch (error) {
+    console.error('Fetch error:', error);
+    return { niveles: [], unidades: [] }; 
+  }
+}
+
+function applyAdvancedFilter(startDate, endDate, niveles, unidades) {
+  fetchAndGroupData(startDate, endDate, niveles, unidades).then(groupedData => {
+    clearMapData();
+    addHeatmapLayers(groupedData);
+    addMarkers(groupedData);
+    createCategoryButtons(groupedData);
+    restoreActiveCategories();
+    generateSummaryTable(groupedData);
+    adjustMapBounds();
+  });
 }
 
 function addHeatmapLayers(categories) {
@@ -86,7 +166,7 @@ function addMarkers(categories) {
       });
 
       marker.addListener('click', function() {
-        showInfoWindow(marker.getPosition(), category, item.detalles, item.img, item.unidad, item.fecha_inicio, item.fecha_cierre);
+        showInfoWindow(marker.getPosition(), category, item.detalles, item.img, item.unidad, item.fecha_inicio, item.fecha_cierre, item.id);
       });
 
       bounds.extend(marker.getPosition());
@@ -95,13 +175,14 @@ function addMarkers(categories) {
   });
 }
 
-function showInfoWindow(latLng, category, details = 'Sin detalles', img = '', unidad, fecha_inicio, fecha_cierre) {
+function showInfoWindow(latLng, category, details = 'Sin detalles', img = '', unidad, fecha_inicio, fecha_cierre,id_evento) {
   let content = `<div><strong>Unidad:</strong> ${unidad}<br><strong>Categoria:</strong> ${category}<br><strong>Detalles:</strong> ${details}</div>`;
   if (img) {
     content += `<div><img src="../../public/${img}" alt="Imagen" style="max-width: 200px; max-height: 150px;"></div>`;
   }
   content += `<br> <strong>Fecha Creacion:</strong> ${fecha_inicio}`
   content += `<br> <strong>Fecha Cierre:</strong> ${fecha_cierre}`
+  content += `<br> <a class="btn btn-sm btn-info" href="../EmergenciaDetalle/?ID=${id_evento}">Seguimiento</a>`
 
   infoWindow.setContent(content);
   infoWindow.setPosition(latLng);
@@ -113,39 +194,58 @@ function filterCategory(category, button) {
     return;
   }
 
-  if (currentView === 'heatmap') {
-    if (heatmaps[category]) {
-      const isVisible = heatmaps[category].getMap();
-      heatmaps[category].setMap(isVisible ? null : map);
+  const row = document.getElementById(`row-${category}`);
+  saveOriginalRowPosition(category, row);
 
-      if (isVisible) {
-        activeCategories.delete(category);
-        button.classList.remove('btn-success');
-      } else {
-        activeCategories.add(category);
-        button.classList.add('btn-success');
-      }
-    }
+  if (currentView === 'heatmap' && heatmaps[category]) {
+    toggleHeatmapVisibility(category, button, row);
   }
 
-  if (currentView === 'markers') {
-    if (markers[category]) {
-      const areVisible = markers[category][0].getMap();
-      markers[category].forEach(marker => marker.setMap(areVisible ? null : map));
-
-      if (areVisible) {
-        activeCategories.delete(category);
-        button.classList.remove('btn-success');
-      } else {
-        activeCategories.add(category);
-        button.classList.add('btn-success');
-      }
-    }
+  if (currentView === 'markers' && markers[category]) {
+    toggleMarkersVisibility(category, button, row);
   }
   adjustMapBounds();
 }
 
-async function fetchAndGroupData(startDate = null, endDate = null) {
+function saveOriginalRowPosition(category, row) {
+  if (!originalRowPositions[category] && row) {
+    const tbody = row.parentNode;
+    originalRowPositions[category] = Array.from(tbody.children).indexOf(row);
+  }
+}
+
+function toggleHeatmapVisibility(category, button, row) {
+  const isVisible = heatmaps[category].getMap();
+  heatmaps[category].setMap(isVisible ? null : map);
+  updateUI(category, button, row, isVisible);
+}
+
+function toggleMarkersVisibility(category, button, row) {
+  const areVisible = markers[category][0].getMap();
+  markers[category].forEach(marker => marker.setMap(areVisible ? null : map));
+  updateUI(category, button, row, areVisible);
+}
+
+function updateUI(category, button, row, isVisible) {
+  if (isVisible) {
+    activeCategories.delete(category);
+    button.classList.remove('btn-success');
+    if (row) {
+      row.classList.remove('table-success');
+      restoreRowPosition(row);
+    }
+  } else {
+    activeCategories.add(category);
+    button.classList.add('btn-success');
+    if (row) {
+      row.classList.add('table-success');
+      moveRowToTop(row);
+    }
+  }
+
+}
+
+async function fetchAndGroupData(startDate = null, endDate = null, niveles = [], unidades = []) {
   const url = '../../controller/evento.php?op=get_evento_lat_lon';
 
   try {
@@ -156,12 +256,18 @@ async function fetchAndGroupData(startDate = null, endDate = null) {
 
     const data = await response.json();
 
+    const nivelesArr = Array.isArray(niveles) ? niveles.map(nivel => nivel.toLowerCase()) : [];
+    const unidadesArr = Array.isArray(unidades) ? unidades.map(unidad => unidad.toLowerCase()) : [];
+
     const filteredData = data.filter(item => {
       const itemDate = new Date(item.fecha_inicio);
       const start = startDate ? new Date(startDate) : null;
       const end = endDate ? new Date(endDate) : null;
+      const matchesDate = (!start || itemDate >= start) && (!end || itemDate <= end);
+      const matchesNivel = !nivelesArr.length || nivelesArr.some(nivel => item.nivel.toLowerCase().includes(nivel));
+      const matchesUnidad = !unidadesArr.length || unidadesArr.some(unidad => item.unidad.toLowerCase().includes(unidad));
 
-      return (!start || itemDate >= start) && (!end || itemDate <= end);
+      return matchesDate && matchesNivel && matchesUnidad;
     });
 
     const groupedData = filteredData.reduce((acc, item) => {
@@ -299,22 +405,15 @@ function generateColorFromCategory(category) {
   }
   return color;
 }
-function applyDateFilter() {
-  const startDate = document.getElementById('startDate').value;
-  const endDate = document.getElementById('endDate').value;
 
+function applyDateFilter(startDate, endDate) {
   fetchAndGroupData(startDate, endDate).then(groupedData => {
-    // Limpiar los datos actuales del mapa
     clearMapData();
-
-    // Volver a añadir las capas de heatmap y los marcadores con los nuevos datos
     addHeatmapLayers(groupedData);
     addMarkers(groupedData);
     createCategoryButtons(groupedData);
-
-    // Restaurar el estado de las categorías activas
     restoreActiveCategories();
-    adjustMapBounds(); // Ajustar los límites del mapa
+    adjustMapBounds();
   });
 }
 
@@ -357,3 +456,162 @@ function createCategoryIcon(color) {
   return icon;
 }
 window.onload = initMap;
+
+function generateSummaryTable(groupedData) {
+  // Crear el contenedor de la tabla
+  const tableContainer = document.getElementById('summaryTableContainer');
+  tableContainer.innerHTML = ''; // Limpiar cualquier contenido previo
+
+  // Crear la tabla y sus encabezados
+  const table = document.createElement('table');
+  table.className = 'table table-bordered';
+
+  const thead = document.createElement('thead');
+  const headerRow = document.createElement('tr');
+
+  const headers = [
+    'N°',
+    'Categoría', 
+    'Cantidad de Eventos',
+    'Cantidad de Eventos por Nivel',
+    'Cantidad de Eventos Abiertos',
+    'Cantidad de Eventos Cerrados',
+    'Primer Día de Inicio', 
+    'Último Día de Inicio',
+    'Primer Día de Cierre', 
+    'Último Día de Cierre'
+  ];
+
+  headers.forEach(headerText => {
+    const th = document.createElement('th');
+    th.textContent = headerText;
+    headerRow.appendChild(th);
+  });
+
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+
+  // Crear el cuerpo de la tabla
+  const tbody = document.createElement('tbody');
+
+  let rowIndex = 1;
+
+  Object.keys(groupedData).forEach(category => {
+    const events = groupedData[category];
+    const firstStartDate = new Date(Math.min(...events.map(e => new Date(e.fecha_inicio))));
+    const lastStartDate = new Date(Math.max(...events.map(e => new Date(e.fecha_inicio))));
+
+    // Filtrar los eventos que no están en proceso para calcular las fechas de cierre
+    const closedEvents = events.filter(e => e.fecha_cierre !== 'En Proceso');
+    const endDates = closedEvents.map(e => new Date(e.fecha_cierre));
+    const firstEndDate = endDates.length ? new Date(Math.min(...endDates)) : null;
+    const lastEndDate = endDates.length ? new Date(Math.max(...endDates)) : null;
+
+    // Contar eventos cerrados y abiertos
+    const closedEventsCount = closedEvents.length;
+    const openEventsCount = events.length - closedEventsCount;
+
+    // Contar eventos por nivel
+    const eventCountByLevel = events.reduce((acc, event) => {
+      const nivel = event.nivel;
+      if (!acc[nivel]) {
+        acc[nivel] = 0;
+      }
+      acc[nivel]++;
+      return acc;
+    }, {});
+
+    // Crear etiquetas Bootstrap para los eventos por nivel
+    const eventCountByLevelBadges = Object.entries(eventCountByLevel)
+      .map(([nivel, count]) => {
+        const badge = document.createElement('span');
+        badge.className = 'badge bg-primary me-1'; // Estilo y margen derecho
+        badge.textContent = `${nivel}: ${count}`;
+        return badge.outerHTML;
+      })
+      .join(' ');
+
+    const row = document.createElement('tr');
+    row.id = `row-${category}`;
+
+    const cells = [
+      rowIndex,
+      category,
+      events.length,
+      eventCountByLevelBadges, // Mover aquí la cantidad de eventos por nivel
+      openEventsCount,
+      closedEventsCount,
+      formatDate(firstStartDate),
+      formatDate(lastStartDate),
+      formatDate(firstEndDate, 'Sin cierre registrado'),
+      formatDate(lastEndDate, 'Sin cierre registrado')
+    ];
+
+    cells.forEach(cellText => {
+      const td = document.createElement('td');
+      td.innerHTML = cellText; // Usar innerHTML para las etiquetas Bootstrap
+      row.appendChild(td);
+    });
+
+    tbody.appendChild(row);
+    rowIndex++;
+  });
+
+  table.appendChild(tbody);
+  tableContainer.appendChild(table);
+}
+
+function formatDate(date, fallbackText = 'Fecha no disponible') {
+  if (!date || isNaN(date.getTime())) {
+    return fallbackText;
+  }
+  return date.toISOString().split('T')[0];
+}
+
+function getRowNumber(row) {
+  return parseInt(row.cells[0].innerText, 10);
+}
+
+function restoreRowPosition(row) {
+  const tbody = row.parentNode;
+  const rowNumber = getRowNumber(row);
+
+  let targetRow = null;
+
+  for (let i = 0; i < tbody.children.length; i++) {
+    const currentRow = tbody.children[i];
+    const currentRowNumber = getRowNumber(currentRow);
+
+    if (currentRowNumber > rowNumber) {
+      targetRow = currentRow;
+      break;
+    }
+  }
+
+  if (targetRow) {
+    tbody.insertBefore(row, targetRow);
+  } else {
+    tbody.appendChild(row);
+  }
+}
+
+function restoreOriginalOrder() {
+  const tableContainer = document.getElementById('summaryTableContainer');
+  const table = tableContainer.querySelector('table');
+  const tbody = table.querySelector('tbody');
+
+  const orderedRows = Object.keys(originalRowPositions)
+    .sort((a, b) => originalRowPositions[a] - originalRowPositions[b])
+    .map(category => document.getElementById(`row-${category}`));
+
+  orderedRows.forEach(row => {
+    if (row) {
+      tbody.appendChild(row);
+    }
+  });
+}
+
+function moveRowToTop(row) {
+  const tbody = row.parentNode;
+  tbody.insertBefore(row, tbody.firstChild);
+}

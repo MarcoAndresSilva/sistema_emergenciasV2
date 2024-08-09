@@ -32,9 +32,6 @@
 							<?php 
 								if ($_SESSION["usu_tipo"] == 2){
 							?> 
-              <a class="dropdown-item" href="../Perfil"><span
-							class="font-icon glyphicon glyphicon-cog"></span>Editar Perfil</a>
-
 							<a class="dropdown-item" href="../CrearUsuario/index.php"><span
 							class="font-icon glyphicon glyphicon-plus"></span>Crear Usuario</a>
 							<?php
@@ -64,7 +61,23 @@
 							</span>
 						</a>
 					</div>
-					
+                 <!-- Icono de notificaciones con estructura proporcionada -->
+                    <div class="site-header-collapsed">
+                        <div class="dropdown dropdown-typical">
+                            <a href="#" class="dropdown-toggle no-arr" id="dd-notifications" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-bell-o" aria-hidden="true"></i>
+                                <span class="alerta" id="notification-count"></span>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dd-notifications">
+                                <h6 class="dropdown-header">Notificaciones</h6>
+                                <div id="notification-list">
+                                    <!-- Las notificaciones se agregarán aquí dinámicamente -->
+                                </div>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item text-center" href="#">Ver todas</a>
+                            </div>
+                        </div>
+                    </div>
 					<div class="site-header-collapsed-in">
 						<div class="site-header-search-container">
 							<!-- <form class="site-header-search closed">
