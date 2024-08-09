@@ -488,6 +488,7 @@ public function add_evento($usu_id, $ev_desc, $ev_est, $ev_inicio, $ev_direc, $e
     public function get_eventos_categoria_latitud_longitud(){
         $sql = 'SELECT ev.ev_latitud as "latitud",
               		ev.ev_longitud as "longitud",
+              		ev.ev_id as "id",
               		ev.ev_desc as "detalles",
               		ev.ev_img as "img",
               		ev.ev_inicio as "fecha_inicio",
