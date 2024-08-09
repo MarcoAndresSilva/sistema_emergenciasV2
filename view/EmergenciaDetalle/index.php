@@ -41,28 +41,30 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
             
 
             <div class="tbl">
+
                 <div class="tbl-row">
                     <div class="tbl-cell">
                         <h3 class="m-t-lg" id="lblNomIdTicket"></h3>
-                        <div id="lblEstado"></div>                        
-                        <span class="label label-pill label-primary" id="lblNomUsuario"></span>
-                        <span class="label label-pill label-warning" id="lblFechaCrea"></span>
+                        <!-- <span class="label label-pill" id="lblEstado"></span>                        -->
+                        <div class="col-lg-1 m-2" id="lblEstado"></div>      
+                        <div class="col-lg-1 m-2 label label-pill label-primary" id="lblNomUsuario"></div>
+                        <div class="col-lg-2 m-2 label label-pill label-warning" id="lblFechaCrea"></div>
                     </div>
                 </div>
             </div>
            
             <div class="row">
-                <div class="col-lg-6 mt-4">
+                <div class="col-lg-4 mt-4">
                     <fieldset class="form-group">
-                        <label class="form-label semibold" for="exampleInput">Categoria</label>
+                        <label class="form-label semibold" for="cat_nom">Categoria</label>
                         <input type="text" class="form-control" id="cat_nom" name="cat_nom" readonly>
                     </fieldset>
                 </div>
 
-                <div class="col-lg-6 mt-4">
+                <div class="col-lg-4 mt-4">
                     <fieldset class="form-group">
-                    <label class="form-label semibold" for="unid_nom">Unidad Asignada</label>
-                        <input type="text" class="form-control" id="unid_nom" name="unid_nom" readonly>
+                    <label class="form-label semibold" for="ev_direc">Dirección</label>
+                        <input type="text" class="form-control" id="ev_direc" name="ev_direc" readonly>
                     </fieldset>
                 </div>
 
@@ -95,12 +97,12 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
                     </div>
                    
                 </div>
+
             </div>
 
 		</div>
     </div>
 
-</div>
 <!--.page-content-->
 
     <?php require_once("../MainFooter/footer.php"); ?>
