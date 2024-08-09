@@ -204,56 +204,14 @@ function filterCategory(category, button) {
   }
 
   const row = document.getElementById(`row-${category}`);
+  saveOriginalRowPosition(category, row);
 
-  if (!originalRowPositions[category] && row) {
-    const tbody = row.parentNode;
-    originalRowPositions[category] = Array.from(tbody.children).indexOf(row);
+  if (currentView === 'heatmap' && heatmaps[category]) {
+    toggleHeatmapVisibility(category, button, row);
   }
 
-  if (currentView === 'heatmap') {
-    if (heatmaps[category]) {
-      const isVisible = heatmaps[category].getMap();
-      heatmaps[category].setMap(isVisible ? null : map);
-
-      if (isVisible) {
-        activeCategories.delete(category);
-        button.classList.remove('btn-success');
-        if (row) {
-          row.classList.remove('table-success');
-          restoreRowPosition(row);  // Restaurar la posición solo de la fila desactivada
-        }
-      } else {
-        activeCategories.add(category);
-        button.classList.add('btn-success');
-        if (row) {
-          row.classList.add('table-success');
-          moveRowToTop(row);  // Mover la fila activada al principio
-        }
-      }
-    }
-  }
-
-  if (currentView === 'markers') {
-    if (markers[category]) {
-      const areVisible = markers[category][0].getMap();
-      markers[category].forEach(marker => marker.setMap(areVisible ? null : map));
-
-      if (areVisible) {
-        activeCategories.delete(category);
-        button.classList.remove('btn-success');
-        if (row) {
-          row.classList.remove('table-success');
-          restoreRowPosition(row);  // Restaurar la posición solo de la fila desactivada
-        }
-      } else {
-        activeCategories.add(category);
-        button.classList.add('btn-success');
-        if (row) {
-          row.classList.add('table-success');
-          moveRowToTop(row);  // Mover la fila activada al principio
-        }
-      }
-    }
+  if (currentView === 'markers' && markers[category]) {
+    toggleMarkersVisibility(category, button, row);
   }
   adjustMapBounds();
 }
