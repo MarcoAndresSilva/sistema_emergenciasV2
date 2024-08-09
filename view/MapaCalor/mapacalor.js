@@ -580,6 +580,10 @@ function formatDate(date, fallbackText = 'Fecha no disponible') {
   }
   return date.toISOString().split('T')[0];
 }
+
+function getRowNumber(row) {
+  return parseInt(row.cells[0].innerText, 10);
+}
 function restoreOriginalOrder() {
   const tableContainer = document.getElementById('summaryTableContainer');
   const table = tableContainer.querySelector('table');
