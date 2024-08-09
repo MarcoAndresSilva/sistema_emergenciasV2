@@ -203,6 +203,13 @@ function filterCategory(category, button) {
     return;
   }
 
+  const row = document.getElementById(`row-${category}`);
+
+  if (!originalRowPositions[category] && row) {
+    const tbody = row.parentNode;
+    originalRowPositions[category] = Array.from(tbody.children).indexOf(row);
+  }
+
   if (currentView === 'heatmap') {
     if (heatmaps[category]) {
       const isVisible = heatmaps[category].getMap();
@@ -211,9 +218,17 @@ function filterCategory(category, button) {
       if (isVisible) {
         activeCategories.delete(category);
         button.classList.remove('btn-success');
+        if (row) {
+          row.classList.remove('table-success');
+          restoreRowPosition(row);  // Restaurar la posición solo de la fila desactivada
+        }
       } else {
         activeCategories.add(category);
         button.classList.add('btn-success');
+        if (row) {
+          row.classList.add('table-success');
+          moveRowToTop(row);  // Mover la fila activada al principio
+        }
       }
     }
   }
@@ -226,9 +241,17 @@ function filterCategory(category, button) {
       if (areVisible) {
         activeCategories.delete(category);
         button.classList.remove('btn-success');
+        if (row) {
+          row.classList.remove('table-success');
+          restoreRowPosition(row);  // Restaurar la posición solo de la fila desactivada
+        }
       } else {
         activeCategories.add(category);
         button.classList.add('btn-success');
+        if (row) {
+          row.classList.add('table-success');
+          moveRowToTop(row);  // Mover la fila activada al principio
+        }
       }
     }
   }
@@ -522,6 +545,7 @@ function generateSummaryTable(groupedData) {
       .join(' ');
 
     const row = document.createElement('tr');
+    row.id = `row-${category}`;
 
     const cells = [
       rowIndex,
@@ -570,4 +594,9 @@ function restoreOriginalOrder() {
       tbody.appendChild(row);
     }
   });
+}
+
+function moveRowToTop(row) {
+  const tbody = row.parentNode;
+  tbody.insertBefore(row, tbody.firstChild);
 }
