@@ -532,17 +532,17 @@ public function add_evento($usu_id, $ev_desc, $ev_est, $ev_inicio, $ev_direc, $e
             parent::set_names();
             
             $sql = "SELECT 
-            tm_emergencia_detalle.evento_id,
-            tm_emergencia_detalle.ev_desc,
-            tm_emergencia_detalle.fecha_crea,
-            tm_usuario.usu_nom,
-            tm_usuario.usu_ape,
-            tm_usuario.usu_tipo
+                tm_emergencia_detalle.emergencia_id,
+                tm_emergencia_detalle.ev_desc,
+                tm_emergencia_detalle.ev_inicio,
+                tm_usuario.usu_nom,
+                tm_usuario.usu_ape,
+                tm_usuario.usu_tipo
             FROM 
-            `tm_emergencia_detalle`
+                tm_emergencia_detalle
             INNER JOIN tm_usuario on tm_emergencia_detalle.usu_id = tm_usuario.usu_id
             WHERE
-            ev_id = ?";
+                tm_emergencia_detalle.ev_id = ?";
             
             $sql = $conectar->prepare($sql);
             $sql->bindValue(1, $ev_id);
@@ -561,21 +561,20 @@ public function add_evento($usu_id, $ev_desc, $ev_est, $ev_inicio, $ev_direc, $e
             parent::set_names();
             $sql = "SELECT
                 tm_evento.ev_id,
-                tm_evento.ev_nom,
+                tm_evento.usu_id,
                 tm_evento.cat_id,
+                tm_evento.ev_direc,
                 tm_evento.ev_desc,
                 tm_evento.ev_est,
                 tm_evento.ev_inicio,
                 tm_usuario.usu_nom,
                 tm_usuario.usu_ape,
-                tm_categoria.cat_nom,
-                tm_unidad.unid_nom
-                FROM
+                tm_categoria.cat_nom
+            FROM
                 tm_evento
-                INNER JOIN tm_categoria ON tm_evento.cat_id = tm_categoria.cat_id
-                INNER JOIN tm_usuario ON tm_evento.ev_nom = tm_usuario.usu_id
-                INNER JOIN tm_unidad ON tm_evento.cat_id = tm_unidad.unid_nom
-                WHERE
+            INNER JOIN tm_categoria ON tm_evento.cat_id = tm_categoria.cat_id
+            INNER JOIN tm_usuario ON tm_evento.usu_id = tm_usuario.usu_id
+            WHERE
                 tm_evento.ev_id = ?";
             $sql = $conectar->prepare($sql);
             $sql->bindValue(1, $ev_id);
@@ -587,4 +586,6 @@ public function add_evento($usu_id, $ev_desc, $ev_est, $ev_inicio, $ev_direc, $e
             return false;
         }
     }
+    
+
 }
