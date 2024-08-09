@@ -174,7 +174,7 @@ function addMarkers(categories) {
       });
 
       marker.addListener('click', function() {
-        showInfoWindow(marker.getPosition(), category, item.detalles, item.img, item.unidad, item.fecha_inicio, item.fecha_cierre);
+        showInfoWindow(marker.getPosition(), category, item.detalles, item.img, item.unidad, item.fecha_inicio, item.fecha_cierre, item.id);
       });
 
       bounds.extend(marker.getPosition());
@@ -183,13 +183,14 @@ function addMarkers(categories) {
   });
 }
 
-function showInfoWindow(latLng, category, details = 'Sin detalles', img = '', unidad, fecha_inicio, fecha_cierre) {
+function showInfoWindow(latLng, category, details = 'Sin detalles', img = '', unidad, fecha_inicio, fecha_cierre,id_evento) {
   let content = `<div><strong>Unidad:</strong> ${unidad}<br><strong>Categoria:</strong> ${category}<br><strong>Detalles:</strong> ${details}</div>`;
   if (img) {
     content += `<div><img src="../../public/${img}" alt="Imagen" style="max-width: 200px; max-height: 150px;"></div>`;
   }
   content += `<br> <strong>Fecha Creacion:</strong> ${fecha_inicio}`
   content += `<br> <strong>Fecha Cierre:</strong> ${fecha_cierre}`
+  content += `<br> <a class="btn btn-sm btn-info" href="../EmergenciaDetalle/?ID=${id_evento}">Seguimiento</a>`
 
   infoWindow.setContent(content);
   infoWindow.setPosition(latLng);
