@@ -1285,6 +1285,29 @@ INSERT INTO `tm_emergencia_detalle`(`emergencia_id`,`ev_id`,`usu_id`,`ev_desc`,`
 (4,161,2,'No hay problema indicame numero de serie',1),
 (5,161,1,'SN:816511616XX',1);
 
+--
+-- estructura de tm_noticia 
+--
+
+CREATE TABLE tm_noticia(
+`noticia_id` INT NOT NULL auto_increment,
+`asunto` VARCHAR(50) NOT NULL,
+`mensaje` VARCHAR(150) NOT NULL,
+`url` VARCHAR(250),
+`fecha` DATETIME DEFAULT CURRENT_TIMESTAMP,
+PRIMARY KEY (`noticia_id`)
+);
+--
+-- estructura de tm_noticia_usuario
+--
+CREATE TABLE tm_noticia_usuario(
+`noti_usu_id` INT NOT NULL auto_increment,
+`noticia_id` INT NOT NULL,
+`usu_id` INT NOT NULL,
+`leido` BOOLEAN NOT NULL,
+`fecha_lectura` DATETIME DEFAULT NULL,
+PRIMARY KEY (`noti_usu_id`)
+);
 
 --
 -- Indices de la tabla `tm_camb_asig`
