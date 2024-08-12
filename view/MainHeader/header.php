@@ -27,7 +27,7 @@
 							class="font-icon glyphicon glyphicon-question-sign"></span>Ayuda</a> -->
 							<div class="dropdown-divider"></div>
 							
-							<a class="dropdown-item" href="../Perfile"><span
+							<a class="dropdown-item" href="../Perfil"><span
 										  class="font-icon glyphicon glyphicon-cog"></span>Editar Perfil</a>
 							<?php 
 								if ($_SESSION["usu_tipo"] == 2){
