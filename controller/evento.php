@@ -6,6 +6,7 @@ require_once("../models/Unidad.php");
 require_once("../models/Estado.php");
 require_once("../models/EventoUnidad.php");
 require_once("../models/NivelPeligro.php");
+require_once("../models/Correo.php");
 
 $evento = new Evento();
 $categoria = new Categoria();
@@ -85,6 +86,12 @@ if (isset($_GET["op"])) {
                 $ev_img
             );
             header('Content-Type: application/json');
+            $correo = new Correo($_SESSION["usu_correo"], "nuevo evento", $ev_desc, "From: sistemaemergencia@munimelipilla.cl\r\n");
+
+            $correo->setAsunto("Actualización del evento");
+            $correo->setMensaje("Este es el nuevo contenido del correo.");
+
+            $datos["correo"]=$correo->enviar();
             echo json_encode($datos);
         break;
 
