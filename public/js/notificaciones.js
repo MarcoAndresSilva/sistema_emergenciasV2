@@ -4,9 +4,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Recupera las notificaciones del localStorage o usa un valor predeterminado
     let notificaciones = JSON.parse(localStorage.getItem('notificaciones')) || [
-        { asunto: "Nuevo mensaje", mensaje: "Tienes un nuevo mensaje de Juan", leido: false, url: "../MapaCalor" },
-        { asunto: "Actualización de perfil", mensaje: "Tu perfil ha sido actualizado", leido: true, url: "#perfilActualizado" },
-        { asunto: "Recordatorio", mensaje: "No olvides tu reunión a las 10 AM", leido: false, url: "#recordatorioReunion" }
+        { asunto: "Nuevos Eventos", mensaje: "Tienes Eventos sin Derivar", leido: false, url: "../ControlEventos/" },
+        { asunto: "Actualización de perfil", mensaje: "Tu perfil ha sido actualizado", leido: true, url: "../perfil" },
     ];
 
     // Guarda las notificaciones en el localStorage
