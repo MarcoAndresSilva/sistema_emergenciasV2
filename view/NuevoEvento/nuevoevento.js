@@ -48,11 +48,28 @@ function obtenerUbicacionUsuario() {
       // Actualizar el campo de dirección
       actualizarDireccion(currentLat, currentLng);
     }, function(error) {
-      console.error("Error al obtener la ubicación del usuario: ", error);
-      swal("Error de Geolocalización", "No se pudo obtener la ubicación del usuario", "error");
+      // Si la geolocalización falla, centrar el mapa en la ubicación predeterminada (Melipilla)
+      map.setCenter(defaultLocation);
+      marker.setPosition(defaultLocation);
+      currentLat = defaultLocation.lat;
+      currentLng = defaultLocation.lng;
+      // Actualizar los campos ocultos de latitud y longitud
+      $('#ev_latitud').val(currentLat);
+      $('#ev_longitud').val(currentLng);
+      // Actualizar el campo de dirección
+      actualizarDireccion(currentLat, currentLng);
     });
   } else {
-    console.error('Error: El navegador no soporta geolocalización.');
+    // Si el navegador no soporta geolocalización, centrar el mapa en la ubicación predeterminada (Melipilla)
+    map.setCenter(defaultLocation);
+    marker.setPosition(defaultLocation);
+    currentLat = defaultLocation.lat;
+    currentLng = defaultLocation.lng;
+    // Actualizar los campos ocultos de latitud y longitud
+    $('#ev_latitud').val(currentLat);
+    $('#ev_longitud').val(currentLng);
+    // Actualizar el campo de dirección
+    actualizarDireccion(currentLat, currentLng);
   }
 }
 
@@ -89,6 +106,7 @@ $(document).ready(function() {
   initMap();
   initAutocomplete();
   cargarCategorias();
+  obtenerUbicacionUsuario();
   $('#elegir-ubicacion').on('change', function() {
     var selectedOption = $(this).val();
     if (selectedOption === 'direccion-escrita') {
@@ -103,7 +121,6 @@ $(document).ready(function() {
   document.querySelectorAll('input[name="ubicacion"]').forEach(function(radio) {
     radio.addEventListener('change', function() {
       toggleMap();
-
       if (this.value === 'permitir' || this.value === 'permitirActual') {
         obtenerUbicacionUsuario();
       }
