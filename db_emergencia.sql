@@ -1304,7 +1304,7 @@ CREATE TABLE tm_noticia_usuario(
 `noti_usu_id` INT NOT NULL auto_increment,
 `noticia_id` INT NOT NULL,
 `usu_id` INT NOT NULL,
-`leido` BOOLEAN NOT NULL,
+`leido` BOOLEAN NOT NULL DEFAULT false,
 `fecha_lectura` DATETIME DEFAULT NULL,
 PRIMARY KEY (`noti_usu_id`)
 );
