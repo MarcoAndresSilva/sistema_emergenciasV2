@@ -86,12 +86,19 @@ if (isset($_GET["op"])) {
                 $ev_img
             );
             header('Content-Type: application/json');
-            $correo = new Correo($_SESSION["usu_correo"], "nuevo evento", $ev_desc, "From: sistemaemergencia@munimelipilla.cl\r\n");
+            $asunto = "Nuevo Evento Registrado: " . $ev_desc;
 
-            $correo->setAsunto("Actualización del evento");
-            $correo->setMensaje("Este es el nuevo contenido del correo.");
+            $mensaje = "Estimado(a),\n\n";
+            $mensaje .= "Se ha registrado un nuevo evento con los siguientes detalles:\n\n";
+            $mensaje .= "Descripción: $ev_desc\n";
+            $mensaje .= "Dirección: $ev_direc\n\n";
+            $mensaje .= "Por favor, revise la información y tome las acciones necesarias.\n\n";
+            $mensaje .= "Atentamente,\n";
+            $mensaje .= "Equipo de Emergencias";
 
-            $datos["correo"]=$correo->enviar();
+            $encabezados = "From: sistemaemergencia@munimelipilla.cl\r\n";
+            $correo = new Correo($_SESSION["usu_correo"], $asunto, $mensaje, $encabezados);
+            $datos["correo"] = $correo->enviar();
             echo json_encode($datos);
         break;
 
