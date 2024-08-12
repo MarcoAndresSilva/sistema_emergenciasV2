@@ -10,6 +10,7 @@ Permisos::redirigirSiNoAutorizado();
 <link rel="stylesheet" href="./nivelCateogiraStyle.css">
 <title>Sistema Emergencia</title>
 <script defer type="text/javascript" src="./perfile.js"></script>
+<?php require_once("../MainJs/js.php"); ?>
 <script src="../../public/js/sweetaler2v11-11-0.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
 </head>
@@ -94,7 +95,6 @@ Permisos::redirigirSiNoAutorizado();
     </div><!--.page-content-->
 
 	<?php require_once("../MainFooter/footer.php"); ?>
-	<?php require_once("../MainJs/js.php"); ?>
 	
 </body>
 	<script>
