@@ -1112,7 +1112,7 @@ CREATE TABLE `tm_usuario` (
 
 INSERT INTO `tm_usuario` (`usu_id`, `usu_nom`, `usu_ape`, `usu_correo`, `usu_telefono`, `usu_name`, `usu_pass`, `fecha_crea`, `fecha_modi`, `fecha_elim`, `estado`, `usu_tipo`, `usu_unidad`) VALUES
 (1, 'Cristian', 'Suazo', 'crhiiss26@gmail.com', 968093527, 'csuazo', 'e10adc3949ba60abbe56e057f20f883e', '2023-12-30 13:15:58', NULL, NULL, 1, 2,1),
-(2, 'Admin', 'admin', 'admin@mail.com', 961718297, 'admin', '202cb962ac59075b964b07152d234b70', '2024-01-03 18:09:32', NULL, NULL, 1, 1,1),
+(2, 'Admin', 'admin', 'admin@mail.com', 961718297, 'admin', '202cb962ac59075b964b07152d234b70', '2024-01-03 18:09:32', NULL, NULL, 1, 2,1),
 (3, 'Marco', 'Silva', 'marco.silvaponce10@gmail.com', 997827161, 'msilva', '827ccb0eea8a706c4c34a16891f84e7b', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 3,2),
 (4, 'marquisio', 'Silviña', 'memo@test.com', 965412724, 'marquisio', '827ccb0eea8a706c4c34a16891f84e7b', '2024-03-20 13:01:58', NULL, NULL, 1, 3,3);
 
@@ -1268,7 +1268,7 @@ CREATE TABLE tm_emergencia_detalle(
 	`emergencia_id` INT NOT NUll auto_increment,
   `ev_id` INT NOT NULL,
   `usu_id` INT NOT NULL,
-  `ev_desc` VARCHAR(500) NOT NULL, 
+  `ev_desc` MEDIUMTEXT NOT NULL, 
   `ev_inicio` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `ev_est` INT NOT NULL,
   PRIMARY KEY (`emergencia_id`)
