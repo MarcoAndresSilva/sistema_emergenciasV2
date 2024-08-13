@@ -1,3 +1,13 @@
+$(document).ready(function() {
+
+  // Obtener el elemento <a> por su clase
+  var enlace = document.querySelector('.MapaCalor');
+  // Añadir una clase al enlace
+  enlace.classList.add('selected');
+
+});
+
+
 var map, heatmaps = {}, markers = {}, infoWindow;
 var currentView = 'heatmap'; // Puede ser 'heatmap' o 'markers'
 var categoryColors = {}; // Almacenará los colores asignados a cada categoría
