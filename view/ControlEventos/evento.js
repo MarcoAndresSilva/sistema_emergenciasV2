@@ -278,7 +278,7 @@ function ActualizarTodo($id_evento){
 
 let lat;
 let long;
-$(document).on('click', '.btnDireccionarMapa', function() {
+$(document).on('click', '.btnDireccionarMapa',function() {
     
     //Desplegar mapa para direccionar al lugar
     toggleMapa();
@@ -289,48 +289,32 @@ $(document).on('click', '.btnDireccionarMapa', function() {
     consultarEventoMostarMapa(ev_id);
 });
 
-function toggleMapa() {
+function toggleMapa() {   
     $('#modal-mapa').toggle();
 }
 
 function consultarEventoMostarMapa(ev_id) {
 
-    $.post("../../controller/evento.php?op=get_evento_id", {ev_id: ev_id}, function(data, status) {
-        var eventos = JSON.parse(data);
-        var direccion = eventos[0]['ev_direc'];
+    $.post("../../controller/evento.php?op=get_evento_id",{ev_id : ev_id}, function(data,status){
         
-        // Expresión regular para extraer las coordenadas
-        var coordenadasRegex = /(-?\d+\.\d+),\s*(-?\d+\.\d+)/;
+        var eventos = JSON.parse(data);
 
-        var match = direccion.match(coordenadasRegex);
+        lat = eventos[0]['ev_latitud'];
+        long = eventos[0]['ev_longitud'];
 
-        if (match) {
-            // Si hay coincidencias, el primer grupo capturado será la latitud y el segundo será la longitud
-            lat = parseFloat(match[1].trim());
-            long = parseFloat(match[2].trim());
-
-            console.log(lat);
-            console.log(long);
-        } else {
-            console.log("No se encontraron coordenadas en la dirección.");
-        }
-
-        mostrarMapa(lat, long);
+        mostrarMapa(lat,long);
     });
 }
 
 var LocationUserOrigin;
 
-async function mostrarMapa(lat, long) {
-
-    const { AdvancedMarkerElement } = await google.maps.importLibrary("marker");
+function mostrarMapa(lat,long) {
 
     var map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 17, // Nivel de zoom
-        mapId: 'DEMO_MAP_ID' // Map ID requerido para AdvancedMarkerElement
+        zoom: 17 // Nivel de zoom
     });
 
-    //Activación y ejecución de la obtención de coordenadas del usuario
+    //Activación y ejecución de la obtencion de coordenadas del usuario
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
                 
@@ -343,7 +327,7 @@ async function mostrarMapa(lat, long) {
                 lng: position.coords.longitude
             };
             //Marcador que ingresa el usuario
-            var marker = new AdvancedMarkerElement({
+            marker = new google.maps.Marker({
                 position: userLocation, // Coordenadas del marcador
                 map: map,
                 title: 'ArrastrarEmergencia'
@@ -362,27 +346,25 @@ async function mostrarMapa(lat, long) {
                 case error.TIMEOUT:
                     console.error("Se agotó el tiempo de espera para la solicitud de geolocalización.");
                     break;
-                default:
-                    console.error("Error desconocido al intentar obtener la ubicación.");
+                    default:
+                        console.error("Error desconocido al intentar obtener la ubicación.");
             }
-            swal("Error de Geolocalización!", "No se logró obtener la ubicación", "error");
+            swal("Error de Geolocalización!","No se logro optener la ubicación", "error");
         });
     } else {
         console.error('Error: El navegador no soporta geolocalización.');
     }
 }
 
-// Redireccionar a Google Maps para crear ruta
-$('.btnCrearRuta').off('click').on('click', function() {
-    // Redirecciona a Google Maps
-    if (LocationUserOrigin && lat && long) {
-        window.location.href = "https://www.google.com/maps/dir/" + LocationUserOrigin.lat + "," + LocationUserOrigin.lng + "/" + lat + "," + long;
-    } else {
-        console.error("No se han obtenido las coordenadas necesarias.");
-    }
+//Btn Crear ruta)
+$('.btnCrearRuta').off('click').on('click',function(){
+    
+    // Redirecciona a google maps
+    window.location.href = "https://www.google.com/maps/dir/" + LocationUserOrigin.lat + "," + LocationUserOrigin.lng + "/" + lat + "," + long  ;
+
 });
 
-$('.CerrarModalMap').off('click').on('click', function() {
+$('.CerrarModalMap').off('click').on('click',function(){
     
     // Llamar a la función para mostrar u ocultar la pestaña
     toggleMapa();
