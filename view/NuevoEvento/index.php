@@ -91,6 +91,7 @@ if (isset($_SESSION["usu_id"])) {
                             <small id="archivoAdjuntado" class="form-text text-muted">No hay archivo adjunto (.JPG/.JPEG/.PNG)</small>
                         </fieldset>
                     </div>
+                </div>
 
                     <div class="group-ident">
                         <div class="col-lg-5" id="select-ubicacion">
@@ -150,11 +151,9 @@ if (isset($_SESSION["usu_id"])) {
     <script type="text/javascript" src="./nuevoevento.js"></script>
     
 </body>
-        
+</html>
 <?php
-    require_once("../MainJs/js.php"); 
-}else{
-    header("Location:". Conectar::ruta () ."index.php");
+} else {
+    header("Location:" . Conectar::ruta() . "index.php");
 }
 ?>
-</html>
