@@ -33,7 +33,7 @@
 
         <!-- Evento -->
         <li class="blue-dirty">
-            <a class="ControlEventos" href="../MapaCalor/">
+            <a class="MapaCalor" href="../MapaCalor/">
                 <span class="glyphicon glyphicon-th"></span>
                 <span class="lbl"> Mapa De Eventos</span>
             </a>
