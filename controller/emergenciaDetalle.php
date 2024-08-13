@@ -99,7 +99,16 @@ if (isset($_GET["op"])) {
                 }
                 echo json_encode($output);
             }
-            break;
+        break;
+
+            
+        case "insertdetalle":
+            $evento->insert_emergencia_detalle($_POST["ev_id"], $_POST["usu_id"], $_POST["ev_desc"]);
+        break;
+
+        case "updatedetalle":
+            $evento->update_evento($_POST["ev_id"]);
+        break;
 
         }
     }        
