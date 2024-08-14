@@ -92,6 +92,10 @@
                         <span class="glyphicon glyphicon-asterisk"></span>
                         <span class="lbl">Gestionar Usuarios</span>
                     </a>
+                    <a class="" href="../SeguridadUnidad/">
+                        <span class="glyphicon glyphicon-asterisk"></span>
+                        <span class="lbl">Seguridad Unidad</span>
+                    </a>
                 </div>
             </div>
         </li>
