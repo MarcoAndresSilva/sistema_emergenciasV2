@@ -1055,9 +1055,9 @@ CREATE TABLE `tm_udu_tipo` (
 --
 
 INSERT INTO `tm_udu_tipo` (`usu_tipo_id`, `usu_tipo_nom`) VALUES
-(1, 'Emergencias'),
-(2, 'Informática'),
-(3, 'Territorial');
+(1, 'Basico'),
+(2, 'Administrador'),
+(3, 'Super usuario');
 
 -- --------------------------------------------------------
 
