@@ -40,35 +40,39 @@ if (isset($_SESSION["usu_id"])) {
             <h5 class="m-t-lg with-border">Ingresar información</h5>
 
             <div class="row">
-                <form class="event-box" action="nuevoevento.js" method="post" id="event_form" enctype="multipart/form-data">
-
-                <div class="group-info-personal">   
-                        <div class="col-lg-5">
-                            <fieldset class="form-group">
-                                <label class="form-label semibold" for="nombre">Nombre</label>
-                                <input type="text" class="form-control" id="nombre" placeholder="Nombre" value="<?php echo $_SESSION['usu_nom']; ?>" readonly>
-                            </fieldset>
-                        </div>
-                        <div class="col-lg-5">
-                            <fieldset class="form-group">
-                                <label class="form-label semibold" for="apellido">Apellido</label>
-                                <input type="text" class="form-control" id="apellido" placeholder="Apellido" value="<?php echo $_SESSION['usu_ape']; ?>" readonly>
-                            </fieldset>
-                        </div>
-                        <div class="col-lg-5">
-                            <fieldset class="form-group">
-                                <label class="form-label semibold" for="telefono">Teléfono</label>
-                                <input type="text" class="form-control" id="telefono" placeholder="Ingrese su N° telefónico" value="<?php echo $_SESSION['usu_telefono']; ?>" readonly>
-                            </fieldset>
-                        </div>
-                        <div class="col-lg-5">
-                            <fieldset class="form-group">
-                                <label class="form-label semibold" for="mail">Dirección de correo electrónico</label>
-                                <input type="email" class="form-control" id="correo" placeholder="Ingrese su email" value="<?php echo $_SESSION['usu_correo']; ?>" readonly>
-                            </fieldset>
+                 <div class="col-lg-6 col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">Nombre</h6>
+                            <p class="card-text"><?php echo $_SESSION['usu_nom']; ?></p>
                         </div>
                     </div>
-
+                </div>
+                <div class="col-lg-6 col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">Apellido</h6>
+                            <p class="card-text"><?php echo $_SESSION['usu_ape']; ?></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">Teléfono</h6>
+                            <p class="card-text"><?php echo $_SESSION['usu_telefono']; ?></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">Dirección de correo electrónico</h6>
+                            <p class="card-text"><?php echo $_SESSION['usu_correo']; ?></p>
+                        </div>
+                    </div>
+                </div>
+                <form class="event-box" action="nuevoevento.js" method="post" id="event_form" enctype="multipart/form-data">
                     <div class="group-emergencia">
                         <div class="col-lg-5">
                             <fieldset class="form-group">
