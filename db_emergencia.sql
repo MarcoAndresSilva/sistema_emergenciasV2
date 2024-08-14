@@ -264,20 +264,20 @@ INSERT INTO `tm_ev_niv` (`ev_niv_id`, `ev_niv_nom`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tm_ev_tm_unid`
+-- Estructura de tabla para la tabla `tm_asignado`
 --
 
-CREATE TABLE `tm_ev_tm_unid` (
+CREATE TABLE `tm_asignado` (
   `id_inter` int(11) NOT NULL,
   `ev_id` int(11) DEFAULT NULL,
   `unid_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `tm_ev_tm_unid`
+-- Volcado de datos para la tabla `tm_asignado`
 --
 
-INSERT INTO `tm_ev_tm_unid` (`id_inter`, `ev_id`, `unid_id`) VALUES
+INSERT INTO `tm_asignado` (`id_inter`, `ev_id`, `unid_id`) VALUES
 (6, 85, 2),
 (7, 85, 5),
 (8, 84, 3),
@@ -645,9 +645,9 @@ ALTER TABLE `tm_ev_niv`
   ADD PRIMARY KEY (`ev_niv_id`);
 
 --
--- Indices de la tabla `tm_ev_tm_unid`
+-- Indices de la tabla `tm_asignado`
 --
-ALTER TABLE `tm_ev_tm_unid`
+ALTER TABLE `tm_asignado`
   ADD PRIMARY KEY (`id_inter`);
 
 --
@@ -714,9 +714,9 @@ ALTER TABLE `tm_ev_niv`
   MODIFY `ev_niv_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- AUTO_INCREMENT de la tabla `tm_ev_tm_unid`
+-- AUTO_INCREMENT de la tabla `tm_asignado`
 --
-ALTER TABLE `tm_ev_tm_unid`
+ALTER TABLE `tm_asignado`
   MODIFY `id_inter` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=330;
 --
 -- AUTO_INCREMENT de la tabla `tm_usu_tipo`

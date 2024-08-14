@@ -401,7 +401,7 @@ class Evento extends Conectar {
             parent::set_names();
             $sql = "SELECT tme.ev_id, tme.ev_nom, tme.ev_mail, tme.ev_desc, te.est_nom, tme.ev_inicio, tme.ev_final, tme.ev_direc, tmc.cat_nom, ten.ev_niv_nom,tme.ev_est,tme.cat_id,tmc.cat_id, ten.ev_niv_id,GROUP_CONCAT(tu.unid_nom SEPARATOR ' - ') AS unidades
             FROM tm_evento tme
-            INNER JOIN tm_ev_tm_unid temu ON tme.ev_id = temu.ev_id 
+            INNER JOIN tm_asignado temu ON tme.ev_id = temu.ev_id 
             INNER JOIN tm_unidad tu ON tu.unid_id = temu.unid_id
             INNER JOIN tm_categoria tmc ON tmc.cat_id = tme.cat_id 
             INNER JOIN tm_ev_niv ten ON tme.ev_niv = ten.ev_niv_id 
