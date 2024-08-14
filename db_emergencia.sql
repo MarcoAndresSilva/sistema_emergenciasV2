@@ -1042,19 +1042,19 @@ CREATE TABLE `tm_sector` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tm_udu_tipo`
+-- Estructura de tabla para la tabla `tm_usu_tipo`
 --
 
-CREATE TABLE `tm_udu_tipo` (
+CREATE TABLE `tm_usu_tipo` (
   `usu_tipo_id` int(11) NOT NULL,
   `usu_tipo_nom` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Volcado de datos para la tabla `tm_udu_tipo`
+-- Volcado de datos para la tabla `tm_usu_tipo`
 --
 
-INSERT INTO `tm_udu_tipo` (`usu_tipo_id`, `usu_tipo_nom`) VALUES
+INSERT INTO `tm_usu_tipo` (`usu_tipo_id`, `usu_tipo_nom`) VALUES
 (1, 'Basico'),
 (2, 'Administrador'),
 (3, 'Super usuario');
@@ -1383,9 +1383,9 @@ ALTER TABLE `tm_sector`
   ADD PRIMARY KEY (`sector_id`);
 
 --
--- Indices de la tabla `tm_udu_tipo`
+-- Indices de la tabla `tm_usu_tipo`
 --
-ALTER TABLE `tm_udu_tipo`
+ALTER TABLE `tm_usu_tipo`
   ADD PRIMARY KEY (`usu_tipo_id`);
 
 --
@@ -1489,9 +1489,9 @@ ALTER TABLE `tm_sector`
   MODIFY `sector_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de la tabla `tm_udu_tipo`
+-- AUTO_INCREMENT de la tabla `tm_usu_tipo`
 --
-ALTER TABLE `tm_udu_tipo`
+ALTER TABLE `tm_usu_tipo`
   MODIFY `usu_tipo_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --

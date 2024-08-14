@@ -113,7 +113,7 @@ public function get_datos_contacto($usu_id) {
 }
 
 public function get_todos_usuarios() {
-    $sql = "SELECT * FROM tm_udu_tipo";
+    $sql = "SELECT * FROM tm_usu_tipo";
     $resultado = $this->ejecutarConsulta($sql);
 
     if (is_array($resultado) && count($resultado) > 0) {
@@ -286,7 +286,7 @@ public function get_info_usuario($usu_id){
                 unid.unid_nom as "Unidad",
                 usu.usu_name as "Usuario"
             FROM `tm_usuario` as usu
-            JOIN tm_udu_tipo as tp
+            JOIN tm_usu_tipo as tp
             ON(tp.usu_tipo_id=usu.usu_tipo)
             JOIN tm_unidad as unid
             ON (usu.usu_unidad=unid.unid_id)
@@ -316,7 +316,7 @@ public function get_full_usuarios(){
                 unid.unid_nom as "Unidad",
                 usu.usu_name as "Usuario"
             FROM `tm_usuario` as usu
-            JOIN tm_udu_tipo as tp
+            JOIN tm_usu_tipo as tp
             ON(tp.usu_tipo_id=usu.usu_tipo)
             JOIN tm_unidad as unid
             ON (usu.usu_unidad=unid.unid_id);';
