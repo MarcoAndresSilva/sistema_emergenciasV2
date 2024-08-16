@@ -9,41 +9,71 @@ $(document).ready(function() {
 });
 
 function cargarTablaGeneral() {
-    // Funcion para cargar los datos de las tablas
-    $.post("../../controller/evento.php?op=tabla-historial-eventos", function(respuesta, status) {
-        // Parsear la respuesta JSON
-        var data = JSON.parse(respuesta);
-        
-        $('#datos-criticos').html(data.critico);
-        $('#datos-medios').html(data.medio);
-        $('#datos-bajos').html(data.bajo);
-        $('#datos-generales').html(data.comun);
+    $('#tabla-historial').DataTable({
+        "pageLength": 10,
+        "lengthMenu": [[10, 20, 50], [10, 20, 50]],
+        "ordering": false,
+        "searching": true,
+        "paging": true,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+        "ajax": {
+            "url": "../../controller/evento.php?op=tabla-historial-eventos",
+            "type": "POST",
+            "dataSrc": "" 
+        },
+        "columns": [
+            { "data": "ev_id" },
+            { "data": "categoria" },
+            { "data": "direccion" },
+            { "data": "asignacion" },
+            { "data": "nivel_peligro" },
+            { "data": "estado" },
+            { "data": "fecha_apertura" },
+            { "data": "ver_detalle" }
+        ],
+        "drawCallback": function(settings) {
+            // Aquí aplicas nuevamente los estilos o cambios de color que necesitas
+            $('.peligro_critico').addClass('label label-pill label-primary');
+            $('.peligro_medio').addClass('label label-pill label-warning');
+            $('.peligro_bajo').addClass('label label-pill label-success');
+            $('.peligro_comun').addClass('label label-pill label-default');
+        }
+    });
 
-        // Agregar el evento click a los botones de ver detalle
-        $('.btnDetalleEmergencia').click(function() {
-            var ev_id = $(this).data('ev-id');
-            ver(ev_id);
-        });
+         // Asegúrate de que el evento de clic esté delegado correctamente
+    $('#tabla-historial').on('click', '.btnDetalleEmergencia', function() {
+        var ev_id = $(this).data('ev-id');
+        ver(ev_id);
     });
 }
 
 function ver(ev_id) {
     // Abrir una nueva pestaña con la ruta especificada
     window.open(`../EmergenciaDetalle?ID=${ev_id}`, '_blank');
+    
 }
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////
 let lat;
 let long;
-$(document).on('click', '.btnDireccionarMapa',function() {
+$(document).on('click', '.btnDireccionarMapa', function() {
+    // Encuentra la fila correspondiente
+    var $tr = $(this).closest('tr');
     
-    //Desplegar mapa para direccionar al lugar
+    // Obtén la instancia de DataTables
+    var table = $('#tabla-historial').DataTable();
+    
+    // Usa DataTables para obtener los datos de la fila
+    var data = table.row($tr).data();
+    
+    // Obtén el ev_id desde los datos de la fila
+    var ev_id = data.ev_id;
+
+    // Desplegar mapa para direccionar al lugar
     toggleMapa();
-    
-    // Obtener el valor del ID del evento desde la celda
-    ev_id = $(this).closest('tr').find('#id_evento_celda').attr('value');
-    // ev_id = 85;
     consultarEventoMostarMapa(ev_id);
 });
 
