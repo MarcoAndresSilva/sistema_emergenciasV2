@@ -9,7 +9,6 @@ Permisos::redirigirSiNoAutorizado();
 <html>
 <?php require_once("../MainHead/head.php"); ?>
 <title>Sistema Emergencia</title>
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQrYCFSz7Q-a-WONxo4yymu9SAPgmaA6c&libraries=visualization"></script>
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="./stylemapacalor.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
