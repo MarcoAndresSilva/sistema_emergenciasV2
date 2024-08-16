@@ -72,6 +72,13 @@ Permisos::redirigirSiNoAutorizado();
                 body.classList.remove('sidebar-hidden');
             }
         });
+        //selecionar en el sidebar que esta en mapacalor
+        document.addEventListener('DOMContentLoaded', function() {
+          var enlace = document.querySelector('.MapaCalor');
+          if (enlace) {
+            enlace.classList.add('selected'); 
+          }
+        });
     </script>
 
     <?php require_once("../MainJs/js.php"); ?>
