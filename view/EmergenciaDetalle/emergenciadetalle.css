@@ -51,8 +51,8 @@
     font-size: 1.2rem;
 }
 
-#lblEstado span{
-    width: 100px;
+#lblEstado{
+    background: transparent;
 }
 /* Mapa  */
 #modal-mapa{
