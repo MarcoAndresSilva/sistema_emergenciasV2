@@ -41,13 +41,13 @@ class Evento extends Conectar {
                 return $resultado;
             } else {
                 ?> <script>console.log("No se encontraron Eventos")</script><?php
-                return 0;
+                return [];
             }
         } catch (Exception $e) {
             ?> 
             <script>console.log("Error catch     get_evento")</script>
             <?php
-            throw $e;
+             return [];
         }
 
     }
@@ -190,55 +190,54 @@ class Evento extends Conectar {
         }
     }
         
- 
-public function add_evento($usu_id, $ev_desc, $ev_est, $ev_inicio, $ev_direc, $ev_latitud, $ev_longitud, $cat_id, $ev_niv, $ev_img) {
-    if (empty($usu_id) || empty($ev_desc) || empty($ev_est) || empty($ev_inicio) || empty($ev_direc) || empty($cat_id)) {
-        return [
-            'status' => 'warning',
-            'message' => 'Faltan datos obligatorios. Por favor, asegúrate de completar todos los campos necesarios.'
-        ];
-    }
-  
-    try {
-        $conectar = parent::conexion();
-        parent::set_names();
-  
-        $sql = "INSERT INTO tm_evento (usu_id, ev_desc, ev_est, ev_inicio, ev_final, ev_direc, ev_latitud, ev_longitud, cat_id, ev_niv, ev_img) 
-        VALUES (:usu_id, :ev_desc, :ev_est, :ev_inicio, NULL, :ev_direc, :ev_latitud, :ev_longitud, :cat_id, :ev_niv, :ev_img)";
-  
-        $consulta = $conectar->prepare($sql);
-  
-        $consulta->bindParam(':usu_id', $usu_id);
-        $consulta->bindParam(':ev_desc', $ev_desc);
-        $consulta->bindParam(':ev_est', $ev_est);
-        $consulta->bindParam(':ev_inicio', $ev_inicio);
-        $consulta->bindParam(':ev_direc', $ev_direc);
-        $consulta->bindParam(':ev_latitud', $ev_latitud);
-        $consulta->bindParam(':ev_longitud', $ev_longitud);
-        $consulta->bindParam(':cat_id', $cat_id);
-        $consulta->bindParam(':ev_niv', $ev_niv);
-        $consulta->bindParam(':ev_img', $ev_img);
-
-        try {
-            $consulta->execute();
+    public function add_evento($usu_id, $ev_desc, $ev_est, $ev_inicio, $ev_direc, $ev_latitud, $ev_longitud, $cat_id, $ev_niv, $ev_img) {
+        if (empty($usu_id) || empty($ev_desc) || empty($ev_est) || empty($ev_inicio) || empty($ev_direc) || empty($cat_id)) {
             return [
-                'status' => 'success',
-                'message' => 'Evento agregado exitosamente.'
-            ];
-        } catch (PDOException $e) {
-            return [
-                'status' => 'error',
-                'message' => 'Error al ejecutar la consulta: ' . $e->getMessage()
+                'status' => 'warning',
+                'message' => 'Faltan datos obligatorios. Por favor, asegúrate de completar todos los campos necesarios.'
             ];
         }
-  
-    } catch (Exception $e) {
-        return [
-            'status' => 'error',
-            'message' => 'Error catch add_evento: ' . $e->getMessage()
-        ];
-    }
-} 
+    
+        try {
+            $conectar = parent::conexion();
+            parent::set_names();
+    
+            $sql = "INSERT INTO tm_evento (usu_id, ev_desc, ev_est, ev_inicio, ev_final, ev_direc, ev_latitud, ev_longitud, cat_id, ev_niv, ev_img) 
+            VALUES (:usu_id, :ev_desc, :ev_est, :ev_inicio, NULL, :ev_direc, :ev_latitud, :ev_longitud, :cat_id, :ev_niv, :ev_img)";
+    
+            $consulta = $conectar->prepare($sql);
+    
+            $consulta->bindParam(':usu_id', $usu_id);
+            $consulta->bindParam(':ev_desc', $ev_desc);
+            $consulta->bindParam(':ev_est', $ev_est);
+            $consulta->bindParam(':ev_inicio', $ev_inicio);
+            $consulta->bindParam(':ev_direc', $ev_direc);
+            $consulta->bindParam(':ev_latitud', $ev_latitud);
+            $consulta->bindParam(':ev_longitud', $ev_longitud);
+            $consulta->bindParam(':cat_id', $cat_id);
+            $consulta->bindParam(':ev_niv', $ev_niv);
+            $consulta->bindParam(':ev_img', $ev_img);
+
+            try {
+                $consulta->execute();
+                return [
+                    'status' => 'success',
+                    'message' => 'Evento agregado exitosamente.'
+                ];
+            } catch (PDOException $e) {
+                return [
+                    'status' => 'error',
+                    'message' => 'Error al ejecutar la consulta: ' . $e->getMessage()
+                ];
+            }
+    
+        } catch (Exception $e) {
+            return [
+                'status' => 'error',
+                'message' => 'Error catch add_evento: ' . $e->getMessage()
+            ];
+        }
+    } 
 
 	public function update_imagen_evento($ev_id, $ev_img) {
 		try {
@@ -506,7 +505,7 @@ public function add_evento($usu_id, $ev_desc, $ev_est, $ev_inicio, $ev_direc, $e
               JOIN tm_unidad as un 
               ON ( un.unid_id=usu.usu_unidad);';
     return $this->ejecutarConsulta($sql);
-}
+    }
 
 
     public function datos_categorias_eventos($fecha_inicio) {
@@ -591,5 +590,43 @@ public function add_evento($usu_id, $ev_desc, $ev_est, $ev_inicio, $ev_direc, $e
         }
     }
     
+    public function insert_emergencia_detalle($ev_id, $usu_id, $ev_desc) {
+    try {
+        $conectar = parent::conexion();
+        parent::set_names();
+
+        // Insertar en la tabla tm_emergencia_detalle
+        $sql = "INSERT INTO tm_emergencia_detalle 
+                (ev_id, usu_id, ev_desc, ev_inicio, ev_est) 
+                VALUES (?, ?, ?, now(), 1);";
+
+        $sql = $conectar->prepare($sql);
+        $sql->bindValue(1, $ev_id, PDO::PARAM_INT);
+        $sql->bindValue(2, $usu_id, PDO::PARAM_INT);
+        $sql->bindValue(3, $ev_desc, PDO::PARAM_STR);
+        $sql->execute();
+
+        // Verificar si se ha insertado alguna fila
+        if ($sql->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+
+    } catch (Exception $e) {
+        error_log("Error en insert_emergencia_detalle: " . $e->getMessage(), 0);
+        throw $e;
+    }
+    }
+
+    public function update_evento($ev_id){
+        $conectar = parent::conexion();
+        parent::set_names();
+        $sql="UPDATE tm_evento SET ev_est = 2 WHERE ev_id = ?";
+        $sql=$conectar->prepare($sql);
+        $sql->bindValue(1, $ev_id);
+        $sql->execute();
+        return $resultado = $sql->fetchAll();
+      }
 
 }

@@ -54,18 +54,38 @@ function listarDetalle(ev_id){
         console.log(data);
         $("#lblNomIdTicket").html("Trazabilidad Evento Emergencia N° ID: " + data.ev_id);
         $('#lblEstado').html(data.ev_est);
+        
         $('#lblNomUsuario').html(data.usu_nom + ' ' + data.usu_ape);
         $('#lblFechaCrea').html(data.ev_inicio);
 
         $("#cat_nom").val(data.cat_nom);
         $("#ev_direc").val(data.ev_direc);
-        $("#tic_descripUsu").summernote("code", data.ev_desc);
-      
+        $("#tic_descripUsu").summernote("code", data.ev_desc); 
 
-      
+        
+
     });
-
-
 }
+
+$(document).on("click", "#btnEnviar", function () {
+    console.log("test");
+    var ev_id = getUrlParameter("ID");
+    var usu_id = $("#user_idx").val();
+    var ev_desc = $("#ev_desc").val();
+  
+    if ($("#ev_desc").summernote("isEmpty")) {
+      swal("Advertencia!", "Ingresa una descripción", "warning");
+    } else {
+      $.post(
+        "../../controller/emergenciaDetalle.php?op=insertdetalle",
+        { ev_id: ev_id, usu_id: usu_id, ev_desc: ev_desc },
+        function () {
+          listarDetalle(ev_id);
+          swal("Correcto!", "Resgistro actualizado correctamente", "success");
+          $("#ev_desc").summernote("reset");
+        }
+      );
+    }
+  });
 
 init();

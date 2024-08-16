@@ -355,131 +355,77 @@ if (isset($_GET["op"])) {
             }
         break;
 
-        case "tabla-historial-eventos": //para cargar la tabla en la ista de historiaEventos
-            $html = "";
-            $critico = "";
-            $medio = "";
-            $bajo = "";
-            $comun = "";
-
+        case "tabla-historial-eventos": 
+            $eventos = [];
+        
             $datos = $evento->get_evento();
-            if (is_array($datos) == true and count($datos) > 0) {
-
-                //Datos para Tabla comun variable = $html
+            if (is_array($datos) && count($datos) > 0) {
+        
                 foreach ($datos as $row) {
-                    //Variable temporal para recorrido y almacenamiento
-                    $recorrido = "";    
-                    $recorrido .= "<tr>";
-
-                    $recorrido .= "<td id='id_evento_celda' value='" . $row['ev_id'] . "'>" . $row['ev_id'] . "</td>";
-
-                    //Llama a la funcion get_datos_categoria para obtener el nombre de la categoria
+                    $evento = [];
+        
+                    $evento['ev_id'] = $row['ev_id'];
+        
                     $datos_categoria = $categoria->get_datos_categoria($row['cat_id']);
-                    foreach ($datos_categoria as $row_categoria) {
-                        $recorrido .= "<td>". $row_categoria['cat_nom']. "</td>";
-                    }
-
-                    $direccion = $row['ev_direc'];
-                 
-                    $direccion .= " <button id='btn' type='button' class='btn btn-inline btn-primary btn-sm ladda-button btnDireccionarMapa modal-btn' id='btnDireccionarMapa'> <i class='fa-solid fa-location-dot'></i> </button>";
-                   
-
-                    // Si no hay coordenadas, eliminar el texto que indica su ausencia
-                    $direccion = str_replace("No hay coordenadas", "", $direccion);
-                    $direccion = str_replace("Sin dirección", "", $direccion);
-
-                    $recorrido .= "<td> " . $direccion . " </td>";
-
-                    //Llama a la funcion get_datos_eventounidad para obtener los nombres de las unidades asignadas
+                    $evento['categoria'] = isset($datos_categoria[0]['cat_nom']) ? $datos_categoria[0]['cat_nom'] : 'Sin Categoría';
+        
+                    $direccion = $row['ev_direc'] . " <button class='btn btn-inline btn-primary btn-sm btnDireccionarMapa'><i class='fa-solid fa-location-dot'></i></button>";
+                    $evento['direccion'] = str_replace(["No hay coordenadas", "Sin dirección"], "", $direccion);
+        
+                    // Obtener las asignaciones
                     $datos_asignaciones = $eventounidad->get_datos_eventoUnidad($row['ev_id']);
-                    if (is_array($datos_asignaciones) && count($datos_asignaciones) > 0) { 
-                        $recorrido .= "<td>";
-                        $contar = 0;
+                    $asignacion = [];
+                    if (is_array($datos_asignaciones) && count($datos_asignaciones) > 0) {
                         foreach ($datos_asignaciones as $row_asignaciones) {
                             $unid_id = $row_asignaciones['unid_id'];
                             $datos_unidad = $unidad->get_datos_unidad($unid_id);
-                            foreach ($datos_unidad as $row_unidad ) {
-                                if ($contar == 0) {
-                                    $recorrido .= $row_unidad['unid_nom'];
-                                    $contar += 1;
-                                } else {
-                                    $recorrido .= " - " . $row_unidad['unid_nom'];
-                                }
+                            foreach ($datos_unidad as $row_unidad) {
+                                $asignacion[] = $row_unidad['unid_nom'];
                             }
                         }
-                        $recorrido .= "</td>";
+                    }
+                    // Si no hay asignaciones, asignar un valor por defecto
+                    $evento['asignacion'] = count($asignacion) > 0 ? implode(' - ', $asignacion) : 'No asignada';
+        
+                    // Nivel de peligro con estilos
+                    if ($row['ev_niv_id'] == 1) {
+                        $evento['nivel_peligro'] = '<span class="label label-pill label-primary peligro_critico">Critico</span>';
+                    } elseif ($row['ev_niv_id'] == 2) {
+                        $evento['nivel_peligro'] = '<span class="label label-pill label-primary peligro_medio">Medio</span>';
+                    } elseif ($row['ev_niv_id'] == 3) {
+                        $evento['nivel_peligro'] = '<span class="label label-pill label-primary peligro_bajo">Bajo</span>';
                     } else {
-                        $recorrido .= "<td>No asignada</td>";
+                        $evento['nivel_peligro'] = '<span class="label label-pill label-primary peligro_comun">Comun</span>';
                     }
-
-                    // Peligro
-                    if ($row['ev_niv_id'] == 1) {
-                        $recorrido .= "<td > <span class='label label-pill label-primary peligro_critico' > Critico </span> </td>";
-                    } else if ($row['ev_niv_id'] == 2) {
-                        $recorrido .= "<td > <span class='label label-pill label-primary peligro_medio' > Medio </span> </td>";
-                    } else if ($row['ev_niv_id'] == 3) {
-                        $recorrido .= "<td > <span class='label label-pill label-primary peligro_bajo' > Bajo </span> </td>";
-                    } else if ($row['ev_niv_id'] == 0) {
-                        $recorrido .= "<td > <span class='label label-pill label-primary peligro_comun' > Comun </span> </td>";
-                    }
-
-                    //Llama a la funcion get_datos_estado para obtener el estado
+        
+                    // Estado con estilos
                     $dato_estado = $estado->get_datos_estado($row['ev_est']);
-                    foreach ($dato_estado as $row_estado) {
-                        if ($row_estado['est_nom'] == "En Proceso") {
-                            $recorrido .= "<td><span class='label label-pill label-warning'>" . $row_estado['est_nom'] . "</span></td>";
-                        } else if ($row_estado['est_nom'] == "Finalizado") {
-                            $recorrido .= "<td><span class='label label-pill label-success'>" . $row_estado['est_nom'] . "</span></td>";
+                    if (isset($dato_estado[0]['est_nom'])) {
+                        if ($dato_estado[0]['est_nom'] == "En Proceso") {
+                            $evento['estado'] = '<span class="label label-pill label-warning">' . $dato_estado[0]['est_nom'] . '</span>';
+                        } elseif ($dato_estado[0]['est_nom'] == "Finalizado") {
+                            $evento['estado'] = '<span class="label label-pill label-success">' . $dato_estado[0]['est_nom'] . '</span>';
                         } else {
-                            $recorrido .= "<td>" . $row_estado['est_nom'] . "</td>";
+                            $evento['estado'] = $dato_estado[0]['est_nom'];
                         }
+                    } else {
+                        $evento['estado'] = 'Desconocido';
                     }
-
-                    // Hora de Apertura
-                    $recorrido .= "<td>" . $row['ev_inicio'] . "</td>";
-
-                    // boton ver
-                    $recorrido .= "<td> <button class='btnDetalleEmergencia' data-ev-id='" . $row['ev_id'] . "' type='button' class='btn btn-inline btn-primary btn-sm ladda-button modal-btn'> <i class='fa-solid fa-eye'></i> </button></td>";
-
-                    $recorrido .= "</tr>";
-
-                    //Filtro de filas por nivel de peligro
-                    if ($row['ev_niv_id'] == 1) {
-                        $critico .= $recorrido; 
-                    } else if ($row['ev_niv_id'] == 2) {
-                        $medio .= $recorrido; 
-                    } else if ($row['ev_niv_id'] == 3) {
-                        $bajo .= $recorrido; 
-                    } else if ($row['ev_niv_id'] == 0) {
-                        $comun .= $recorrido;
-                    }
-                    $html .= $recorrido;
+        
+                    $evento['fecha_apertura'] = $row['ev_inicio'];
+        
+                    $evento['ver_detalle'] = "<button class='btnDetalleEmergencia' data-ev-id='" . $row['ev_id'] . "'><i class='fa-solid fa-eye'></i></button>";
+        
+                    $eventos[] = $evento;
                 }
-                $respuesta = array(
-                    'html' => $html,
-                    'critico' => $critico,
-                    'medio' => $medio,
-                    'bajo' => $bajo,
-                    'comun' => $comun
-                );
-                echo json_encode($respuesta);
+                
+                echo json_encode($eventos);
             } else {
-                $html = "<tr><td colspan=5>No se encontraron registros</td></tr>";
-                $critico = "<tr><td colspan=5>No se encontraron registros</td></tr>";
-                $medio = "<tr><td colspan=5>No se encontraron registros</td></tr>";
-                $bajo = "<tr><td colspan=5>No se encontraron registros</td></tr>";
-                $comun = "<tr><td colspan=5>No se encontraron registros</td></tr>";
-                $respuesta = array(
-                    'html' => $html,
-                    'critico' => $critico,
-                    'medio' => $medio,
-                    'bajo' => $bajo,
-                    'comun' => $comun
-                );
-
-                echo json_encode($respuesta);
+                echo json_encode([]);
             }
-        break;
+            break;
+        
+        
 
         case "tablas-dashboard":
 

@@ -1,3 +1,12 @@
+$(document).ready(function() {
+
+  // Obtener el elemento <a> por su clase
+  var enlace = document.querySelector('.NuevoEvento');
+  // Añadir una clase al enlace
+  enlace.classList.add('selected');
+
+});
+
 var defaultLocation = { lat: -33.7402, lng: -71.2060 }; // Coordenadas de Melipilla
 var mapContainer = document.getElementById('map');
 var map;

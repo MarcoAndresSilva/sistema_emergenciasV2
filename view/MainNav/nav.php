@@ -33,7 +33,7 @@
 
         <!-- Evento -->
         <li class="blue-dirty">
-            <a class="ControlEventos" href="../MapaCalor/">
+            <a class="MapaCalor" href="../MapaCalor/">
                 <span class="glyphicon glyphicon-th"></span>
                 <span class="lbl"> Mapa De Eventos</span>
             </a>
@@ -91,6 +91,10 @@
                     <a class="" href="../GestionUsuario/">
                         <span class="glyphicon glyphicon-asterisk"></span>
                         <span class="lbl">Gestionar Usuarios</span>
+                    </a>
+                    <a class="" href="../SeguridadUnidad/">
+                        <span class="glyphicon glyphicon-asterisk"></span>
+                        <span class="lbl">Seguridad Unidad</span>
                     </a>
                 </div>
             </div>

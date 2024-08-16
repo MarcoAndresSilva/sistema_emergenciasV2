@@ -6,12 +6,19 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 <!DOCTYPE html>
 <html>
     <?php require_once("../MainHead/head.php") ?>
+
+    <!-- Agrega las librerías de DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css">
     <link rel="stylesheet" href="./historialeventos.css">
     <script src="../../public/js/sweetaler2v11-11-0.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+    <!-- Agrega el script de DataTables -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
     <title>Sistema Emergencia</title>
 </head>
 
@@ -43,7 +50,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
             <div class="box-typical box-typical-padding table table-responsive-sm">
 
                 <!-- tabla de asuntos inmediatos (Alto) -->
-                <table class="table tabla-media tabla-basica table-bordered table-striped table-vcenter js-dataTable-js">
+                <table  id="tabla-historial" class="table tabla-media tabla-basica table-bordered table-striped table-vcenter js-dataTable-js">
                     <thead>
                         <tr>
                             <th style="width:5%">ID</th>

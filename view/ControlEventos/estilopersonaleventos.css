@@ -17,7 +17,7 @@
 .tabla-basica th, .tabla-basica td {
     border: 1px solid #c0c0c0;
     padding: 8px;
-    text-align: left;
+    text-align: center;
 }
 
 .tabla-basica th {
