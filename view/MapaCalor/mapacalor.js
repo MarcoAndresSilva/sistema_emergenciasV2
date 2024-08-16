@@ -7,6 +7,7 @@ const activeCategories = new Set(); // Almacena las categorías activas
 var bounds; // Almacena los límites de los puntos en el mapa
 var originalRowPositions = {};
 
+// ! WARNING: Esta funcion debe ser ejecutada por la api de google
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     zoom: 13,
