@@ -46,9 +46,9 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
                     <div class="tbl-cell">
                         <h3 class="m-t-lg" id="lblNomIdTicket"></h3>
                         <!-- <span class="label label-pill" id="lblEstado"></span> -->
-                        <div class="col-lg-1 m-2" id="lblEstado"></div>      
-                        <div class="col-lg-1 m-2 label label-pill label-primary" id="lblNomUsuario"></div>
-                        <div class="col-lg-2 m-2 label label-pill label-warning" id="lblFechaCrea"></div>
+                        <div class="col-lg-2 m-2 label label-pill" id="lblEstado"></div>      
+                        <div class="col-lg-2 m-2 label label-pill label-primary" id="lblNomUsuario"></div>
+                        <div class="col-lg-3 m-2 label label-pill label-warning" id="lblFechaCrea"></div>
                     </div>
                 </div>
             </div>
