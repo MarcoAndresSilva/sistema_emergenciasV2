@@ -14,6 +14,7 @@ Permisos::redirigirSiNoAutorizado();
   <link rel="stylesheet" href="./stylemapacalor.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script type="module" src="./mapacalor.js"></script>
 </head>
 
 <body class="with-side-menu">
@@ -60,7 +61,6 @@ Permisos::redirigirSiNoAutorizado();
     
   <!--   <script  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQrYCFSz7Q-a-WONxo4yymu9SAPgmaA6c&libraries=visualization&callback=initMap"> -->
   <!-- </script> -->
-    <script defer type="text/javascript" src="./mapacalor.js"></script>
     <script>
         document.getElementById('show-hide-sidebar-toggle').addEventListener('click', function(e) {
             e.preventDefault();
@@ -74,11 +74,13 @@ Permisos::redirigirSiNoAutorizado();
             }
         });
     </script>
-  <script async defer
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQrYCFSz7Q-a-WONxo4yymu9SAPgmaA6c&libraries=visualization&callback=initMap">
-  </script>
+
     <?php require_once("../MainJs/js.php"); ?>
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <?php require_once("../MainFooter/footer.php"); ?>
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdCMoRAl_-ARUflpa4Jn_qUoOpdXlxQEg&callback=initMap&libraries=visualization&v=weekly&loading=async"
+      defer
+    ></script>
 </body>
 </html>

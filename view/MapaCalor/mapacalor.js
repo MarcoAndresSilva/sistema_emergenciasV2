@@ -465,8 +465,7 @@ function createCategoryIcon(color) {
   icon.style.marginRight = '5px';
   return icon;
 }
-window.onload = initMap;
-
+window.initMap = initMap;
 function generateSummaryTable(groupedData) {
   // Crear el contenedor de la tabla
   const tableContainer = document.getElementById('summaryTableContainer');
