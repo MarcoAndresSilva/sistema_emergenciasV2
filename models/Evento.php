@@ -41,13 +41,13 @@ class Evento extends Conectar {
                 return $resultado;
             } else {
                 ?> <script>console.log("No se encontraron Eventos")</script><?php
-                return 0;
+                return [];
             }
         } catch (Exception $e) {
             ?> 
             <script>console.log("Error catch     get_evento")</script>
             <?php
-            throw $e;
+             return [];
         }
 
     }
