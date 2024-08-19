@@ -52,4 +52,20 @@ class Noticia extends Conectar {
     }
     return array('status'=>'error', 'message'=>"problemas al actualizar estado del mensaje noticia" );
   }
+  public function get_noticias_usuario($usuario_id){
+    $sql = "SELECT  nti.asunto AS 'asunto',
+                    nti.mensaje AS 'mensaje',
+                    ns.leido AS 'leido',
+                    nti.url AS 'url'
+            FROM tm_noticia_usuario as ns
+            JOIN tm_noticia as nti
+            ON (nti.noticia_id=ns.noticia_id)
+            WHERE usu_id=:usuario_id;";
+    $params = [":usuario_id"=>$usuario_id];
+    $result = $this->ejecutarConsulta($sql,$params);
+    if ($result){
+      return $result;
+    }
+    return array('status'=>'error', 'message'=>"Problemas al optener informacion de las noticias");
+  }
 }
