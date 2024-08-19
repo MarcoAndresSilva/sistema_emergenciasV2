@@ -38,14 +38,18 @@ class Noticia extends Conectar {
     }
     return $consulta;
   }
+  public function check_mensaje_leido($noticia_id, $usuario_id){
+    $fecha_lectura = date('Y-m-d H:i:s');
+    $sql = "UPDATE tm_noticia_usuario SET leido=1, fecha_lectura=:fecha_lectura WHERE usu_id=:usuario_id and noticia_id=:noticia_id";
     $params = [
-      ":usuario"=>$usuario,
-      ":noticia"=>$noticia,
+      ":usuario_id" => $usuario_id,
+      ":noticia_id" => $noticia_id,
+      ":fecha_lectura"=> $fecha_lectura,
     ];
     $result = $this->ejecutarAccion($sql,$params);
     if ($result){
-      return array('status'=>'succes', 'message'=>"se agrego la noticia");
+      return array( 'status'=>'succes', 'message'=>"Se marca mensaje como leido");
     }
-    return array('status'=>'warning', 'message'=>"problemas al agregar dato");
+    return array('status'=>'error', 'message'=>"problemas al actualizar estado del mensaje noticia" );
   }
 }
