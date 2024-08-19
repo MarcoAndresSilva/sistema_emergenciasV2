@@ -433,6 +433,12 @@ public function update_usuario_tipo($usu_id, $usu_tipo){
         return array('status' => 'info', 'message' => 'No se realizó ningún cambio');
     }
 }
+  public function get_full_usuarios_tipo($tipo_usuario){
+    $sql = "SELECT * FROM tm_usuario WHERE usu_tipo=:tipo_usuario and estado = 1";
+    $params=[":tipo_usuario"=>$tipo_usuario];
+    $result = $this->ejecutarConsulta($sql,$params);
+    return $result;
+  }
 
 }
 ?>
