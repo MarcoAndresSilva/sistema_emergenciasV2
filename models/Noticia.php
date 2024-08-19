@@ -1,4 +1,5 @@
 <?php 
+require_once 'Usuario.php';
 class Noticia extends Conectar {
 
   public function add_noticia(string $asunto, string $mensaje, string $url=null){
@@ -16,6 +17,19 @@ class Noticia extends Conectar {
   }
   public function enviar_notica_usuario($usuario, $noticia) {
     $sql = "INSERT INTO tm_noticia_usuario(usu_id,noticia_id) VALUES (:usuario , :noticia)";
+  public  function preparar_consulta_por_tipo_usuario($tipo_usuario,$id_noticia){
+    $usuario = new Usuario();
+    $list_usuario = $usuario->get_full_usuarios_tipo($tipo_usuario);
+    $consulta = "";
+    foreach($list_usuario as $item){
+        $id_usuario = $item["usu_id"];
+        $consulta .= "($id_usuario,$id_noticia),";
+    }
+    if (!empty($consulta)){
+      $consulta = substr($consulta, 0, -1).';';
+    }
+    return $consulta;
+  }
     $params = [
       ":usuario"=>$usuario,
       ":noticia"=>$noticia,
