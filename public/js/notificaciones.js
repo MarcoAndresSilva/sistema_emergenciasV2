@@ -78,14 +78,23 @@ document.addEventListener("DOMContentLoaded", function() {
     function markAsRead(index) {
         if (!notificaciones[index].leido) {
             notificaciones[index].leido = true;
-            updateNotificationCount(); // Actualiza el contador después de marcar como leído
-            renderNotifications(); // Vuelve a renderizar las notificaciones
+            updateNotificationCount();
+            renderNotifications();
+        const formData = new URLSearchParams();
+        formData.append('noticia_id', notificaciones[index].id );
+
+
+            fetch('../../controller/noticia.php?op=read_noticia', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error al marcar como leída: ' + response.status);
+                }
+            })
+            .catch(error => console.error('Error al marcar como leída:', error));
         }
     }
 
-            updateNotificationCount();
-            renderNotifications();
-
-
-    window.addNotification = addNotification;
 });
