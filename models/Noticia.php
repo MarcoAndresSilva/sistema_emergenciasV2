@@ -30,12 +30,19 @@ class Noticia extends Conectar {
     $sql = "INSERT INTO tm_noticia_usuario(usu_id,noticia_id) VALUES ";
     $valores_usuario = $this->preparar_consulta_por_tipo_usuario($tipo_usuario,$noticia);
     $sql .= $valores_usuario;
-    $result = $this->ejecutarAccion($sql);
-    if ($result){
-      return array('status'=>'succes', 'message'=>"se envio noticia");
+    try {
+        $result = $this->ejecutarAccion($sql);
+        if ($result) {
+            return array('status' => 'success', 'message' => "Se envió la noticia");
+        } else {
+            return array('status' => 'warning', 'message' => "Problemas al agregar dato");
+        }
+    } catch (PDOException $e) {
+        return array('status' => 'error', 'message' => "Error en la base de datos: " . $e->getMessage());
+    } catch (Exception $e) {
+        return array('status' => 'error', 'message' => "Error: " . $e->getMessage());
     }
-    return array('status'=>'warning', 'message'=>"problemas al agregar dato");
-  }
+}
   public  function preparar_consulta_por_tipo_usuario($tipo_usuario,$id_noticia){
     $usuario = new Usuario();
     $list_usuario = $usuario->get_full_usuarios_tipo($tipo_usuario);
