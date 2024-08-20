@@ -80,9 +80,9 @@ document.addEventListener("DOMContentLoaded", function() {
             notificaciones[index].leido = true;
             updateNotificationCount();
             renderNotifications();
+
         const formData = new URLSearchParams();
         formData.append('noticia_id', notificaciones[index].id );
-
 
             fetch('../../controller/noticia.php?op=read_noticia', {
                 method: 'POST',
