@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", function() {
         notificaciones.forEach((notif, index) => {
             const notifElement = document.createElement("a");
             notifElement.className = "dropdown-item";
-            notifElement.href = notif.url; // Usa el campo 'url'
+            notifElement.href = notif.url;
             notifElement.innerHTML = `<i class="fa fa-info-circle" aria-hidden="true"></i> ${notif.mensaje}`;
             if (!notif.leido) {
                 notifElement.classList.add("font-weight-bold");
