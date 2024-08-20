@@ -9,7 +9,7 @@ if (isset($_GET["op"])) {
             $mensaje= $_POST["mensaje"];
             $url = isset($_POST["enlace"]) ? $_POST["enlace"] : null;
             $datos = $noticia->add_noticia($asunto,$mensaje,$url);
-            echo $datos;
+            echo json_encode($datos);
         break;
         case "get_noticia":
             $usuario_id = $_SESSION["usu_id"];
