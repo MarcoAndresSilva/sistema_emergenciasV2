@@ -50,6 +50,7 @@ document.addEventListener("DOMContentLoaded", function() {
             });
     }
 
+    fetchNotifications();
     // Actualiza el contador de notificaciones
     function updateNotificationCount() {
         const unreadNotifications = notificaciones.filter(n => !n.leido);
