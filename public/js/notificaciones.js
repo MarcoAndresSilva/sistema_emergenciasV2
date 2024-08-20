@@ -2,15 +2,24 @@ document.addEventListener("DOMContentLoaded", function() {
     const notificationCountElement = document.getElementById("notification-count");
     const notificationListElement = document.getElementById("notification-list");
 
-    // Recupera las notificaciones del localStorage o usa un valor predeterminado
-    let notificaciones = JSON.parse(localStorage.getItem('notificaciones')) || [
-        { asunto: "Nuevos Eventos", mensaje: "Tienes Eventos sin Derivar", leido: false, url: "../ControlEventos/" },
-        { asunto: "Actualización de perfil", mensaje: "Tu perfil ha sido actualizado", leido: true, url: "../perfil" },
-    ];
+    let notificaciones = [];
 
-    // Guarda las notificaciones en el localStorage
-    function saveNotifications() {
-        localStorage.setItem('notificaciones', JSON.stringify(notificaciones));
+    function fetchNotifications() {
+        fetch('../../controller/noticia.php?op=get_noticia')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error en la solicitud: ' + response.status);
+                }
+                return response.json();
+            })
+            .then(data => {
+                notificaciones = data;
+                updateNotificationCount();
+                renderNotifications();
+            })
+            .catch(error => {
+                console.error('Error al obtener las notificaciones:', error);
+            });
     }
 
     // Actualiza el contador de notificaciones
