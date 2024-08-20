@@ -49,7 +49,6 @@ document.addEventListener("DOMContentLoaded", function() {
     function markAsRead(index) {
         if (!notificaciones[index].leido) {
             notificaciones[index].leido = true;
-            saveNotifications(); // Guarda las notificaciones actualizadas
             updateNotificationCount(); // Actualiza el contador después de marcar como leído
             renderNotifications(); // Vuelve a renderizar las notificaciones
         }
@@ -86,10 +85,6 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
-    // Ejemplo de uso: Agrega una nueva notificación
 
-    // Inicializa las notificaciones
-    updateNotificationCount();
-    renderNotifications();
     window.addNotification = addNotification;
 });
