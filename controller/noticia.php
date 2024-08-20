@@ -16,5 +16,11 @@ if (isset($_GET["op"])) {
             $result = $noticia->get_noticias_usuario($usuario_id);
             echo json_encode($result);
         break;
+        case "read_noticia":
+            $usuario_id = $_SESSION["usu_id"];
+            $noticia_id = $_POST["noticia_id"];
+            $result = $noticia->check_mensaje_leido($noticia_id, $usuario_id);
+            echo json_encode($result);
+        break;
   }
 }
