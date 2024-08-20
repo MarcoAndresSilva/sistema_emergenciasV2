@@ -26,7 +26,7 @@ class Noticia extends Conectar {
         'message' => "Problemas al agregar dato"
     ];
   }
-  public function enviar_noticia_usuario($noticia,$tipo_usuario) {
+ public function enviar_noticia_usuario(int $noticia, int $tipo_usuario) {
     $sql = "INSERT INTO tm_noticia_usuario(usu_id,noticia_id) VALUES ";
     $valores_usuario = $this->preparar_consulta_por_tipo_usuario($tipo_usuario,$noticia);
     $sql .= $valores_usuario;
