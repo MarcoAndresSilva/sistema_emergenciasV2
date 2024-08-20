@@ -1,3 +1,32 @@
+function addNotification(asunto, mensaje, url) {
+        const formData = new URLSearchParams();
+        formData.append('asunto', asunto);
+        formData.append('mensaje', mensaje);
+        formData.append('url', url);
+
+        fetch('../../controller/noticia.php?op=add_noticia', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: formData.toString()
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la solicitud POST: ' + response.status);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Notificación guardada con éxito:', data);
+            notificaciones.push(data);
+            updateNotificationCount();
+            renderNotifications();
+        })
+        .catch(error => {
+            console.error('Error al guardar la notificación:', error);
+        });
+    }
 document.addEventListener("DOMContentLoaded", function() {
     const notificationCountElement = document.getElementById("notification-count");
     const notificationListElement = document.getElementById("notification-list");
@@ -54,36 +83,8 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    function addNotification(asunto, mensaje, url) {
-        const nuevaNotificacion = {
-            asunto: asunto,
-            mensaje: mensaje,
-            leido: false,
-            url: url
-        }; 
-        fetch('../../controller/noticia.php?op=add_noticia', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(nuevaNotificacion)
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error en la solicitud POST: ' + response.status);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Notificación guardada con éxito:', data);
-            notificaciones.push(data);
             updateNotificationCount();
             renderNotifications();
-        })
-        .catch(error => {
-            console.error('Error al guardar la notificación:', error);
-        });
-    }
 
 
     window.addNotification = addNotification;
