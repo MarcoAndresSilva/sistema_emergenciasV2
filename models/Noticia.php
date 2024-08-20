@@ -77,7 +77,7 @@ class Noticia extends Conectar {
                     nti.mensaje AS 'mensaje',
                     ns.leido AS 'leido',
                     nti.noticia_id AS 'id',
-                    nti.url AS 'url'
+                    coalesce(nti.url,'#') AS 'url'
             FROM tm_noticia_usuario as ns
             JOIN tm_noticia as nti
             ON (nti.noticia_id=ns.noticia_id)
