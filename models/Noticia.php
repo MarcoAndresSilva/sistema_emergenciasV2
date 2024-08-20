@@ -69,4 +69,20 @@ class Noticia extends Conectar {
     }
     return array('status'=>'error', 'message'=>"Problemas al optener informacion de las noticias");
   }
+  public function regla_usuario_enviar_por_asunto(string $asunto){
+      $super_user = 1;
+      $admin = 2;
+      $basico = 3;
+      $actual = $_SESSION["usu_id"];
+
+      $enviar = [
+        "Nuevo Evento"=>$admin,
+        "Cambio Perfil"=>$actual,
+        "Cambio perfil"=>$basico,
+        "Derivado"=>$admin
+      ];
+
+       return $enviar[$asunto];
+  }
+
 }
