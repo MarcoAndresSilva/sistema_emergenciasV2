@@ -1,3 +1,4 @@
+let notificaciones = [];
 function addNotification(asunto, mensaje, url) {
         const formData = new URLSearchParams();
         formData.append('asunto', asunto);
@@ -30,8 +31,6 @@ function addNotification(asunto, mensaje, url) {
 document.addEventListener("DOMContentLoaded", function() {
     const notificationCountElement = document.getElementById("notification-count");
     const notificationListElement = document.getElementById("notification-list");
-
-    let notificaciones = [];
 
     function fetchNotifications() {
         fetch('../../controller/noticia.php?op=get_noticia')
