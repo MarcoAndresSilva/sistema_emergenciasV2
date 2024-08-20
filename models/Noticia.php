@@ -30,6 +30,7 @@ class Noticia extends Conectar {
     $sql = "INSERT INTO tm_noticia_usuario(usu_id,noticia_id) VALUES ";
     $valores_usuario = $this->preparar_consulta_por_tipo_usuario($tipo_usuario,$noticia);
     $sql .= $valores_usuario;
+    // ! FIX: puede ver error por sin dato en valores_usuario
     try {
         $result = $this->ejecutarAccion($sql);
         if ($result) {
@@ -46,6 +47,7 @@ class Noticia extends Conectar {
   public  function preparar_consulta_por_tipo_usuario($tipo_usuario,$id_noticia){
     $usuario = new Usuario();
     $list_usuario = $usuario->get_full_usuarios_tipo($tipo_usuario);
+// ! FIX: en caso de que no tenga datos el list_usuario 
     $consulta = "";
     foreach($list_usuario as $item){
         $id_usuario = $item["usu_id"];

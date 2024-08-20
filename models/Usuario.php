@@ -434,6 +434,7 @@ public function update_usuario_tipo($usu_id, $usu_tipo){
     }
 }
   public function get_full_usuarios_tipo($tipo_usuario){
+    //! FIX: falta caso en que los datos sean 0
     $sql = "SELECT * FROM tm_usuario WHERE usu_tipo=:tipo_usuario and estado = 1";
     $params=[":tipo_usuario"=>$tipo_usuario];
     $result = $this->ejecutarConsulta($sql,$params);
