@@ -55,18 +55,35 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     }
 
-    // Función para agregar una nueva notificación
     function addNotification(asunto, mensaje, url) {
         const nuevaNotificacion = {
             asunto: asunto,
             mensaje: mensaje,
             leido: false,
             url: url
-        };
-        notificaciones.push(nuevaNotificacion); // Agrega la nueva notificación al array
-        saveNotifications(); // Guarda el nuevo estado en localStorage
-        updateNotificationCount(); // Actualiza el contador
-        renderNotifications(); // Vuelve a renderizar las notificaciones
+        }; 
+        fetch('../../controller/noticia.php?op=add_noticia', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(nuevaNotificacion)
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la solicitud POST: ' + response.status);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Notificación guardada con éxito:', data);
+            notificaciones.push(data);
+            updateNotificationCount();
+            renderNotifications();
+        })
+        .catch(error => {
+            console.error('Error al guardar la notificación:', error);
+        });
     }
 
     // Ejemplo de uso: Agrega una nueva notificación
