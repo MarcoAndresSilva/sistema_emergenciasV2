@@ -56,6 +56,7 @@ class Noticia extends Conectar {
     $sql = "SELECT  nti.asunto AS 'asunto',
                     nti.mensaje AS 'mensaje',
                     ns.leido AS 'leido',
+                    nti.noticia_id AS 'id',
                     nti.url AS 'url'
             FROM tm_noticia_usuario as ns
             JOIN tm_noticia as nti
