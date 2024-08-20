@@ -72,5 +72,9 @@
 
         return $consulta->rowCount() > 0;
     }
+    public function obtenerUltimoRegistro(string $tabla, $idCampo = 'id') {
+        $sql = "SELECT * FROM $tabla ORDER BY $idCampo DESC LIMIT 1";
+        return $this->ejecutarConsulta($sql, [], false);
+    }
 
 }
