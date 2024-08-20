@@ -345,17 +345,6 @@ INSERT INTO `tm_asignado` (`id_inter`, `ev_id`, `unid_id`) VALUES
 (327, 157, 5),
 (329, 158, 1);
 
--- --------------------------------------------------------
--- Estructura de tabla para la tabla `tm_sector`
---
-
-CREATE TABLE `tm_sector` (
-  `sector_id` int(11) NOT NULL,
-  `sector_nom` varchar(50) NOT NULL,
-  `ciudad_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `tm_usu_tipo`
