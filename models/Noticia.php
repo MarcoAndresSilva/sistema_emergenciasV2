@@ -11,9 +11,20 @@ class Noticia extends Conectar {
     ];
     $result = $this->ejecutarAccion($sql, $params);
     if ($result){
-      return array('status'=>'succes', 'message'=>"se agrego la noticia");
+        $lastInsertId= $this->obtenerUltimoRegistro('tm_noticia',"noticia_id");
+        $id_noticia_new = $lastInsertId["noticia_id"];
+        $tipo_usuario = $this->regla_usuario_enviar_por_asunto($asunto);
+        $envio_usuario = $this->enviar_noticia_usuario($id_noticia_new,$tipo_usuario);
+        return [
+            'status' => 'success',
+            'message' => "Se agregó la noticia",
+            'send' => $envio_usuario
+        ];
     }
-    return array('status'=>'warning', 'message'=>"problemas al agregar dato");
+    return [
+        'status' => 'warning',
+        'message' => "Problemas al agregar dato"
+    ];
   }
   public function enviar_noticia_usuario($noticia,$tipo_usuario) {
     $sql = "INSERT INTO tm_noticia_usuario(usu_id,noticia_id) VALUES ";
