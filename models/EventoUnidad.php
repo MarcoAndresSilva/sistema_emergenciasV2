@@ -5,7 +5,7 @@ class EventoUnidad extends Conectar {
         try{
             $conectar = parent::conexion();
             parent::set_names();
-            $sql = "INSERT INTO tm_ev_tm_unid (ev_id, unid_id) VALUES ( :ev_id, :unid_id)";
+            $sql = "INSERT INTO tm_asignado (ev_id, unid_id) VALUES ( :ev_id, :unid_id)";
             
             $consulta  = $conectar->prepare($sql);
         
@@ -18,7 +18,7 @@ class EventoUnidad extends Conectar {
                 return true;
             } else {
                 ?>
-                <script>console.log("No se agregaro filas intermedias tm_ev_tm_unid")</script>
+                <script>console.log("No se agregaro filas intermedias tm_asignado")</script>
                 <?php
                 return 0;
             }
@@ -35,7 +35,7 @@ class EventoUnidad extends Conectar {
         try{
             $conectar = parent::conexion();
             parent::set_names();
-            $sql = "DELETE FROM tm_ev_tm_unid WHERE ev_id = :ev_id AND unid_id = :unid_id";
+            $sql = "DELETE FROM tm_asignado WHERE ev_id = :ev_id AND unid_id = :unid_id";
             
             $consulta  = $conectar->prepare($sql);
         
@@ -48,7 +48,7 @@ class EventoUnidad extends Conectar {
                 return true;
             } else {
                 ?>
-                <script>console.log("No se eliminaron filas intermedias tm_ev_tm_unid")</script>
+                <script>console.log("No se eliminaron filas intermedias tm_asignado")</script>
                 <?php
                 return 0;
             }
@@ -96,7 +96,7 @@ class EventoUnidad extends Conectar {
         try {
             $conectar = parent::conexion();
             parent::set_names();
-            $sql = "SELECT unid_id FROM tm_ev_tm_unid WHERE ev_id = ". $ev_id. "";
+            $sql = "SELECT unid_id FROM tm_asignado WHERE ev_id = ". $ev_id. "";
             $consulta  = $conectar->prepare($sql);
             $consulta->execute();
             $resultado = $consulta->fetchAll();
@@ -118,7 +118,7 @@ class EventoUnidad extends Conectar {
 		try {
 			$conectar = parent::conexion();
 			parent::set_names();
-			$sql = "UPDATE tm_ev_tm_unid SET  unid_id=:unid_id WHERE ev_id = :ev_id and unid_id=:unid_id";
+			$sql = "UPDATE tm_asignado SET  unid_id=:unid_id WHERE ev_id = :ev_id and unid_id=:unid_id";
 			$consulta = $conectar->prepare($sql);
 
             $consulta->bindParam(':unid_id',$unid_id);

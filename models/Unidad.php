@@ -83,7 +83,7 @@ class Unidad extends Conectar
     {
         try {
             // Verificar si la unidad está en uso en otras tablas
-            $sql_check_evun = "SELECT * FROM tm_ev_tm_unid WHERE unid_id = :unid_id";
+            $sql_check_evun = "SELECT * FROM tm_asignado WHERE unid_id = :unid_id";
             $params = [':unid_id' => $unid_id];
             if ($this->ejecutarConsulta($sql_check_evun, $params)) {
                 return ['status' => 'warning', 'message' => 'La unidad no se puede eliminar porque está en uso en otros registros.'];
