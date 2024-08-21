@@ -22,7 +22,17 @@ class Noticia extends Conectar {
     ];
   }
 
-  public function crear_noticia_y_enviar_grupo_usuario(array $agrsNoticia){ 
+  /**
+   * Crea una noticia y la envía a un grupo de usuarios basado en el asunto.
+   *
+   * @param array $argsNoticia Un array asociativo con los siguientes elementos:
+   *  - 'asunto': (string) El asunto de la noticia.
+   *  - 'mensaje': (string) El mensaje de la noticia.
+   *  - 'url': (string|null) La URL asociada con la noticia (opcional).
+   * 
+   * @return array Un array con el estado y mensaje del proceso, junto con los resultados de las operaciones.
+   */
+  public function crear_noticia_y_enviar_grupo_usuario(array $agrsNoticia){
     $asunto = $agrsNoticia["asunto"];
     $mensaje = $agrsNoticia["mensaje"];
     $url = $agrsNoticia["url"];
