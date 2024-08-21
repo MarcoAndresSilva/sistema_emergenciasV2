@@ -22,7 +22,7 @@ class Noticia extends Conectar {
     ];
   }
 
-  public function crear_noticia_y_enviar_grupo_usuario(array $agrsNoticia){
+  public function crear_noticia_y_enviar_grupo_usuario(array $agrsNoticia){ 
     $asunto = $agrsNoticia["asunto"];
     $mensaje = $agrsNoticia["mensaje"];
     $url = $agrsNoticia["url"];
@@ -33,7 +33,7 @@ class Noticia extends Conectar {
     $tipo_usuario = $this->regla_usuario_enviar_por_asunto($asunto);
     $ultima_noticia = $this->obtenerUltimoRegistro('tm_noticia',"noticia_id");
     $id_noticia_new = $ultima_noticia["noticia_id"];
-    $envio_usuario = $this->enviar_noticia_usuario($id_noticia_new,$tipo_usuario);
+    $envio_usuario = $this->enviar_noticia_grupal_por_tipo($id_noticia_new,$tipo_usuario);
     if ($envio_usuario["status"] !== "success"){
       return [
         "status"=>"error",
@@ -50,7 +50,7 @@ class Noticia extends Conectar {
     ];
   }
 
- public function enviar_noticia_usuario(int $noticia, int $tipo_usuario) {
+ public function enviar_noticia_grupal_por_tipo(int $noticia, int $tipo_usuario) {
     $sql = "INSERT INTO tm_noticia_usuario(usu_id,noticia_id) VALUES ";
     $valores_usuario = $this->preparar_consulta_por_tipo_usuario($tipo_usuario,$noticia);
     $sql .= $valores_usuario;
