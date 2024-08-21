@@ -613,6 +613,27 @@ CREATE TABLE tm_noticia_usuario(
 `fecha_lectura` DATETIME DEFAULT NULL,
 PRIMARY KEY (`noti_usu_id`)
 );
+--
+-- estructura de tm_regla_envio
+--
+
+CREATE TABLE tm_regla_envio (
+  id_regla INT  NOT NULL auto_increment,
+  asunto VARCHAR(150) UNIQUE,
+  unidad VARCHAR(150),
+  seccion VARCHAR(150),
+  usuario VARCHAR(150),
+  tipo_usuario VARCHAR(50),
+PRIMARY KEY (id_regla)
+);
+--
+-- insercion de tm_regla_envio
+-- * NOTE: se usa la logica de los datos de unidad seccion usuario y tipo sea
+--         un string con los valores de la ids de cada entidad separado por coma
+
+INSERT INTO tm_regla_envio (asunto, unidad, seccion, usuario, tipo_usuario)
+VALUES  ('Nuevo Evento', '1,2,4', '1,2,4', '1,2,4', '1,2,4'),
+        ('Nuevo Evento', null, null, '4', '1');
 
 --
 -- Indices de la tabla `tm_camb_asig`
