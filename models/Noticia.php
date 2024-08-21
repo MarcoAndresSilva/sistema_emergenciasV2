@@ -149,5 +149,13 @@ class Noticia extends Conectar {
 
        return $enviar[$asunto];
   }
+  public function lista_posibles_envios_por_ids(string $ids, string $id_name){
+    $sql = "SELECT * FROM tm_usuario WHERE :id_name in ( :ids );";
+    $params = [
+      ":id_name" => $id_name,
+      ":ids"=>$ids,
+    ];
+    return $this->ejecutarConsulta($sql,$params);
+  }
 
 }
