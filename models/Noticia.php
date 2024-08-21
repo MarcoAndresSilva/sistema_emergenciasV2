@@ -44,6 +44,17 @@ class Noticia extends Conectar {
         return array('status' => 'error', 'message' => "Error: " . $e->getMessage());
     }
 }
+  public function enviar_noticia_simple(int $noticia_id, int $usuario_id){
+
+    $sql = "INSERT INTO tm_noticia_usuario(usu_id,noticia_id) VALUES (:usuario_id,:noticia_id)";
+    $params = [":usuario_id"=> $usuario_id, ":noticia_id"=>$noticia_id];
+    $result = $this->ejecutarAccion($sql,$params);
+    if($result){
+      return ["status"=>"success","message"=>"se envio correo al usuario"];
+    }
+    return ["status"=>"warning", "message"=>"No se pudo enviar mensaje"];
+
+  }
   public  function preparar_consulta_por_tipo_usuario($tipo_usuario,$id_noticia){
     $usuario = new Usuario();
     $list_usuario = $usuario->get_full_usuarios_tipo($tipo_usuario);
