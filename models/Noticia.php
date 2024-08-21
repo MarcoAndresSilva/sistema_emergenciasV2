@@ -11,14 +11,9 @@ class Noticia extends Conectar {
     ];
     $result = $this->ejecutarAccion($sql, $params);
     if ($result){
-        $lastInsertId= $this->obtenerUltimoRegistro('tm_noticia',"noticia_id");
-        $id_noticia_new = $lastInsertId["noticia_id"];
-        $tipo_usuario = $this->regla_usuario_enviar_por_asunto($asunto);
-        $envio_usuario = $this->enviar_noticia_usuario($id_noticia_new,$tipo_usuario);
         return [
             'status' => 'success',
-            'message' => "Se agregó la noticia",
-            'send' => $envio_usuario
+            'message' => "Se agregó la noticia"
         ];
     }
     return [
