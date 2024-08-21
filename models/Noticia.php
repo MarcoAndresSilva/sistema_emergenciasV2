@@ -21,6 +21,35 @@ class Noticia extends Conectar {
         'message' => "Problemas al agregar dato"
     ];
   }
+
+  public function crear_noticia_y_enviar_grupo_usuario(array $agrsNoticia){
+    $asunto = $agrsNoticia["asunto"];
+    $mensaje = $agrsNoticia["mensaje"];
+    $url = $agrsNoticia["url"];
+    $add_noticia = $this->add_noticia($asunto,$mensaje,$url);
+    if ($add_noticia["status"] !== "success"){
+      return ["status"=>"error", "message"=>"Error al agregar", "add_noticia"=>$add_noticia];
+    }
+    $tipo_usuario = $this->regla_usuario_enviar_por_asunto($asunto);
+    $ultima_noticia = $this->obtenerUltimoRegistro('tm_noticia',"noticia_id");
+    $id_noticia_new = $ultima_noticia["noticia_id"];
+    $envio_usuario = $this->enviar_noticia_usuario($id_noticia_new,$tipo_usuario);
+    if ($envio_usuario["status"] !== "success"){
+      return [
+        "status"=>"error",
+        "message"=>"Error al enviar",
+        "add_noticia"=>$add_noticia,
+        "enviar_grupo"=>$envio_usuario,
+      ];
+    }
+    return [
+      "status"=>"success",
+      "message"=>"Crear y enviar Terminado",
+      "add_noticia"=>$add_noticia,
+      "enviar_grupo"=>$envio_usuario,
+    ];
+  }
+
  public function enviar_noticia_usuario(int $noticia, int $tipo_usuario) {
     $sql = "INSERT INTO tm_noticia_usuario(usu_id,noticia_id) VALUES ";
     $valores_usuario = $this->preparar_consulta_por_tipo_usuario($tipo_usuario,$noticia);
