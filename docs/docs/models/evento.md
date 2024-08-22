@@ -135,6 +135,7 @@ Esta función obtiene la cantidad de eventos agrupados por día de inicio.
 
 ### Comportamiento
 La función:
+
 1. Establece una conexión a la base de datos utilizando la conexión de la clase padre (`parent::conexion()`).
 2. Configura los nombres de los campos (`parent::set_names()`).
 3. Construye una consulta SQL que selecciona el día del mes (`DAY(ev_inicio)`) en el que comienzan los eventos y cuenta la cantidad de eventos que inician en cada día. Los resultados son agrupados por el día de inicio.
@@ -176,7 +177,8 @@ Esta función obtiene la cantidad de eventos por nivel de emergencia dentro de u
 
 ### Comportamiento
 
-La función:
+**La función:**
+
 1. Establece una conexión a la base de datos utilizando la conexión de la clase padre (`parent::conexion()`).
 2. Construye una condición SQL basada en los niveles de emergencia (`$ev_niv_array`) proporcionados.
 3. Construye y prepara una consulta SQL que cuenta la cantidad de eventos agrupados por nivel (`ev_niv`), que ocurrieron dentro del rango de fechas especificado por `$fecha_mes_anterior` y `$fecha_actual`.
