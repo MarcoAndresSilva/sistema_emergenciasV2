@@ -856,26 +856,27 @@ Esta función obtiene los detalles de emergencias asociadas a un evento específ
 ### Retorno
 
 - **array**: Un arreglo asociativo con los detalles de emergencias asociadas al evento:
-  - **emergencia_id** (int): Identificador de la emergencia.
-  - **ev_desc** (string): Descripción de la emergencia.
-  - **ev_inicio** (string): Fecha y hora de inicio de la emergencia.
-  - **usu_nom** (string): Nombre del usuario asociado con la emergencia.
-  - **usu_ape** (string): Apellido del usuario asociado con la emergencia.
-  - **usu_tipo** (string): Tipo de usuario asociado con la emergencia.
+    - **emergencia_id** (int): Identificador de la emergencia.
+    - **ev_desc** (string): Descripción de la emergencia.
+    - **ev_inicio** (string): Fecha y hora de inicio de la emergencia.
+    - **usu_nom** (string): Nombre del usuario asociado con la emergencia.
+    - **usu_ape** (string): Apellido del usuario asociado con la emergencia.
+    - **usu_tipo** (string): Tipo de usuario asociado con la emergencia.
 
 ### Descripción de la Consulta SQL
 
 La consulta SQL realiza las siguientes acciones:
+
 - **Selecciona**:
-  - Identificador de la emergencia (`tm_emergencia_detalle.emergencia_id`).
-  - Descripción de la emergencia (`tm_emergencia_detalle.ev_desc`).
-  - Fecha y hora de inicio de la emergencia (`tm_emergencia_detalle.ev_inicio`).
-  - Nombre del usuario (`tm_usuario.usu_nom`).
-  - Apellido del usuario (`tm_usuario.usu_ape`).
-  - Tipo de usuario (`tm_usuario.usu_tipo`).
+    - Identificador de la emergencia (`tm_emergencia_detalle.emergencia_id`).
+    - Descripción de la emergencia (`tm_emergencia_detalle.ev_desc`).
+    - Fecha y hora de inicio de la emergencia (`tm_emergencia_detalle.ev_inicio`).
+    - Nombre del usuario (`tm_usuario.usu_nom`).
+    - Apellido del usuario (`tm_usuario.usu_ape`).
+    - Tipo de usuario (`tm_usuario.usu_tipo`).
 
 - **Une** las tablas `tm_emergencia_detalle` y `tm_usuario`:
-  - La unión se realiza mediante `INNER JOIN` basándose en el identificador del usuario (`usu_id`) para obtener la información del usuario asociado con cada detalle de emergencia.
+    - La unión se realiza mediante `INNER JOIN` basándose en el identificador del usuario (`usu_id`) para obtener la información del usuario asociado con cada detalle de emergencia.
 
 - **Filtra** los resultados para aquellos que están asociados con el identificador del evento proporcionado (`tm_emergencia_detalle.ev_id = ?`).
 
