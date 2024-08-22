@@ -45,9 +45,8 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
                 <div class="tbl-row">
                     <div class="tbl-cell">
                         <h3 class="m-t-lg" id="lblNomIdTicket"></h3>
-                        <!-- <span class="label label-pill" id="lblEstado"></span> -->
-                        <div class="col-lg-2 m-2 label label-pill" id="lblEstado"></div>      
-                        <div class="col-lg-2 m-2 label label-pill label-primary" id="lblNomUsuario"></div>
+                        <div class="col-lg-3 m-2 label label-pill" id="lblEstado"></div>      
+                        <div class="col-lg-3 m-2 label label-pill label-primary" id="lblNomUsuario"></div>
                         <div class="col-lg-3 m-2 label label-pill label-warning" id="lblFechaCrea"></div>
                     </div>
                 </div>
@@ -95,6 +94,11 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
                     <div class="col-lg-12">
                         <button type="button" id="btnEnviar" class="btn btn-rounded btn-inline btn-primary">Enviar</button>
                     </div>
+
+                    <div class="col-lg-12">
+                        
+                        <button id='btnPanelCerrar' type='button' class='btn btn-rounded btn-danger ladda-button modal-btn'> <i class='fa-solid fa-square-xmark'></i> Cerrar Evento</button>
+                    </div>
                    
                 </div>
 
@@ -108,7 +112,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
     <?php require_once("../MainFooter/footer.php"); ?>
 
     <?php
-
+require_once('modalCerrar.php');
 require_once("../MainJs/js.php");
 ?>
 </body>
