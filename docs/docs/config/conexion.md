@@ -188,3 +188,30 @@ protected function ejecutarAccion($sql, $params = []) {
     return $consulta->rowCount() > 0;
 }
 ```
+
+## obtenerUltimoRegistro
+
+Esta función obtiene el último registro de una tabla en base a un campo de identificación.
+
+### Parámetros
+
+- **$tabla**: Nombre de la tabla de la cual se desea obtener el último registro. Tipo: `string`.
+- **$idCampo**: (Opcional) Nombre del campo de identificación por el cual se ordenará la consulta. Por defecto es `'id'`. Tipo: `string`.
+
+### Retorno
+
+- Retorna el resultado de la consulta SQL que obtiene el último registro de la tabla especificada. El tipo de retorno depende de la implementación de la función `ejecutarConsulta`.
+
+### Comportamiento
+
+La función construye y ejecuta una consulta SQL que selecciona todos los campos de la tabla especificada, ordenados en forma descendente por el campo de identificación (por defecto `'id'`). Luego, retorna el primer resultado de esta consulta, que corresponde al último registro de la tabla.
+
+#### codigo
+
+```php
+<?php
+public function obtenerUltimoRegistro(string $tabla, $idCampo = 'id') {
+    $sql = "SELECT * FROM $tabla ORDER BY $idCampo DESC LIMIT 1";
+    return $this->ejecutarConsulta($sql, [], false);
+}
+```
