@@ -38,6 +38,7 @@ nav:
         - Atender Emergencia: view/atenderEmergencia.md
         - Categorías Emergencias: view/categoriasEmergencias.md
         - Control Eventos: view/controlEventos.md
+        - Mapa Calor: view/MapaCalor.md
         - Crear Usuario: view/crearUsuario.md
         - Emergencias Por Institución: view/emergenciasPorInstitucion.md
         - Funcionarios Municipales: view/funcionariosMunicipales.md
