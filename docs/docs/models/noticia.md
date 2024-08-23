@@ -93,5 +93,61 @@ public function lista_posibles_envios_por_ids(string $ids, string $id_name){
 ```
 
 
-```
+## check_mensaje_leido
 
+### Funcionamiento
+
+La función `check_mensaje_leido` actualiza el estado de lectura de una noticia para un usuario específico. Marca la noticia como leída y establece la fecha de lectura en la base de datos.
+
+Recibe dos parámetros:
+- `noticia_id` (int): El identificador de la noticia que se marca como leída.
+- `usuario_id` (int): El identificador del usuario que marca la noticia como leída.
+
+La función obtiene la fecha y hora actual en formato `Y-m-d H:i:s`. Luego, construye una consulta SQL para actualizar el campo `leido` a `1` y el campo `fecha_lectura` con la fecha actual en la tabla `tm_noticia_usuario`. La consulta se ejecuta solo si el `usu_id` y `noticia_id` coinciden con los valores proporcionados.
+
+### Return
+
+La función devuelve un array con el estado de la operación y un mensaje correspondiente:
+
+- **Éxito**:
+  ```js
+  [
+      'status' => 'success',
+      'message' => "Se marca mensaje como leído"
+  ]
+  ```
+
+- **Error** (en caso de fallo):
+  ```php
+  [
+      'status' => 'error',
+      'message' => "Problemas al actualizar estado del mensaje noticia"
+  ]
+  ```
+
+### Código Original
+
+```php
+<?php
+public function check_mensaje_leido($noticia_id, $usuario_id){
+  $fecha_lectura = date('Y-m-d H:i:s');
+  $sql = "UPDATE tm_noticia_usuario SET leido=1, fecha_lectura=:fecha_lectura WHERE usu_id=:usuario_id AND noticia_id=:noticia_id";
+  $params = [
+    ":usuario_id" => $usuario_id,
+    ":noticia_id" => $noticia_id,
+    ":fecha_lectura" => $fecha_lectura,
+  ];
+  $result = $this->ejecutarAccion($sql, $params);
+  if ($result){
+    return [
+      'status' => 'success',
+      'message' => "Se marca mensaje como leído"
+    ];
+  }
+  return [
+    'status' => 'error',
+    'message' => "Problemas al actualizar estado del mensaje noticia"
+  ];
+}
+```
+```
