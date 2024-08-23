@@ -1,461 +1,335 @@
-var coordsUser = {};
-var permitirUbicacion = true;
-var marker;
+$(document).ready(function() {
+
+  // Obtener el elemento <a> por su clase
+  var enlace = document.querySelector('.NuevoEvento');
+  // Añadir una clase al enlace
+  enlace.classList.add('selected');
+
+});
+
+var defaultLocation = { lat: -33.7402, lng: -71.2060 }; // Coordenadas de Melipilla
 var mapContainer = document.getElementById('map');
+var map;
+var marker;
+var currentLat; // Variable para almacenar la latitud actual
+var currentLng; // Variable para almacenar la longitud actual
 
+function initMap() {
+  map = new google.maps.Map(mapContainer, {
+    zoom: 17,
+    center: defaultLocation
+  });
 
+  marker = new google.maps.Marker({
+    position: defaultLocation,
+    map: map,
+    title: 'Arrastrar',
+    draggable: true
+  });
+
+  google.maps.event.addListener(marker, 'dragend', function(event) {
+    currentLat = event.latLng.lat(); // Actualizar latitud
+    currentLng = event.latLng.lng(); // Actualizar longitud
+    console.log('Nuevas coordenadas: ' + currentLat + ',' + currentLng);
+    // Actualizar los campos ocultos de latitud y longitud
+    $('#ev_latitud').val(currentLat);
+    $('#ev_longitud').val(currentLng);
+    // Actualizar el campo de dirección
+    actualizarDireccion(currentLat, currentLng);
+  });
+}
+
+function obtenerUbicacionUsuario() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var userLocation = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      };
+
+      map.setCenter(userLocation);
+      marker.setPosition(userLocation);
+      currentLat = userLocation.lat;
+      currentLng = userLocation.lng;
+      // Actualizar los campos ocultos de latitud y longitud
+      $('#ev_latitud').val(currentLat);
+      $('#ev_longitud').val(currentLng);
+      // Actualizar el campo de dirección
+      actualizarDireccion(currentLat, currentLng);
+    }, function(error) {
+      // Si la geolocalización falla, centrar el mapa en la ubicación predeterminada (Melipilla)
+      map.setCenter(defaultLocation);
+      marker.setPosition(defaultLocation);
+      currentLat = defaultLocation.lat;
+      currentLng = defaultLocation.lng;
+      // Actualizar los campos ocultos de latitud y longitud
+      $('#ev_latitud').val(currentLat);
+      $('#ev_longitud').val(currentLng);
+      // Actualizar el campo de dirección
+      actualizarDireccion(currentLat, currentLng);
+    });
+  } else {
+    // Si el navegador no soporta geolocalización, centrar el mapa en la ubicación predeterminada (Melipilla)
+    map.setCenter(defaultLocation);
+    marker.setPosition(defaultLocation);
+    currentLat = defaultLocation.lat;
+    currentLng = defaultLocation.lng;
+    // Actualizar los campos ocultos de latitud y longitud
+    $('#ev_latitud').val(currentLat);
+    $('#ev_longitud').val(currentLng);
+    // Actualizar el campo de dirección
+    actualizarDireccion(currentLat, currentLng);
+  }
+}
+
+function initAutocomplete() {
+  var input = document.getElementById('address');
+  var autocomplete = new google.maps.places.Autocomplete(input);
+  autocomplete.setFields(['address_component', 'geometry']);
+
+  autocomplete.addListener('place_changed', function() {
+    var place = autocomplete.getPlace();
+
+    if (!place.geometry) {
+      console.error("No se pudo obtener la información de la dirección.");
+      return;
+    }
+
+    var formattedAddress = place.formatted_address;
+    if ($('#address').val() !== formattedAddress) {
+      $('#address').val(formattedAddress);
+    }
+  });
+}
+
+function cargarCategorias() {
+  $.get("../../controller/categoria.php?op=combo", function(data) {
+    $('#cat_id').html(data);
+  }).fail(function(jqXHR, textStatus, errorThrown) {
+    console.error("Error en la solicitud de categorías: ", textStatus, errorThrown);
+    swal("Error al cargar categorías", "No se pudo cargar la lista de categorías.", "error");
+  });
+}
 
 $(document).ready(function() {
-    
-    // Obtener el elemento <a> por su ID
-    var enlace = document.querySelector('.NuevoEvento');
-    
-    // Añadir una clase al enlace
-    enlace.classList.add('selected');
-
-    
-    //Funcion para cargar los datos de la tabla categoria
-    $.post("../../controller/categoria.php?op=combo",function(data,status){
-        $('#cat_id').html(data);
-    });
-
-    //Funcion para mostrar el select en el que se compartira la ubicacion 
-        $('#elegir-ubicacion').on('change', function() {
-            var selectedOption = $(this).val();
-            if (selectedOption === 'direccion-escrita') {
-                $('#direccion-escrita').show();
-                $('#direccion-geolocalizacion').hide();
-            } else if (selectedOption === 'ubicacion-content') {
-                $('#direccion-escrita').hide();
-                $('#direccion-geolocalizacion').show();
-            }
-        });
-    });
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//ID para realizar una correcta asignación de unidades al evento
-var cat_id;
-var alerta = true;
-//Activacion del boton guardar
-
-$('#btnGuardar').off('click').on('click', function() {
-    if (validarFormulario()) {
-        // Llama a la función pasa add_evento 
-        add_evento();
-        
-        // insert_asignacion_unidades(ev_id, cat_id);
-
-        if(alerta){
-            swal("Emergencia Registrada", "Pronto se trabajará en esta emergencia", "success");
-        }else{
-            swal("Algo Salio Mal", "No se logro registrar la emergencia", "error");
-        }
+  initMap();
+  initAutocomplete();
+  cargarCategorias();
+  obtenerUbicacionUsuario();
+  $('#elegir-ubicacion').on('change', function() {
+    var selectedOption = $(this).val();
+    if (selectedOption === 'direccion-escrita') {
+      $('#direccion-escrita').show();
+      $('#direccion-geolocalizacion').hide();
+    } else if (selectedOption === 'ubicacion-content') {
+      $('#direccion-escrita').hide();
+      $('#direccion-geolocalizacion').show();
     }
-});
-////////////////////////////////////////////////////////////////////////////////////////////////////
-//Boton para cargar el archivo
-document.getElementById('btnCargarArchivo').addEventListener('click', function() {
-    //Evita que el formulario se envie
-    event.preventDefault();
-    
-    //Activa la funcion del input type file
-    document.getElementById('imagen').click();
-});
+  });
 
-document.getElementById('imagen').addEventListener('change', function() {
+  document.querySelectorAll('input[name="ubicacion"]').forEach(function(radio) {
+    radio.addEventListener('change', function() {
+      toggleMap();
+      if (this.value === 'permitir' || this.value === 'permitirActual') {
+        obtenerUbicacionUsuario();
+      }
+    });
+  });
+
+  $('#btnGuardar').off('click').on('click', function() {
+    if (validarFormulario()) {
+      var direccion = $('#address').val();
+      var latitud = currentLat; // Usar la variable de latitud actual
+      var longitud = currentLng; // Usar la variable de longitud actual
+      $('#ev_latitud').val(latitud);
+      $('#ev_longitud').val(longitud);
+      add_evento();
+    }
+  });
+
+  document.getElementById('btnCargarArchivo').addEventListener('click', function(event) {
+    event.preventDefault();
+    document.getElementById('imagen').click();
+  });
+
+  document.getElementById('imagen').addEventListener('change', function() {
     var label = document.getElementById('archivoAdjuntado');
     if (this.files && this.files.length > 0) {
-      label.textContent = this.files[0].name; // Actualiza el contenido del label con el nombre del archivo seleccionado
+      label.textContent = this.files[0].name;
     } else {
       label.textContent = 'No hay archivo adjunto (.JPG/.JPEG/.PNG)';
     }
+  });
 });
 
-// Lógica para obtener datos dinámicos de la sesión y llenar campos
-var nombre = document.getElementById('nombre').value;
-var apellido = document.getElementById('apellido').value;
-var telefono = document.getElementById('telefono').value;
-var correo = document.getElementById('correo').value;
-
-$('#nombre').val(nombre);
-$('#apellido').val(apellido);
-$('#telefono').val(telefono);
-$('#correo').val(correo);
-
-function guardarDatosPersonales() {  
-    let datosPersonales = [nombre, apellido, telefono, correo];
-    console.log(datosPersonales);
-}
-////////////////////////////////////////////////////////////////////////////////////////////////////
-//Funcion para tomar datos y concretar funcion add_evento
-function add_evento() {
-    let ev_id;
-    //Verifica si el marcador esta definido
-    if (marker === null || marker === undefined) {
-        console.log("El marcador es nulo o no está definido");
-    } else {
-        var newCoords = marker.getPosition();
-    }
-    guardarDatosPersonales();
-
-
-    // Aquí agregamos la variable que falta
-    var ev_desc = $('#descripcion').val();
-    var ev_est = 1;
-
-
-    //Fecha y Hora
-    var ev_inicio = new Date();
-    var anio = ev_inicio.getFullYear();
-    var mes = ev_inicio.getMonth() + 1; // Mes en JavaScript es 0-indexado, así que suma 1
-    var dia = ev_inicio.getDate();
-    var horas = ev_inicio.getHours();
-    var minutos = ev_inicio.getMinutes();
-    var segundos = ev_inicio.getSeconds();
-    // Formatear la fecha y hora como desees
-    var fechaFormateada = anio + '-' + mes + '-' + dia + ' ' + horas + ':' + minutos + ':' + segundos;
-    ev_inicio = fechaFormateada;
-
-    //Variable Categoría
-    cat_id = $('#cat_id').val();
-    //Verificamos la categoría asignada para automatizar la asignación de unidades a las emergencias
-
-    var ev_direc = $('#address').val();
-    //Obtiene el valor del radiobutton del uso de ubicación
-    var valorUbicacion = $("input[name='ubicacion']:checked").val();
-
-    //Utiliza la ubicación del marcador
-    if (valorUbicacion === 'permitir') {
-        if ($('#address').val() === "") {
-            ev_direc = 'Sin dirección , ' + marker.getPosition().lat() + ',' + marker.getPosition().lng();
-            console.log('Coordenadas a uilizar: ' + ev_direc);
-
-        } else if ($('#address').val() !== "") {
-            ev_direc += ' , ' + marker.getPosition().lat() + ',' + marker.getPosition().lng();
-        }
-
-    }
-    //Utiliza la ubicación actual del dispositivo
-    else if (valorUbicacion === 'permitirActual') {
-        if ($('#address').val() === "") {
-            ev_direc = 'Sin dirección , ' + marker.getPosition().lat() + ',' + marker.getPosition().lng();
-
-        } else if ($('#address').val() !== "") {
-            ev_direc += ' , ' + marker.getPosition().lat() + ',' + marker.getPosition().lng();
-        }
-    }
-    //No utiliza ubicación por lo que añade un string al final de la dirección para especificar que no hay coordenadas
-    else if (valorUbicacion === 'noPermitir') {
-        ev_direc += " , No hay coordenadas";
-    }
-
-    // Valida si la direccion esta vacía o No
-    validarCampoVacioDireccion('#address', 'Debes ingresar una dirección.');
-
-    const ev_niv = 0;
-    var ev_img = "";
-
-    
-    $.post("../../controller/evento.php?op=add_evento", {
-        ev_desc: ev_desc,
-        ev_est: ev_est,
-        ev_inicio: ev_inicio,
-        ev_direc: ev_direc,
-        cat_id: cat_id,
-        ev_niv: ev_niv,
-        ev_img: ev_img
-    }, function(data, status) {
-
-        console.log(data);
-
-        if (data == 1) {
-
-            $.post("../../controller/evento.php?op=get_id_ultimo_evento", function(dataId, status) {
-                ev_id = dataId;
-
-                console.log(dataId);
-                console.log(ev_id);
-
-                // Después de agregar el evento con éxito, cargar la imagen
-                var formData = new FormData($('#event_form')[0]);
-                formData.append('ev_id', ev_id);
-                $.ajax({
-                    url: '../../controller/evento.php?op=carga-imagen',
-                    type: 'POST',
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    success: function(response) {
-                        if (response == 1) {
-                            console.log("Imagen cargada correctamente");
-                        } else {
-                            console.log("Error al cargar la imagen");
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Error en la solicitud de carga de imagen: " + error);
-                    }
-                });
-                if (data == 1) {
-                    console.log("data == 1");
-                } else {
-                    alerta === false;
-                }
-                insert_asignacion_unidades(ev_id, cat_id);
-                // console.log(ev_asig);
-            }); 
-            $('#descripcion').val('');
-            $('#cat_id').val(1);
-        } else {
-            alerta === false;
-        }
-    });
-
-};
-
-function insert_asignacion_unidades(ev_id, cat_id){
-    var ev_asig = [];
-    switch (cat_id){
-        case "1":
-            ev_asig = [2,3,4,5];
-            break;
-            
-        case "2":
-            ev_asig = [3];
-            break;
-            
-        case "3":
-            ev_asig = [3,4,5];
-            break;
-            
-        case "4":
-            ev_asig = [2,3];
-            break;
-            
-        case "5":
-            ev_asig = [2];
-            break;
-            
-        case "7":
-            ev_asig = [2];
-            break;
-            
-        case "9":
-            ev_asig = [2,3,4,5];
-            break;
-    }
-
-    ev_asig.forEach(function(unid_id){
-        $.post("../../controller/eventoUnidad.php?op=insert_asignacion_unidades",{ev_id:ev_id, unid_id:unid_id},function(data,status){
-            if (data == 0) {
-                alerta == false;
-            }
-        });
-    });
-
-}
-
-
-
-// Listener para los cambios en el checklist "Usar Ubicación"
-document.querySelectorAll('input[name="ubicacion"]').forEach(function(radio) {
-    //Contador para mostrar la información 1 sola vez
-    permisoContador = 0;
-    radio.addEventListener('change', function() {
-        if(permisoContador == 0){
-            swal("Aceptar el Permiso de Ubicación", "Favor Aceptar el permiso de Ubicación que solicita el sitio Web","info");
-            permisoContador++;
-        }
-        permitirUbicacion = this.value === 'permitir';
-        permitirActual = this.value ==='permitirActual';
-
-        toggleMap();
-        //API DE GOOGLE MAPS
-        //Activación del mapa
-        var map = new google.maps.Map(mapContainer, {
-            zoom: 17 // Nivel de zoom
-        });
-        // Se utiliza un marcador que permite su arrastre
-        if(permitirUbicacion){
-            //Activación y ejecución de la obtencion de coordenadas del usuario
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    
-                    var userLocation = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude
-                    };
-                    //Marcador que ingresa el usuario
-                    marker = new google.maps.Marker({
-                        position: userLocation, // Coordenadas del marcador
-                        map: map,
-                        title: 'Arrastrar',
-                        draggable: true
-                    });
-                    map.setCenter(userLocation);
-
-                    // Agregar un evento al marcador para obtener las nuevas coordenadas cuando se arrastra
-                    google.maps.event.addListener(marker, 'dragend', function (event) {
-                        var newLat = event.latLng.lat();
-                        var newLng = event.latLng.lng();
-                        userLocation = {
-                            lat: newLat,
-                            lng: newLng
-                        };
-                        console.log('Nuevas coordenadas: ' + userLocation.lat + ',' + userLocation.lng);
-                    });
-
-                }, function(error) {
-                    
-                    // Manejo de errores
-                    switch (error.code) {
-                        case error.PERMISSION_DENIED:
-                            console.error("El usuario denegó la solicitud de geolocalización.");
-                            break;
-                        case error.POSITION_UNAVAILABLE:
-                            console.error("La información de ubicación no está disponible.");
-                            break;
-                        case error.TIMEOUT:
-                            console.error("Se agotó el tiempo de espera para la solicitud de geolocalización.");
-                            break;
-                            default:
-                                console.error("Error desconocido al intentar obtener la ubicación.");
-                    }
-                    swal("Error de Geolocalización!","No se logro optener la ubicación", "error");
-                });
-            } else {
-                console.error('Error: El navegador no soporta geolocalización.');
-            }
-        }
-        // Se utiliza un marcador fijo de la ubicación actual
-        else if(permitirActual){
-            //Activación y ejecución de la obtencion de coordenadas del usuario
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    
-                    var userLocation = {
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude
-                    };
-                    //Marcador que ingresa el usuario
-                    marker = new google.maps.Marker({
-                        position: userLocation, // Coordenadas del marcador
-                        map: map,
-                        title: 'Tu ubicación'
-                    });
-                    map.setCenter(userLocation);
-
-                }, function(error) {
-                    
-                    // Manejo de errores
-                    switch (error.code) {
-                        case error.PERMISSION_DENIED:
-                            console.error("El usuario denegó la solicitud de geolocalización.");
-                            break;
-                        case error.POSITION_UNAVAILABLE:
-                            console.error("La información de ubicación no está disponible.");
-                            break;
-                        case error.TIMEOUT:
-                            console.error("Se agotó el tiempo de espera para la solicitud de geolocalización.");
-                            break;
-                            default:
-                                console.error("Error desconocido al intentar obtener la ubicación.");
-                    }
-                    swal("Error de Geolocalización!","No se logro optener la ubicación", "error");
-                });
-            } else {
-                console.error('Error: El navegador no soporta geolocalización.');
-            }
-        }
-
-        
-
-    });
-});
-
-// Función para mostrar u ocultar la pestaña
 function toggleMap() {
-    
-    if (permitirUbicacion || permitirActual) {
-        // Mostrar el mapa si la ubicación o la ubicaciónActual está permitida
-        mapContainer.style.display = 'block';
-    } else{
-        // Ocultar el mapa si la ubicación no está permitida
-        mapContainer.style.display = 'none';
-    }
+  var permitirUbicacion = $('input[name="ubicacion"]:checked').val() === 'permitir' || $('input[name="ubicacion"]:checked').val() === 'permitirActual';
+  mapContainer.style.display = permitirUbicacion ? 'block' : 'none';
 }
-//Validación del formulario
-function validarFormulario() {
-    return (
-        // validarCampoNombre('#nombre', 'Debes ingresar un nombre sin caracteres especiales') &&
-        // validarEmail('#mail', 'Debes ingresar una dirección de correo electrónico válida.') &&
-        validarCampoVacio('#descripcion', 'Debes ingresar una descripción.') &&
-        validarCampoVacio('#cat_id', 'Debes seleccionar una categoría.')
-        // validarTelefono('#phone', 'El teléfono solo puede contener números y no puede estar vacío.')
-    );
-}
-// el nombre vendra diamicamente del perfil
-// function validarCampoNombre(selector, mensajeError) {
-//     var valor = $(selector).val().trim();
-    
-//     // Expresión regular que permite letras, espacios y tildes
-//     var regexNombre = /^[A-Za-zÁ-Úá-ú\s]+$/;
 
-//     if (valor === "" || !regexNombre.test(valor)) {
-//         mostrarMensajeError(mensajeError);
-//         return false;
-//     }
-    
-//     return true;
-// }
+function validarFormulario() {
+  var direccionValida = validarCampoDireccion();
+  var categoriaValida = validarCampoVacio('#cat_id', 'Debes seleccionar una categoría.');
+  return direccionValida && categoriaValida;
+}
 
 function validarCampoVacio(selector, mensajeError) {
-    var valor = $(selector).val().trim();
-    if (valor === "") {
-        mostrarMensajeError(mensajeError);
-        return false;
-    }
-    return true;
+  var valor = $(selector).val() || ''; // Agregar valor por defecto vacío
+  valor = valor.trim();
+  if (valor === "") {
+    mostrarMensajeError(mensajeError);
+    return false;
+  }
+  return true;
 }
 
-function validarCampoVacioDireccion(selector, mensajeError) {
-    var valor = $(selector).val().trim();
-    if (valor === "" & (coordsUser.lat === "" || coordsUser.lng === "")) {
-        mostrarMensajeError(mensajeError);
-        return false;
-    }
+function validarCampoDireccion() {
+  var valorUbicacion = $("input[name='ubicacion']:checked").val();
+  var direccion = $('#address').val() || ''; // Agregar valor por defecto vacío
+  direccion = direccion.trim();
+  var latitud = $('#ev_latitud').val() || ''; // Agregar valor por defecto vacío
+  latitud = latitud.trim();
+  var longitud = $('#ev_longitud').val() || ''; // Agregar valor por defecto vacío
+  longitud = longitud.trim();
+
+  if ((valorUbicacion === 'permitir' || valorUbicacion === 'permitirActual') && (latitud !== "" && longitud !== "")) {
+    // Si hay latitud y longitud, no es necesario tener una dirección.
     return true;
+  } else if (direccion === "") {
+    // Si no hay latitud y longitud, se requiere una dirección.
+    mostrarMensajeError('Debes ingresar una dirección.');
+    return false;
+  }
+
+  return true;
 }
-
-// function validarEmail(selector, mensajeError) {
-//     var email = $(selector).val();
-//     var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-//     if (!emailRegex.test(email)) {
-//         mostrarMensajeError(mensajeError);
-//         return false;
-//     }
-//     return true;
-// }
-
-// Función para validar el campo de teléfono
-// function validarTelefono(selector, mensajeError) {
-//     var telefono = $(selector).val().trim();
-    
-//     // Expresión regular que permite solo números
-//     var regexTelefono = /^\d+$/;
-
-//     if (telefono === "" || !regexTelefono.test(telefono)) {
-//         mostrarMensajeError(mensajeError);
-//         return false;
-//     }
-    
-//     return true;
-// }
 
 function mostrarMensajeError(mensaje) {
-    // Aquí puedes mostrar el mensaje de error en algún elemento específico o en la consola del navegador.
-    console.error(mensaje);
-    swal( "Validación de formulario",mensaje, "error" ) ;
+  console.error(mensaje);
+  swal("Faltan datos", mensaje, "info");
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function obtenerDireccionDesdeCoordenadas(lat, lng) {
+  return new Promise((resolve, reject) => {
+    const geocoder = new google.maps.Geocoder();
+    const latlng = { lat: parseFloat(lat), lng: parseFloat(lng) };
+    geocoder.geocode({ location: latlng }, (results, status) => {
+      if (status === "OK") {
+        if (results[0]) {
+          resolve(results[0].formatted_address);
+        } else {
+          reject("No results found");
+        }
+      } else {
+        reject("Geocoder failed due to: " + status);
+      }
+    });
+  });
+}
+
+async function actualizarDireccion(lat, lng) {
+  try {
+    const direccion = await obtenerDireccionDesdeCoordenadas(lat, lng);
+    $('#address').val(direccion);
+  } catch (error) {
+    console.error(error);
+    $('#address').val('Sin dirección');
+  }
+}
+
+
+
+async function add_evento() {
+  let ev_latitud = $('#ev_latitud').val();
+  let ev_longitud = $('#ev_longitud').val();
+
+  var ev_desc = $('#descripcion').val();
+  var ev_est = 1;
+
+  var ev_inicio = new Date();
+  var anio = ev_inicio.getFullYear();
+  var mes = ev_inicio.getMonth() + 1;
+  var dia = ev_inicio.getDate();
+  var horas = ev_inicio.getHours();
+  var minutos = ev_inicio.getMinutes();
+  var segundos = ev_inicio.getSeconds();
+  var fechaFormateada = anio + '-' + mes + '-' + dia + ' ' + horas + ':' + minutos + ':' + segundos;
+  ev_inicio = fechaFormateada;
+
+  var cat_id = $('#cat_id').val();
+  var ev_direc = $('#address').val();
+  var valorUbicacion = $("input[name='ubicacion']:checked").val();
+
+  if (valorUbicacion === 'permitir' || valorUbicacion === 'permitirActual') {
+    if ($('#address').val() === "") {
+      try {
+        ev_direc = await obtenerDireccionDesdeCoordenadas(ev_latitud, ev_longitud);
+      } catch (error) {
+        ev_direc = "Sin dirección";
+      }
+    }
+  } else if (valorUbicacion === 'no') {
+    ev_latitud = "null";
+    ev_longitud = "null";
+    ev_direc = $('#address').val();
+  }
+
+  var ev_telefono = $('#telefono').val();
+  if (ev_telefono === "") {
+    ev_telefono = "-";
+  }
+
+  // Crear FormData para incluir todos los datos y archivos
+  var formData = new FormData();
+  formData.append('ev_desc', ev_desc);
+  formData.append('ev_est', ev_est);
+  formData.append('ev_inicio', ev_inicio);
+  formData.append('ev_direc', ev_direc);
+  formData.append('cat_id', cat_id);
+  formData.append('ev_niv', 1);
+  formData.append('ev_latitud', ev_latitud);
+  formData.append('ev_longitud', ev_longitud);
+  formData.append('ev_telefono', ev_telefono);
+
+  // Agregar la imagen si existe
+  var files = $('#imagen')[0].files[0];
+  if (files) {
+    formData.append('imagen', files);
+  }
+
+  $.ajax({
+    url: "../../controller/evento.php?op=add_evento",
+    type: "POST",
+    data: formData,
+    processData: false, // No procesar los datos
+    contentType: false, // No establecer contentType
+    success: function(response) {
+
+      let data;
+      try {
+        data = typeof response === 'string' ? JSON.parse(response) : response;
+      } catch (e) {
+        console.error('Error al parsear JSON:', e);
+        swal("Error", "Respuesta del servidor no es un JSON válido", "error");
+        return;
+      }
+
+
+      if (data.status === 'success') {
+        swal("Éxito", data.message, "success")
+          addNotification("Nuevo Evento", "evento nuevo por derivar", "../ControlEventos/");
+          formulario = document.getElementById("event_form");
+          formulario.reset();
+      } else if (data.status === 'error') {
+        swal("Error", data.message, "error");
+      } else {
+        swal("Error", "Respuesta del servidor no contiene el campo 'status'", "error");
+      }
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.error("Error en la solicitud de agregar evento: ", textStatus, errorThrown);
+      swal("Error al agregar evento", "No se pudo agregar el evento.", "error");
+    }
+  });
+}

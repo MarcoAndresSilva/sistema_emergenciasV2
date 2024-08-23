@@ -42,7 +42,7 @@ class RegistroLog extends Conectar{
                 IFNULL(usu.usu_nom   ,'Desconocido') as 'nombre', 
                 IFNULL(usu.usu_ape   ,'Desconocido') as 'apellido',
                 IFNULL(usu.usu_correo,'Desconocido') as 'correo',
-                IFNULL(usu.usu_name  ,'Desconocido') as 'usaurio',
+                IFNULL(usu.usu_name  ,'Desconocido') as 'usuario',
                 log.fecha      as 'fecha',
                 log.op         as 'operacion',
                 log.detalle    as 'detalle' 

@@ -253,7 +253,9 @@ function actualizarTabla(data) {
  
         tbody.appendChild(fila);
     });
-
+   if ($.fn.DataTable.isDataTable('#miTabla')) {
+        $('#miTabla').DataTable().clear().destroy();
+    }
     // Agrega el nuevo tbody a la tabla
     tabla.appendChild(tbody);
     $('#miTabla').DataTable({
@@ -264,6 +266,7 @@ function actualizarTabla(data) {
         "language":{
             "url":'../registrosLog/spanishDatatable.json'
         },
+        "responsive": true
     });
 }
 

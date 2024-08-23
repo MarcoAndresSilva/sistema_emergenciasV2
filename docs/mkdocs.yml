@@ -14,11 +14,13 @@ nav:
         - Unidad: controllers/unidad.md
         - Usuario: controllers/usuario.md
         - RegistroLog: controllers/registroLog.md 
+        - Seguridad Password: controllers/seguridadPassword.md
     - Models:
         - Datos Geográficos: models/datosGeograficos.md
         - Categoría: models/categoria.md
         - Estado: models/estado.md
         - Evento: models/evento.md
+        - Noticia: models/noticia.md
         - Evento Unidad: models/eventoUnidad.md
         - Nivel Peligro: models/nivelPeligro.md
         - Unidad: models/unidad.md
@@ -32,11 +34,12 @@ nav:
         - public: public/public.md
     - Docker:
         - Docker File: docker/dockerFile.md
-        - Docker Container: docker/dockerContainer.md
+        - Docker Compose: docker/dockerContainer.md
     - View:
         - Atender Emergencia: view/atenderEmergencia.md
         - Categorías Emergencias: view/categoriasEmergencias.md
         - Control Eventos: view/controlEventos.md
+        - Mapa Calor: view/MapaCalor.md
         - Crear Usuario: view/crearUsuario.md
         - Emergencias Por Institución: view/emergenciasPorInstitucion.md
         - Funcionarios Municipales: view/funcionariosMunicipales.md
@@ -75,7 +78,12 @@ plugins:
       cover_subtitle: Documentacion 
       copyright: municipalidad de melipilla
   - search 
+  - mermaid2
 markdown_extensions:
   - pymdownx.highlight:
       anchor_linenums: true
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format

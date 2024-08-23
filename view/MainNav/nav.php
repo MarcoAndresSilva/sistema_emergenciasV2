@@ -14,22 +14,36 @@
                 <span class="lbl">Nuevo Evento</span>
             </a>
         </li>
-        <li class="blue-dirty">
+        <!-- <li class="blue-dirty">
             <a class="Historial" href="../Historial/">
                 <span class="glyphicon glyphicon-th"></span>
                 <span class="lbl">Historial </span>
             </a>
+        </li> -->
+        <li class="blue-dirty">
+            <a class="HistorialEventos" href="../HistorialEventos/">
+                <span class="glyphicon glyphicon-th"></span>
+                <span class="lbl">Historial Eventos </span>
+            </a>
         </li>
         
         <?php 
-        if ($_SESSION["usu_tipo"] == 1){
+        if ($_SESSION["usu_tipo"] == 2) {
         ?> 
-        
+
+        <!-- Evento -->
+        <li class="blue-dirty">
+            <a class="MapaCalor" href="../MapaCalor/">
+                <span class="glyphicon glyphicon-th"></span>
+                <span class="lbl"> Mapa De Eventos</span>
+            </a>
+        </li>
+
         <!-- Evento -->
         <li class="blue-dirty">
             <a class="ControlEventos" href="../ControlEventos/">
                 <span class="glyphicon glyphicon-th"></span>
-                <span class="lbl"> Eventos</span>
+                <span class="lbl"> Control de Eventos</span>
             </a>
         </li>
 
@@ -42,6 +56,11 @@
             </a>
             <div class="collapse-personal" id="collapseParametria"  >
                 <div class="card card-body" style="padding-left: 5px; border: none" style="padding-left: 5px; border: none">
+
+                    <a class="Unidad-Municipal" href="../UnidadMunicipal/">
+                        <span class="glyphicon glyphicon-asterisk"></span>
+                        <span class="lbl">Unidades Municipales</span>
+                    </a>
 
                     <a class="" href="../NivelCategoria/">
                         <span class="glyphicon glyphicon-asterisk"></span>
@@ -69,9 +88,13 @@
                         <span class="glyphicon glyphicon-asterisk"></span>
                         <span class="lbl"> Seguridad contrase&ntilde;a</span>
                     </a>
-                    <a class="" href="../GestionPerfile/">
+                    <a class="" href="../GestionUsuario/">
                         <span class="glyphicon glyphicon-asterisk"></span>
                         <span class="lbl">Gestionar Usuarios</span>
+                    </a>
+                    <a class="" href="../SeguridadUnidad/">
+                        <span class="glyphicon glyphicon-asterisk"></span>
+                        <span class="lbl">Seguridad Unidad</span>
                     </a>
                 </div>
             </div>

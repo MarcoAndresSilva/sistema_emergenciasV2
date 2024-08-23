@@ -1,16 +1,21 @@
 <?php
+require_once("../../models/Permisos.php");
 require_once("../../config/conexion.php");
-require_once("../../models/SeguridadPassword.php");
-
-if (isset($_SESSION["usu_id"])) {
+Permisos::redirigirSiNoAutorizado();
 ?>
 
 <!DOCTYPE html>
 <html>
 <?php require_once("../MainHead/head.php") ?>
 <title>Sistema Emergencia</title>
-<link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap5.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap4.min.css">
 <link rel="stylesheet" href="./StyleSeguridadPassword.css">
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap4.min.js"></script>
+<script defer type="text/javascript" src="./searchpass.js"></script>
 </head>
 
 <body class="with-side-menu">
@@ -25,28 +30,19 @@ if (isset($_SESSION["usu_id"])) {
         <div class="container-fluid">
             <div class="box-typical box-typical-padding table-responsive-sm" id="tabla-password">
                     <div class="input-group rounded">
-                        <div class="form-floating">
-                            <select class="form-select" id="selectStatus" >
-                                <option value="" selected>Todos</option>
-                                <option value="Vulnerable">Vulnerable</option>
-                                <option value="Seguro">Seguro</option>
-                            </select>
-                            <label for="floatingSelect">Estado de seguridad</label>
-                        </div>
-                        <div class="input-group rounded">
-                            <input class="form-control rounded" type="number" name="meses" placeholder="Numeros de meses" id="mesesexpiracion">
-                        </div>
                     </div> <!-- .input-group -->
                     
                     
-<table id="table-data" class="table table-bordered responsive  table-vcenter js-dataTable-js"> 
+<table id="table-data" class="table table-bordered responsive  table-vcenter js-dataTable-js display nowrap"> 
     <thead>
         <tr>
             <th>Nombre</th>
             <th>Apellido</th>
             <th>Correo</th>
             <th>estado</th>
-            <th>meses</th>
+            <th>Unidad</th>
+            <th>Dias antiguedad</th>
+            <th>Dias limite</th>
             <th>Detalle</th>
         </tr>
     </thead>
@@ -64,19 +60,7 @@ if (isset($_SESSION["usu_id"])) {
 
 </body>
         
-    <?php
-       require_once("../MainJs/js.php"); 
-echo ' <script  src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>';
-echo '<script defer type="text/javascript" src="./searchpass.js"></script>';
-echo '<script defer type="text/javascript" src="./mesesExpiracion.js"></script>';
-echo '<script defer src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.js"></script>';
-
-      
-    }else{
-        header("Location:". Conectar::ruta () ."index.php");
-    }
-    
-    ?>
+<?php require_once("../MainJs/js.php");?>
  
 
 </html>

@@ -1,6 +1,5 @@
 <?php
 require_once("../../config/conexion.php");
-require_once("../MainJs/js.php");
 if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_tipo"] == 2)) {
 	
 	?>
@@ -11,8 +10,11 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 <link rel="stylesheet" href="./nivelCateogiraStyle.css">
 <title>Sistema Emergencia</title>
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap5.css" />
-<script async src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
-<script async src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.4.1/css/responsive.bootstrap5.min.css" />
+<script  src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
+<script defer src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.js"></script>
+<script defer src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
+<script defer src="https://cdn.datatables.net/responsive/2.4.1/js/responsive.bootstrap5.min.js"></script>
 <script defer type="text/javascript" src="./GestionMotivo.js"></script>
 <script src="../../public/js/sweetaler2v11-11-0.js"></script>
 </head>
@@ -78,6 +80,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 
 <?php
 
+require_once("../MainJs/js.php");
 }else{
 	header("location:".Conectar::ruta()."index.php");
 }

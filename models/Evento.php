@@ -6,7 +6,33 @@ class Evento extends Conectar {
         try {
             $conectar = parent::conexion();
             parent::set_names();
-            $sql = "SELECT * FROM tm_evento tme inner join tm_categoria tmc on tmc.cat_id=tme.cat_id inner join tm_ev_niv ten on tme.ev_niv=ten.ev_niv_id inner join tm_estado te on te.est_id=tme.ev_est ORDER BY ev_id desc";
+            $sql = 'SELECT
+                        us.usu_name as "ev_nom", us.usu_ape as "ev_ape",
+                        tme.ev_direc as "ev_direc",
+                        tmc.cat_nom as "cat_nom",
+                        tme.ev_desc as "ev_desc",
+                        tme.ev_inicio as "ev_inicio",
+                        tmc.cat_id as "cat_id",
+                        tme.ev_direc as "ev_direc",
+                        tme.ev_id as "ev_id",
+                        ten.ev_niv_id as "ev_niv_id",
+                        tme.ev_est as "ev_est",
+                        tme.ev_final as "ev_final",
+                        tme.ev_latitud as "ev_latitud",
+                        tme.ev_longitud as "ev_longitud"
+                    FROM
+                        tm_evento tme
+                    INNER JOIN tm_categoria tmc ON
+                        tmc.cat_id = tme.cat_id
+                    INNER JOIN tm_ev_niv ten ON
+                        tme.ev_niv = ten.ev_niv_id
+                    INNER JOIN tm_estado te ON
+                        te.est_id = tme.ev_est
+                    INNER JOIN tm_usuario us
+                    on us.usu_id=tme.usu_id
+                    ORDER BY
+                        ev_id
+                    DESC;';
             $sql = $conectar->prepare($sql);
             $sql->execute();
             $resultado = $sql->fetchAll();
@@ -15,20 +41,17 @@ class Evento extends Conectar {
                 return $resultado;
             } else {
                 ?> <script>console.log("No se encontraron Eventos")</script><?php
-                return 0;
+                return [];
             }
         } catch (Exception $e) {
             ?> 
             <script>console.log("Error catch     get_evento")</script>
             <?php
-            throw $e;
+             return [];
         }
 
     }
 
-    
-
-    //get_evento segun su estado
     public function get_evento_nivel($ev_niv) {
         try {
             $conectar = parent::conexion();
@@ -53,8 +76,6 @@ class Evento extends Conectar {
 
     }
 
-
-
     public function get_eventos_por_dia() {
         try {
             $conectar = parent::conexion();
@@ -68,6 +89,7 @@ class Evento extends Conectar {
             throw $e;
         }
     }
+
     public function get_cantidad_eventos_por_nivel($ev_niv_array, $fecha_actual, $fecha_mes_anterior) {
         try {
             $conectar = parent::conexion();
@@ -150,7 +172,6 @@ class Evento extends Conectar {
             throw $e;
         }
     }
-
     public function datos_eventos_por_rango($fecha_actual, $fecha_desde_mes_anterior) {
         try {
             $conectar = parent::conexion();
@@ -169,41 +190,55 @@ class Evento extends Conectar {
         }
     }
         
-    public function add_evento($ev_nom, $ev_apellido, $ev_mail, $ev_desc, $ev_est, $ev_inicio, $ev_direc, $cat_id, $ev_niv, $ev_img, $ev_telefono) {
+    public function add_evento($usu_id, $ev_desc, $ev_est, $ev_inicio, $ev_direc, $ev_latitud, $ev_longitud, $cat_id, $ev_niv, $ev_img) {
+        if (empty($usu_id) || empty($ev_desc) || empty($ev_est) || empty($ev_inicio) || empty($ev_direc) || empty($cat_id)) {
+            return [
+                'status' => 'warning',
+                'message' => 'Faltan datos obligatorios. Por favor, asegúrate de completar todos los campos necesarios.'
+            ];
+        }
+    
         try {
             $conectar = parent::conexion();
             parent::set_names();
-            $sql = "INSERT INTO tm_evento (ev_nom, ev_apellido, ev_mail, ev_desc, ev_est, ev_inicio, ev_final, ev_direc, cat_id, ev_niv, ev_img, ev_telefono) 
-            VALUES (:ev_nom, :ev_apellido, :ev_mail, :ev_desc, :ev_est, :ev_inicio, NULL, :ev_direc, :cat_id, :ev_niv, :ev_img, :ev_telefono)";
-            $consulta  = $conectar->prepare($sql);
-            $consulta->bindParam(':ev_nom', $ev_nom);
-            $consulta->bindParam(':ev_apellido', $ev_apellido);
-            $consulta->bindParam(':ev_mail', $ev_mail);
+    
+            $sql = "INSERT INTO tm_evento (usu_id, ev_desc, ev_est, ev_inicio, ev_final, ev_direc, ev_latitud, ev_longitud, cat_id, ev_niv, ev_img) 
+            VALUES (:usu_id, :ev_desc, :ev_est, :ev_inicio, NULL, :ev_direc, :ev_latitud, :ev_longitud, :cat_id, :ev_niv, :ev_img)";
+    
+            $consulta = $conectar->prepare($sql);
+    
+            $consulta->bindParam(':usu_id', $usu_id);
             $consulta->bindParam(':ev_desc', $ev_desc);
             $consulta->bindParam(':ev_est', $ev_est);
             $consulta->bindParam(':ev_inicio', $ev_inicio);
             $consulta->bindParam(':ev_direc', $ev_direc);
+            $consulta->bindParam(':ev_latitud', $ev_latitud);
+            $consulta->bindParam(':ev_longitud', $ev_longitud);
             $consulta->bindParam(':cat_id', $cat_id);
             $consulta->bindParam(':ev_niv', $ev_niv);
             $consulta->bindParam(':ev_img', $ev_img);
-            $consulta->bindParam(':ev_telefono', $ev_telefono);
+
             try {
                 $consulta->execute();
+                return [
+                    'status' => 'success',
+                    'message' => 'Evento agregado exitosamente.'
+                ];
             } catch (PDOException $e) {
-                echo "Error al ejecutar la consulta: " . $e->getMessage();
-            }            
-            if ($consulta->rowCount() > 0) {
-                return true;
-            } else { 
-                return false;
+                return [
+                    'status' => 'error',
+                    'message' => 'Error al ejecutar la consulta: ' . $e->getMessage()
+                ];
             }
+    
         } catch (Exception $e) {
-            echo "Error catch add_evento: " . $e->getMessage();
-            throw $e;
+            return [
+                'status' => 'error',
+                'message' => 'Error catch add_evento: ' . $e->getMessage()
+            ];
         }
-    }
+    } 
 
-    //update_imagen_evento segun id
 	public function update_imagen_evento($ev_id, $ev_img) {
 		try {
 			$conectar = parent::conexion();
@@ -228,6 +263,7 @@ class Evento extends Conectar {
         }
         
 	}
+
     public function update_imagen_cierre($ev_id, $ev_img) {
 		try {
 			$conectar = parent::conexion();
@@ -253,8 +289,7 @@ class Evento extends Conectar {
         
 	}
     
-    //update_nivelpeligro_evento segun id
-	public function update_nivelpeligro_evento($ev_id, $ev_niv) {
+    public function update_nivelpeligro_evento($ev_id, $ev_niv) {
 		try {
 			$conectar = parent::conexion();
 			parent::set_names();
@@ -279,7 +314,6 @@ class Evento extends Conectar {
         }
 	}
 
-    //get_evento_id segun disponibilidad
     public function get_evento_id($ev_id) {
         try {
             $conectar = parent::conexion();
@@ -323,7 +357,7 @@ class Evento extends Conectar {
             throw $e;
         }
     }
-    
+
     public function cerrar_evento($ev_id, $ev_final, $ev_est, $detalle_cierre, $motivo_cierre, $usu_id) {
         try {
             $conectar = parent::conexion();
@@ -367,7 +401,7 @@ class Evento extends Conectar {
             parent::set_names();
             $sql = "SELECT tme.ev_id, tme.ev_nom, tme.ev_mail, tme.ev_desc, te.est_nom, tme.ev_inicio, tme.ev_final, tme.ev_direc, tmc.cat_nom, ten.ev_niv_nom,tme.ev_est,tme.cat_id,tmc.cat_id, ten.ev_niv_id,GROUP_CONCAT(tu.unid_nom SEPARATOR ' - ') AS unidades
             FROM tm_evento tme
-            INNER JOIN tm_ev_tm_unid temu ON tme.ev_id = temu.ev_id 
+            INNER JOIN tm_asignado temu ON tme.ev_id = temu.ev_id 
             INNER JOIN tm_unidad tu ON tu.unid_id = temu.unid_id
             INNER JOIN tm_categoria tmc ON tmc.cat_id = tme.cat_id 
             INNER JOIN tm_ev_niv ten ON tme.ev_niv = ten.ev_niv_id 
@@ -426,46 +460,173 @@ class Evento extends Conectar {
             throw $e;
         }
     }
-public function get_evento_por_categoria($cat_id){
-    try {
-        $conectar = parent::conexion();
-        parent::set_names();
-        $sql = "SELECT * FROM tm_evento where cat_id=:cat_id";
-        $sql = $conectar->prepare($sql);
-        $sql->bindValue(":cat_id", $cat_id);
-        $sql->execute();
-        $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
 
-        if (is_array($resultado) && count($resultado) > 0) {
-            return $resultado;
-        } else {
-            error_log("No logro obtener eventos por categoria");
-            return array(); // return an empty array instead of 0
+    public function get_evento_por_categoria($cat_id){
+        try {
+            $conectar = parent::conexion();
+            parent::set_names();
+            $sql = "SELECT * FROM tm_evento where cat_id=:cat_id";
+            $sql = $conectar->prepare($sql);
+            $sql->bindValue(":cat_id", $cat_id);
+            $sql->execute();
+            $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+            if (is_array($resultado) && count($resultado) > 0) {
+                return $resultado;
+            } else {
+                error_log("No logro obtener eventos por categoria");
+                return array(); // return an empty array instead of 0
+            }
+        } catch (Exception $e) {
+            error_log("Error catch get_evento: " . $e->getMessage());
+            throw $e;
         }
-    } catch (Exception $e) {
-        error_log("Error catch get_evento: " . $e->getMessage());
-        throw $e;
     }
-}
-public function datos_categorias_eventos($fecha_inicio) {
+
+
+    public function get_eventos_categoria_latitud_longitud(){
+        $sql = 'SELECT ev.ev_latitud as "latitud",
+              		ev.ev_longitud as "longitud",
+              		ev.ev_id as "id",
+              		ev.ev_desc as "detalles",
+              		ev.ev_img as "img",
+              		ev.ev_inicio as "fecha_inicio",
+              		IFNULL(ev.ev_final, "En Proceso") as "fecha_cierre",
+                  nv.ev_niv_nom as "nivel",
+                  cat.cat_nom as "categoria",
+                  un.unid_nom as "unidad"
+              FROM tm_evento as ev
+              JOIN tm_categoria as cat
+              ON (ev.cat_id=cat.cat_id)
+              JOIN tm_usuario as usu
+              ON (usu.usu_id=ev.usu_id)
+              JOIN tm_ev_niv as nv
+              ON (ev.ev_niv = nv.ev_niv_id)
+              JOIN tm_unidad as un 
+              ON ( un.unid_id=usu.usu_unidad);';
+    return $this->ejecutarConsulta($sql);
+    }
+
+
+    public function datos_categorias_eventos($fecha_inicio) {
+        try {
+            $conectar = parent::conexion();
+            parent::set_names();
+            
+            $sql = "SELECT tm_categoria.cat_nom, COUNT(tm_evento.ev_id) as cantidad_eventos 
+                    FROM tm_categoria 
+                    LEFT JOIN tm_evento ON tm_categoria.cat_id = tm_evento.cat_id AND tm_evento.ev_inicio >= :fecha_inicio
+                    GROUP BY tm_categoria.cat_id";
+            
+            $sql = $conectar->prepare($sql);
+            $sql->bindValue(':fecha_inicio', $fecha_inicio);
+            $sql->execute();
+            
+            $resultado = $sql->fetchAll();
+            return $resultado;
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function listar_eventosdetalle_por_evento($ev_id) {
+        try {
+            $conectar = parent::conexion();
+            parent::set_names();
+            
+            $sql = "SELECT 
+                tm_emergencia_detalle.emergencia_id,
+                tm_emergencia_detalle.ev_desc,
+                tm_emergencia_detalle.ev_inicio,
+                tm_usuario.usu_nom,
+                tm_usuario.usu_ape,
+                tm_usuario.usu_tipo
+            FROM 
+                tm_emergencia_detalle
+            INNER JOIN tm_usuario on tm_emergencia_detalle.usu_id = tm_usuario.usu_id
+            WHERE
+                tm_emergencia_detalle.ev_id = ?";
+            
+            $sql = $conectar->prepare($sql);
+            $sql->bindValue(1, $ev_id);
+            $sql->execute();
+            
+            $resultado = $sql->fetchAll();
+            return $resultado;
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function listar_evento_por_id($ev_id) {
+        try {
+            $conectar = parent::conexion();
+            parent::set_names();
+            $sql = "SELECT
+                tm_evento.ev_id,
+                tm_evento.usu_id,
+                tm_evento.cat_id,
+                tm_evento.ev_direc,
+                tm_evento.ev_desc,
+                tm_evento.ev_est,
+                tm_evento.ev_inicio,
+                tm_usuario.usu_nom,
+                tm_usuario.usu_ape,
+                tm_categoria.cat_nom
+            FROM
+                tm_evento
+            INNER JOIN tm_categoria ON tm_evento.cat_id = tm_categoria.cat_id
+            INNER JOIN tm_usuario ON tm_evento.usu_id = tm_usuario.usu_id
+            WHERE
+                tm_evento.ev_id = ?";
+            $sql = $conectar->prepare($sql);
+            $sql->bindValue(1, $ev_id);
+            $sql->execute();
+            $resultado = $sql->fetchAll();
+            return $resultado;
+        } catch (PDOException $e) {
+            error_log("Error en listar_evento_por_id: " . $e->getMessage(), 0);
+            return false;
+        }
+    }
+    
+    public function insert_emergencia_detalle($ev_id, $usu_id, $ev_desc) {
     try {
         $conectar = parent::conexion();
         parent::set_names();
-        
-        $sql = "SELECT tm_categoria.cat_nom, COUNT(tm_evento.ev_id) as cantidad_eventos 
-                FROM tm_categoria 
-                LEFT JOIN tm_evento ON tm_categoria.cat_id = tm_evento.cat_id AND tm_evento.ev_inicio >= :fecha_inicio
-                GROUP BY tm_categoria.cat_id";
-        
+
+        // Insertar en la tabla tm_emergencia_detalle
+        $sql = "INSERT INTO tm_emergencia_detalle 
+                (ev_id, usu_id, ev_desc, ev_inicio, ev_est) 
+                VALUES (?, ?, ?, now(), 1);";
+
         $sql = $conectar->prepare($sql);
-        $sql->bindValue(':fecha_inicio', $fecha_inicio);
+        $sql->bindValue(1, $ev_id, PDO::PARAM_INT);
+        $sql->bindValue(2, $usu_id, PDO::PARAM_INT);
+        $sql->bindValue(3, $ev_desc, PDO::PARAM_STR);
         $sql->execute();
-        
-        $resultado = $sql->fetchAll();
-        return $resultado;
+
+        // Verificar si se ha insertado alguna fila
+        if ($sql->rowCount() > 0) {
+            return true;
+        } else {
+            return false;
+        }
+
     } catch (Exception $e) {
+        error_log("Error en insert_emergencia_detalle: " . $e->getMessage(), 0);
         throw $e;
     }
-}
+    }
+
+    public function update_evento($ev_id){
+        $conectar = parent::conexion();
+        parent::set_names();
+        $sql="UPDATE tm_evento SET ev_est = 2 WHERE ev_id = ?";
+        $sql=$conectar->prepare($sql);
+        $sql->bindValue(1, $ev_id);
+        $sql->execute();
+        return $resultado = $sql->fetchAll();
+      }
 
 }

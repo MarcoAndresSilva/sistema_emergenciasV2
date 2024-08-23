@@ -10,6 +10,7 @@ if (isset($_SESSION["usu_id"])) {
 
 <link rel="stylesheet" href="./estilopersonal.css">
 <title>Sistema Emergencia</title>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQrYCFSz7Q-a-WONxo4yymu9SAPgmaA6c&libraries=places&callback=initMap"></script>
 </head>
 
 <body class="with-side-menu">
@@ -39,35 +40,39 @@ if (isset($_SESSION["usu_id"])) {
             <h5 class="m-t-lg with-border">Ingresar información</h5>
 
             <div class="row">
-                <form class="event-box" action="nuevoevento.js" method="post" id="event_form" enctype="multipart/form-data">
-
-                <div class="group-info-personal">   
-                        <div class="col-lg-5">
-                            <fieldset class="form-group">
-                                <label class="form-label semibold" for="nombre">Nombre</label>
-                                <input type="text" class="form-control" id="nombre" placeholder="Nombre" value="<?php echo $_SESSION['usu_nom']; ?>" readonly>
-                            </fieldset>
-                        </div>
-                        <div class="col-lg-5">
-                            <fieldset class="form-group">
-                                <label class="form-label semibold" for="apellido">Apellido</label>
-                                <input type="text" class="form-control" id="apellido" placeholder="Apellido" value="<?php echo $_SESSION['usu_ape']; ?>" readonly>
-                            </fieldset>
-                        </div>
-                        <div class="col-lg-5">
-                            <fieldset class="form-group">
-                                <label class="form-label semibold" for="telefono">Teléfono</label>
-                                <input type="text" class="form-control" id="telefono" placeholder="Ingrese su N° telefónico" value="<?php echo $_SESSION['usu_telefono']; ?>" readonly>
-                            </fieldset>
-                        </div>
-                        <div class="col-lg-5">
-                            <fieldset class="form-group">
-                                <label class="form-label semibold" for="mail">Dirección de correo electrónico</label>
-                                <input type="email" class="form-control" id="correo" placeholder="Ingrese su email" value="<?php echo $_SESSION['usu_correo']; ?>" readonly>
-                            </fieldset>
+                 <div class="col-lg-6 col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">Nombre</h6>
+                            <p class="card-text"><?php echo $_SESSION['usu_nom']; ?></p>
                         </div>
                     </div>
-
+                </div>
+                <div class="col-lg-6 col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">Apellido</h6>
+                            <p class="card-text"><?php echo $_SESSION['usu_ape']; ?></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">Teléfono</h6>
+                            <p class="card-text"><?php echo $_SESSION['usu_telefono']; ?></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h6 class="card-subtitle mb-2 text-muted">Dirección de correo electrónico</h6>
+                            <p class="card-text"><?php echo $_SESSION['usu_correo']; ?></p>
+                        </div>
+                    </div>
+                </div>
+                <form class="event-box" action="nuevoevento.js" method="post" id="event_form" enctype="multipart/form-data">
                     <div class="group-emergencia">
                         <div class="col-lg-5">
                             <fieldset class="form-group">
@@ -83,15 +88,14 @@ if (isset($_SESSION["usu_id"])) {
                                 <input type="text" class="form-control" id="descripcion" placeholder="Descripción">
                             </fieldset>
                         </div>     
-                        <div class="col-lg-5">
-                            <fieldset class="form-group">
-                                <label class="form-label semibold" for="exampleInput">Desea adjuntar una imagen de la emergencia?</label>
-                                <input type="file" id="imagen" name="imagen" accept="image/*">
-                                <button id="btnCargarArchivo" class="btn btn-round btn-inline btn-primary">Cargar Archivo</button>
-                                <label id="archivoAdjuntado">No hay archivo adjunto (.JPG/.JPEG/.PNG)</label>
-                            </fieldset>
-                        </div>
-                    </div>                  
+                    <div class="col-lg-5">
+                        <fieldset class="form-group">
+                            <label class="form-label semibold" for="formFile">Desea adjuntar una imagen de la emergencia?</label>
+                            <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*">
+                            <small id="archivoAdjuntado" class="form-text text-muted">No hay archivo adjunto (.JPG/.JPEG/.PNG)</small>
+                        </fieldset>
+                    </div>
+                </div>
 
                     <div class="group-ident">
                         <div class="col-lg-5" id="select-ubicacion">
@@ -132,6 +136,8 @@ if (isset($_SESSION["usu_id"])) {
                             <div id="map">
                                 <!-- Aquí se muestra el mapa utilizando la API de Google Maps -->
                             </div>
+                <input type="hidden" id="ev_latitud"> 
+                <input type="hidden" id="ev_longitud"> 
                         </div>
                     </div>
 
@@ -149,11 +155,9 @@ if (isset($_SESSION["usu_id"])) {
     <script type="text/javascript" src="./nuevoevento.js"></script>
     
 </body>
-        
+</html>
 <?php
-    require_once("../MainJs/js.php"); 
-}else{
-    header("Location:". Conectar::ruta () ."index.php");
+} else {
+    header("Location:" . Conectar::ruta() . "index.php");
 }
 ?>
-</html>

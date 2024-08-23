@@ -121,7 +121,7 @@ if (isset($_POST["op"])) {
         
             if (is_array($validar) && count($validar) > 0) {
                 $response = array(
-                    "status" => "error",
+                    "status" => "warning",
                     "mensaje" => "¡La categoría ya tiene datos existentes relacionados!"
                 );
             } else {

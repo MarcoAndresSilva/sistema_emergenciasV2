@@ -38,5 +38,43 @@
             // host
             // return "https://emergencias.melipilla.cl/";
         }
+    // Método para ejecutar consultas y devolver resultados
+    protected function ejecutarConsulta($sql, $params = [], $fetchAll = true)
+    {
+        $conexion = $this->conexion();
+        $this->set_names();
+        $consulta = $conexion->prepare($sql);
+
+        foreach ($params as $key => &$val) {
+            $consulta->bindParam($key, $val);
+        }
+
+        $consulta->execute();
+
+        if ($fetchAll) {
+            return $consulta->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            return $consulta->fetch(PDO::FETCH_ASSOC);
+        }
     }
-?>
+    // Método para ejecutar acciones (INSERT, UPDATE, DELETE)
+    protected function ejecutarAccion($sql, $params = [])
+    {
+        $conexion = $this->conexion();
+        $this->set_names();
+        $consulta = $conexion->prepare($sql);
+
+        foreach ($params as $key => &$val) {
+            $consulta->bindParam($key, $val);
+        }
+
+        $consulta->execute();
+
+        return $consulta->rowCount() > 0;
+    }
+    public function obtenerUltimoRegistro(string $tabla, $idCampo = 'id') {
+        $sql = "SELECT * FROM $tabla ORDER BY $idCampo DESC LIMIT 1";
+        return $this->ejecutarConsulta($sql, [], false);
+    }
+
+}

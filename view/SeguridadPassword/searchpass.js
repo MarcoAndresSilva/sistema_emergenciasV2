@@ -19,75 +19,70 @@ $.post('../../controller/seguridadPassword.php', { op: 'password_status' }, func
     }
 
     console.log(data);
+  const calculateSecurityLevel = (mayuscula, minuscula, numero, especiales, largo) => {
+      let score = 0;
+      if (mayuscula) score++;
+      if (minuscula) score++;
+      if (numero) score++;
+      if (especiales) score++;
+      if (largo) score++;
+  
+      switch (score) {
+          case 5:
+              return 'Muy Robusta';
+          case 4:
+              return 'Robusta';
+          case 3:
+              return 'Aceptable';
+          case 2:
+              return 'Débil';
+          default:
+              return 'Muy Débil';
+      }
+  };
     const transformedData = data.map(item => {
-        const { nombre, apellido, correo, mayuscula, minuscula, numero, especiales, largo, fecha } = item;
-        let estado = 'seguro';
+        const { nombre, apellido, correo, mayuscula, minuscula, numero, especiales, largo, fecha, unidad, dias_cambio } = item;
+        const estado = calculateSecurityLevel(mayuscula, minuscula, numero, especiales, largo);
         let detalles = [];
 
-        if (!mayuscula || !minuscula || !numero || !especiales || !largo) {
-            estado = 'Vulnerable';
-            if (!mayuscula) detalles.push(fn_img('mayúsculas', 'mayúsculas'));
-            if (!minuscula) detalles.push(fn_img('minúsculas', 'minúsculas'));
-            if (!numero) detalles.push(fn_img('números', 'números'));
-            if (!especiales) detalles.push(fn_img('caracteres especiales', 'caracteres especiales'));
-            if (!largo) detalles.push(fn_img('longitud mínima', 'longitud mínima'));
-        }
+        if (!mayuscula) detalles.push(fn_img('mayúsculas', 'mayúsculas'));
+        if (!minuscula) detalles.push(fn_img('minúsculas', 'minúsculas'));
+        if (!numero) detalles.push(fn_img('números', 'números'));
+        if (!especiales) detalles.push(fn_img('caracteres especiales', 'caracteres especiales'));
+        if (!largo) detalles.push(fn_img('longitud mínima', 'longitud mínima'));
 
-        let detalle = detalles.length > 0 ? detalles.join('') : fn_img('seguro','La contraseña robusta') ;
-        return { nombre, apellido, correo, estado, detalle, fecha };
+        const detalle = detalles.length > 0 ? detalles.join('') : fn_img('seguro', 'La contraseña es robusta');
+
+        return { nombre, apellido, correo, estado, detalle, fecha, unidad, dias_cambio };
     });
 
     var tableBody = $('#table-data tbody');
     console.table(transformedData);
     transformedData.forEach(function(rowData) {
         var row = $('<tr>');
+        if (rowData.fecha > rowData.dias_cambio) {
+            row.addClass('table-danger');
+        } else {
+            row.addClass('table-success');
+        }
         row.append($('<td>').text(rowData.nombre));
         row.append($('<td>').text(rowData.apellido));
         row.append($('<td>').text(rowData.correo));
         row.append($('<td>').text(rowData.estado));
+        row.append($('<td>').text(rowData.unidad));
         row.append($('<td>').text(rowData.fecha));
+        row.append($('<td>').text(rowData.dias_cambio));
         row.append($('<td>').html(rowData.detalle));
         tableBody.append(row);
     });
 
     table = $('#table-data').DataTable({
+        responsive: true,
         language:{
             url:'../registrosLog/spanishDatatable.json'
         }
     });
 }, 'json').fail(function(error) {
     console.log('Error: ', error);
-});
-// Controlador de eventos para el cambio en #mesesexpiracion
-$('#mesesexpiracion').on('change', function() {
-    var selectedMonths = $(this).val();
-    // Comprobar si la tabla está definida antes de intentar usarla
-    if (table) {
-        // Filtrar la tabla basada en el número de meses
-        table.rows().every(function() {
-            var data = this.data();
-            // Acceder a la columna de 'meses' usando data[4]
-            if (selectedMonths === '') {
-                // Si el valor seleccionado es null, quitar todas las clases de colores
-                $(this.node()).removeClass('table-danger table-success');
-            } else if (data[4] >= selectedMonths) {
-                // Agregar la clase 'table-danger' a la fila
-                $(this.node()).removeClass('table-success').addClass('table-danger');
-            } else {
-                // Agregar la clase 'table-success' a la fila
-                $(this.node()).removeClass('table-danger').addClass('table-success');
-            }
-        });
-        table.draw();
-    }
-});
-// Controlador de eventos para el cambio en #selectStatus
-$('#selectStatus').on('change', function() {
-    var selectedStatus = $(this).val();
-    // Comprobar si la tabla está definida antes de intentar usarla
-    if (table) {
-        // Filtrar la tabla basada en el estado seleccionado
-        table.column(3).search(selectedStatus).draw();
-    }
 });
 

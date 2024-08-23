@@ -79,8 +79,17 @@ if (isset($_GET["op"])) {
                 }
                 echo $html;
             }
+      break;
+      case "get_tipo_usuarios":
+            $datos = $usuario->get_todos_usuarios();
+            echo json_encode($datos);
         break;
-
+        case 'get_criterios_seguridad':
+            $unidad = $_SESSION['usu_unidad'];
+            $passSeg = new SeguridadPassword();
+            $response = $passSeg->getCriteriosSeguridadPorUnidad($unidad);
+            echo json_encode($response);
+        break;
         case "update_password":
             // Recibir los datos POST
             $old_pass = $_POST['old_pass'];
@@ -141,6 +150,12 @@ if (isset($_GET["op"])) {
             $usu_unidad = $_POST['usu_unidad'];
         
             $data = $usuario->update_usuario($usu_id, $usu_nom, $usu_ape, $usu_correo, $usu_telefono, $usu_name, $usu_tipo, $usu_unidad);
+            echo json_encode($data);
+      break;
+        case "update_password_force":
+            $usu_id = $_POST['usu_id'];
+            $new_pass = $_POST['new_pass'];
+            $data = $usuario->update_password_force($new_pass,$usu_id);
             echo json_encode($data);
         break;
         case "update_usuario_tipo":

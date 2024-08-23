@@ -5,71 +5,103 @@ require_once("../models/Categoria.php");
 require_once("../models/Unidad.php");
 require_once("../models/Estado.php");
 require_once("../models/EventoUnidad.php");
+require_once("../models/NivelPeligro.php");
+require_once("../models/Correo.php");
 
 $evento = new Evento();
 $categoria = new Categoria();
 $unidad = new Unidad();
 $estado = new Estado();
 $eventounidad = new EventoUnidad();
+$NivelPeligro = new NivelPeligro();
+
+function guardarImagen($archivo, $carpeta) {
+    if (!isset($archivo) || $archivo['error'] !== UPLOAD_ERR_OK) {
+        return "Error al recibir la imagen: " . $archivo['error'];
+    }
+
+    $directorio_destino = __DIR__ . "/../public/img/{$carpeta}/";
+
+    $extension = pathinfo($archivo['name'], PATHINFO_EXTENSION);
+    $nombre_archivo = uniqid('', true) . '.' . $extension;
+    $ruta_destino = $directorio_destino . $nombre_archivo;
+
+    if (!is_dir($directorio_destino)) {
+        if (!mkdir($directorio_destino, 0775, true)) {
+            return "No se pudo crear el directorio: " . $directorio_destino;
+        }
+    }
+
+    if (!is_writable($directorio_destino)) {
+        return "El directorio no tiene permisos de escritura: " . $directorio_destino;
+    }
+
+    if (!move_uploaded_file($archivo['tmp_name'], $ruta_destino)) {
+        return "Error al mover el archivo a: " . $ruta_destino;
+    }
+
+    $ruta_relativa = "/img/{$carpeta}/" . $nombre_archivo;
+    return $ruta_relativa;
+}
+
 if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_tipo"] == 2)) {
 if (isset($_GET["op"])) {
     switch ($_GET["op"]) {
+
         case "add_evento":
-            // Obtener datos de la sesión del usuario
-            $usu_id = $_SESSION["usu_id"];
-            $usu_nom = $_SESSION["usu_nom"];
-            $usu_ape = $_SESSION["usu_ape"];
-            $usu_mail = $_SESSION["usu_correo"];
-            $usu_telefono = $_SESSION["usu_telefono"];
+            $usu_id = $_SESSION["usu_id"]; 
+            $ev_desc = $_POST['ev_desc'];
+            $ev_est = $_POST['ev_est'];
+            $ev_inicio = $_POST['ev_inicio'];
+            $ev_direc = $_POST['ev_direc'];
+            $ev_latitud = $_POST['ev_latitud'];
+            $ev_longitud = $_POST['ev_longitud'];
+            $cat_id = $_POST['cat_id'];
+            $ev_niv = $_POST['ev_niv'];
+        
+            $ev_img = null;
+
+            if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+                $carpeta = 'imagenesEventos';
+                $url_imagen = guardarImagen($_FILES['imagen'], $carpeta);
+        
+                if ($url_imagen === "Error al recibir la imagen." || $url_imagen === "Error al mover el archivo.") {
+                    echo $url_imagen;
+                    break;
+                  }
+                $ev_img = $url_imagen;
+        
+            }
         
             $datos = $evento->add_evento(
-                // $usu_id,
-                $usu_nom, // Llenar con el nom del usuario en sesión
-                $usu_ape, // Llenar con el ape del usuario en sesión
-                $usu_mail, // Llenar con el correo del usuario en sesión
-                $_POST['ev_desc'],
-                $_POST['ev_est'],
-                $_POST['ev_inicio'],
-                $_POST['ev_direc'],
-                $_POST['cat_id'],
-                $_POST['ev_niv'],
-                $_POST['ev_img'],
-                $usu_telefono // Llenar con el teléfono del usuario en sesión
+                $usu_id,
+                $ev_desc,
+                $ev_est,
+                $ev_inicio,
+                $ev_direc,
+                $ev_latitud,
+                $ev_longitud,
+                $cat_id,
+                $ev_niv,
+                $ev_img
             );
-        
-            if ($datos == true) {
-                echo 1;
-            } else {
-                echo 0;
-            }
+            header('Content-Type: application/json');
+            $asunto = "Nuevo Evento Registrado: " . $ev_desc;
+
+            $mensaje = "Estimado(a),\n\n";
+            $mensaje .= "Se ha registrado un nuevo evento con los siguientes detalles:\n\n";
+            $mensaje .= "Descripción: $ev_desc\n";
+            $mensaje .= "Dirección: $ev_direc\n\n";
+            $mensaje .= "Por favor, revise la información y tome las acciones necesarias.\n\n";
+            $mensaje .= "Atentamente,\n";
+            $mensaje .= "Equipo de Emergencias";
+
+            $encabezados = "From: sistemaemergencia@munimelipilla.cl\r\n";
+            $correo = new Correo($_SESSION["usu_correo"], $asunto, $mensaje, $encabezados);
+            $datos["correo"] = $correo->enviar();
+            echo json_encode($datos);
         break;
 
-        case "carga-imagen":
-            //verificar si se obtuvo el ID del evento
-            if (isset($_POST['ev_id'])){
-                // Verificar si se envió un archivo y no hubo errores
-                if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
-                    // Ruta donde se almacenará la imagen 
-                    $ruta_destino = '../public/img/imagenesEventos/' . $_FILES['imagen']['name'];
-                    // Mover la imagen del directorio temporal al destino final
-                    if (move_uploaded_file($_FILES['imagen']['tmp_name'], $ruta_destino)) {
-                        // Actualizar la columna ev_img en la base de datos con la ruta de la imagen
-                        $datos = $evento->update_imagen_evento($_POST['ev_id'], $ruta_destino);
-                        if ($datos == true) {
-                            echo 1;
-                        } else {
-                            echo 0;
-                        }
-                    } else {
-                        echo "Error al mover el archivo.";
-                    }
-                } else {
-                    echo "Error al recibir la imagen.";
-                }
-            }else {
-                echo "Error al recibir el ID del evento.";
-            }
-        break;
         case "carga-imagen-cierre":
             //verificar si se obtuvo el ID del evento
             if (isset($_POST['ev_id'])){
@@ -98,6 +130,7 @@ if (isset($_GET["op"])) {
         break;
 
         case "tabla-general":
+
             $html = "";
             $critico = "";
             $medio = "";
@@ -124,24 +157,17 @@ if (isset($_GET["op"])) {
                     }
 
                     $direccion = $row['ev_direc'];
-                    // Dividir la cadena en texto y coordenadas
-                    $parts = explode(" , ", $direccion);
+                    $ev_latitud = $row['ev_latitud'];
+                    $ev_longitud = $row['ev_longitud'];
 
-                    // Si hay coordenadas, eliminarlas y agregar el botón
-                    if ($parts[1] !== "No hay coordenadas") {
-                        // Eliminar las coordenadas
-                        $texto = $parts[0];
-                        // Agregar el botón después del texto de la dirección
-                        $direccion = $texto . " <button id='btn' type='button' class='btn btn-inline btn-primary btn-sm ladda-button btnDireccionarMapa modal-btn' id='btnDireccionarMapa'> <i class='fa-solid fa-location-dot'></i> </button>";
-                    }else {
-                        $direccion = $parts[0];
-                    }
-
-                    // Si no hay coordenadas, eliminar el texto que indica su ausencia
-                    $direccion = str_replace("No hay coordenadas", "", $direccion);
-                    $direccion = str_replace("Sin dirección", "", $direccion);
-
-                    $recorrido .= "<td> " . $direccion . " </td>";
+                    $direccion .= " <button id='btn' type='button' 
+                                        class='btn btn-inline btn-primary btn-sm ladda-button btnDireccionarMapa modal-btn'  
+                                        id='btnDireccionarMapa' 
+                                        data-latitud='$ev_latitud' 
+                                        data-longitud='$ev_longitud'> 
+                                        <i class='fa-solid fa-location-dot'></i> 
+                                    </button>";
+                   $recorrido .= "<td> " . $direccion . " </td>";
 
                     //Llama a la funcion get_datos_eventounidad para obtener los nombres de las unidades asignadas
                     $datos_asignaciones = $eventounidad->get_datos_eventoUnidad($row['ev_id']);
@@ -188,13 +214,13 @@ if (isset($_GET["op"])) {
                     // Hora de Apertura
                     $recorrido .= "<td>" . $row['ev_inicio'] . "</td>";
                     
-                    // boton derivar
-                    $recorrido .= "<td> <button id='btnPanelDerivar' type='button' class='btn btn-inline btn-primary btn-sm ladda-button modal-btn'> <i class='fa-solid fa-up-right-from-square'></i> </button>
-                    </td>";
-
-                     // boton cerrar
-                     $recorrido .= "<td> <button id='btnPanelCerrar' type='button' class='btn btn-inline btn-danger btn-sm ladda-button  modal-btn'> <i class='fa-solid fa-square-xmark'></i> </button>
+                     // boton derivar
+                     $recorrido .= "<td> <button id='btnPanelDerivar' type='button' class='btn btn-inline btn-primary btn-sm ladda-button modal-btn'> <i class='fa-solid fa-up-right-from-square'></i> </button>
                      </td>";
+ 
+                      // boton cerrar
+                    //   $recorrido .= "<td> <button id='btnPanelCerrar' type='button' class='btn btn-inline btn-danger btn-sm ladda-button modal-btn'> <i class='fa-solid fa-square-xmark'></i> </button>
+                    //   </td>";
 
                     $recorrido .= "</tr>";
 
@@ -236,11 +262,10 @@ if (isset($_GET["op"])) {
                 
                 echo json_encode($respuesta);
             }
-            break;
-            
-/*-----------------------------------------------------------------------------------------------------*/
+        break;
 
         case "tabla-general-historial":
+
             $html = "";
             $critico = "";
             $medio = "";
@@ -266,28 +291,30 @@ if (isset($_GET["op"])) {
                     }
         
                     $direccion = $row['ev_direc'];
-                    // Dividir la cadena en texto y coordenadas
-                    $parts = explode(" , ", $direccion);
-                    
-                    // Si hay coordenadas, eliminarlas y agregar el botón
-                    if ($parts[1] !== "No hay coordenadas") {
-                        // Eliminar las coordenadas
-                        $texto = $parts[0];
-                        // Agregar el botón después del texto de la dirección
-                        $direccion = $texto;
-                    }else {
-                        $direccion = $parts[0];
-                    }
-        
-                    // Si no hay coordenadas, eliminar el texto que indica su ausencia
-                    $direccion = str_replace("No hay coordenadas", "", $direccion);
-        
                     $recorrido .= "<td>" . $direccion . "</td>";
-                    
+
+                    //Llama a la funcion get_datos_estado para obtener el estado
+                    $dato_estado = $estado->get_datos_estado($row['ev_est']);
+                        foreach ($dato_estado as $row_estado) {
+                           if ($row_estado['est_nom'] == "En Proceso") {
+                               $recorrido .= "<td><span class='label label-pill label-warning'>" . $row_estado['est_nom'] . "</span></td>";
+                           } else if ($row_estado['est_nom'] == "Finalizado") {
+                               $recorrido .= "<td><span class='label label-pill label-success'>" . $row_estado['est_nom'] . "</span></td>";
+                           } else {
+                               $recorrido .= "<td>" . $row_estado['est_nom'] . "</td>";
+                           }
+                    }
+                    // fecha y hora apertura
                     $recorrido .= "<td>" . $row['ev_inicio'] . "</td>";
+
+                    //btn modal
                     $recorrido .= "<td> <button id='btn' type='button' class='btn btn-inline btn-primary btn-sm ladda-button btnInfoEmergencia '> <i class='fa fa-search'></i></button>
                     </td>";
+
                     $recorrido .= "</tr>";
+
+                   
+
                     //Filtro de filas por nivel de peligro
                     if($row['ev_est'] == 1){
                         if($row['ev_niv_id'] == 1){
@@ -326,11 +353,82 @@ if (isset($_GET["op"])) {
                 
                 echo json_encode($respuesta);
             }
-            break;
+        break;
 
-/*-----------------------------------------------------------------------------------------------------*/
+        case "tabla-historial-eventos": 
+            $eventos = [];
+        
+            $datos = $evento->get_evento();
+            if (is_array($datos) && count($datos) > 0) {
+        
+                foreach ($datos as $row) {
+                    $evento = [];
+        
+                    $evento['ev_id'] = $row['ev_id'];
+        
+                    $datos_categoria = $categoria->get_datos_categoria($row['cat_id']);
+                    $evento['categoria'] = isset($datos_categoria[0]['cat_nom']) ? $datos_categoria[0]['cat_nom'] : 'Sin Categoría';
+        
+                    $direccion = $row['ev_direc'] . " <button class='btn btn-inline btn-primary btn-sm btnDireccionarMapa'><i class='fa-solid fa-location-dot'></i></button>";
+                    $evento['direccion'] = str_replace(["No hay coordenadas", "Sin dirección"], "", $direccion);
+        
+                    // Obtener las asignaciones
+                    $datos_asignaciones = $eventounidad->get_datos_eventoUnidad($row['ev_id']);
+                    $asignacion = [];
+                    if (is_array($datos_asignaciones) && count($datos_asignaciones) > 0) {
+                        foreach ($datos_asignaciones as $row_asignaciones) {
+                            $unid_id = $row_asignaciones['unid_id'];
+                            $datos_unidad = $unidad->get_datos_unidad($unid_id);
+                            foreach ($datos_unidad as $row_unidad) {
+                                $asignacion[] = $row_unidad['unid_nom'];
+                            }
+                        }
+                    }
+                    // Si no hay asignaciones, asignar un valor por defecto
+                    $evento['asignacion'] = count($asignacion) > 0 ? implode(' - ', $asignacion) : 'No asignada';
+        
+                    // Nivel de peligro con estilos
+                    if ($row['ev_niv_id'] == 1) {
+                        $evento['nivel_peligro'] = '<span class="label label-pill label-primary peligro_critico">Critico</span>';
+                    } elseif ($row['ev_niv_id'] == 2) {
+                        $evento['nivel_peligro'] = '<span class="label label-pill label-primary peligro_medio">Medio</span>';
+                    } elseif ($row['ev_niv_id'] == 3) {
+                        $evento['nivel_peligro'] = '<span class="label label-pill label-primary peligro_bajo">Bajo</span>';
+                    } else {
+                        $evento['nivel_peligro'] = '<span class="label label-pill label-primary peligro_comun">Comun</span>';
+                    }
+        
+                    // Estado con estilos
+                    $dato_estado = $estado->get_datos_estado($row['ev_est']);
+                    if (isset($dato_estado[0]['est_nom'])) {
+                        if ($dato_estado[0]['est_nom'] == "En Proceso") {
+                            $evento['estado'] = '<span class="label label-pill label-warning">' . $dato_estado[0]['est_nom'] . '</span>';
+                        } elseif ($dato_estado[0]['est_nom'] == "Finalizado") {
+                            $evento['estado'] = '<span class="label label-pill label-success">' . $dato_estado[0]['est_nom'] . '</span>';
+                        } else {
+                            $evento['estado'] = $dato_estado[0]['est_nom'];
+                        }
+                    } else {
+                        $evento['estado'] = 'Desconocido';
+                    }
+        
+                    $evento['fecha_apertura'] = $row['ev_inicio'];
+        
+                    $evento['ver_detalle'] = "<button class='btnDetalleEmergencia' data-ev-id='" . $row['ev_id'] . "'><i class='fa-solid fa-eye'></i></button>";
+        
+                    $eventos[] = $evento;
+                }
+                
+                echo json_encode($eventos);
+            } else {
+                echo json_encode([]);
+            }
+            break;
+        
+        
 
         case "tablas-dashboard":
+
             $html = "";
             $criticoYmedio = "";
             $bajoYcomun = "";
@@ -476,9 +574,10 @@ if (isset($_GET["op"])) {
                 
                 echo json_encode($respuesta);
             }
-            break;
+        break;
 
         case "update_nivelpeligro_evento":
+
             $datos = $evento->update_nivelpeligro_evento($_POST['ev_id'],
             $_POST['ev_niv']);
                 if ($datos == true) {
@@ -486,9 +585,10 @@ if (isset($_GET["op"])) {
             } else {
                 echo 0;
             }
-            break;
+        break;
 
         case "get_evento_id":
+
             $ev_id = $_POST["ev_id"];
             $datos_evento = $evento->get_evento_id($ev_id);
 
@@ -499,9 +599,10 @@ if (isset($_GET["op"])) {
             } else {
                 echo '<script> console.log(Error al obtener evento con la id: ' . $ev_id . ') </script>';
             }
-            break;
-            case "cerrar_evento":
-                $nombre_apellido = $_POST['nombre_apellido'];
+        break;
+
+        case "cerrar_evento":
+            $nombre_apellido = $_POST['nombre_apellido'];
                 list($nombre, $apellido) = explode(' ', $nombre_apellido, 2);
             
                 // Obtener el usu_id basado en el nombre y apellido
@@ -518,7 +619,8 @@ if (isset($_GET["op"])) {
                 } else {
                     echo 0; // No se encontró el usuario
                 }
-                break;
+        break;
+
         case "cantidad-eventos":
             
             $eventos_abiertos = 0;
@@ -578,8 +680,7 @@ if (isset($_GET["op"])) {
                 'datos_var' => $datos_var
             );
             echo json_encode($respuesta);
-            break;          
-
+        break;          
 
         case "evento-grafico-dashboard":
 
@@ -632,11 +733,9 @@ if (isset($_GET["op"])) {
             // Devolver los resultados como JSON
             echo json_encode($resultado);
         break;
-            
-            // -----------------------------------------------------------------------------------------
-
 
         case "get_eventos":
+
 
             $where = $_POST['where'];
 
@@ -736,19 +835,42 @@ if (isset($_GET["op"])) {
                 
                 echo json_encode($respuesta);
             }
-            break;
+        break;
 
-
-            // -----------------------------------------------------------------------------------------
         case "get_id_ultimo_evento":
             $datos = $evento->get_id_ultimo_evento();
             echo $datos;
-            break;
+        break;
+
         case "get_datos_categoria_eventos_ultimos_30_dias":
             $fecha_inicio = date('Y-m-d', strtotime('-30 days')); // Fecha de inicio hace 30 días
             $datos = $evento->datos_categorias_eventos($fecha_inicio);
             echo json_encode($datos);
-            break;
+        break;
+
+        case "get_evento_lat_lon":
+          $datos = $evento->get_eventos_categoria_latitud_longitud();
+          header('Content-Type: application/json');
+          echo json_encode($datos);
+        break;
+      case "get_filters_evento_map":
+        $datosUnidad= $unidad->get_unidad();
+        $datosNivel = $NivelPeligro->get_nivel_peligro();
+
+        $unidades = array_map(function($item) {
+            return $item['unid_nom'];
+        }, $datosUnidad);
+
+        $niveles = array_map(function($item) {
+            return $item['ev_niv_nom'];
+        }, $datosNivel);
+
+        echo json_encode([
+            'unidades' => $unidades,
+            'niveles' => $niveles
+        ]);
+      break;
+
 
     }
 
