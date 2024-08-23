@@ -20,6 +20,7 @@ nav:
         - Categoría: models/categoria.md
         - Estado: models/estado.md
         - Evento: models/evento.md
+        - Noticia: models/noticia.md
         - Evento Unidad: models/eventoUnidad.md
         - Nivel Peligro: models/nivelPeligro.md
         - Unidad: models/unidad.md
