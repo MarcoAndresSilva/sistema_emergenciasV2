@@ -5,6 +5,7 @@
 La función `add_noticia` se encarga de insertar una nueva noticia en la base de datos. 
 
 Recibe tres parámetros:
+
 - `asunto` (string): El asunto de la noticia.
 - `mensaje` (string): El mensaje de la noticia.
 - `url` (string, opcional): Un enlace asociado a la noticia. Puede ser `null` si no se proporciona.
@@ -63,6 +64,7 @@ public function add_noticia(string $asunto, string $mensaje, string $url=null){
 La función `lista_posibles_envios_por_ids` recupera un conjunto de registros de la tabla `tm_usuario` basado en una lista de identificadores y un nombre de columna.
 
 Recibe dos parámetros:
+
 - `ids` (string): Una cadena de identificadores separados por comas (por ejemplo, `"1,2,3"`). Estos identificadores se utilizan en la cláusula `IN` de la consulta SQL.
 - `id_name` (string): El nombre de la columna en la tabla `tm_usuario` que se utilizará para la condición de filtrado (por ejemplo, `"usu_id"` o `"usu_tipo"`).
 
