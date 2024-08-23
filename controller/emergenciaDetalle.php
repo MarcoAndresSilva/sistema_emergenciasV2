@@ -43,7 +43,7 @@ if (isset($_GET["op"])) {
                                     <div class="activity-line-item-user-status">
                                         <?php
                                             if ($row['usu_tipo'] == 1) {
-                                                echo 'Reportador';
+                                                echo 'Visualizador';
                                             } else {
                                                 echo 'Administrador';
                                             }
@@ -80,18 +80,18 @@ if (isset($_GET["op"])) {
             if (is_array($datos) == true && count($datos) > 0) {
                 foreach ($datos as $row) {
                     $output["ev_id"] = $row["ev_id"];
-                    $output["usu_id"] = $row["usu_id"];      
+                    $output["usu_id"] = $row["usu_id"];
+                    $output["ev_est_num"] = $row["ev_est"]; // Añadir el estado como número
+        
                     if ($row["ev_est"] == 1) {
-                        $output["ev_est"] = '<span class="label label-pill label-success">Abierto</span>';
+                        $output["ev_est"] = '<span class="label label-pill label-success">En proceso</span>';
                     } else {
-                        $output["ev_est"] = '<span class="label label-pill label-danger">Cerrado</span>';
+                        $output["ev_est"] = '<span class="label label-pill label-danger">Finalizado</span>';
                     }
                     
                     $output["cat_id"] = $row["cat_id"];
                     $output["ev_direc"] = $row["ev_direc"];
-                    $output["ev_desc"] = $row["ev_desc"];  
-
-
+                    $output["ev_desc"] = $row["ev_desc"];
                     $output["ev_inicio"] = date("d/m/Y - H:i:s", strtotime($row["ev_inicio"]));
                     $output["usu_nom"] = $row["usu_nom"];
                     $output["usu_ape"] = $row["usu_ape"];

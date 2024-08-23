@@ -219,8 +219,8 @@ if (isset($_GET["op"])) {
                      </td>";
  
                       // boton cerrar
-                      $recorrido .= "<td> <button id='btnPanelCerrar' type='button' class='btn btn-inline btn-danger btn-sm ladda-button modal-btn'> <i class='fa-solid fa-square-xmark'></i> </button>
-                      </td>";
+                    //   $recorrido .= "<td> <button id='btnPanelCerrar' type='button' class='btn btn-inline btn-danger btn-sm ladda-button modal-btn'> <i class='fa-solid fa-square-xmark'></i> </button>
+                    //   </td>";
 
                     $recorrido .= "</tr>";
 

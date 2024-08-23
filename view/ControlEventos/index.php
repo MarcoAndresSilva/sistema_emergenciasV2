@@ -54,7 +54,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
                             <th style="width:10%">Estado</th>
                             <th style="width:15%">Hora Apertura</th>
                             <th style="width:5%">Derivar</th>
-                            <th style="width:5%">Cerrar</th>
+                            
                         </tr>
                     </thead>
                     <tbody id="datos-criticos">
@@ -89,7 +89,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 
     <?php
 require_once('modalDerivar.php');
-require_once('modalCerrar.php');
+// require_once('modalCerrar.php');
 require_once("../MainJs/js.php");
 ?>
 </body>
