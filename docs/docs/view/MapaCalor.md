@@ -1,8 +1,23 @@
 # requerimientos
 
-# javascript
+## API o Librerías Necesarias
 
-## diagrama general de variable globales y funciones
+1. **Google Maps JavaScript API**
+     - URL: `https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=visualization&callback=initMap`
+
+2. **Google Maps Visualization Library**
+      - Incluida en la Google Maps JavaScript API.
+
+3. **Select2**
+      - URL: `https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css`
+      - JS: `https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js`
+
+4. **SweetAlert2**
+      - CSS: `https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css`
+      - JS: `https://cdn.jsdelivr.net/npm/sweetalert2@11`
+## javascript
+
+### diagrama general de variable globales y funciones
 ```mermaid
 graph TD;
 
@@ -48,7 +63,7 @@ togglePOIs --> |Modifica| map
 showInfoWindow --> |Modifica| map
 fitMapToBounds --> |Modifica| map
 ```
-## Diagrama de flujo de proceso principal
+### Diagrama de flujo de proceso principal
 ```mermaid
 graph TD
   A[Inicio] --> B["document.ready"]
@@ -195,9 +210,9 @@ graph TD;
       - **Funciones**: Se usa para ajustar la vista del mapa a los eventos cargados.
 
 
-# Funciones
+## Funciones
 
-## `initMap()`
+### `initMap()`
 
 Esta función inicializa el mapa de Google Maps, configura las opciones del mapa, y llama a otras funciones para cargar datos y visualizarlos en el mapa. 
 
