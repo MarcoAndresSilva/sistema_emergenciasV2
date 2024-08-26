@@ -173,4 +173,9 @@ class Noticia extends Conectar {
     }
     return array_values($usuariosUnicos);
 }
+ public function get_regla_envio_por_asunto(string $asunto = null) {
+    $sql = "SELECT * FROM tm_regla_envio WHERE asunto = :asunto;";
+    $params = [":asunto"=>$asunto];
+    return $this->ejecutarConsulta($sql,$params);
+ }
 }
