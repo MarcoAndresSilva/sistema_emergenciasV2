@@ -147,13 +147,17 @@ class Noticia extends Conectar {
        return $enviar[$asunto];
   }
   public function lista_posibles_envios_por_ids(string $ids, string $id_name){
-    $sql = "SELECT * FROM tm_usuario WHERE :id_name in ( :ids );";
-    $params = [
-      ":id_name" => $id_name,
-      ":ids"=>$ids,
-    ];
-    return $this->ejecutarConsulta($sql,$params);
-  }
+    // WARNING: no se puede usar el ejecutarConsulta porque agrega comillas o 
+    // termina utilizando los numeros como un string
+    $conectar = parent::conexion();
+    parent::set_names();
+    $idsArray = explode(',', $ids);
+    $placeholders = implode(',', array_fill(0, count($idsArray), '?'));
+    $sql = "SELECT * FROM tm_usuario WHERE $id_name IN ($placeholders);";
+    $consulta = $conectar->prepare($sql);
+    $consulta->execute($idsArray);
+    return $consulta->fetchAll(PDO::FETCH_ASSOC);
+}
 
 public function eliminarDuplicadosPorUsuId(...$listas) {
     $todosLosElementos = [];
