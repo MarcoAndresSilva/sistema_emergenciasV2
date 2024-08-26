@@ -175,4 +175,34 @@ class Noticia extends Conectar {
     $params = [":asunto"=>$asunto];
     return $this->ejecutarConsulta($sql,$params);
  }
+
+public function usuarios_a_enviar_segun_regla(string $asunto) {
+    $list_regla = $this->get_regla_envio_por_asunto($asunto);
+
+    $filtro = [
+      "tipo_usuario" => [
+        "id_name" =>"usu_tipo",
+        "value"=> $list_regla["tipo_usuario"],
+      ],
+      "usuario" =>[
+        "id_name" =>"usu_id",
+        "value"=> $list_regla["usuario"],
+      ],
+      "seccion" =>[
+        "id_name" =>"usu_id",
+        "value"=> $list_regla["seccion"],
+      ],
+      "unidad" =>[
+        "id_name" =>"usu_unid",
+        "value"=> $list_regla["unidad"],
+      ]
+    ];
+
+    $tipo_usuario= $this->lista_posibles_envios_por_ids($filtro["tipo_usuario"]["value"],$filtro["tipo_usuario"]["id_name"]);
+    $usuario= $this->lista_posibles_envios_por_ids($filtro["usuario"]["value"],$filtro["usuario"]["id_name"]);
+    $unidad= $this->lista_posibles_envios_por_ids($filtro["unidad"]["value"],$filtro["unidad"]["id_name"]);
+    $seccion= $this->lista_posibles_envios_por_ids($filtro["seccion"]["value"],$filtro["seccion"]["id_name"]);
+
+    return $this->eliminarDuplicadosPorUsuId($tipo_usuario,$usuario,$unidad,$seccion);
+  }
 }
