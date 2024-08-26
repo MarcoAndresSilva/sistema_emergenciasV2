@@ -60,11 +60,11 @@ class Noticia extends Conectar {
     ];
   }
 
- public function enviar_noticia_grupal_por_tipo(int $noticia, int $tipo_usuario) {
+ public function enviar_noticia_grupal_por_lista_usuario(int $noticia, array $lista_usuario) {
     $sql = "INSERT INTO tm_noticia_usuario(usu_id,noticia_id) VALUES ";
-    $valores_usuario = $this->preparar_consulta_por_lista_usuario($tipo_usuario,$noticia);
+    $valores_usuario = $this->preparar_consulta_por_lista_usuario($lista_usuario,$noticia);
     $sql .= $valores_usuario;
-    // ! FIX: puede ver error por sin dato en valores_usuario
+    // !FIX: puede ver error por sin dato en valores_usuario
     try {
         $result = $this->ejecutarAccion($sql);
         if ($result) {
