@@ -62,7 +62,7 @@ class Noticia extends Conectar {
 
  public function enviar_noticia_grupal_por_tipo(int $noticia, int $tipo_usuario) {
     $sql = "INSERT INTO tm_noticia_usuario(usu_id,noticia_id) VALUES ";
-    $valores_usuario = $this->preparar_consulta_por_tipo_usuario($tipo_usuario,$noticia);
+    $valores_usuario = $this->preparar_consulta_por_lista_usuario($tipo_usuario,$noticia);
     $sql .= $valores_usuario;
     // ! FIX: puede ver error por sin dato en valores_usuario
     try {
@@ -89,13 +89,10 @@ class Noticia extends Conectar {
     return ["status"=>"warning", "message"=>"No se pudo enviar mensaje"];
 
   }
-  public  function preparar_consulta_por_tipo_usuario($tipo_usuario,$id_noticia){
-    $usuario = new Usuario();
-    $list_usuario = $usuario->get_full_usuarios_tipo($tipo_usuario);
-// ! FIX: en caso de que no tenga datos el list_usuario 
+  public  function preparar_consulta_por_lista_usuario($list_usuarios,$id_noticia){
     $consulta = "";
-    foreach($list_usuario as $item){
-        $id_usuario = $item["usu_id"];
+    foreach($list_usuarios as $usuario){
+        $id_usuario = $usuario["usu_id"];
         $consulta .= "($id_usuario,$id_noticia),";
     }
     if (!empty($consulta)){
