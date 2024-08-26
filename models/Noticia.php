@@ -40,10 +40,10 @@ class Noticia extends Conectar {
     if ($add_noticia["status"] !== "success"){
       return ["status"=>"error", "message"=>"Error al agregar", "add_noticia"=>$add_noticia];
     }
-    $tipo_usuario = $this->regla_usuario_enviar_por_asunto($asunto);
+    $lista_usuario = $this->usuarios_a_enviar_segun_regla($asunto);
     $ultima_noticia = $this->obtenerUltimoRegistro('tm_noticia',"noticia_id");
     $id_noticia_new = $ultima_noticia["noticia_id"];
-    $envio_usuario = $this->enviar_noticia_grupal_por_tipo($id_noticia_new,$tipo_usuario);
+    $envio_usuario = $this->enviar_noticia_grupal_por_lista_usuario($id_noticia_new,$lista_usuario);
     if ($envio_usuario["status"] !== "success"){
       return [
         "status"=>"error",
