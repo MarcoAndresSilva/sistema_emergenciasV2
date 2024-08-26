@@ -197,7 +197,7 @@ public function usuarios_a_enviar_segun_regla(string $asunto) {
         "value"=> $list_regla["seccion"],
       ],
       "unidad" =>[
-        "id_name" =>"usu_unid",
+        "id_name" =>"usu_unidad",
         "value"=> $list_regla["unidad"],
       ]
     ];
