@@ -155,7 +155,7 @@ class Noticia extends Conectar {
     return $this->ejecutarConsulta($sql,$params);
   }
 
-  function eliminarDuplicadosPorUsuId(...$listas) {
+public function eliminarDuplicadosPorUsuId(...$listas) {
     $todosLosElementos = [];
 
     foreach ($listas as $lista) {
