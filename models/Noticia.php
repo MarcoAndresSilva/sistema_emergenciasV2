@@ -158,4 +158,19 @@ class Noticia extends Conectar {
     return $this->ejecutarConsulta($sql,$params);
   }
 
+  function eliminarDuplicadosPorUsuId(...$listas) {
+    $todosLosElementos = [];
+
+    foreach ($listas as $lista) {
+        $todosLosElementos = array_merge($todosLosElementos, $lista);
+    }
+    
+    // Utilizar un array asociativo para eliminar duplicados basados en usu_id
+    $usuariosUnicos = [];
+    
+    foreach ($todosLosElementos as $elemento) {
+        $usuariosUnicos[$elemento['usu_id']] = $elemento;
+    }
+    return array_values($usuariosUnicos);
+}
 }
