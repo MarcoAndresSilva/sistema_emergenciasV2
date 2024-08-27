@@ -177,7 +177,7 @@ public function eliminarDuplicadosPorUsuId(...$listas) {
  public function get_regla_envio_por_asunto(string $asunto = null) {
     $sql = "SELECT * FROM tm_regla_envio WHERE asunto = :asunto;";
     $params = [":asunto"=>$asunto];
-    return $this->ejecutarConsulta($sql,$params);
+    return $this->ejecutarConsulta($sql,$params,false);
  }
 
 public function usuarios_a_enviar_segun_regla(string $asunto) {
