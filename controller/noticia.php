@@ -20,6 +20,11 @@ if (isset($_GET["op"])) {
             $result = $noticia->get_noticias_usuario($usuario_id);
             echo json_encode($result);
         break;
+        case "get_reglas":
+            $usuario_id = $_SESSION["usu_id"];
+            $result = $noticia->get_reglas();
+            echo json_encode($result);
+        break;
         case "get_reglas_relaciones":
               $unidad = new Unidad();
               $usuario = new Usuario();
