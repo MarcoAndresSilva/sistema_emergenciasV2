@@ -37,6 +37,27 @@ if (isset($_GET["op"])) {
 
             echo json_encode($result);
         break;
+        case "update_reglas":
+            if (isset($_POST['unidad'], $_POST['seccion'], $_POST['usuario'], $_POST['tipo_usuario'], $_POST['asunto'])) {
+                $args = [
+                    "unidad" => $_POST['unidad'],
+                    "seccion" => $_POST['seccion'],
+                    "usuario" => $_POST['usuario'],
+                    "tipo_usuario" => $_POST['tipo_usuario'],
+                    "asunto" => $_POST['asunto']
+                ];
+
+                $result = $noticia->update_regla_envio($args);
+
+                if ($result) {
+                    echo json_encode($result);
+                } else {
+                    echo json_encode(["status" => "error", "message" => "Ocurrió un error al actualizar la regla."]);
+                }
+            } else {
+                echo json_encode(["status" => "error", "message" => "Datos incompletos para la actualización."]);
+            }
+        break;
         case "read_noticia":
             $usuario_id = $_SESSION["usu_id"];
             $noticia_id = $_POST["noticia_id"];

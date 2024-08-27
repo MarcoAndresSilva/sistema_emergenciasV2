@@ -228,4 +228,20 @@ public function usuarios_a_enviar_segun_regla(string $asunto) {
 
     return $this->eliminarDuplicadosPorUsuId($tipo_usuario,$usuario,$unidad,$seccion);
   }
+  public function update_regla_envio(array $args) {
+    $sql = "UPDATE tm_regla_envio
+            SET unidad= :unidad , seccion= :seccion,usuario= :usuario ,tipo_usuario= :tipo_usuario WHERE asunto = :asunto";
+    $params = [
+      ":seccion"=> $args["seccion"],
+      ":usuario"=> $args["usuario"],
+      ":tipo_usuario"=> $args["tipo_usuario"],
+      ":unidad"=> $args["unidad"],
+      ":asunto"=> $args["asunto"],
+    ];
+    $result = $this->ejecutarAccion($sql,$params);
+    if ($result){
+        return ["status"=>"success", "message"=>"actualizacion exitosa"];
+    } 
+    return ["status"=>"warning", "message"=>"no se hizo ningun cambio"];
+  }
 }
