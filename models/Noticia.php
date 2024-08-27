@@ -129,7 +129,9 @@ class Noticia extends Conectar {
     if ($result){
       return $result;
     }
-    return array('status'=>'error', 'message'=>"Problemas al optener informacion de las noticias");
+    if ($result == null){
+      return [];
+    }
   }
   public function regla_usuario_enviar_por_asunto(string $asunto){
       $super_user = 1;
