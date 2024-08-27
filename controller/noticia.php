@@ -1,6 +1,9 @@
 <?php
 require_once '../config/conexion.php';
 require_once '../models/Noticia.php';
+require_once '../models/Unidad.php';
+require_once '../models/Usuario.php';
+
 if (isset($_GET["op"])) {
   $noticia = new Noticia();
     switch ($_GET["op"]) {
@@ -15,6 +18,18 @@ if (isset($_GET["op"])) {
         case "get_noticia":
             $usuario_id = $_SESSION["usu_id"];
             $result = $noticia->get_noticias_usuario($usuario_id);
+            echo json_encode($result);
+        break;
+        case "get_reglas_relaciones":
+              $unidad = new Unidad();
+              $usuario = new Usuario();
+              $result=[
+                  "unidad" =>  $unidad->get_unidad(),
+                  "tipo_usuario" =>  $usuario->get_todos_usuarios(),
+                  "tipo_usuario" =>  $usuario->get_todos_usuarios(),
+                  "usuarios" =>  $usuario->get_full_usuarios(),
+                ];
+
             echo json_encode($result);
         break;
         case "read_noticia":
