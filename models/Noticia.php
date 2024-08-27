@@ -89,6 +89,21 @@ class Noticia extends Conectar {
     return ["status"=>"warning", "message"=>"No se pudo enviar mensaje"];
 
   }
+  public function crear_y_enviar_noticia_simple($data) {
+    $asunto = $data['asunto'];
+    $mensaje = $data['mensaje'];
+    $url = $data['url'];
+    $usuario_id = $data['usuario_id'];
+    $news = $this->add_noticia($asunto,$mensaje,$url);
+    if($news["status"] !== "success"){
+      return ["status"=>"error"];
+    }
+    $news_last = $this->obtenerUltimoRegistro("tm_noticia","noticia_id");
+
+    $noticia_simple = $this->enviar_noticia_simple($news_last["noticia_id"],$usuario_id);
+
+    return $noticia_simple;
+  }
   public  function preparar_consulta_por_lista_usuario($list_usuarios,$id_noticia){
     $consulta = "";
     foreach($list_usuarios as $usuario){
