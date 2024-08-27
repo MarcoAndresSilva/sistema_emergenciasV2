@@ -8,7 +8,8 @@ if (isset($_GET["op"])) {
             $asunto = $_POST["asunto"];
             $mensaje= $_POST["mensaje"];
             $url = isset($_POST["enlace"]) ? $_POST["enlace"] : null;
-            $datos = $noticia->add_noticia($asunto,$mensaje,$url);
+            $argumentos = ["asunto"=> $asunto, "mensaje"=>$mensaje, "url" =>$url];
+            $datos = $noticia->crear_noticia_y_enviar_grupo_usuario($argumentos);
             echo json_encode($datos);
         break;
         case "get_noticia":
