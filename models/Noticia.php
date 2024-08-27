@@ -204,10 +204,22 @@ public function usuarios_a_enviar_segun_regla(string $asunto) {
       ]
     ];
 
-    $tipo_usuario= $this->lista_posibles_envios_por_ids($filtro["tipo_usuario"]["value"],$filtro["tipo_usuario"]["id_name"]);
-    $usuario= $this->lista_posibles_envios_por_ids($filtro["usuario"]["value"],$filtro["usuario"]["id_name"]);
-    $unidad= $this->lista_posibles_envios_por_ids($filtro["unidad"]["value"],$filtro["unidad"]["id_name"]);
-    $seccion= $this->lista_posibles_envios_por_ids($filtro["seccion"]["value"],$filtro["seccion"]["id_name"]);
+    // Si el valor es null, asigna un array vacío
+    $tipo_usuario = $filtro["tipo_usuario"]["value"] !== null
+        ? $this->lista_posibles_envios_por_ids($filtro["tipo_usuario"]["value"], $filtro["tipo_usuario"]["id_name"])
+        : [];
+
+    $usuario = $filtro["usuario"]["value"] !== null
+        ? $this->lista_posibles_envios_por_ids($filtro["usuario"]["value"], $filtro["usuario"]["id_name"])
+        : [];
+
+    $unidad = $filtro["unidad"]["value"] !== null
+        ? $this->lista_posibles_envios_por_ids($filtro["unidad"]["value"], $filtro["unidad"]["id_name"])
+        : [];
+
+    $seccion = $filtro["seccion"]["value"] !== null
+        ? $this->lista_posibles_envios_por_ids($filtro["seccion"]["value"], $filtro["seccion"]["id_name"])
+        : [];
 
     return $this->eliminarDuplicadosPorUsuId($tipo_usuario,$usuario,$unidad,$seccion);
   }
