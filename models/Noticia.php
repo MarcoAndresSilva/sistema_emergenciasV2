@@ -183,6 +183,10 @@ public function eliminarDuplicadosPorUsuId(...$listas) {
     return $this->ejecutarConsulta($sql,$params,false);
  }
 
+ public function get_reglas() {
+    $sql = "SELECT * FROM tm_regla_envio;";
+    return $this->ejecutarConsulta($sql);
+ }
 public function usuarios_a_enviar_segun_regla(string $asunto) {
     $list_regla = $this->get_regla_envio_por_asunto($asunto);
 
