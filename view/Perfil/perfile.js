@@ -55,6 +55,14 @@ function fetchData(op, postData, sendAsJson = false) {
             // Mostrar un mensaje de alerta según el estado de la respuesta
             if (data.status === 'success') {
                 Swal.fire('Éxito', data.message, 'success');
+                // Reiniciar ambos formularios
+                const formsToReset = ['updatePasswordForm', 'updatePhoneForm'];
+                formsToReset.forEach(formId => {
+                    const form = document.getElementById(formId);
+                    if (form) {
+                        form.reset();
+                    }
+                });
             } else if(data.status === 'error'){
                 Swal.fire('Error', data.message, 'error');
             }else if(data.status === 'warning'){
