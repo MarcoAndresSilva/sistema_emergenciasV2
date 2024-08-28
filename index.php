@@ -47,9 +47,6 @@ if (isset($_POST["enviar"]) and $_POST["enviar"] == "si") {
 
                     
                     <form class="sign-box" action="" method="post" id="login_form">
-                      
-                    <!-- usu_tipo para hacer las veces de rol y jugar con el inicio de sesion   -->
-                      <input type="hidden" id="usu_tipo" name="usu_tipo" value="1">
 
                         <div class="sign-avatar">
                             <img src="public/img/avatar-sign.png" alt="">
@@ -89,12 +86,10 @@ if (isset($_POST["enviar"]) and $_POST["enviar"] == "si") {
                                 placeholder="Contrase&ntilde;a" />
                         </div>
                         <div class="form-group">
-                            <div class="float-right reset">
+                            <!-- <div class="float-right reset">
                                 <a href="reset-password.html">Cambiar contrase&ntilde;a</a>
                             </div>
-                            <div class="float-left reset">
-                                <a href="#" id="btnAdmin">Acceso Administrador</a>
-                            </div>
+                      -->
                         </div>
                         <input type="hidden" name="enviar" class="form-control" value="si">
                         <button type="submit" class="btn btn-rounded">Iniciar Sesi&oacute;n</button>
