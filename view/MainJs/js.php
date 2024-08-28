@@ -22,7 +22,6 @@
 <script src="../../public/js/summernote-ES.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdCMoRAl_-ARUflpa4Jn_qUoOpdXlxQEg&libraries=places"></script>
 
 
 <script src="https://kit.fontawesome.com/bf71f20919.js" crossorigin="anonymous"></script>

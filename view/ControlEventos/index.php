@@ -92,6 +92,7 @@ require_once('modalDerivar.php');
 // require_once('modalCerrar.php');
 require_once("../MainJs/js.php");
 ?>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdCMoRAl_-ARUflpa4Jn_qUoOpdXlxQEg&libraries=places"></script>
 </body>
 
 <script type="text/javascript" src="./evento.js"></script>
