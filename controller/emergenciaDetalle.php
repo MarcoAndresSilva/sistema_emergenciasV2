@@ -17,62 +17,47 @@ if (isset($_GET["op"])) {
 
 
         case "listar_detalle_emergencias":
-            $datos = $evento->listar_eventosdetalle_por_evento($_POST["ev_id"]);
-            ?>
-                <?php
+            if (isset($_POST["ev_id"])) {
+                $datos = $evento->listar_eventosdetalle_por_evento($_POST["ev_id"]);
                 foreach ($datos as $row) {
                     ?>
-                        <article class="activity-line-item box-typical">
-        
-                            <div class="activity-line-date">
-                                <?php echo date("d/m/Y - H:i:s", strtotime($row["ev_inicio"])); ?>
+                    <article class="activity-line-item box-typical">
+                        <div class="activity-line-date">
+                            <?php echo date("d/m/Y - H:i:s", strtotime($row["ev_inicio"])); ?>
+                        </div>
+                        <header class="activity-line-item-header">
+                            <div class="activity-line-item-user">
+                                <div class="activity-line-item-user-photo">
+                                    <a href="#">
+                                        <img src="../../public/<?php echo $row['usu_tipo']?>.png" alt="">
+                                    </a>
+                                </div>
+                                <div class="activity-line-item-user-name">
+                                    <?php echo $row['usu_nom'] . ' ' . $row['usu_ape']; ?> 
+                                </div>
+                                <div class="activity-line-item-user-status">
+                                    <?php echo ($row['usu_tipo'] == 1) ? 'Visualizador' : 'Administrador'; ?>
+                                </div>
                             </div>
-        
-                            <header class="activity-line-item-header">
-                                <div class="activity-line-item-user">
-                                    <div class="activity-line-item-user-photo">
-                                        <a href="#">
-                                            <img src="../../public/  <?php echo $row['usu_tipo']?>.png" alt="">
-                                        </a>
-                                    </div>
-
-                                    <div class="activity-line-item-user-name">
-                                        <?php echo $row['usu_nom'] . ' ' . $row['usu_ape']; ?> 
-                                    </div>
-
-                                    <div class="activity-line-item-user-status">
-                                        <?php
-                                            if ($row['usu_tipo'] == 1) {
-                                                echo 'Visualizador';
-                                            } else {
-                                                echo 'Administrador';
-                                            }
-                                        ?>
+                        </header>
+                        <div class="activity-line-action-list">
+                            <section class="activity-line-action">
+                                <div class="time">
+                                    <?php echo date("H:i:s", strtotime($row["ev_inicio"])); ?>
+                                </div>
+                                <div class="cont">
+                                    <div class="cont-in">
+                                        <p><?php echo $row['ev_desc'] ?> </p>
                                     </div>
                                 </div>
-                            </header>
-        
-                            <div class="activity-line-action-list">
-        
-                                <section class="activity-line-action">
-                                    <div class="time">
-                                        <?php echo date("H:i:s", strtotime($row["ev_inicio"])); ?>
-                                    </div>
-                                    
-                                    <div class="cont">
-                                        <div class="cont-in">
-                                            <p><?php echo $row['ev_desc'] ?> </p>
-                                        </div>
-                                    </div>
-                                </section>
-
-                            </div>
-
-                        </article>
+                            </section>
+                        </div>
+                    </article>
                     <?php
                 }
-                ?>
-            <?php
+            } else {
+                echo "Error: ev_id no definido.";
+            }
         break;
 
         case "mostrar":
@@ -81,12 +66,14 @@ if (isset($_GET["op"])) {
                 foreach ($datos as $row) {
                     $output["ev_id"] = $row["ev_id"];
                     $output["usu_id"] = $row["usu_id"];
-                    $output["ev_est_num"] = $row["ev_est"]; // Añadir el estado como número
-        
-                    if ($row["ev_est"] == 1) {
-                        $output["ev_est"] = '<span class="label label-pill label-success">En proceso</span>';
-                    } else {
+                    $output["ev_est_num"] = $row["ev_est"]; 
+                    $output["ev_final"] = $row["ev_final"]; // Añadir ev_final al output
+                    
+                    // Verificar si hay una fecha de finalización
+                    if ($row["ev_final"] != null) {
                         $output["ev_est"] = '<span class="label label-pill label-danger">Finalizado</span>';
+                    } else {
+                        $output["ev_est"] = '<span class="label label-pill label-success">En proceso</span>';
                     }
                     
                     $output["cat_id"] = $row["cat_id"];
