@@ -570,6 +570,7 @@ class Evento extends Conectar {
                 tm_evento.ev_desc,
                 tm_evento.ev_est,
                 tm_evento.ev_inicio,
+                tm_evento.ev_final, 
                 tm_usuario.usu_nom,
                 tm_usuario.usu_ape,
                 tm_categoria.cat_nom
@@ -589,7 +590,6 @@ class Evento extends Conectar {
             return false;
         }
     }
-    
     public function insert_emergencia_detalle($ev_id, $usu_id, $ev_desc) {
     try {
         $conectar = parent::conexion();
