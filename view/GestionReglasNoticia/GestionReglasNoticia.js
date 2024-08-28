@@ -45,7 +45,14 @@ document.addEventListener("DOMContentLoaded", function () {
                     return ids.map(id => dataMappings.tipo_usuario[id] || "Sin Asignar").join(', ');
                 }
                 return "Sin Asignar";
-            }}
+            }},
+            { // Add Edit button with data-id attribute
+                title: 'Acciones',
+                data: 'id_regla',
+                render: function (data, type, row) {
+                    return `<button class="edit-btn btn btn-primary" data-id="${data}">Editar</button>`;
+                }
+            }
         ]
     });
 
@@ -94,39 +101,117 @@ document.addEventListener("DOMContentLoaded", function () {
         table.ajax.reload();
     });
 
-    // Function to apply filters
-    function applyFilter(filterType, filterValues) {
-        table.columns().search(''); // Clear all existing filters
+    // Add click event listener for edit button
+    $('#reglas-table tbody').on('click', '.edit-btn', async function () {
+        const idRegla = $(this).data('id');
 
-        if (filterType && filterValues) {
-            const filterIndex = {
-                'unidad': 2,  // Assuming 'unidad' is in the 3rd column (index 2)
-                'seccion': 3, // Assuming 'seccion' is in the 4th column (index 3)
-                'usuario': 4, // Assuming 'usuario' is in the 5th column (index 4)
-                'tipo_usuario': 5 // Assuming 'tipo_usuario' is in the 6th column (index 5)
-            }[filterType];
-
-            if (filterIndex !== undefined) {
-                // Handle single ID or multiple IDs
-                const values = filterValues.split(',').map(v => v.trim());
-                const searchString = values.length > 1 ? `^(${values.join('|')})$` : values[0];
-                table.column(filterIndex).search(searchString, true, false).draw(); // Apply filter to specific column
-            }
-        } else {
-            fetchAllData(); // Fetch all data if no filter is applied
-        }
-    }
-
-    // Function to fetch all data
-    async function fetchAllData() {
+        // Fetch all rules and find the specific rule by id_regla
         try {
             const response = await fetch('../../controller/noticia.php?op=get_reglas');
             if (!response.ok) throw new Error('Network response was not ok');
             
-            const data = await response.json();
-            table.clear().rows.add(data).draw();  // Clear old data and add new data
+            const rules = await response.json();
+            const ruleData = rules.find(rule => rule.id_regla == idRegla); // Find the rule with the specific id
+            
+            if (ruleData) {
+                openEditModal(ruleData); // Open modal with fetched data
+            } else {
+                console.error('Regla no encontrada con el ID proporcionado.');
+            }
         } catch (error) {
-            console.error('Fetch error:', error);
+            console.error('Error fetching rule data:', error);
         }
+    });
+
+function openEditModal(rowData) {
+    Swal.fire({
+        title: 'Editar Regla',
+        html: `
+            <label for="unidad">Unidad:</label>
+            <select id="unidad" class="swal2-input" multiple style="width: 100%"></select>
+            
+            <label for="seccion">Sección:</label>
+            <select id="seccion" class="swal2-input" multiple style="width: 100%"></select>
+            
+            <label for="usuario">Usuario:</label>
+            <select id="usuario" class="swal2-input" multiple style="width: 100%"></select>
+            
+            <label for="tipo_usuario">Tipo de Usuario:</label>
+            <select id="tipo_usuario" class="swal2-input" multiple style="width: 100%"></select>
+        `,
+        showCancelButton: true,
+        preConfirm: () => {
+            const popup = Swal.getPopup();  // Obtener el contenedor del SweetAlert
+
+            // Obtener los valores seleccionados de los selectores dentro del modal
+            const unidad = $(popup).find('#unidad').val() ? $(popup).find('#unidad').val().join(',') : '';
+            const seccion = $(popup).find('#seccion').val() ? $(popup).find('#seccion').val().join(',') : '';
+            const usuario = $(popup).find('#usuario').val() ? $(popup).find('#usuario').val().join(',') : '';
+            const tipo_usuario = $(popup).find('#tipo_usuario').val() ? $(popup).find('#tipo_usuario').val().join(',') : '';
+
+            // Retornar los datos formateados
+            return {
+                id_regla: rowData.id_regla,
+                unidad: unidad,
+                seccion: seccion,
+                usuario: usuario,
+                tipo_usuario: tipo_usuario
+            };
+        },
+        didOpen: () => {
+            // Inicializar Select2 con los valores actuales
+            initializeSelect2('#unidad', dataMappings.unidad, rowData.unidad || "");
+            initializeSelect2('#seccion', dataMappings.seccion, rowData.seccion || "");
+            initializeSelect2('#usuario', dataMappings.usuarios, rowData.usuario || "");
+            initializeSelect2('#tipo_usuario', dataMappings.tipo_usuario, rowData.tipo_usuario || "");
+        }
+    }).then((result) => {
+        if (result.isConfirmed && result.value) {
+            // Llamar a la función para actualizar la regla
+            updateRegla(result.value);
+        }
+    });
+}
+
+    function initializeSelect2(selector, data, selectedData) {
+        const selectElement = $(selector);
+        selectElement.empty(); // Clear previous options
+        for (const id in data) {
+            if (data.hasOwnProperty(id)) {
+                const isSelected = selectedData.split(',').includes(id) ? 'selected' : '';
+                selectElement.append(`<option value="${id}" ${isSelected}>${data[id]}</option>`);
+            }
+        }
+        selectElement.select2({ width: '100%' }); // Initialize Select2
     }
+
+async function updateRegla(data) {
+    try {
+        // Crear un objeto FormData
+        const formData = new FormData();
+        formData.append('id_regla', data.id_regla);
+        formData.append('unidad', data.unidad);
+        formData.append('seccion', data.seccion);
+        formData.append('usuario', data.usuario);
+        formData.append('tipo_usuario', data.tipo_usuario);
+        // Asegúrate de incluir el campo "asunto" si es necesario
+        formData.append('asunto', data.asunto || ''); 
+
+        // Realizar la solicitud de actualización con el formato adecuado
+        const response = await fetch('../../controller/noticia.php?op=update_reglas', {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.json();
+        if (result.status === 'error') {
+            Swal.fire('Error', result.message, 'error');
+        } else {
+            Swal.fire('Éxito', 'Regla actualizada con éxito', 'success');
+            table.ajax.reload(); // Recargar los datos de la tabla después de la actualización
+        }
+    } catch (error) {
+        console.error('Error updating rule:', error);
+    }
+}
 });
