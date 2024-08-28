@@ -50,6 +50,15 @@ document.addEventListener("DOMContentLoaded", function() {
             });
     }
 
+    setInterval(fetchNotifications, 10000);
+
+    // Detectar clic en cualquier botón y ejecutar fetchNotifications
+    document.addEventListener("click", function(event) {
+        if (event.target.tagName.toLowerCase() === "button") {
+            fetchNotifications();
+        }
+    });
+
     fetchNotifications();
     // Actualiza el contador de notificaciones
     function updateNotificationCount() {

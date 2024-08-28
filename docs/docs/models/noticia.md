@@ -150,4 +150,96 @@ public function check_mensaje_leido($noticia_id, $usuario_id){
   ];
 }
 ```
-```
+
+## lista_posibles_envios_por_ids
+
+Obtiene una lista de registros de la tabla `tm_usuario` cuyas IDs coinciden con los proporcionados. Esta función utiliza una consulta preparada para evitar problemas de inyección SQL y para manejar múltiples IDs de manera segura.
+
+### Funcionamiento
+
+1. **Conexión a la Base de Datos**: Se establece una conexión a la base de datos mediante la función `parent::conexion()`.
+2. **Preparación de Consulta**: La cadena de IDs proporcionada se divide en un array utilizando `explode()`. Se generan los placeholders necesarios para la consulta utilizando `array_fill()` y `implode()`.
+3. **Ejecución de Consulta**: Se prepara la consulta SQL con placeholders (`?`) y se ejecuta utilizando el array de IDs.
+4. **Obtención de Resultados**: Se recuperan los resultados de la consulta en formato de array asociativo usando `fetchAll(PDO::FETCH_ASSOC)`.
+
+### Parámetros
+
+- `string $ids`: Una cadena de IDs separadas por comas (e.g., "1,2,3").
+- `string $id_name`: El nombre de la columna en la tabla `tm_usuario` que se usará para comparar con las IDs proporcionadas.
+
+### Return
+
+- `array`: Un array asociativo con los registros que coinciden con los IDs proporcionados, donde cada elemento es un array asociativo representando una fila de la tabla `tm_usuario`.
+
+## eliminarDuplicadosPorUsuId
+
+Elimina duplicados en base al campo `usu_id` de una o más listas de elementos. La función combina todas las listas proporcionadas en una sola y elimina los elementos duplicados, conservando solo el primer elemento encontrado para cada ID de usuario.
+
+### Funcionamiento
+
+1. **Combina Listas**: Se combinan todas las listas de elementos proporcionadas en una sola lista usando `array_merge()`.
+2. **Eliminación de Duplicados**: Se recorre la lista combinada y se utiliza un array asociativo para eliminar duplicados basados en el campo `usu_id`. El valor del array asociativo es el elemento completo, mientras que la clave es el `usu_id`.
+3. **Retorno de Resultados**: Se devuelven los valores del array asociativo como un array indexado usando `array_values()`, lo que elimina las claves asociativas y devuelve una lista con los elementos únicos.
+
+### Parámetros
+
+- `...$listas`: Una o más listas (arrays) de elementos. Cada elemento debe ser un array asociativo que contenga al menos el campo `usu_id`.
+
+### Return
+
+- `array`: Una lista de elementos únicos basada en el campo `usu_id`. Cada elemento es un array asociativo que representa un único usuario.
+
+## get_regla_envio_por_asunto
+
+Obtiene una o más reglas de envío de la tabla `tm_regla_envio` que coinciden con el asunto proporcionado. Si no se proporciona un asunto, la función no devuelve resultados.
+
+### Funcionamiento
+
+1. **Preparación de Consulta**: Se prepara una consulta SQL que selecciona todos los registros de `tm_regla_envio` donde el campo `asunto` coincide con el valor proporcionado.
+2. **Ejecución de Consulta**: Se ejecuta la consulta con el parámetro `:asunto` utilizando la función `ejecutarConsulta()`.
+
+### Parámetros
+
+- `string $asunto` (opcional): El asunto de las reglas de envío a buscar. Si no se proporciona, la consulta no devolverá resultados.
+
+### Return
+
+- `array`: Un array asociativo con los registros que coinciden con el asunto proporcionado. Cada elemento es un array asociativo representando una fila de la tabla `tm_regla_envio`.
+
+## get_reglas
+
+Obtiene todas las reglas de envío de la tabla `tm_regla_envio`.
+
+### Funcionamiento
+
+1. **Preparación de Consulta**: Se prepara una consulta SQL que selecciona todos los registros de `tm_regla_envio`.
+2. **Ejecución de Consulta**: Se ejecuta la consulta utilizando la función `ejecutarConsulta()`.
+
+### Return
+
+- `array`: Un array asociativo con todos los registros de la tabla `tm_regla_envio`. Cada elemento es un array asociativo representando una fila de la tabla.
+
+## update_regla_envio
+
+Actualiza una regla de envío en la tabla `tm_regla_envio` con los valores proporcionados para `unidad`, `seccion`, `usuario`, y `tipo_usuario`, basándose en el campo `asunto`.
+
+### Funcionamiento
+
+1. **Preparación de Consulta**: Se prepara una consulta SQL que actualiza los campos `unidad`, `seccion`, `usuario`, y `tipo_usuario` en la tabla `tm_regla_envio` para el registro cuyo campo `asunto` coincida con el valor proporcionado.
+2. **Ejecución de Consulta**: Se ejecuta la consulta con los parámetros proporcionados utilizando la función `ejecutarAccion()`.
+3. **Retorno de Resultado**: Se devuelve un array que indica el estado de la operación:
+    - `"status" => "success"` si la actualización fue exitosa.
+    - `"status" => "warning"` si no se hizo ningún cambio.
+
+### Parámetros
+- `array $args`: Un array asociativo con los siguientes elementos:
+    - `"unidad"`: El nuevo valor para el campo `unidad`.
+    - `"seccion"`: El nuevo valor para el campo `seccion`.
+    - `"usuario"`: El nuevo valor para el campo `usuario`.
+    - `"tipo_usuario"`: El nuevo valor para el campo `tipo_usuario`.
+    - `"asunto"`: El valor del campo `asunto` que identifica el registro a actualizar.
+
+### Return
+- `array`: Un array asociativo con los siguientes campos:
+    - `"status"`: El estado de la operación, puede ser `"success"` o `"warning"`.
+    - `"message"`: Un mensaje descriptivo de la operación, indicando si la actualización fue exitosa o si no se hizo ningún cambio.

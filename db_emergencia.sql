@@ -633,7 +633,7 @@ PRIMARY KEY (id_regla)
 
 INSERT INTO tm_regla_envio (asunto, unidad, seccion, usuario, tipo_usuario)
 VALUES  ('Nuevo Evento', '1,2,4', '1,2,4', '1,2,4', '1,2,4'),
-        ('Nuevo Evento', null, null, '4', '1');
+        ('Evento Cerrado', null, null, '4', '1');
 
 --
 -- Indices de la tabla `tm_camb_asig`
