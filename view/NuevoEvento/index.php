@@ -100,13 +100,15 @@ if (isset($_SESSION["usu_id"])) {
                   <div class="group-ident">
                     <div class="col-lg-5">
                       <fieldset class="form-group">
-                        <label class="form-label semibold" for="exampleInput">Ingresa una dirección y<span class="label-red"> (marque la emergencia en el mapa)</span> </label>
+                        <label class="form-label semibold" for="exampleInput">Ingresar dirección o Marque en el mapa</label>
                         <input type="text" class="form-control" id="address" placeholder="Dirección">
                       </fieldset>
                     </div>
-                    <div>
-                      <input type="checkbox" id="solicitarUbicacion" />
-                      <label for="solicitarUbicacion">Solicitar mi ubicación actual</label>
+                    <div class="col-lg-8 d-flex align-items-center">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="solicitarUbicacion">
+                        <label class="form-check-label" for="solicitarUbicacion">Solicitar mi ubicación actual</label>
+                      </div>
                     </div>
                     <div id="map" style="height: 400px; width: 100%;"></div>
                     <input type="hidden" id="ev_latitud">
