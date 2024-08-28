@@ -240,7 +240,6 @@ function fetchCriteriosSeguridad() {
                 },
                 submitHandler: function(form) {
                     // Procesar el envío del formulario después de la validación
-                    form.submit();
                 }
             });
         }
