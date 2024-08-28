@@ -47,7 +47,7 @@ function listarDetalle(ev_id){
         $('#lblDetalle').html(data);
     });
 
-    $.post("../../controller/emergenciaDetalle.php?op=mostrar", {ev_id : ev_id}, function(data) {
+    $.post("../../controller/emergenciaDetalle.php?op=mostrar", {ev_id: ev_id}, function(data) {
         data = JSON.parse(data);
         console.log(data);
         $("#lblNomIdTicket").html("Trazabilidad Evento Emergencia N° ID: " + data.ev_id);
@@ -60,23 +60,16 @@ function listarDetalle(ev_id){
         $("#ev_direc").val(data.ev_direc);
         $("#tic_descripUsu").summernote("code", data.ev_desc); 
 
-        // Verifica si el evento está cerrado
-        if (data.ev_est == 2 || data.ev_final) {
-            // Deshabilita el campo Summernote
+        // Verifica si el evento tiene fecha de finalización y deshabilita campos si es así
+        if (data.ev_final) { // Si ev_final no es nulo
             $("#ev_desc").summernote("disable");
-
-            // Oculta los botones
-            $("#btnEnviar").hide();
-            $("#btnPanelCerrar").hide();
+            $("#btnEnviar").prop("disabled", true);
+            $("#btnPanelCerrar").prop("disabled", true);
         } else {
-            // Habilita el campo Summernote en caso de que el evento esté abierto
             $("#ev_desc").summernote("enable");
-
-            // Muestra los botones
-            $("#btnEnviar").show();
-            $("#btnPanelCerrar").show();
+            $("#btnEnviar").prop("disabled", false);
+            $("#btnPanelCerrar").prop("disabled", false);
         }
-
     });
 }
 
@@ -102,6 +95,8 @@ $(document).on("click", "#btnEnviar", function () {
   });
 
 
+
+//   Modal Cerrar
   function mostrarModal(modalId) {
     var modal = $(modalId);
     if (modal.length) {
@@ -113,22 +108,18 @@ $(document).on("click", "#btnEnviar", function () {
 }
 
 
-  $(document).on("click", "#btnPanelCerrar", function(e) {
+$(document).on("click", "#btnPanelCerrar", function(e) {
     console.log('Button Cerrar clicked');
     mostrarModal('#modalCerrar');
-
-    // Obtener el valor del ID del evento desde la url
     var id_evento = getUrlParameter('ID');
-
-    // Llama a la función para consultar la categoría y otros detalles
+    $('#ev_id_cierre').text(id_evento);
     consultarCategoriaCierre(id_evento);
-    mostrarCatIdEventoCierre(id_evento);
 });
+
 
 // Función para obtener el cat_id del evento y mostrarlo en el div cat_id
 function mostrarCatIdEventoCierre(ev_id) {
-    // $('#ev_id_cierre').text(ev_id);
-    ev_id = getUrlParameter('ID');
+    $('#ev_id_cierre').text(ev_id);
 }
 
 // Función para mostrar el cat_nom_cierre en el div y cargar los motivos de cierre
@@ -227,13 +218,8 @@ document.getElementById('imagen').addEventListener('change', function() {
 //Btn Cerrar evento (Añade hora cierre)
 
 $('.btnCerrarEvento').off('click').on('click',function(){
-
-    
     if(validarFormulario()){
-         //Llama a la funcion cerrar evento Añade la hora final
-    CerrarEvento();
-          
-      // Mostrar mensaje de éxito
+    CerrarEvento(); 
     swal({
         title: "Evento Cerrado",
         text: "El evento ha sido cerrado con éxito.",
@@ -263,7 +249,6 @@ function validarCampoVacio(selector, mensajeError) {
     return true;
 }
 function mostrarMensajeError(mensaje) {
-    // Aquí puedes mostrar el mensaje de error en algún elemento específico o en la consola del navegador.
     console.error(mensaje);
     swal( "Validación de formulario",mensaje, "warning" ) ;
 }
