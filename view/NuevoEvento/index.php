@@ -74,77 +74,48 @@ if (isset($_SESSION["usu_id"])) {
                 </div>
                 <form class="event-box" action="nuevoevento.js" method="post" id="event_form" enctype="multipart/form-data">
                     <div class="group-emergencia">
-                        <div class="col-lg-5">
-                            <fieldset class="form-group">
-                                <label class="form-label semibold" for="exampleInput">Seleccione una Categoría</label>
-                                <select id="cat_id" class="form-control">
-                                    <!-- Datos recopilados desde función get_categoria -->
-                                </select>
-                            </fieldset>
-                        </div>                                           
-                        <div class="col-lg-5">
-                            <fieldset class="form-group">
-                                <label class="form-label semibold" for="descripcion">Ingrese una breve descripción</label>
-                                <input type="text" class="form-control" id="descripcion" placeholder="Descripción">
-                            </fieldset>
-                        </div>     
                     <div class="col-lg-5">
                         <fieldset class="form-group">
-                            <label class="form-label semibold" for="formFile">Desea adjuntar una imagen de la emergencia?</label>
-                            <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*">
-                            <small id="archivoAdjuntado" class="form-text text-muted">No hay archivo adjunto (.JPG/.JPEG/.PNG)</small>
-                        </fieldset>
+                            <label class="form-label semibold" for="exampleInput">Seleccione una Categoría</label>
+                            <select id="cat_id" class="form-control">
+                          <!-- Datos recopilados desde función get_categoria -->
+                        </select>
+                      </fieldset>
                     </div>
-                </div>
-
-                    <div class="group-ident">
-                        <div class="col-lg-5" id="select-ubicacion">
-                            <fieldset class="form-group">
-                                <label class="form-label semibold" for="exampleInput">Ingresa una dirección manualmente y adicionalmente<span class="label-red"> (marque la emeregencia en el mapa)</span> </label>
-                                <select id="elegir-ubicacion" class="form-control">
-                                    <option value="direccion-escrita">Seleccionar </option>
-                                    <option value="direccion-escrita">Escribir la ubicación</option>
-                                    <option value="ubicacion-content">Geolocalización</option>
-                                </select>
-                            </fieldset>
-                        </div>
-                        <div class="col-lg-5" id="direccion-escrita" style="display:none;">
-                            <fieldset class="form-group">
-                                <label class="form-label semibold" for="Address">Ingrese Dirección</label>
-                                <input type="text" class="form-control" id="address" placeholder="Dirección">
-                            </fieldset>
-                        </div>
-                        <div class="ubicacion-content" id="direccion-geolocalizacion" style="display:none;">
-                            <!-- Contenido relacionado con la geolocalización -->
-                            <div class="col-lg-5">
-                                <fieldset class="form-group">
-                                    <label class="form-label semibold">Utilizar Ubicación</label>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="ubicacion" id="permitirActual" value="permitirActual">
-                                        <label class="form-check-label" for="permitirActual">Ubicación Actual</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="ubicacion" id="permitirUbicacion" value="permitir">
-                                        <label class="form-check-label" for="permitirUbicacion">Marcador</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="ubicacion" id="noPermitirUbicacion" value="noPermitir" checked>
-                                        <label class="form-check-label" for="noPermitirUbicacion">No utilizar</label>
-                                    </div>
-                                </fieldset>
-                            </div>
-                            <div id="map">
-                                <!-- Aquí se muestra el mapa utilizando la API de Google Maps -->
-                            </div>
-                <input type="hidden" id="ev_latitud"> 
-                <input type="hidden" id="ev_longitud"> 
-                        </div>
+                <div class="col-lg-5">
+                      <fieldset class="form-group">
+                        <label class="form-label semibold" for="descripcion">Ingrese una breve descripción</label>
+                        <input type="text" class="form-control" id="descripcion" placeholder="Descripción">
+                      </fieldset>
                     </div>
+                    <div class="col-lg-5">
+                      <fieldset class="form-group">
+                        <label class="form-label semibold" for="formFile">Desea adjuntar una imagen de la emergencia?</label>
+                        <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*">
+                        <small id="archivoAdjuntado" class="form-text text-muted">No hay archivo adjunto (.JPG/.JPEG/.PNG)</small>
+                      </fieldset>
+                    </div>
+                  </div>
 
-                    <div class="col-lg-10">
-                        <button type="button" class="btn btn-round btn-inline btn-primary" id="btnGuardar">AGREGAR NUEVA EMERGENCIA</button>
-                    </div>   
+                  <div class="group-ident">
+                    <div class="col-lg-5">
+                      <fieldset class="form-group">
+                        <label class="form-label semibold" for="exampleInput">Ingresa una dirección y<span class="label-red"> (marque la emergencia en el mapa)</span> </label>
+                        <input type="text" class="form-control" id="address" placeholder="Dirección">
+                      </fieldset>
+                    </div>
+                    <div>
+                      <input type="checkbox" id="solicitarUbicacion" />
+                      <label for="solicitarUbicacion">Solicitar mi ubicación actual</label>
+                    </div>
+                    <div id="map" style="height: 400px; width: 100%;"></div>
+                    <input type="hidden" id="ev_latitud">
+                    <input type="hidden" id="ev_longitud">
+                  </div>
 
+                  <div class="col-lg-10">
+                    <button type="button" class="btn btn-round btn-inline btn-primary" id="btnGuardar">AGREGAR NUEVA EMERGENCIA</button>
+                  </div>
                 </form>               
             </div>
         </div><!--.container-fluid-->
