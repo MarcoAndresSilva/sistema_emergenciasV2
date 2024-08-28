@@ -61,6 +61,10 @@
                         <span class="glyphicon glyphicon-asterisk"></span>
                         <span class="lbl">Unidades Municipales</span>
                     </a>
+                    <a class="GestionReglasNoticia" href="../GestionReglasNoticia/">
+                        <span class="glyphicon glyphicon-asterisk"></span>
+                        <span class="lbl"> Gestion Reglas Noticia</span>
+                    </a>
 
                     <a class="" href="../NivelCategoria/">
                         <span class="glyphicon glyphicon-asterisk"></span>

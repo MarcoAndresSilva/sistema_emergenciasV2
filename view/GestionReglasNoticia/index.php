@@ -43,6 +43,26 @@ Permisos::redirigirSiNoAutorizado();
         </div><!--.container-fluid-->
     </div><!--.page-content-->
 
+    <script>
+        document.getElementById('show-hide-sidebar-toggle').addEventListener('click', function(e) {
+            e.preventDefault();
+
+            var body = document.body;
+
+            if (!body.classList.contains('sidebar-hidden')) {
+                body.classList.add('sidebar-hidden');
+            } else {
+                body.classList.remove('sidebar-hidden');
+            }
+        });
+        //selecionar en el sidebar que esta en mapacalor
+        document.addEventListener('DOMContentLoaded', function() {
+          var enlace = document.querySelector('.Parametria');
+          if (enlace) {
+            enlace.classList.add('selected');
+          }
+        });
+    </script>
         <?php require_once("../MainFooter/footer.php"); ?>
 
 </body>
