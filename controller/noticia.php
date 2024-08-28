@@ -44,7 +44,7 @@ if (isset($_GET["op"])) {
                     "seccion" => $_POST['seccion'],
                     "usuario" => $_POST['usuario'],
                     "tipo_usuario" => $_POST['tipo_usuario'],
-                    "asunto" => $_POST['asunto']
+                    "id_regla" => $_POST['id_regla']
                 ];
 
                 $result = $noticia->update_regla_envio($args);

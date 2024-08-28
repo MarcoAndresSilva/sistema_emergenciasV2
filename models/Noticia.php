@@ -230,13 +230,13 @@ public function usuarios_a_enviar_segun_regla(string $asunto) {
   }
   public function update_regla_envio(array $args) {
     $sql = "UPDATE tm_regla_envio
-            SET unidad= :unidad , seccion= :seccion,usuario= :usuario ,tipo_usuario= :tipo_usuario WHERE asunto = :asunto";
+            SET unidad= :unidad , seccion= :seccion,usuario= :usuario ,tipo_usuario= :tipo_usuario WHERE id_regla= :id_regla";
     $params = [
       ":seccion"=> $args["seccion"],
       ":usuario"=> $args["usuario"],
       ":tipo_usuario"=> $args["tipo_usuario"],
       ":unidad"=> $args["unidad"],
-      ":asunto"=> $args["asunto"],
+      ":id_regla"=> $args["id_regla"],
     ];
     $result = $this->ejecutarAccion($sql,$params);
     if ($result){
