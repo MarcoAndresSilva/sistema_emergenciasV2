@@ -10,18 +10,18 @@ public function login() {
 
     $name = isset($_POST["usu_name"]) ? $_POST["usu_name"] : null;
     $pass = isset($_POST["usu_pass"]) ? $_POST["usu_pass"] : null;
-    $tipo = isset($_POST["usu_tipo"]) ? $_POST["usu_tipo"] : null;
+
 
     $log = new RegistroLog();
     $ipCliente = $this->GetIpCliente();
 
-    if (is_null($name) || is_null($pass) || is_null($tipo)) {
+    if (is_null($name) || is_null($pass) ) {
         header("Location:" . Conectar::ruta() . "index.php?m=camposvacios");
         exit();
     }
 
     $hashedPass = md5($pass);
-    $info_usuario = $this->get_login_usuario($name, $hashedPass, $tipo);
+    $info_usuario = $this->get_login_usuario($name, $hashedPass);
 
     if (!$info_usuario) {
         $mensaje = "El usuario $name intentó iniciar sesión, IP: $ipCliente";
@@ -50,12 +50,11 @@ private function crearSesionUsuario($usuario) {
     $_SESSION["usu_unidad"] = $usuario["usu_unidad"];
 }
 
-private function get_login_usuario($name, $hashedPass, $tipo) {
-    $sql = "SELECT * FROM tm_usuario WHERE usu_name = :usu_name AND usu_pass = :usu_pass AND usu_tipo = :usu_tipo AND estado = 1";
+private function get_login_usuario($name, $hashedPass) {
+    $sql = "SELECT * FROM tm_usuario WHERE usu_name = :usu_name AND usu_pass = :usu_pass AND estado = 1";
     $params = [
         ':usu_name' => $name,
-        ':usu_pass' => $hashedPass,
-        ':usu_tipo' => $tipo
+        ':usu_pass' => $hashedPass
     ];
     return $this->ejecutarConsulta($sql, $params, false);
 }
