@@ -6,7 +6,42 @@ const disabledCategories = ['last_tiendas', 'otros']; // Lista de categorías a 
 const activeCategories = new Set(); // Almacena las categorías activas
 var bounds; // Almacena los límites de los puntos en el mapa
 var originalRowPositions = {};
+var allEvents = []; // Array para almacenar todos los eventos
+var streetNames = {};
+let geocoder;
+let autocomplete;
 
+
+// Función para centrar el mapa en una calle
+function focusOnStreet(address) {
+  geocoder.geocode({ address: address }, function(results, status) {
+    if (status === 'OK') {
+      const location = results[0].geometry.location;
+      map.setCenter(location);
+      map.setZoom(15); // Ajusta el nivel de zoom según sea necesario
+    } else {
+      alert('No se pudo encontrar la dirección: ' + status);
+    }
+  });
+}
+
+// Función para manejar la búsqueda
+function searchStreet() {
+  const searchText = document.getElementById('searchInput').value.trim();
+  if (searchText) {
+    focusOnStreet(searchText);
+  }
+}
+
+// Asignar la función al botón de búsqueda
+document.getElementById('searchButton').addEventListener('click', searchStreet);
+
+// Opcionalmente, manejar la búsqueda cuando se presiona Enter en el campo de búsqueda
+document.getElementById('searchInput').addEventListener('keydown', function(event) {
+  if (event.key === 'Enter') {
+    searchStreet();
+  }
+});
 // ! WARNING: Esta funcion debe ser ejecutada por la api de google
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
@@ -28,6 +63,8 @@ function initMap() {
   });
 
   infoWindow = new google.maps.InfoWindow();
+  geocoder = new google.maps.Geocoder();
+
 
   fetchAndGroupData().then(groupedData => {
     addHeatmapLayers(groupedData);
@@ -256,6 +293,7 @@ async function fetchAndGroupData(startDate = null, endDate = null, niveles = [],
     }
 
     const data = await response.json();
+    allEvents = data;
 
     const nivelesArr = Array.isArray(niveles) ? niveles.map(nivel => nivel.toLowerCase()) : [];
     const unidadesArr = Array.isArray(unidades) ? unidades.map(unidad => unidad.toLowerCase()) : [];
