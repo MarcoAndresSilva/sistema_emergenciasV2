@@ -344,7 +344,6 @@ function toggleView() {
   } else {
     toggleMapViewButton.innerHTML = '<i class="fa fa-bullseye"></i> Mapa de Calor';
   }
-  adjustMapBounds();
 }
 
 function togglePOIs() {
