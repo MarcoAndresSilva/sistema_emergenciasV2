@@ -51,8 +51,10 @@ Permisos::redirigirSiNoAutorizado();
   <!-- Aquí se insertarán los botones de categorías -->
 </div>
 <!-- Contenedor del mapa -->
-<input type="text" id="searchInput" placeholder="Buscar calle" />
-<button id="searchButton">Buscar</button>
+<div class="input-group mb-3">
+  <input class="form-control" type="text" id="searchInput" placeholder="Buscar calle" />
+  <button class="btn btn-outline-secondary" id="searchButton">Buscar</button>
+</div>
   <div id="map"></div>
 <div id="summaryTableContainer" class="table-responsive"></div>
   <!-- Controles de filtro por categoría -->
