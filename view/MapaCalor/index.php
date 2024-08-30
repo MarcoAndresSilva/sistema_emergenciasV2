@@ -89,7 +89,7 @@ Permisos::redirigirSiNoAutorizado();
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <?php require_once("../MainFooter/footer.php"); ?>
     <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdCMoRAl_-ARUflpa4Jn_qUoOpdXlxQEg&callback=initMap&libraries=visualization&v=weekly&loading=async"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQrYCFSz7Q-a-WONxo4yymu9SAPgmaA6c&callback=initMap&libraries=visualization,places&v=weekly&loading=async"
       defer
     ></script>
 </body>
