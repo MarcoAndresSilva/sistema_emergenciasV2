@@ -10,17 +10,67 @@ var allEvents = []; // Array para almacenar todos los eventos
 var streetNames = {};
 let geocoder;
 let autocomplete;
+let autocompleteService;
 
 
 // Función para centrar el mapa en una calle
 function focusOnStreet(address) {
+  const geocoder = new google.maps.Geocoder();
   geocoder.geocode({ address: address }, function(results, status) {
     if (status === 'OK') {
       const location = results[0].geometry.location;
       map.setCenter(location);
-      map.setZoom(15); // Ajusta el nivel de zoom según sea necesario
+      map.setZoom(18); // Ajusta el nivel de zoom según sea necesario
     } else {
-      alert('No se pudo encontrar la dirección: ' + status);
+      // Obtener sugerencias de direcciones
+      getSuggestions(address);
+    }
+  });
+}
+
+function getSuggestions(input) {
+  autocompleteService.getPlacePredictions({ input: input, componentRestrictions: { country: 'cl' } }, function(predictions, status) {
+    if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
+
+      console.log(predictions); // Esto debería mostrar hasta 20 resultados.
+      let suggestions = predictions.map(prediction => prediction.description);
+
+      if (suggestions.length > 0) {
+        let selectOptions = suggestions.map(suggestion => `<option value="${suggestion}">${suggestion}</option>`).join('');
+        
+        Swal.fire({
+          title: 'Dirección no encontrada',
+          icon: 'warning',
+          html: `
+            <p>No se pudo encontrar la dirección. Podría estar mal escrita o no existir.</p>
+            <p>¿Quisiste decir?</p>
+            <select id="addressSelect" class="swal2-show">
+              ${selectOptions}
+            </select>
+          `,
+          confirmButtonText: 'Buscar',
+          preConfirm: () => {
+            const selectedAddress = Swal.getPopup().querySelector('#addressSelect').value;
+            return selectedAddress;
+          }
+        }).then((result) => {
+          if (result.isConfirmed) {
+            focusOnStreet(result.value); // Llama nuevamente a la función con la dirección seleccionada
+          }
+        });
+      } else {
+        Swal.fire({
+          title: 'Dirección no encontrada',
+          text: 'No se pudo encontrar la dirección. Podría estar mal escrita o no existir.',
+          icon: 'warning'
+        });
+      }
+    } else {
+      Swal.fire({
+        title: 'Dirección no encontrada',
+        text: 'No se pudo encontrar la dirección. Podría estar mal escrita o no existir.',
+        icon: 'warning'
+      });
     }
   });
 }
@@ -29,6 +79,7 @@ function focusOnStreet(address) {
 function searchStreet() {
   const searchText = document.getElementById('searchInput').value.trim();
   if (searchText) {
+    autocomplete.setBounds(new google.maps.LatLngBounds());
     focusOnStreet(searchText);
   }
 }
@@ -64,7 +115,22 @@ function initMap() {
 
   infoWindow = new google.maps.InfoWindow();
   geocoder = new google.maps.Geocoder();
+  autocompleteService = new google.maps.places.AutocompleteService();
 
+  // Inicializar el autocompletado
+  const searchInput = document.getElementById('searchInput');
+  autocomplete = new google.maps.places.Autocomplete(searchInput, {
+    types: ['address'],
+    componentRestrictions: { country: 'cl' } // Opcional: Restricción por país
+  });
+
+  // Manejar el evento de selección del autocompletado
+  autocomplete.addListener('place_changed', function() {
+    const place = autocomplete.getPlace();
+    if (place.geometry) {
+      focusOnStreet(place.formatted_address);
+    }
+  });
 
   fetchAndGroupData().then(groupedData => {
     addHeatmapLayers(groupedData);
