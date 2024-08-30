@@ -95,6 +95,13 @@ document.getElementById('searchInput').addEventListener('keydown', function(even
 });
 // ! WARNING: Esta funcion debe ser ejecutada por la api de google
 function initMap() {
+  initializeMap();
+  initializeAutocomplete();
+  fetchAndSetupData();
+  setupEventListeners();
+}
+
+function initializeMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     zoom: 13,
     center: { lat: -33.6866, lng: -71.2166 }, // Coordenadas del centro de Melipilla
@@ -116,22 +123,15 @@ function initMap() {
   infoWindow = new google.maps.InfoWindow();
   geocoder = new google.maps.Geocoder();
   autocompleteService = new google.maps.places.AutocompleteService();
+}
 
-  // Inicializar el autocompletado
+function initializeAutocomplete() {
   const searchInput = document.getElementById('searchInput');
-  autocomplete = new google.maps.places.Autocomplete(searchInput, {
-    types: ['address'],
-    componentRestrictions: { country: 'cl' } // Opcional: Restricción por país
-  });
+  autocomplete = new google.maps.places.Autocomplete(searchInput, { ffpes: [ 'address' ], componentRestrictions: { country: 'cl' } });
+  autocomplete.addListener('place_changed', handlePlaceChanged);
+}
 
-  // Manejar el evento de selección del autocompletado
-  autocomplete.addListener('place_changed', function() {
-    const place = autocomplete.getPlace();
-    if (place.geometry) {
-      focusOnStreet(place.formatted_address);
-    }
-  });
-
+function fetchAndSetupData() {
   fetchAndGroupData().then(groupedData => {
     addHeatmapLayers(groupedData);
     addMarkers(groupedData);
@@ -139,10 +139,19 @@ function initMap() {
     generateSummaryTable(groupedData);
     adjustMapBounds();
   });
+}
 
+function setupEventListeners() {
   document.getElementById('toggleMapView').addEventListener('click', toggleView);
   document.getElementById('togglePOIs').addEventListener('click', togglePOIs);
   document.getElementById('dateFilterButton').addEventListener('click', showDateFilterDialog);
+}
+
+function handlePlaceChanged() {
+  const place = autocomplete.getPlace();
+  if (place.geometry) {
+    focusOnStreet(place.formatted_address);
+  }
 }
 
 async function showDateFilterDialog() {
