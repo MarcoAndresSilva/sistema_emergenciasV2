@@ -10,9 +10,9 @@ if (isset($_SESSION["usu_id"])) {
 <title>Sistema Emergencia</title>
 <script defer type="text/javascript" src="./registroLog.js"></script>
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap5.css" />
-<script defer src="https://cdn.datatables.net/2.0.7/js/dataTables.js"></script>
-<script defer src="https://cdn.datatables.net/2.0.7/js/dataTables.bootstrap5.js"></script>
 
+<script defer src="https://cdn.datatables.net/responsive/2.0.3/js/dataTables.responsive.min.js"></script>
+<script defer src="https://cdn.datatables.net/responsive/2.0.3/js/responsive.dataTables.min.js"></script>
 </head>
 
 <body class="with-side-menu">
