@@ -602,24 +602,36 @@ if (isset($_GET["op"])) {
         break;
 
         case "cerrar_evento":
-            $nombre_apellido = $_POST['nombre_apellido'];
-                list($nombre, $apellido) = explode(' ', $nombre_apellido, 2);
+
+            $imagen = $_FILES["imagen"];
+            $carpeta = "imagenesCierres";
+
+            // Guardar la imagen usando la función guardarImagen
+            $adjunto = guardarImagen($imagen, $carpeta);
             
-                // Obtener el usu_id basado en el nombre y apellido
-                $usu_id = $evento->obtener_usuario_id($nombre, $apellido);
+            $usu_id = $_SESSION["usu_id"];
             
-                if ($usu_id) {
-                    $datos = $evento->cerrar_evento($_POST['ev_id'], $_POST['ev_final'], $_POST['ev_est'], $_POST['detalle_cierre'], $_POST['motivo_cierre'], $usu_id);
-                    
-                    if ($datos == true) {
-                        echo 1;
-                    } else {
-                        echo 0;
-                    }
+            if ($usu_id) {
+                // Llamar al método cerrar_evento con los parámetros correspondientes
+                $datos = $evento->cerrar_evento(
+                    $_POST['ev_id'],
+                    $_POST['ev_final'],
+                    $_POST['ev_est'],
+                    $_POST['detalle_cierre'],
+                    $_POST['motivo_cierre'],
+                    $usu_id,
+                    $adjunto
+                );
+                
+                if ($datos == true) {
+                    echo 1;
                 } else {
-                    echo 0; // No se encontró el usuario
+                    echo 0;
                 }
-        break;
+            } else {
+                echo 0; // No se encontró el usuario
+            }
+            break;
 
         case "cantidad-eventos":
             
