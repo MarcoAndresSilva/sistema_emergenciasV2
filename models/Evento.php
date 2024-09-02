@@ -358,7 +358,7 @@ class Evento extends Conectar {
         }
     }
 
-    public function cerrar_evento($ev_id, $ev_final, $ev_est, $detalle_cierre, $motivo_cierre, $usu_id) {
+    public function cerrar_evento($ev_id, $ev_final, $ev_est, $detalle_cierre, $motivo_cierre, $usu_id,$adjunto) {
         try {
             $conectar = parent::conexion();
             parent::set_names();
@@ -375,12 +375,13 @@ class Evento extends Conectar {
             $consulta_evento->execute();
     
             // Insertar en la tabla tm_ev_cierre
-            $sql_cierre = "INSERT INTO tm_ev_cierre (usu_id, ev_id, detalle, motivo) VALUES (:usu_id, :ev_id, :detalle, :motivo)";
+            $sql_cierre = "INSERT INTO tm_ev_cierre (usu_id, ev_id, detalle, motivo,adjunto) VALUES (:usu_id, :ev_id, :detalle, :motivo,:adjunto)";
             $consulta_cierre = $conectar->prepare($sql_cierre);
             $consulta_cierre->bindValue(':usu_id', $usu_id);
             $consulta_cierre->bindValue(':ev_id', $ev_id);
             $consulta_cierre->bindValue(':detalle', $detalle_cierre);
             $consulta_cierre->bindValue(':motivo', $motivo_cierre);
+            $consulta_cierre->bindValue(':adjunto', $adjunto);
             $consulta_cierre->execute();
     
             // Confirmar transacción
