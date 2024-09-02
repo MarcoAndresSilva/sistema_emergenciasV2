@@ -47,6 +47,7 @@ Permisos::redirigirSiNoAutorizado();
   <i class="fas fa-eye btn-icon"></i> Mostrar Puntos de Interés
 </button>
 <button id="dateFilterButton" class="btn btn-warning"><i class="fa fa-filter btn-icon" aria-hidden="true"></i> Filtros</button>
+<button id="searchevento" class="btn btn-warning"><i class="fa fa-search btn-icon" aria-hidden="true"></i> Buscar evento</button>
 <div id="controls" class="row" role="group" aria-label="Controles de mapa">
   <!-- Aquí se insertarán los botones de categorías -->
 </div>

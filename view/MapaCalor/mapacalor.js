@@ -545,6 +545,100 @@ function restoreActiveCategories() {
   });
 }
 
+function obtenerIdEvento() {
+    Swal.fire({
+        title: 'Buscar Evento',
+        text: 'Ingrese el ID del evento:',
+        input: 'text',
+        inputPlaceholder: 'ID del evento',
+        showCancelButton: true,
+        confirmButtonText: 'Buscar',
+        cancelButtonText: 'Cancelar',
+        inputValidator: (value) => {
+            if (!value) {
+                return '¡Debes ingresar un ID!';
+            }
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const idEvento = result.value;
+            marcarEventoEnMapa(idEvento);
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const searchButton = document.getElementById('searchevento');
+
+    searchButton.addEventListener('click', function() {
+        obtenerIdEvento();
+    });
+});
+
+function marcarEventoEnMapa(idEvento) {
+    const eventos = allEvents;
+    const evento = eventos.find(e => e.id == idEvento);
+    const category = evento.categoria;
+    const icon = "M -2,0 0,-2 2,0 0,2 z"
+    if (evento) {
+        const customIcon = {
+            path: icon,
+            scale: 8,
+            fillColor: categoryColors[category],
+            fillOpacity: 1,
+            strokeWeight: 0,
+            strokeColor: categoryColors[category]
+        };
+         const marker = new google.maps.Marker({
+            position: { lat: evento.latitud, lng: evento.longitud },
+            map: map,
+            title: evento.nombre,
+            icon: customIcon, // Asigna el ícono personalizado
+            animation: google.maps.Animation.DROP
+        });
+
+        map.setCenter({ lat: evento.latitud, lng: evento.longitud });
+        map.setZoom(19);
+
+        showInfoWindow(
+            { lat: evento.latitud, lng: evento.longitud },
+            evento.categoria,
+            evento.detalles || 'Sin detalles',
+            evento.img || '',
+            evento.unidad,
+            evento.fecha_inicio,
+            evento.fecha_cierre,
+            evento.id
+        );
+
+        marker.addListener('click', () => {
+            showInfoWindow(
+                { lat: evento.latitud, lng: evento.longitud },
+                evento.categoria,
+                evento.detalles || 'Sin detalles',
+                evento.img || '',
+                evento.unidad,
+                evento.fecha_inicio,
+                evento.fecha_cierre,
+                evento.id
+            );
+        });
+
+        Swal.fire({
+              title:'¡Evento encontrado!',
+              text:`El evento "${evento.categoria}" ha sido marcado en el mapa.`,
+              icon:'success',
+              timer:1000,
+              showConfirmButton: false,
+              });
+    } else {
+        Swal.fire(
+            'Evento no encontrado',
+            `No se encontró ningún evento con el ID "${idEvento}".`,
+            'info'
+        );
+    }}
+
 function adjustMapBounds() {
   const activeMarkers = [];
   activeCategories.forEach(category => {
