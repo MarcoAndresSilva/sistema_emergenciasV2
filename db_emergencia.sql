@@ -237,7 +237,7 @@ CREATE TABLE `tm_ev_cierre` (
   `ev_id` int(11) NOT NULL,
   `detalle` varchar(300) NOT NULL,
   `motivo` int NOT NULL,
-  `adjunto` blob
+  `adjunto` varchar(300)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
