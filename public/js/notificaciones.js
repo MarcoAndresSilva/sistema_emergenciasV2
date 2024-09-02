@@ -68,18 +68,34 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Muestra las notificaciones en el menú
     function renderNotifications() {
+        const now = new Date();
+        const time_hrs_limite_live_noticia = 8;
         notificationListElement.innerHTML = '';
         notificaciones.forEach((notif, index) => {
-            const notifElement = document.createElement("a");
-            notifElement.className = "dropdown-item";
-            notifElement.href = notif.url;
-            notifElement.innerHTML = `<i class="fa fa-info-circle" aria-hidden="true"></i> ${notif.mensaje}`;
             if (!notif.leido) {
-                notifElement.classList.add("font-weight-bold");
+                // Mostrar notificación no leída
+                const notifElement = document.createElement("a");
+                notifElement.className = "dropdown-item font-weight-bold";
+                notifElement.href = notif.url;
+                notifElement.innerHTML = `<i class="fa fa-info-circle" aria-hidden="true"></i> ${notif.mensaje}`;
+                notifElement.addEventListener("click", () => markAsRead(index));
+                notificationListElement.appendChild(notifElement);
+            } else if (notif.leido && notif.fecha_leido) {
+                // Calcular la diferencia de horas entre la fecha actual y la fecha de lectura
+                const fechaLeido = new Date(notif.fecha_leido);
+                const diffTime = Math.abs(now - fechaLeido);
+                const diffHours = Math.ceil(diffTime / (1000 * 60 * 60)); 
+
+                if (diffHours <= time_hrs_limite_live_noticia) {
+                    // Mostrar notificación leída si está dentro del tiempo límite
+                    const notifElement = document.createElement("a");
+                    notifElement.className = "dropdown-item";
+                    notifElement.href = notif.url;
+                    notifElement.innerHTML = `<i class="fa fa-info-circle" aria-hidden="true"></i> ${notif.mensaje}`;
+                    notifElement.addEventListener("click", () => markAsRead(index));
+                    notificationListElement.appendChild(notifElement);
+                }
             }
-            // Agrega el manejador de eventos para marcar la notificación como leída
-            notifElement.addEventListener("click", () => markAsRead(index));
-            notificationListElement.appendChild(notifElement);
         });
     }
 
