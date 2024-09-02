@@ -6,9 +6,102 @@ const disabledCategories = ['last_tiendas', 'otros']; // Lista de categorías a 
 const activeCategories = new Set(); // Almacena las categorías activas
 var bounds; // Almacena los límites de los puntos en el mapa
 var originalRowPositions = {};
+var allEvents;
+var streetNames = {};
+let geocoder;
+let autocomplete;
+let autocompleteService;
 
+
+// Función para centrar el mapa en una calle
+function focusOnStreet(address) {
+  const geocoder = new google.maps.Geocoder();
+  geocoder.geocode({ address: address }, function(results, status) {
+    if (status === 'OK') {
+      const location = results[0].geometry.location;
+      map.setCenter(location);
+      map.setZoom(18); // Ajusta el nivel de zoom según sea necesario
+    } else {
+      // Obtener sugerencias de direcciones
+      getSuggestions(address);
+    }
+  });
+}
+
+function getSuggestions(input) {
+  autocompleteService.getPlacePredictions({ input: input, componentRestrictions: { country: 'cl' } }, function(predictions, status) {
+    if (status === google.maps.places.PlacesServiceStatus.OK && predictions) {
+
+      console.log(predictions); // Esto debería mostrar hasta 20 resultados.
+      let suggestions = predictions.map(prediction => prediction.description);
+
+      if (suggestions.length > 0) {
+        let selectOptions = suggestions.map(suggestion => `<option value="${suggestion}">${suggestion}</option>`).join('');
+        
+        Swal.fire({
+          title: 'Dirección no encontrada',
+          icon: 'warning',
+          html: `
+            <p>No se pudo encontrar la dirección. Podría estar mal escrita o no existir.</p>
+            <p>¿Quisiste decir?</p>
+            <select id="addressSelect" class="swal2-show">
+              ${selectOptions}
+            </select>
+          `,
+          confirmButtonText: 'Buscar',
+          preConfirm: () => {
+            const selectedAddress = Swal.getPopup().querySelector('#addressSelect').value;
+            return selectedAddress;
+          }
+        }).then((result) => {
+          if (result.isConfirmed) {
+            focusOnStreet(result.value); // Llama nuevamente a la función con la dirección seleccionada
+          }
+        });
+      } else {
+        Swal.fire({
+          title: 'Dirección no encontrada',
+          text: 'No se pudo encontrar la dirección. Podría estar mal escrita o no existir.',
+          icon: 'warning'
+        });
+      }
+    } else {
+      Swal.fire({
+        title: 'Dirección no encontrada',
+        text: 'No se pudo encontrar la dirección. Podría estar mal escrita o no existir.',
+        icon: 'warning'
+      });
+    }
+  });
+}
+
+// Función para manejar la búsqueda
+function searchStreet() {
+  const searchText = document.getElementById('searchInput').value.trim();
+  if (searchText) {
+    autocomplete.setBounds(new google.maps.LatLngBounds());
+    focusOnStreet(searchText);
+  }
+}
+
+// Asignar la función al botón de búsqueda
+document.getElementById('searchButton').addEventListener('click', searchStreet);
+
+// Opcionalmente, manejar la búsqueda cuando se presiona Enter en el campo de búsqueda
+document.getElementById('searchInput').addEventListener('keydown', function(event) {
+  if (event.key === 'Enter') {
+    searchStreet();
+  }
+});
 // ! WARNING: Esta funcion debe ser ejecutada por la api de google
 function initMap() {
+  initializeMap();
+  initializeAutocomplete();
+  fetchAndSetupData();
+  setupEventListeners();
+}
+
+function initializeMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     zoom: 13,
     center: { lat: -33.6866, lng: -71.2166 }, // Coordenadas del centro de Melipilla
@@ -28,7 +121,17 @@ function initMap() {
   });
 
   infoWindow = new google.maps.InfoWindow();
+  geocoder = new google.maps.Geocoder();
+  autocompleteService = new google.maps.places.AutocompleteService();
+}
 
+function initializeAutocomplete() {
+  const searchInput = document.getElementById('searchInput');
+  autocomplete = new google.maps.places.Autocomplete(searchInput, { ffpes: [ 'address' ], componentRestrictions: { country: 'cl' } });
+  autocomplete.addListener('place_changed', handlePlaceChanged);
+}
+
+function fetchAndSetupData() {
   fetchAndGroupData().then(groupedData => {
     addHeatmapLayers(groupedData);
     addMarkers(groupedData);
@@ -36,10 +139,19 @@ function initMap() {
     generateSummaryTable(groupedData);
     adjustMapBounds();
   });
+}
 
+function setupEventListeners() {
   document.getElementById('toggleMapView').addEventListener('click', toggleView);
   document.getElementById('togglePOIs').addEventListener('click', togglePOIs);
   document.getElementById('dateFilterButton').addEventListener('click', showDateFilterDialog);
+}
+
+function handlePlaceChanged() {
+  const place = autocomplete.getPlace();
+  if (place.geometry) {
+    focusOnStreet(place.formatted_address);
+  }
 }
 
 async function showDateFilterDialog() {
@@ -256,6 +368,7 @@ async function fetchAndGroupData(startDate = null, endDate = null, niveles = [],
     }
 
     const data = await response.json();
+    allEvents = data;
 
     const nivelesArr = Array.isArray(niveles) ? niveles.map(nivel => nivel.toLowerCase()) : [];
     const unidadesArr = Array.isArray(unidades) ? unidades.map(unidad => unidad.toLowerCase()) : [];
@@ -344,7 +457,6 @@ function toggleView() {
   } else {
     toggleMapViewButton.innerHTML = '<i class="fa fa-bullseye"></i> Mapa de Calor';
   }
-  adjustMapBounds();
 }
 
 function togglePOIs() {
@@ -432,6 +544,100 @@ function restoreActiveCategories() {
     }
   });
 }
+
+function obtenerIdEvento() {
+    Swal.fire({
+        title: 'Buscar Evento',
+        text: 'Ingrese el ID del evento:',
+        input: 'text',
+        inputPlaceholder: 'ID del evento',
+        showCancelButton: true,
+        confirmButtonText: 'Buscar',
+        cancelButtonText: 'Cancelar',
+        inputValidator: (value) => {
+            if (!value) {
+                return '¡Debes ingresar un ID!';
+            }
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const idEvento = result.value;
+            marcarEventoEnMapa(idEvento);
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const searchButton = document.getElementById('searchevento');
+
+    searchButton.addEventListener('click', function() {
+        obtenerIdEvento();
+    });
+});
+
+function marcarEventoEnMapa(idEvento) {
+    const eventos = allEvents;
+    const evento = eventos.find(e => e.id == idEvento);
+    const category = evento.categoria;
+    const icon = "M -2,0 0,-2 2,0 0,2 z"
+    if (evento) {
+        const customIcon = {
+            path: icon,
+            scale: 8,
+            fillColor: categoryColors[category],
+            fillOpacity: 1,
+            strokeWeight: 0,
+            strokeColor: categoryColors[category]
+        };
+         const marker = new google.maps.Marker({
+            position: { lat: evento.latitud, lng: evento.longitud },
+            map: map,
+            title: evento.nombre,
+            icon: customIcon, // Asigna el ícono personalizado
+            animation: google.maps.Animation.DROP
+        });
+
+        map.setCenter({ lat: evento.latitud, lng: evento.longitud });
+        map.setZoom(19);
+
+        showInfoWindow(
+            { lat: evento.latitud, lng: evento.longitud },
+            evento.categoria,
+            evento.detalles || 'Sin detalles',
+            evento.img || '',
+            evento.unidad,
+            evento.fecha_inicio,
+            evento.fecha_cierre,
+            evento.id
+        );
+
+        marker.addListener('click', () => {
+            showInfoWindow(
+                { lat: evento.latitud, lng: evento.longitud },
+                evento.categoria,
+                evento.detalles || 'Sin detalles',
+                evento.img || '',
+                evento.unidad,
+                evento.fecha_inicio,
+                evento.fecha_cierre,
+                evento.id
+            );
+        });
+
+        Swal.fire({
+              title:'¡Evento encontrado!',
+              text:`El evento "${evento.categoria}" ha sido marcado en el mapa.`,
+              icon:'success',
+              timer:1000,
+              showConfirmButton: false,
+              });
+    } else {
+        Swal.fire(
+            'Evento no encontrado',
+            `No se encontró ningún evento con el ID "${idEvento}".`,
+            'info'
+        );
+    }}
 
 function adjustMapBounds() {
   const activeMarkers = [];
