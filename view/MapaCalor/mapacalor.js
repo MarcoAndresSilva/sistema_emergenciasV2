@@ -6,7 +6,7 @@ const disabledCategories = ['last_tiendas', 'otros']; // Lista de categorías a 
 const activeCategories = new Set(); // Almacena las categorías activas
 var bounds; // Almacena los límites de los puntos en el mapa
 var originalRowPositions = {};
-var allEvents = []; // Array para almacenar todos los eventos
+var allEvents;
 var streetNames = {};
 let geocoder;
 let autocomplete;
