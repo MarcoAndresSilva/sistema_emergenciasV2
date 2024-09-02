@@ -98,35 +98,40 @@ require_once("../MainJs/js.php");
 <script type="text/javascript" src="./evento.js"></script>
 <?php
 if (isset($_GET['id_evento'])) {
-    $id_evento = intval($_GET['id_evento']);
+    $id_eventos = explode(',', $_GET['id_evento']);
+    $id_eventos = array_map('intval', $id_eventos);
+
+    $id_eventos_js = json_encode($id_eventos);
 
     echo "<script defer type='text/javascript'>
             window.onload = function() {
-                // Ejecutar la función highlightRow cada 1 segundos (1000 milisegundos)
+                const id_eventos = $id_eventos_js;
+
+                // Ejecutar la función highlightRow cada 1 segundo (1000 milisegundos)
                 setInterval(function() {
-                    highlightRow($id_evento);
+                    highlightRows(id_eventos);
                 }, 1000);
           };
           </script>";
 }
 ?>
 <script defer type="text/javascript">
-    function highlightRow(id_evento) {
+    function highlightRows(id_eventos) {
         const rows = document.querySelectorAll("td#id_evento_celda");
-        console.log(rows);
 
         rows.forEach(cell => {
             // Obtener el <tr> padre de la celda
             const row = cell.closest("tr");
 
-            if (parseInt(cell.textContent) === id_evento) {
+            // Verificar si el id_evento de la celda está en la lista de id_eventos
+            if (id_eventos.includes(parseInt(cell.textContent))) {
                 row.classList.add("table-success");
             } else {
                 row.classList.remove("table-success");
             }
         });
     }
-  </script>
+</script>
 </html>
 
 <?php
