@@ -383,7 +383,6 @@ async function add_evento() {
 
       if (data.status === 'success') {
         swal("Éxito", data.message, "success")
-          addNotification("Nuevo Evento", "evento nuevo por derivar", "../ControlEventos/");
           formulario = document.getElementById("event_form");
           formulario.reset();
       } else if (data.status === 'error') {
