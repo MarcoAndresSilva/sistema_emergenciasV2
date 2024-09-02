@@ -196,15 +196,6 @@ function cargarMotivosCierre(categoria) {
     });
 }
 
-//Boton para cargar el archivo
-document.getElementById('btnCargarArchivo').addEventListener('click', function() {
-    //Evita que el formulario se envie
-    event.preventDefault();
-    
-    //Activa la funcion del input type file
-    document.getElementById('imagen').click();
-});
-
 document.getElementById('imagen').addEventListener('change', function() {
     var label = document.getElementById('archivoAdjuntado');
     if (this.files && this.files.length > 0) {
@@ -254,7 +245,6 @@ function mostrarMensajeError(mensaje) {
 }
 
 function CerrarEvento() {
-    // var ev_id = $('#ev_id_cierre').text();
     ev_id = getUrlParameter('ID');
     var detalle_cierre = $('#detalle_cierre').val();
     var motivo_cierre = $('#motivo_cierre').val();
@@ -275,39 +265,37 @@ function CerrarEvento() {
     // Estado del evento al cerrarse
     var ev_est = 2;
 
-    // Respuesta de consulta cerrarEvento
-    $.post("../../controller/evento.php?op=cerrar_evento", {
-        ev_id: ev_id,
-        ev_final: fechaFormateada,
-        ev_est: ev_est,
-        detalle_cierre: detalle_cierre,
-        motivo_cierre: motivo_cierre,
-        nombre_apellido: nombre_apellido
-    }, function(data) {
-        // Después de cerrar el evento con éxito, cargar la imagen
-        var formData = new FormData($('#event_form')[0]);
-        formData.append('ev_id', ev_id);
-        $.ajax({
-            url: '../../controller/evento.php?op=carga-imagen-cierre',
-            type: 'POST',
-            data: formData,
-            contentType: false,
-            processData: false,
-            success: function(response) {
-                if (response == 1) {
-                    console.log("Imagen cargada correctamente");
-                } else {
-                    console.log("Error al cargar la imagen");
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error("Error en la solicitud de carga de imagen: " + error);
+    // Crear un objeto FormData para enviar todos los datos, incluyendo la imagen
+    var formData = new FormData();
+    formData.append('ev_id', ev_id);
+    formData.append('ev_final', fechaFormateada);
+    formData.append('ev_est', ev_est);
+    formData.append('detalle_cierre', detalle_cierre);
+    formData.append('motivo_cierre', motivo_cierre);
+    formData.append('nombre_apellido', nombre_apellido);
+
+    // Capturar la imagen del campo #imagen
+    var imagen = $('#imagen')[0].files[0];
+    if (imagen) {
+        formData.append('imagen', imagen);
+    }
+
+    // Enviar la solicitud POST con todos los datos
+    $.ajax({
+        url: '../../controller/evento.php?op=cerrar_evento',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function(data) {
+            if (data == 1) {
+                swal("Evento Finalizado", "El evento se ha cerrado correctamente", "success");
+            } else {
+                swal("No Finalizado", "El evento no se ha podido cerrar correctamente", "error");
             }
-        });
-        if(data == 1) {
-            swal("Evento Finalizado", "El evento se ha cerrado correctamente", "success");
-        } else {
-            swal("No Finalizado", "El evento no se ha podido cerrar correctamente", "error");
+        },
+        error: function(xhr, status, error) {
+            console.error("Error en la solicitud: " + error);
         }
     });
 }
