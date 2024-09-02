@@ -25,6 +25,7 @@ $.post('../../controller/registroLog.php', { op: 'registro_log' }, function(data
         language:{
             url:'./spanishDatatable.json'
         },
+        responsive: true,
         columnDefs: [
             { searchable: false, targets: [ 7] } // Deshabilita la búsqueda detalle
         ],
