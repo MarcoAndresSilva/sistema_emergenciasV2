@@ -36,7 +36,7 @@ if (isset($_GET["op"])) {
                                     <?php echo $row['usu_nom'] . ' ' . $row['usu_ape']; ?> 
                                 </div>
                                 <div class="activity-line-item-user-status">
-                                    <?php echo ($row['usu_tipo'] == 1) ? 'Visualizador' : 'Administrador'; ?>
+                                    <?php echo ($row['usu_tipo'] == 1) ? 'Basico' : 'Administrador'; ?>
                                 </div>
                             </div>
                         </header>
