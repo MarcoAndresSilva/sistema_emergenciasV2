@@ -7,6 +7,7 @@ require_once("../models/Estado.php");
 require_once("../models/EventoUnidad.php");
 require_once("../models/NivelPeligro.php");
 require_once("../models/Correo.php");
+require_once("../models/Noticia.php");
 
 $evento = new Evento();
 $categoria = new Categoria();
@@ -14,6 +15,7 @@ $unidad = new Unidad();
 $estado = new Estado();
 $eventounidad = new EventoUnidad();
 $NivelPeligro = new NivelPeligro();
+$noticia = new Noticia();
 
 function guardarImagen($archivo, $carpeta) {
     if (!isset($archivo) || $archivo['error'] !== UPLOAD_ERR_OK) {
@@ -99,6 +101,16 @@ if (isset($_GET["op"])) {
             $encabezados = "From: sistemaemergencia@munimelipilla.cl\r\n";
             $correo = new Correo($_SESSION["usu_correo"], $asunto, $mensaje, $encabezados);
             $datos["correo"] = $correo->enviar();
+
+            $last_evento = $noticia->obtenerUltimoRegistro("tm_evento","ev_id");
+            $id_ultimo_evento = $last_evento["ev_id"];
+            $args = [
+              "asunto" => "Nuevo Evento",
+              "mensaje" => "Evento sin derivar",
+              "url" => "../ControlEventos/index.php?id_evento=$id_ultimo_evento",
+            ];
+            $noticia->crear_noticia_y_enviar_grupo_usuario($args);
+
             echo json_encode($datos);
         break;
 
