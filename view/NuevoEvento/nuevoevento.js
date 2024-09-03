@@ -1,3 +1,13 @@
+$(document).ready(function() {
+
+  // Obtener el elemento <a> por su ID
+  var enlace = document.querySelector('.NuevoEvento');
+  // Añadir una clase al enlace
+  enlace.classList.add('selected');
+});
+
+
+
 var map, marker;
 var melipilla = {lat: -33.68546006255509, long: -71.21451520290904};
 var currentLat = melipilla.lat;

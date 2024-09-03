@@ -9,21 +9,57 @@ $(document).ready(function() {
 });
 
 function cargarTablaGeneral() {
-      //Funcion para cargar los datos de las tablas
-      $.post("../../controller/evento.php?op=tabla-general",function(respuesta,status){
+    $('#tabla-control').DataTable({
+        "pageLength": 10,
+        "lengthMenu": [[10, 20, 50], [10, 20, 50]],
+        "ordering": true,
+        "searching": true,
+        "paging": true,
+        "info": true,
+        "autoWidth": false,
+        "responsive": true,
+        "ajax": {
+            "url": "../../controller/evento.php?op=tabla-control",
+            "type": "POST",
+            "dataSrc": "" 
+        },
+        "columns": [
+            { "data": "ev_id" },
+            { "data": "categoria" },
+            { "data": "direccion" },
+            { "data": "asignacion" },
+            { "data": "nivel_peligro" },
+            { "data": "estado" },
+            { "data": "fecha_apertura" },
+            { "data": "ver_derivar" },
+            { "data": "ver_detalle" }
 
-        // Parsear la respuesta JSON
-        var data = JSON.parse(respuesta);
-        
-        $('#datos-criticos').html(data.critico);
-        $('#datos-medios').html(data.medio);
-        $('#datos-bajos').html(data.bajo);
-        $('#datos-generales').html(data.comun);
+        ],
+        "drawCallback": function(settings) {
+            // Aquí aplicas nuevamente los estilos o cambios de color que necesitas
+            $('.peligro_critico').addClass('label label-pill label-primary');
+            $('.peligro_medio').addClass('label label-pill label-warning');
+            $('.peligro_bajo').addClass('label label-pill label-success');
+            $('.peligro_comun').addClass('label label-pill label-default');
+        }
+    });
+
+         // Asegúrate de que el evento de clic esté delegado correctamente
+    $('#tabla-control').on('click', '#btnDetalleEmergencia', function() {
+        ev_id = $(this).data('ev-id');
+        ver(ev_id);
     });
 }
 
+function ver(ev_id) {
+    // Abrir una nueva pestaña con la ruta especificada
+    window.open(`../EmergenciaDetalle?ID=${ev_id}`, '_blank');
+    
+}
+
+
  //Variable id_evento
- $id_evento = 0;
+ $id_evento = $(this).data('ev-id');
 
 
 //////////btn derivar//////////// 
@@ -31,15 +67,10 @@ $(document).on("click", "#btnPanelDerivar", function(e) {
     console.log('Button Derivar clicked');
     mostrarModal('#modalDerivar');
    
-    // Obtener el valor del ID del evento desde la celda
-    $id_evento = $(this).closest('tr').find('#id_evento_celda').attr('value');
-    // Llama la funcion para mostrar el id
+    $id_evento = $(this).data('ev-id');
     mostrarIdEvento($id_evento);
-    // Llama la funcion para consultar la categoria
     consultarCategoria($id_evento);
-    //Llamar a la función para consultar el nivel de peligro
     consultarNivelPeligro($id_evento);
-     //Llamar a la función para consultar las unidades disponibles
     consultarUnidadDisponible($id_evento);
 });
 
@@ -272,12 +303,20 @@ let lat;
 let long;
 $(document).on('click', '.btnDireccionarMapa',function() {
     
-    //Desplegar mapa para direccionar al lugar
-    toggleMapa();
+    // Encuentra la fila correspondiente
+    var $tr = $(this).closest('tr');
     
-    // Obtener el valor del ID del evento desde la celda
-    ev_id = $(this).closest('tr').find('#id_evento_celda').attr('value');
-    // ev_id = 85;
+    // Obtén la instancia de DataTables
+    var table = $('#tabla-control').DataTable();
+    
+    // Usa DataTables para obtener los datos de la fila
+    var data = table.row($tr).data();
+    
+    // Obtén el ev_id desde los datos de la fila
+    var ev_id = data.ev_id;
+
+    // Desplegar mapa para direccionar al lugar
+    toggleMapa();
     consultarEventoMostarMapa(ev_id);
 });
 

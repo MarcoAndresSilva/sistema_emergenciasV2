@@ -45,6 +45,15 @@
     height: 100%;
 }
 
+#btnDetalleEmergencia,
+#btnPanelDerivar{
+    border: none;
+    color: #00A8FF;
+    font-size: 1.5rem;
+    background-color: transparent;
+}
+
+
 /* Mapa  */
 #modal-mapa{
     display: none;
