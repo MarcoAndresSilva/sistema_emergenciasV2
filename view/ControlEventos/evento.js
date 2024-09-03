@@ -35,6 +35,9 @@ function cargarTablaGeneral() {
             { "data": "ver_detalle" }
 
         ],
+        "createdRow": function(row,data, dataIndex){
+        $("td", row).eq(0).attr("id","id_evento_celda");
+        },
         "drawCallback": function(settings) {
             // Aquí aplicas nuevamente los estilos o cambios de color que necesitas
             $('.peligro_critico').addClass('label label-pill label-primary');
