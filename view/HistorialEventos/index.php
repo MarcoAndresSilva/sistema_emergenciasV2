@@ -60,7 +60,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
                             <th style="width:10%">Nivel Peligro</th>
                             <th style="width:10%">Estado</th>
                             <th style="width:15%">Fecha Apertura</th>
-                            <th style="width:5%">Ver Detalle</th>
+                            <th style="width:5%">Ver Documentación</th>
                         </tr>
                     </thead>
                     <tbody id="datos-criticos">
