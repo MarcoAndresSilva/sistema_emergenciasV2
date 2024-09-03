@@ -4,7 +4,7 @@ function init() {
 
 $(document).ready(function() {
 
-    var enlace = document.querySelector('.HistorialEventos');
+    var enlace = document.querySelector('.ControlEventos');
     enlace.classList.add('selected');
 
     var ev_id = getUrlParameter('ID');
