@@ -30,7 +30,13 @@
         <?php 
         if ($_SESSION["usu_tipo"] == 2) {
         ?> 
-
+         <!-- Evento -->
+         <li class="blue-dirty">
+            <a class="ControlEventos" href="../ControlEventos/">
+                <span class="glyphicon glyphicon-th"></span>
+                <span class="lbl"> Control de Eventos</span>
+            </a>
+        </li>
         <!-- Evento -->
         <li class="blue-dirty">
             <a class="MapaCalor" href="../MapaCalor/">
@@ -39,13 +45,7 @@
             </a>
         </li>
 
-        <!-- Evento -->
-        <li class="blue-dirty">
-            <a class="ControlEventos" href="../ControlEventos/">
-                <span class="glyphicon glyphicon-th"></span>
-                <span class="lbl"> Control de Eventos</span>
-            </a>
-        </li>
+       
 
 
         <!-- Parametría -->
