@@ -43,17 +43,18 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
             <div class="box-typical box-typical-padding table table-responsive-sm">
 
                 <!-- tabla de asuntos inmediatos (Alto) -->
-                <table class="table tabla-media tabla-basica table-bordered table-striped table-vcenter js-dataTable-js">
+                <table id="tabla-control" class="table tabla-media tabla-basica table-bordered table-striped table-vcenter js-dataTable-js">
                     <thead>
                         <tr>
                             <th style="width:5%">ID</th>
                             <th style="width:9.5%">Categor&iacute;a</th>
                             <th style="width:9.5%">Direcci&oacute;n</th>
-                            <th style="width:25%">Asignaci&oacute;n</th>
+                            <th style="width:20%">Asignaci&oacute;n</th>
                             <th style="width:10%">Nivel Peligro</th>
                             <th style="width:10%">Estado</th>
                             <th style="width:15%">Hora Apertura</th>
-                            <th style="width:5%">Derivar</th>
+                            <th style="width:5%">Derivar Evento</th>
+                            <th style="width:5%">Chat del Evento</th>
                             
                         </tr>
                     </thead>
