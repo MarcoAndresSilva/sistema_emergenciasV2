@@ -137,7 +137,7 @@ function fetchAndSetupData() {
     addMarkers(groupedData);
     createCategoryButtons(groupedData);
     generateSummaryTable(groupedData);
-    generarTabla();
+    generateFullTable(groupedData);
     adjustMapBounds();
   });
 }
@@ -229,6 +229,7 @@ function applyAdvancedFilter(startDate, endDate, niveles, unidades) {
     createCategoryButtons(groupedData);
     restoreActiveCategories();
     generateSummaryTable(groupedData);
+    generateFullTable(groupedData);
     adjustMapBounds();
   });
 }
@@ -837,7 +838,7 @@ function moveRowToTop(row) {
   tbody.insertBefore(row, tbody.firstChild);
 }
 
-function generarTabla() {
+function generateFullTable(groupedData) {
     const container = document.getElementById('tableContainerFull');
     const tabla = document.createElement('table');
     tabla.id = 'eventosTable'; 
@@ -858,33 +859,29 @@ function generarTabla() {
 
     const tbody = document.createElement('tbody');
 
-    allEvents.sort((a, b) => {
-        if (a.categoria === b.categoria) {
-            return a.id - b.id;
-        }
-        return a.categoria.localeCompare(b.categoria);
-    });
-
-    allEvents.forEach(evento => {
-        const fila = document.createElement('tr');
-        fila.innerHTML = `
-            <td>${evento.id}</td>
-            <td>${evento.categoria}</td>
-            <td>${createBadgeNivel(evento.nivel,evento.nivel)}</td>
-            <td>${evento.fecha_cierre === "En Proceso" ? "En Proceso" : "Cerrado"}</td>
-            <td>${evento.detalles}</td>
-        `;
-        tbody.appendChild(fila);
-    });
+    for (const [categoria, eventos] of Object.entries(groupedData)) {
+        eventos.forEach(evento => {
+            const fila = document.createElement('tr');
+            fila.innerHTML = `
+                <td>${evento.id}</td>
+                <td>${evento.categoria}</td>
+                <td>${createBadgeNivel(evento.nivel,evento.nivel)}</td>
+                <td>${evento.fecha_cierre === "En Proceso" ? "En Proceso" : "Cerrado"}</td>
+                <td>${evento.detalles}</td>
+            `;
+            tbody.appendChild(fila);
+        });
+    }
 
     tabla.appendChild(tbody);
 
     container.innerHTML = '';
     container.appendChild(tabla);
-  $(document).ready(function () {
-    $("#eventosTable").DataTable({
-      responsive: true,
-      "order": [[0, 'desc']]
+
+    $(document).ready(function () {
+        $("#eventosTable").DataTable({
+            responsive: true,
+            "order": [[0, 'desc']]
+        });
     });
-  })
 }
