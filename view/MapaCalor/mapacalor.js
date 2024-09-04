@@ -731,12 +731,7 @@ function generateSummaryTable(groupedData) {
 
     // Crear etiquetas Bootstrap para los eventos por nivel
     const eventCountByLevelBadges = Object.entries(eventCountByLevel)
-      .map(([nivel, count]) => {
-        const badge = document.createElement('span');
-        badge.className = 'badge bg-primary me-1'; // Estilo y margen derecho
-        badge.textContent = `${nivel}: ${count}`;
-        return badge.outerHTML;
-      })
+      .map(([nivel, count]) => createBadgeNivel(`${nivel}: ${count}`, nivel))
       .join(' ');
 
     const row = document.createElement('tr');
@@ -770,6 +765,21 @@ function generateSummaryTable(groupedData) {
   $("#resumenTable").DataTable({
     responsive: true
   });
+}
+function createBadgeNivel(contenido, nivel) {
+    const badgeClasses = {
+        "Critico": "bg-danger",
+        "Bajo": "bg-primary",
+        "Medio": "bg-warning text-bg-warning",
+        "General": "bg-secondary",
+    };
+    const defautl = "bg-secondary";
+
+    const badge = document.createElement('span');
+    badge.className = `badge ${badgeClasses[nivel] || defautl} me-1`;
+    badge.textContent = `${contenido}`;
+
+    return badge.outerHTML;
 }
 
 function formatDate(date, fallbackText = 'Fecha no disponible') {
@@ -860,7 +870,7 @@ function generarTabla() {
         fila.innerHTML = `
             <td>${evento.id}</td>
             <td>${evento.categoria}</td>
-            <td>${evento.nivel}</td>
+            <td>${createBadgeNivel(evento.nivel,evento.nivel)}</td>
             <td>${evento.fecha_cierre === "En Proceso" ? "En Proceso" : "Cerrado"}</td>
             <td>${evento.detalles}</td>
         `;
