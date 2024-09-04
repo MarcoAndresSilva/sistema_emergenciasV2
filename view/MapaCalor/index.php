@@ -58,6 +58,7 @@ Permisos::redirigirSiNoAutorizado();
 </div>
   <div id="map"></div>
 <div id="summaryTableContainer" class="table-responsive"></div>
+<div id="tableContainerFull" class="table-responsive"></div>
   <!-- Controles de filtro por categoría -->
 
         </div><!--.container-fluid-->

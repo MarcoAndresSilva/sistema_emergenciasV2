@@ -137,6 +137,7 @@ function fetchAndSetupData() {
     addMarkers(groupedData);
     createCategoryButtons(groupedData);
     generateSummaryTable(groupedData);
+    generarTabla();
     adjustMapBounds();
   });
 }
@@ -820,4 +821,50 @@ function restoreOriginalOrder() {
 function moveRowToTop(row) {
   const tbody = row.parentNode;
   tbody.insertBefore(row, tbody.firstChild);
+}
+
+function generarTabla() {
+    const container = document.getElementById('tableContainerFull');
+    const tabla = document.createElement('table');
+    tabla.id = 'eventosTable'; 
+    tabla.classList.add('table', 'table-striped', 'table-bordered', 'table-hover', 'table-sm');
+    tabla.style.width = '100%';
+
+    const thead = document.createElement('thead');
+    const encabezado = `
+        <tr>
+            <th>ID</th>
+            <th>Categoría</th>
+            <th>Nivel</th>
+            <th>Estado</th>
+            <th>Detalles</th>
+        </tr>`;
+    thead.innerHTML = encabezado;
+    tabla.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+
+    allEvents.sort((a, b) => {
+        if (a.categoria === b.categoria) {
+            return a.id - b.id;
+        }
+        return a.categoria.localeCompare(b.categoria);
+    });
+
+    allEvents.forEach(evento => {
+        const fila = document.createElement('tr');
+        fila.innerHTML = `
+            <td>${evento.id}</td>
+            <td>${evento.categoria}</td>
+            <td>${evento.nivel}</td>
+            <td>${evento.fecha_cierre === "En Proceso" ? "En Proceso" : "Cerrado"}</td>
+            <td>${evento.detalles}</td>
+        `;
+        tbody.appendChild(fila);
+    });
+
+    tabla.appendChild(tbody);
+
+    container.innerHTML = '';
+    container.appendChild(tabla);
 }
