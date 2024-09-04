@@ -873,7 +873,8 @@ function generarTabla() {
     container.appendChild(tabla);
   $(document).ready(function () {
     $("#eventosTable").DataTable({
-      responsive: true
+      responsive: true,
+      "order": [[0, 'desc']]
     });
   })
 }
