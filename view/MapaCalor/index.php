@@ -57,8 +57,10 @@ Permisos::redirigirSiNoAutorizado();
   <button class="btn btn-outline-secondary" id="searchButton">Buscar</button>
 </div>
   <div id="map"></div>
-<div id="summaryTableContainer" class="table-responsive"></div>
-<div id="tableContainerFull" class="table-responsive"></div>
+<div class="row bg-white">
+<div id="summaryTableContainer" class="col-6 table-responsive"></div>
+<div id="tableContainerFull" class="col-6 table-responsive"></div>
+</div>
   <!-- Controles de filtro por categoría -->
 
         </div><!--.container-fluid-->
