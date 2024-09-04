@@ -672,6 +672,7 @@ function generateSummaryTable(groupedData) {
   // Crear la tabla y sus encabezados
   const table = document.createElement('table');
   table.className = 'table table-bordered';
+  table.id = "resumenTable"
 
   const thead = document.createElement('thead');
   const headerRow = document.createElement('tr');
@@ -766,6 +767,9 @@ function generateSummaryTable(groupedData) {
 
   table.appendChild(tbody);
   tableContainer.appendChild(table);
+  $("#resumenTable").DataTable({
+    responsive: true
+  });
 }
 
 function formatDate(date, fallbackText = 'Fecha no disponible') {
@@ -867,4 +871,9 @@ function generarTabla() {
 
     container.innerHTML = '';
     container.appendChild(tabla);
+  $(document).ready(function () {
+    $("#eventosTable").DataTable({
+      responsive: true
+    });
+  })
 }
