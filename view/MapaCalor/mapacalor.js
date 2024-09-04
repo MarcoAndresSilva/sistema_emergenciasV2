@@ -843,7 +843,6 @@ function generateFullTable(groupedData) {
     const tabla = document.createElement('table');
     tabla.id = 'eventosTable'; 
     tabla.classList.add('table', 'table-striped', 'table-bordered', 'table-hover', 'table-sm');
-    tabla.style.width = '100%';
 
     const thead = document.createElement('thead');
     const encabezado = `
