@@ -435,6 +435,10 @@ function createCategoryButtons(categories) {
     const icon = createCategoryIcon(categoryColors[category]);
     button.prepend(icon);
     row.appendChild(button);
+
+    if (activeCategories.has(category)) {
+      button.classList.add('btn-success');
+    }
   });
 }
 
