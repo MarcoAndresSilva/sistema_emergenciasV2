@@ -813,7 +813,9 @@ if (isset($_GET["op"])) {
         break;
 
         case "get_evento_lat_lon":
-          $datos = $evento->get_eventos_categoria_latitud_longitud();
+          $startDate = isset($_REQUEST['startDate']) ? $_REQUEST['startDate'] : null;
+          $endDate = isset($_REQUEST['endDate']) ? $_REQUEST['endDate'] : null;
+          $datos = $evento->get_eventos_categoria_latitud_longitud($startDate, $endDate);
           header('Content-Type: application/json');
           echo json_encode($datos);
         break;

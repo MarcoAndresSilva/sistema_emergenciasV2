@@ -361,7 +361,19 @@ function updateUI(category, button, row, isVisible) {
 }
 
 async function fetchAndGroupData(startDate = null, endDate = null, niveles = [], unidades = []) {
-  const url = '../../controller/evento.php?op=get_evento_lat_lon';
+  let url = '../../controller/evento.php?op=get_evento_lat_lon';
+
+  const params = new URLSearchParams();
+  if (startDate) {
+    params.append('startDate', startDate);
+  }
+  if (endDate) {
+    params.append('endDate', endDate);
+  }
+
+  if (params.toString()) {
+    url += `&${params.toString()}`;
+  }
 
   try {
     const response = await fetch(url);
@@ -376,14 +388,10 @@ async function fetchAndGroupData(startDate = null, endDate = null, niveles = [],
     const unidadesArr = Array.isArray(unidades) ? unidades.map(unidad => unidad.toLowerCase()) : [];
 
     const filteredData = data.filter(item => {
-      const itemDate = new Date(item.fecha_inicio);
-      const start = startDate ? new Date(startDate) : null;
-      const end = endDate ? new Date(endDate) : null;
-      const matchesDate = (!start || itemDate >= start) && (!end || itemDate <= end);
       const matchesNivel = !nivelesArr.length || nivelesArr.some(nivel => item.nivel.toLowerCase().includes(nivel));
       const matchesUnidad = !unidadesArr.length || unidadesArr.some(unidad => item.unidad.toLowerCase().includes(unidad));
 
-      return matchesDate && matchesNivel && matchesUnidad;
+      return matchesNivel && matchesUnidad;
     });
 
     const groupedData = filteredData.reduce((acc, item) => {
