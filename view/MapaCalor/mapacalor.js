@@ -345,6 +345,9 @@ function updateUI(category, button, row, isVisible) {
   if (isVisible) {
     activeCategories.delete(category);
     button.classList.remove('btn-success');
+
+    updateTableRows(category, false);
+
     if (row) {
       row.classList.remove('table-success');
       restoreRowPosition(row);
@@ -352,12 +355,36 @@ function updateUI(category, button, row, isVisible) {
   } else {
     activeCategories.add(category);
     button.classList.add('btn-success');
+
+    updateTableRows(category, true);
+
     if (row) {
       row.classList.add('table-success');
       moveRowToTop(row);
     }
   }
+}
 
+function updateTableRows(category, addClass) {
+  const table = document.getElementById('eventosTable');
+  if (!table) return; // Si la tabla no existe, salir
+
+  const rows = table.querySelectorAll('tbody tr');
+
+  rows.forEach(row => {
+    const categoryCell = row.cells[1]; //categoría segunda columna
+    if (categoryCell) {
+      const rowCategory = categoryCell.textContent.trim();
+
+      if (rowCategory === category) {
+        if (addClass) {
+          row.classList.add('table-success');
+        } else {
+          row.classList.remove('table-success');
+        }
+      }
+    }
+  });
 }
 
 async function fetchAndGroupData(startDate = null, endDate = null, niveles = [], unidades = []) {
