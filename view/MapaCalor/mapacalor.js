@@ -870,19 +870,36 @@ function generateFullTable(groupedData) {
 
     const tbody = document.createElement('tbody');
 
+    const sortedEvents = [];
     for (const [categoria, eventos] of Object.entries(groupedData)) {
         eventos.forEach(evento => {
-            const fila = document.createElement('tr');
-            fila.innerHTML = `
-                <td>${evento.id}</td>
-                <td>${evento.categoria}</td>
-                <td>${createBadgeNivel(evento.nivel,evento.nivel)}</td>
-                <td>${evento.fecha_cierre === "En Proceso" ? "En Proceso" : "Cerrado"}</td>
-                <td>${evento.detalles}</td>
-            `;
-            tbody.appendChild(fila);
+            sortedEvents.push({ evento, isActive: activeCategories.has(categoria) });
         });
     }
+
+    // Ordenar eventos: Primero los activos, luego el resto
+    sortedEvents.sort((a, b) => {
+        if (a.isActive && !b.isActive) return -1;
+        if (!a.isActive && b.isActive) return 1;
+        return 0;
+    });
+
+    sortedEvents.forEach(({ evento, isActive }) => {
+        const fila = document.createElement('tr');
+        fila.innerHTML = `
+            <td>${evento.id}</td>
+            <td>${evento.categoria}</td>
+            <td>${createBadgeNivel(evento.nivel, evento.nivel)}</td>
+            <td>${evento.fecha_cierre === "En Proceso" ? "En Proceso" : "Cerrado"}</td>
+            <td>${evento.detalles}</td>
+        `;
+
+        if (isActive) {
+            fila.classList.add('table-success');
+        }
+
+        tbody.appendChild(fila);
+    });
 
     tabla.appendChild(tbody);
 
