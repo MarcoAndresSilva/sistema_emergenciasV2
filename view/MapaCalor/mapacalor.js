@@ -373,18 +373,38 @@ function updateTableRows(category, addClass) {
 
   rows.forEach(row => {
     const categoryCell = row.cells[1]; //categoría segunda columna
+    const checkbox = row.querySelector('input[type="checkbox"]');
     if (categoryCell) {
       const rowCategory = categoryCell.textContent.trim();
 
       if (rowCategory === category) {
         if (addClass) {
           row.classList.add('table-success');
+          checkbox.checked = true;
         } else {
           row.classList.remove('table-success');
+          checkbox.checked = false;
         }
       }
     }
   });
+}
+
+function toggleEvent(idEvento, checkbox) {
+    const evento = allEvents.find(e => e.id == idEvento);
+    if (!evento) return;
+
+    const category = evento.categoria;
+    const isActive = checkbox.checked;
+
+    if (isActive) {
+        activeCategories.add(category);
+    } else {
+        activeCategories.delete(category);
+    }
+
+    updateTableRows(category, isActive);
+    updateUI(category, null, null, !isActive);
 }
 
 async function fetchAndGroupData(startDate = null, endDate = null, niveles = [], unidades = []) {
@@ -638,6 +658,8 @@ function marcarEventoEnMapa(idEvento) {
             animation: google.maps.Animation.DROP
         });
 
+        markers[idEvento] = marker;
+
         map.setCenter({ lat: evento.latitud, lng: evento.longitud });
         map.setZoom(19);
 
@@ -664,20 +686,6 @@ function marcarEventoEnMapa(idEvento) {
                 evento.id
             );
         });
-
-        Swal.fire({
-              title:'¡Evento encontrado!',
-              text:`El evento "${evento.categoria}" ha sido marcado en el mapa.`,
-              icon:'success',
-              timer:1000,
-              showConfirmButton: false,
-              });
-    } else {
-        Swal.fire(
-            'Evento no encontrado',
-            `No se encontró ningún evento con el ID "${idEvento}".`,
-            'info'
-        );
     }}
 
 function adjustMapBounds() {
@@ -891,6 +899,7 @@ function generateFullTable(groupedData) {
             <th>Nivel</th>
             <th>Estado</th>
             <th>Detalles</th>
+            <th>Mostrar</th>
         </tr>`;
     thead.innerHTML = encabezado;
     tabla.appendChild(thead);
@@ -919,6 +928,7 @@ function generateFullTable(groupedData) {
             <td>${createBadgeNivel(evento.nivel, evento.nivel)}</td>
             <td>${evento.fecha_cierre === "En Proceso" ? "En Proceso" : "Cerrado"}</td>
             <td>${evento.detalles}</td>
+            <td><input type="checkbox" class="mostrar-evento-checkbox" data-evento-id="${evento.id}"></td>
         `;
 
         if (isActive) {
@@ -938,5 +948,35 @@ function generateFullTable(groupedData) {
             responsive: true,
             "order": [[0, 'desc']]
         });
+
+        $('#eventosTable tbody').on('change', '.mostrar-evento-checkbox', function () {
+            const idEvento = $(this).data('evento-id');
+            const isChecked = $(this).is(':checked');
+            const row = $(this).closest('tr');
+
+            if (isChecked) {
+                // Si se selecciona, marcar evento en el mapa y resaltar la fila
+                marcarEventoEnMapa(idEvento);
+                row.addClass('table-success');
+            } else {
+                // Si se deselecciona, eliminar marcador del mapa y quitar resaltado
+                desmarcarEventoEnMapa(idEvento);
+                row.removeClass('table-success');
+            }
+        });
     });
+}
+
+function desmarcarEventoEnMapa(idEvento) {
+    if (markers[idEvento]) {
+        markers[idEvento].setMap(null); // Remueve el marcador del mapa
+        delete markers[idEvento]; // Elimina el marcador del objeto 'markers'
+
+    } else {
+        Swal.fire(
+            'Error',
+            `No se encontró un marcador en el mapa para el ID "${idEvento}".`,
+            'error'
+        );
+    }
 }
