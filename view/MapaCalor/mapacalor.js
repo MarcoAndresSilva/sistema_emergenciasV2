@@ -621,11 +621,35 @@ function obtenerIdEvento() {
     }).then((result) => {
         if (result.isConfirmed) {
             const idEvento = result.value;
-            marcarEventoEnMapa(idEvento);
+            buscarYMarcarEventoEnTabla(idEvento);
         }
     });
 }
 
+function buscarYMarcarEventoEnTabla(idEvento) {
+    const table = $('#eventosTable').DataTable();
+    const row = table.row(function(idx, data, node) {
+        return data[0] == idEvento;
+    });
+
+    if (row.length) {
+        const rowNode = row.node();
+        const checkbox = $(rowNode).find('.mostrar-evento-checkbox');
+
+        // Marcar el checkbox, agregar la clase 'table-success' y marcar en el mapa
+        $(rowNode).addClass('table-success');
+        checkbox.prop('checked', true);
+
+        // Marcar el evento en el mapa
+        marcarEventoEnMapa(idEvento);
+    } else {
+        Swal.fire(
+            'Evento no encontrado',
+            `No se encontró ningún evento con el ID "${idEvento}" en la tabla.`,
+            'info'
+        );
+    }
+}
 document.addEventListener('DOMContentLoaded', function() {
     const searchButton = document.getElementById('searchevento');
 
@@ -658,6 +682,8 @@ function marcarEventoEnMapa(idEvento) {
 
         markers[idEvento] = marker;
 
+        actualizarFilaTabla(idEvento, true);
+
         map.setCenter({ lat: evento.latitud, lng: evento.longitud });
         map.setZoom(19);
 
@@ -684,8 +710,15 @@ function marcarEventoEnMapa(idEvento) {
                 evento.id
             );
         });
-    }}
 
+    } else {
+        Swal.fire(
+            'Evento no encontrado',
+            `No se encontró ningún evento con el ID "${idEvento}".`,
+            'info'
+        );
+    }
+}
 function adjustMapBounds() {
   const activeMarkers = [];
   activeCategories.forEach(category => {
@@ -970,11 +1003,30 @@ function desmarcarEventoEnMapa(idEvento) {
         markers[idEvento].setMap(null); // Remueve el marcador del mapa
         delete markers[idEvento]; // Elimina el marcador del objeto 'markers'
 
+        actualizarFilaTabla(idEvento, false);
     } else {
         Swal.fire(
             'Error',
             `No se encontró un marcador en el mapa para el ID "${idEvento}".`,
             'error'
         );
+    }
+}
+
+function actualizarFilaTabla(idEvento, isMarked) {
+    const table = $('#eventosTable').DataTable();
+    const row = table.row(function(idx, data, node) {
+        return data[0] == idEvento;
+    });
+
+    const rowNode = row.node();
+    if (rowNode) {
+        if (isMarked) {
+            $(rowNode).addClass('table-success');
+            $(rowNode).find('.event-checkbox').prop('checked', true);
+        } else {
+            $(rowNode).removeClass('table-success');
+            $(rowNode).find('.event-checkbox').prop('checked', false);
+        }
     }
 }
