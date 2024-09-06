@@ -380,10 +380,8 @@ function updateTableRows(category, addClass) {
       if (rowCategory === category) {
         if (addClass) {
           row.classList.add('table-success');
-          checkbox.checked = true;
         } else {
           row.classList.remove('table-success');
-          checkbox.checked = false;
         }
       }
     }
