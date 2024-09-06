@@ -606,22 +606,29 @@ function restoreActiveCategories() {
 
 function obtenerIdEvento() {
     Swal.fire({
-        title: 'Buscar Evento',
-        text: 'Ingrese el ID del evento:',
+        title: 'Buscar Eventos',
+        text: 'Ingrese los IDs de los eventos, separados por comas:',
         input: 'text',
-        inputPlaceholder: 'ID del evento',
+        inputPlaceholder: 'Ejemplo: 1, 3, 4, 5',
         showCancelButton: true,
         confirmButtonText: 'Buscar',
         cancelButtonText: 'Cancelar',
         inputValidator: (value) => {
             if (!value) {
-                return '¡Debes ingresar un ID!';
+                return '¡Debes ingresar al menos un ID!';
+            }
+            const ids = value.split(',').map(id => id.trim());
+            if (ids.some(id => isNaN(id))) {
+                return '¡Todos los IDs deben ser números!';
             }
         }
     }).then((result) => {
         if (result.isConfirmed) {
-            const idEvento = result.value;
-            buscarYMarcarEventoEnTabla(idEvento);
+            const ids = result.value.split(',').map(id => id.trim());
+
+            ids.forEach(idEvento => {
+                buscarYMarcarEventoEnTabla(idEvento);
+            });
         }
     });
 }
