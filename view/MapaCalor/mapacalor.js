@@ -730,15 +730,21 @@ function adjustMapBounds() {
   }
 }
 function adjustMapBoundsToMarkers() {
-    const activeMarkers = Object.values(markers);
-    if (activeMarkers.length > 0) {
+    const checkboxes = document.querySelectorAll('#eventosTable .mostrar-evento-checkbox:checked');
+
+    if (checkboxes.length > 0) {
         const newBounds = new google.maps.LatLngBounds();
-        activeMarkers.forEach(marker => {
+
+        checkboxes.forEach(checkbox => {
+            const idEvento = checkbox.getAttribute('data-evento-id');
+            const marker = markers[idEvento];
             if (marker instanceof google.maps.Marker) {
                 newBounds.extend(marker.getPosition());
             }
         });
         map.fitBounds(newBounds);
+    } else {
+        adjustMapBounds();
     }
 }
 function createCategoryIcon(color) {
