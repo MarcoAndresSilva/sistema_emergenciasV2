@@ -666,8 +666,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function marcarEventoEnMapa(idEvento) {
-    const eventos = allEvents;
-    const evento = eventos.find(e => e.id == idEvento);
+    const evento = allEvents.find(e => e.id == idEvento);
     const category = evento.categoria;
     const icon = "M -2,0 0,-2 2,0 0,2 z"
     if (evento) {
