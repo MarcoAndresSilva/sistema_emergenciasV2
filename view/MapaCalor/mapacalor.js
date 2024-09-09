@@ -691,19 +691,7 @@ function marcarEventoEnMapa(idEvento) {
 
         actualizarFilaTabla(idEvento, true);
 
-        map.setCenter({ lat: evento.latitud, lng: evento.longitud });
-        map.setZoom(19);
-
-        showInfoWindow(
-            { lat: evento.latitud, lng: evento.longitud },
-            evento.categoria,
-            evento.detalles || 'Sin detalles',
-            evento.img || '',
-            evento.unidad,
-            evento.fecha_inicio,
-            evento.fecha_cierre,
-            evento.id
-        );
+        adjustMapBoundsToMarkers();
 
         marker.addListener('click', () => {
             showInfoWindow(
@@ -741,6 +729,18 @@ function adjustMapBounds() {
   } else if (bounds && !bounds.isEmpty()) {
     map.fitBounds(bounds);
   }
+}
+function adjustMapBoundsToMarkers() {
+    const activeMarkers = Object.values(markers);
+    if (activeMarkers.length > 0) {
+        const newBounds = new google.maps.LatLngBounds();
+        activeMarkers.forEach(marker => {
+            if (marker instanceof google.maps.Marker) {
+                newBounds.extend(marker.getPosition());
+            }
+        });
+        map.fitBounds(newBounds);
+    }
 }
 function createCategoryIcon(color) {
   const icon = document.createElement('i');
@@ -1010,6 +1010,7 @@ function desmarcarEventoEnMapa(idEvento) {
         markers[idEvento].setMap(null); // Remueve el marcador del mapa
         delete markers[idEvento]; // Elimina el marcador del objeto 'markers'
 
+        adjustMapBoundsToMarkers();
         actualizarFilaTabla(idEvento, false);
     } else {
         Swal.fire(
