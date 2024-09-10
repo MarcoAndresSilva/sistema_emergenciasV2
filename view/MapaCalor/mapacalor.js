@@ -942,6 +942,7 @@ function generateFullTable(groupedData) {
             <th>Nivel</th>
             <th>Estado</th>
             <th>Detalles</th>
+            <th>Dirección</th>
             <th>Mostrar</th>
         </tr>`;
     thead.innerHTML = encabezado;
@@ -967,6 +968,7 @@ function generateFullTable(groupedData) {
         const fila = document.createElement('tr');
         const checkboxEstado = isActive ? 'Activo' : 'desabilitado';
         const checkedAttribute = isActive ? 'checked' : '';
+        const direccion = evento.direccion.replace(", Región Metropolitana, Chile", '');
 
         fila.innerHTML = `
             <td>${evento.id}</td>
@@ -974,6 +976,7 @@ function generateFullTable(groupedData) {
             <td>${createBadgeNivel(evento.nivel, evento.nivel)}</td>
             <td>${evento.fecha_cierre === "En Proceso" ? "En Proceso" : "Cerrado"}</td>
             <td>${evento.detalles}</td>
+            <td>${direccion}</td>
             <td>
                 <label>
                     <input type="checkbox" class="mostrar-evento-checkbox" data-evento-id="${evento.id}" ${checkedAttribute}>

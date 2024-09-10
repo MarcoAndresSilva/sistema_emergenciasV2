@@ -490,6 +490,7 @@ class Evento extends Conectar {
               		ev.ev_longitud as "longitud",
               		ev.ev_id as "id",
               		ev.ev_desc as "detalles",
+              		ev.ev_direc as "direccion",
               		ev.ev_img as "img",
               		ev.ev_inicio as "fecha_inicio",
               		IFNULL(ev.ev_final, "En Proceso") as "fecha_cierre",
