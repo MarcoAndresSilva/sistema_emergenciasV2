@@ -137,6 +137,7 @@ function fetchAndSetupData() {
     addMarkers(groupedData);
     createCategoryButtons(groupedData);
     generateSummaryTable(groupedData);
+    generateFullTable(groupedData);
     adjustMapBounds();
   });
 }
@@ -228,6 +229,7 @@ function applyAdvancedFilter(startDate, endDate, niveles, unidades) {
     createCategoryButtons(groupedData);
     restoreActiveCategories();
     generateSummaryTable(groupedData);
+    generateFullTable(groupedData);
     adjustMapBounds();
   });
 }
@@ -343,6 +345,9 @@ function updateUI(category, button, row, isVisible) {
   if (isVisible) {
     activeCategories.delete(category);
     button.classList.remove('btn-success');
+
+    updateTableRows(category, false);
+
     if (row) {
       row.classList.remove('table-success');
       restoreRowPosition(row);
@@ -350,16 +355,70 @@ function updateUI(category, button, row, isVisible) {
   } else {
     activeCategories.add(category);
     button.classList.add('btn-success');
+
+    updateTableRows(category, true);
+
     if (row) {
       row.classList.add('table-success');
       moveRowToTop(row);
     }
   }
+}
 
+function updateTableRows(category, addClass) {
+  const table = document.getElementById('eventosTable');
+  if (!table) return; // Si la tabla no existe, salir
+
+  const rows = table.querySelectorAll('tbody tr');
+
+  rows.forEach(row => {
+    const categoryCell = row.cells[1]; //categoría segunda columna
+    const checkbox = row.querySelector('input[type="checkbox"]');
+    if (categoryCell) {
+      const rowCategory = categoryCell.textContent.trim();
+
+      if (rowCategory === category) {
+        if (addClass) {
+          row.classList.add('table-success');
+        } else {
+          row.classList.remove('table-success');
+        }
+      }
+    }
+  });
+}
+
+function toggleEvent(idEvento, checkbox) {
+    const evento = allEvents.find(e => e.id == idEvento);
+    if (!evento) return;
+
+    const category = evento.categoria;
+    const isActive = checkbox.checked;
+
+    if (isActive) {
+        activeCategories.add(category);
+    } else {
+        activeCategories.delete(category);
+    }
+
+    updateTableRows(category, isActive);
+    updateUI(category, null, null, !isActive);
 }
 
 async function fetchAndGroupData(startDate = null, endDate = null, niveles = [], unidades = []) {
-  const url = '../../controller/evento.php?op=get_evento_lat_lon';
+  let url = '../../controller/evento.php?op=get_evento_lat_lon';
+
+  const params = new URLSearchParams();
+  if (startDate) {
+    params.append('startDate', startDate);
+  }
+  if (endDate) {
+    params.append('endDate', endDate);
+  }
+
+  if (params.toString()) {
+    url += `&${params.toString()}`;
+  }
 
   try {
     const response = await fetch(url);
@@ -374,14 +433,10 @@ async function fetchAndGroupData(startDate = null, endDate = null, niveles = [],
     const unidadesArr = Array.isArray(unidades) ? unidades.map(unidad => unidad.toLowerCase()) : [];
 
     const filteredData = data.filter(item => {
-      const itemDate = new Date(item.fecha_inicio);
-      const start = startDate ? new Date(startDate) : null;
-      const end = endDate ? new Date(endDate) : null;
-      const matchesDate = (!start || itemDate >= start) && (!end || itemDate <= end);
       const matchesNivel = !nivelesArr.length || nivelesArr.some(nivel => item.nivel.toLowerCase().includes(nivel));
       const matchesUnidad = !unidadesArr.length || unidadesArr.some(unidad => item.unidad.toLowerCase().includes(unidad));
 
-      return matchesDate && matchesNivel && matchesUnidad;
+      return matchesNivel && matchesUnidad;
     });
 
     const groupedData = filteredData.reduce((acc, item) => {
@@ -425,6 +480,10 @@ function createCategoryButtons(categories) {
     const icon = createCategoryIcon(categoryColors[category]);
     button.prepend(icon);
     row.appendChild(button);
+
+    if (activeCategories.has(category)) {
+      button.classList.add('btn-success');
+    }
   });
 }
 
@@ -547,26 +606,57 @@ function restoreActiveCategories() {
 
 function obtenerIdEvento() {
     Swal.fire({
-        title: 'Buscar Evento',
-        text: 'Ingrese el ID del evento:',
+        title: 'Buscar Eventos',
+        text: 'Ingrese los IDs de los eventos, separados por comas:',
         input: 'text',
-        inputPlaceholder: 'ID del evento',
+        inputPlaceholder: 'Ejemplo: 1, 3, 4, 5',
         showCancelButton: true,
         confirmButtonText: 'Buscar',
         cancelButtonText: 'Cancelar',
         inputValidator: (value) => {
             if (!value) {
-                return '¡Debes ingresar un ID!';
+                return '¡Debes ingresar al menos un ID!';
+            }
+            const ids = value.split(',').map(id => id.trim());
+            if (ids.some(id => isNaN(id))) {
+                return '¡Todos los IDs deben ser números!';
             }
         }
     }).then((result) => {
         if (result.isConfirmed) {
-            const idEvento = result.value;
-            marcarEventoEnMapa(idEvento);
+            const ids = result.value.split(',').map(id => id.trim());
+
+            ids.forEach(idEvento => {
+                buscarYMarcarEventoEnTabla(idEvento);
+            });
         }
     });
 }
 
+function buscarYMarcarEventoEnTabla(idEvento) {
+    const table = $('#eventosTable').DataTable();
+    const row = table.row(function(idx, data, node) {
+        return data[0] == idEvento;
+    });
+
+    if (row.length) {
+        const rowNode = row.node();
+        const checkbox = $(rowNode).find('.mostrar-evento-checkbox');
+
+        // Marcar el checkbox, agregar la clase 'table-success' y marcar en el mapa
+        $(rowNode).addClass('table-success');
+        checkbox.prop('checked', true);
+
+        // Marcar el evento en el mapa
+        marcarEventoEnMapa(idEvento);
+    } else {
+        Swal.fire(
+            'Evento no encontrado',
+            `No se encontró ningún evento con el ID "${idEvento}" en la tabla.`,
+            'info'
+        );
+    }
+}
 document.addEventListener('DOMContentLoaded', function() {
     const searchButton = document.getElementById('searchevento');
 
@@ -576,8 +666,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function marcarEventoEnMapa(idEvento) {
-    const eventos = allEvents;
-    const evento = eventos.find(e => e.id == idEvento);
+    const evento = allEvents.find(e => e.id == idEvento);
     const category = evento.categoria;
     const icon = "M -2,0 0,-2 2,0 0,2 z"
     if (evento) {
@@ -597,19 +686,11 @@ function marcarEventoEnMapa(idEvento) {
             animation: google.maps.Animation.DROP
         });
 
-        map.setCenter({ lat: evento.latitud, lng: evento.longitud });
-        map.setZoom(19);
+        markers[idEvento] = marker;
 
-        showInfoWindow(
-            { lat: evento.latitud, lng: evento.longitud },
-            evento.categoria,
-            evento.detalles || 'Sin detalles',
-            evento.img || '',
-            evento.unidad,
-            evento.fecha_inicio,
-            evento.fecha_cierre,
-            evento.id
-        );
+        actualizarFilaTabla(idEvento, true);
+
+        adjustMapBoundsToMarkers();
 
         marker.addListener('click', () => {
             showInfoWindow(
@@ -624,21 +705,14 @@ function marcarEventoEnMapa(idEvento) {
             );
         });
 
-        Swal.fire({
-              title:'¡Evento encontrado!',
-              text:`El evento "${evento.categoria}" ha sido marcado en el mapa.`,
-              icon:'success',
-              timer:1000,
-              showConfirmButton: false,
-              });
     } else {
         Swal.fire(
             'Evento no encontrado',
             `No se encontró ningún evento con el ID "${idEvento}".`,
             'info'
         );
-    }}
-
+    }
+}
 function adjustMapBounds() {
   const activeMarkers = [];
   activeCategories.forEach(category => {
@@ -654,6 +728,24 @@ function adjustMapBounds() {
   } else if (bounds && !bounds.isEmpty()) {
     map.fitBounds(bounds);
   }
+}
+function adjustMapBoundsToMarkers() {
+    const checkboxes = document.querySelectorAll('#eventosTable .mostrar-evento-checkbox:checked');
+
+    if (checkboxes.length > 0) {
+        const newBounds = new google.maps.LatLngBounds();
+
+        checkboxes.forEach(checkbox => {
+            const idEvento = checkbox.getAttribute('data-evento-id');
+            const marker = markers[idEvento];
+            if (marker instanceof google.maps.Marker) {
+                newBounds.extend(marker.getPosition());
+            }
+        });
+        map.fitBounds(newBounds);
+    } else {
+        adjustMapBounds();
+    }
 }
 function createCategoryIcon(color) {
   const icon = document.createElement('i');
@@ -671,6 +763,7 @@ function generateSummaryTable(groupedData) {
   // Crear la tabla y sus encabezados
   const table = document.createElement('table');
   table.className = 'table table-bordered';
+  table.id = "resumenTable"
 
   const thead = document.createElement('thead');
   const headerRow = document.createElement('tr');
@@ -729,12 +822,7 @@ function generateSummaryTable(groupedData) {
 
     // Crear etiquetas Bootstrap para los eventos por nivel
     const eventCountByLevelBadges = Object.entries(eventCountByLevel)
-      .map(([nivel, count]) => {
-        const badge = document.createElement('span');
-        badge.className = 'badge bg-primary me-1'; // Estilo y margen derecho
-        badge.textContent = `${nivel}: ${count}`;
-        return badge.outerHTML;
-      })
+      .map(([nivel, count]) => createBadgeNivel(`${nivel}: ${count}`, nivel))
       .join(' ');
 
     const row = document.createElement('tr');
@@ -765,6 +853,24 @@ function generateSummaryTable(groupedData) {
 
   table.appendChild(tbody);
   tableContainer.appendChild(table);
+  $("#resumenTable").DataTable({
+    responsive: true
+  });
+}
+function createBadgeNivel(contenido, nivel) {
+    const badgeClasses = {
+        "Critico": "bg-danger",
+        "Bajo": "bg-primary",
+        "Medio": "bg-warning text-bg-warning",
+        "General": "bg-secondary",
+    };
+    const defautl = "bg-secondary";
+
+    const badge = document.createElement('span');
+    badge.className = `badge ${badgeClasses[nivel] || defautl} me-1`;
+    badge.textContent = `${contenido}`;
+
+    return badge.outerHTML;
 }
 
 function formatDate(date, fallbackText = 'Fecha no disponible') {
@@ -820,4 +926,137 @@ function restoreOriginalOrder() {
 function moveRowToTop(row) {
   const tbody = row.parentNode;
   tbody.insertBefore(row, tbody.firstChild);
+}
+
+function generateFullTable(groupedData) {
+    const container = document.getElementById('tableContainerFull');
+    const tabla = document.createElement('table');
+    tabla.id = 'eventosTable'; 
+    tabla.classList.add('table', 'table-striped', 'table-bordered', 'table-hover', 'table-sm');
+
+    const thead = document.createElement('thead');
+    const encabezado = `
+        <tr>
+            <th>ID</th>
+            <th>Categoría</th>
+            <th>Nivel</th>
+            <th>Estado</th>
+            <th>Detalles</th>
+            <th>Dirección</th>
+            <th>Mostrar</th>
+        </tr>`;
+    thead.innerHTML = encabezado;
+    tabla.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+
+    const sortedEvents = [];
+    for (const [categoria, eventos] of Object.entries(groupedData)) {
+        eventos.forEach(evento => {
+            sortedEvents.push({ evento, isActive: activeCategories.has(categoria) });
+        });
+    }
+
+    // Ordenar eventos: Primero los activos, luego el resto
+    sortedEvents.sort((a, b) => {
+        if (a.isActive && !b.isActive) return -1;
+        if (!a.isActive && b.isActive) return 1;
+        return 0;
+    });
+
+    sortedEvents.forEach(({ evento, isActive }) => {
+        const fila = document.createElement('tr');
+        const checkboxEstado = isActive ? 'Activo' : 'desabilitado';
+        const checkedAttribute = isActive ? 'checked' : '';
+        const direccion = evento.direccion.replace(", Región Metropolitana, Chile", '');
+
+        fila.innerHTML = `
+            <td>${evento.id}</td>
+            <td>${evento.categoria}</td>
+            <td>${createBadgeNivel(evento.nivel, evento.nivel)}</td>
+            <td>${evento.fecha_cierre === "En Proceso" ? "En Proceso" : "Cerrado"}</td>
+            <td>${evento.detalles}</td>
+            <td>${direccion}</td>
+            <td>
+                <label>
+                    <input type="checkbox" class="mostrar-evento-checkbox" data-evento-id="${evento.id}" ${checkedAttribute}>
+                    <span>${checkboxEstado}</span>
+                </label>
+            </td>
+        `;
+
+        if (isActive) {
+            fila.classList.add('table-success');
+        }
+
+        tbody.appendChild(fila);
+    });
+
+    tabla.appendChild(tbody);
+
+    container.innerHTML = '';
+    container.appendChild(tabla);
+
+    $(document).ready(function () {
+        $("#eventosTable").DataTable({
+            responsive: true,
+            order: [[0, 'desc']],
+            paging: false,
+            scrollCollapse: true,
+            scrollY: "220px",
+        });
+
+        $('#eventosTable tbody').on('change', '.mostrar-evento-checkbox', function () {
+            const idEvento = $(this).data('evento-id');
+            const isChecked = $(this).is(':checked');
+            const row = $(this).closest('tr');
+            const label = $(this).next('span');
+
+            if (isChecked) {
+                // Si se selecciona, marcar evento en el mapa y resaltar la fila
+                marcarEventoEnMapa(idEvento);
+                row.addClass('table-success');
+                label.text('Activo');
+            } else {
+                // Si se deselecciona, eliminar marcador del mapa y quitar resaltado
+                desmarcarEventoEnMapa(idEvento);
+                row.removeClass('table-success');
+                label.text('desabilitado');
+            }
+        });
+    });
+}
+
+function desmarcarEventoEnMapa(idEvento) {
+    if (markers[idEvento]) {
+        markers[idEvento].setMap(null); // Remueve el marcador del mapa
+        delete markers[idEvento]; // Elimina el marcador del objeto 'markers'
+
+        adjustMapBoundsToMarkers();
+        actualizarFilaTabla(idEvento, false);
+    } else {
+        Swal.fire(
+            'Error',
+            `No se encontró un marcador en el mapa para el ID "${idEvento}".`,
+            'error'
+        );
+    }
+}
+
+function actualizarFilaTabla(idEvento, isMarked) {
+    const table = $('#eventosTable').DataTable();
+    const row = table.row(function(idx, data, node) {
+        return data[0] == idEvento;
+    });
+
+    const rowNode = row.node();
+    if (rowNode) {
+        if (isMarked) {
+            $(rowNode).addClass('table-success');
+            $(rowNode).find('.event-checkbox').prop('checked', true);
+        } else {
+            $(rowNode).removeClass('table-success');
+            $(rowNode).find('.event-checkbox').prop('checked', false);
+        }
+    }
 }

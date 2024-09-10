@@ -485,11 +485,12 @@ class Evento extends Conectar {
     }
 
 
-    public function get_eventos_categoria_latitud_longitud(){
+    public function get_eventos_categoria_latitud_longitud($startDate = null, $endDate = null) {
         $sql = 'SELECT ev.ev_latitud as "latitud",
               		ev.ev_longitud as "longitud",
               		ev.ev_id as "id",
               		ev.ev_desc as "detalles",
+              		ev.ev_direc as "direccion",
               		ev.ev_img as "img",
               		ev.ev_inicio as "fecha_inicio",
               		IFNULL(ev.ev_final, "En Proceso") as "fecha_cierre",
@@ -504,10 +505,23 @@ class Evento extends Conectar {
               JOIN tm_ev_niv as nv
               ON (ev.ev_niv = nv.ev_niv_id)
               JOIN tm_unidad as un 
-              ON ( un.unid_id=usu.usu_unidad);';
-    return $this->ejecutarConsulta($sql);
-    }
+              ON ( un.unid_id=usu.usu_unidad)
+              WHERE 1 = 1';
 
+
+        $params = [];
+
+        if ($startDate) {
+            $sql .= ' AND DATE(ev.ev_inicio) >= :startDate';
+            $params[':startDate'] = $startDate;
+        }
+        if ($endDate) {
+            $sql .= ' AND DATE(ev.ev_inicio) <= :endDate';
+            $params[':endDate'] = $endDate;
+        }
+
+        return $this->ejecutarConsulta($sql, $params);
+    }
 
     public function datos_categorias_eventos($fecha_inicio) {
         try {

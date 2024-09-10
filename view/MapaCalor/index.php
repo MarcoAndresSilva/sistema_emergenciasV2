@@ -13,6 +13,11 @@ Permisos::redirigirSiNoAutorizado();
   <link rel="stylesheet" href="./stylemapacalor.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap5.css" />
+  <script defer src="https://cdn.datatables.net/1.13.6/js/dataTables.js"></script>
+  <script defer src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.js"></script>
+  <script defer src="https://cdn.datatables.net/responsive/2.0.3/js/dataTables.responsive.min.js"></script>
+  <script defer src="https://cdn.datatables.net/responsive/2.0.3/js/responsive.dataTables.min.js"></script>
   <script type="module" src="./mapacalor.js"></script>
 </head>
 
@@ -57,7 +62,10 @@ Permisos::redirigirSiNoAutorizado();
   <button class="btn btn-outline-secondary" id="searchButton">Buscar</button>
 </div>
   <div id="map"></div>
-<div id="summaryTableContainer" class="table-responsive"></div>
+<div class="row bg-white">
+<div id="summaryTableContainer" class="col-6 table-responsive"></div>
+<div id="tableContainerFull" class="col-6 table-responsive"></div>
+</div>
   <!-- Controles de filtro por categoría -->
 
         </div><!--.container-fluid-->
