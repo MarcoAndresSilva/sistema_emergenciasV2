@@ -965,13 +965,21 @@ function generateFullTable(groupedData) {
 
     sortedEvents.forEach(({ evento, isActive }) => {
         const fila = document.createElement('tr');
+        const checkboxEstado = isActive ? 'Activo' : 'desabilitado';
+        const checkedAttribute = isActive ? 'checked' : '';
+
         fila.innerHTML = `
             <td>${evento.id}</td>
             <td>${evento.categoria}</td>
             <td>${createBadgeNivel(evento.nivel, evento.nivel)}</td>
             <td>${evento.fecha_cierre === "En Proceso" ? "En Proceso" : "Cerrado"}</td>
             <td>${evento.detalles}</td>
-            <td><input type="checkbox" class="mostrar-evento-checkbox" data-evento-id="${evento.id}"></td>
+            <td>
+                <label>
+                    <input type="checkbox" class="mostrar-evento-checkbox" data-evento-id="${evento.id}" ${checkedAttribute}>
+                    <span>${checkboxEstado}</span>
+                </label>
+            </td>
         `;
 
         if (isActive) {
@@ -989,22 +997,28 @@ function generateFullTable(groupedData) {
     $(document).ready(function () {
         $("#eventosTable").DataTable({
             responsive: true,
-            "order": [[0, 'desc']]
+            order: [[0, 'desc']],
+            paging: false,
+            scrollCollapse: true,
+            scrollY: "220px",
         });
 
         $('#eventosTable tbody').on('change', '.mostrar-evento-checkbox', function () {
             const idEvento = $(this).data('evento-id');
             const isChecked = $(this).is(':checked');
             const row = $(this).closest('tr');
+            const label = $(this).next('span');
 
             if (isChecked) {
                 // Si se selecciona, marcar evento en el mapa y resaltar la fila
                 marcarEventoEnMapa(idEvento);
                 row.addClass('table-success');
+                label.text('Activo');
             } else {
                 // Si se deselecciona, eliminar marcador del mapa y quitar resaltado
                 desmarcarEventoEnMapa(idEvento);
                 row.removeClass('table-success');
+                label.text('desabilitado');
             }
         });
     });
