@@ -38,6 +38,16 @@ class Correo {
 
     public function setEncabezados($encabezados) {
         $this->encabezados = $encabezados;
+    // Método para definir un grupo de destinatarios
+    public function setGrupoDestinatario($listaUsuarios) {
+        $correos = [];
+
+        foreach ($listaUsuarios['result'] as $usuario) {
+            if (isset($usuario['Correo'])) {
+                $correos[] = $usuario['Correo'];
+            }
+        }
+        $this->setDestinatario(implode(", ", $correos));
     }
 }
 
