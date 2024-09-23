@@ -1,5 +1,6 @@
 <?php 
 require_once 'Usuario.php';
+require_once 'Correo.php';
 class Noticia extends Conectar {
 
   public function add_noticia(string $asunto, string $mensaje, string $url=null){
@@ -44,6 +45,11 @@ class Noticia extends Conectar {
     $ultima_noticia = $this->obtenerUltimoRegistro('tm_noticia',"noticia_id");
     $id_noticia_new = $ultima_noticia["noticia_id"];
     $envio_usuario = $this->enviar_noticia_grupal_por_lista_usuario($id_noticia_new,$lista_usuario);
+
+    $correo = new Correo('', $asunto, $mensaje);
+    $correo->setGrupoDestinatario($lista_usuario);
+    $resultado_correo = $correo->enviar();
+
     if ($envio_usuario["status"] !== "success"){
       return [
         "status"=>"error",
@@ -57,6 +63,7 @@ class Noticia extends Conectar {
       "message"=>"Crear y enviar Terminado",
       "add_noticia"=>$add_noticia,
       "enviar_grupo"=>$envio_usuario,
+      "enviar_correo"=>$resultado_correo,
     ];
   }
 
