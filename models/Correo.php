@@ -50,9 +50,9 @@ class Correo {
     public function setGrupoDestinatario($listaUsuarios) {
         $correos = [];
 
-        foreach ($listaUsuarios['result'] as $usuario) {
-            if (isset($usuario['Correo'])) {
-                $correos[] = $usuario['Correo'];
+        foreach ($listaUsuarios as $usuario) {
+            if (isset($usuario['usu_correo'])) {
+                $correos[] = $usuario['usu_correo'];
             }
         }
         $this->setDestinatario(implode(", ", $correos));
