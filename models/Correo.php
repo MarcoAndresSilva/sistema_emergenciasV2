@@ -94,5 +94,11 @@ class Correo {
         // Establecer el mensaje en el correo
         $this->setMensaje($mensaje);
     }
+    public function setAsuntoNuevoEvento($datos_evento) {
+        $id_evento = $datos_evento['id_evento'];
+        $categoria = $datos_evento['cat_nom'];
+        $nuevo_asunto="🚨Nuevo evento en $categoria - 📎ticket $id_evento";
+        $this->setAsunto($nuevo_asunto);
+    }
 }
 
