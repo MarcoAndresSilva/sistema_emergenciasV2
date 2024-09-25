@@ -91,7 +91,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     const notifElement = document.createElement("a");
                     notifElement.className = "dropdown-item";
                     notifElement.href = notif.url;
-                    notifElement.innerHTML = `<i class="fa fa-info-circle" aria-hidden="true"></i> ${notif.mensaje}`;
+                    notifElement.innerHTML = `<i class="fa fa-info-circle" aria-hidden="true"></i> ${notif.asunto}`;
                     notifElement.addEventListener("click", () => markAsRead(index));
                     notificationListElement.appendChild(notifElement);
                 }
