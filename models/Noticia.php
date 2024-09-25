@@ -48,8 +48,8 @@ class Noticia extends Conectar {
     $ultima_noticia = $this->obtenerUltimoRegistro('tm_noticia',"noticia_id");
     $id_noticia_new = $ultima_noticia["noticia_id"];
     $envio_usuario = $this->enviar_noticia_grupal_por_lista_usuario($id_noticia_new,$lista_usuario);
-
-    $correo = new Correo('', $asunto, $mensaje);
+    $formato = $this->formato_noticia_correo_segun_asunto($agrsNoticia);
+    $correo = new Correo('', $formato->asunto, $formato->mensaje);
     $correo->setGrupoDestinatario($lista_usuario);
     $resultado_correo = $correo->enviar();
 
