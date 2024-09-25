@@ -335,6 +335,36 @@ class Evento extends Conectar {
         }
 
     }
+    public function informacion_evento_completa($ev_id) {
+      $sql = 'SELECT
+                cat.cat_nom as "cat_nom",
+                usr.usu_nom as "usu_nom",
+                usr.usu_ape as "usu_ape",
+                est.est_nom as "est_nom",
+                eve.ev_desc as "ev_desc",
+                nv.ev_niv_nom as "ev_niv_nom",
+                eve.ev_latitud as "eve_latitud",
+                eve.ev_longitud as "eve_longitud",
+                eve.ev_id as "id_evento",
+                eve.ev_direc as "ev_direc"
+              FROM tm_evento as eve
+              JOIN tm_categoria as cat
+              ON(cat.cat_id=eve.cat_id)
+              JOIN tm_usuario as usr
+              ON(usr.usu_id=eve.usu_id)
+              JOIN tm_estado as est
+              ON(est.est_id=eve.ev_est)
+              JOIN tm_ev_niv as nv
+              ON(nv.ev_niv_id=eve.ev_niv)
+              WHERE eve.ev_id=:id_evento';
+
+    $params = [':id_evento' => $ev_id];
+    $resultado = $this->ejecutarConsulta($sql, $params,false);
+
+    if (is_array($resultado) && count($resultado) > 0) {
+            return $resultado;
+        }
+    }
 
     public function obtener_usuario_id($nombre, $apellido) {
         try {
