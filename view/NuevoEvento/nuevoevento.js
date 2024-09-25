@@ -316,6 +316,7 @@ function actualizarDireccion(lat, lng) {
 
 
 async function add_evento() {
+  disableSubmit();
   let ev_latitud = $('#ev_latitud').val();
   let ev_longitud = $('#ev_longitud').val();
 
@@ -391,6 +392,7 @@ async function add_evento() {
       }
 
 
+      enableSubmit();
       if (data.status === 'success') {
         swal("Éxito", data.message, "success")
           formulario = document.getElementById("event_form");
@@ -406,4 +408,21 @@ async function add_evento() {
       swal("Error al agregar evento", "No se pudo agregar el evento.", "error");
     }
   });
+}
+
+function disableSubmit() {
+  $('#btnGuardar').prop('disabled', true);
+  let spiner = `<div class="spinner-border text-secondary" role="status">
+                   <span class="sr-only">Enviando...</span>
+                	</div>`;
+  document.getElementById("btnGuardar").innerHTML = spiner;
+}
+
+function enableSubmit() {
+  $('#btnGuardar').prop('disabled', false);
+  changedtextsubimt("AGREGAR NUEVA EMERGENCIA");
+}
+
+function changedtextsubimt(text){
+  $('#btnGuardar').text(text)
 }
