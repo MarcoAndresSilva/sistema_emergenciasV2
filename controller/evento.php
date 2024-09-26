@@ -554,12 +554,14 @@ if (isset($_GET["op"])) {
         break;
 
         case "cerrar_evento":
-
-            $imagen = $_FILES["imagen"];
-            $carpeta = "imagenesCierres";
-
-            // Guardar la imagen usando la función guardarImagen
-            $adjunto = guardarImagen($imagen, $carpeta);
+            $adjunto = null;
+            if (isset($_POST["adjunto"])) {
+                $imagen = $_FILES["adjunto"];
+                $carpeta = "imagenesCierres";
+                // Guardar la imagen usando la función guardarImagen
+                $adjunto = guardarImagen($imagen, $carpeta);
+            }
+            
             
             $usu_id = $_SESSION["usu_id"];
             
