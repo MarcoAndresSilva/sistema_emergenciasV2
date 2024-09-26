@@ -425,8 +425,11 @@ async function add_evento() {
 function disableSubmit() {
   $('#btnGuardar').prop('disabled', true);
   let spiner = `<div class="spinner-border text-secondary" role="status">
-                   <span class="sr-only">Enviando...</span>
-                	</div>`;
+                  <span class="sr-only"></span>
+                </div>
+                <span>Enviando...</span>
+              `;
+
   document.getElementById("btnGuardar").innerHTML = spiner;
 }
 
