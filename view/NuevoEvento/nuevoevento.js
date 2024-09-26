@@ -316,6 +316,17 @@ function actualizarDireccion(lat, lng) {
 
 
 async function add_evento() {
+  disableSubmit();
+
+  Swal.fire({
+    title: 'Guardando...',
+    html: 'Por favor, espera mientras procesamos tu solicitud.',
+    allowOutsideClick: false,
+    didOpen: () => {
+      Swal.showLoading();
+    }
+  });
+
   let ev_latitud = $('#ev_latitud').val();
   let ev_longitud = $('#ev_longitud').val();
 
@@ -391,6 +402,8 @@ async function add_evento() {
       }
 
 
+      enableSubmit();
+      Swal.close();
       if (data.status === 'success') {
         swal("Éxito", data.message, "success")
           formulario = document.getElementById("event_form");
@@ -404,6 +417,27 @@ async function add_evento() {
     error: function(jqXHR, textStatus, errorThrown) {
       console.error("Error en la solicitud de agregar evento: ", textStatus, errorThrown);
       swal("Error al agregar evento", "No se pudo agregar el evento.", "error");
+      Swal.close();
     }
   });
+}
+
+function disableSubmit() {
+  $('#btnGuardar').prop('disabled', true);
+  let spiner = `<div class="spinner-border text-secondary" role="status">
+                  <span class="sr-only"></span>
+                </div>
+                <span>Enviando...</span>
+              `;
+
+  document.getElementById("btnGuardar").innerHTML = spiner;
+}
+
+function enableSubmit() {
+  $('#btnGuardar').prop('disabled', false);
+  changedtextsubimt("AGREGAR NUEVA EMERGENCIA");
+}
+
+function changedtextsubimt(text){
+  $('#btnGuardar').text(text)
 }
