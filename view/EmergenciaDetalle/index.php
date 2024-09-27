@@ -148,7 +148,7 @@ require_once("../MainJs/js.php");
 ?>
 </body>
 
-<script type="text/javascript" src="../ControlEventos/DERIVAR.JS"></script>
+<script type="text/javascript" src="../ControlEventos/derivar.js"></script>
 <script type="text/javascript" src="./emergenciadetalle.js"></script>
 
 </html>
