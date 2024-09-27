@@ -90,12 +90,11 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 
     <?php
 require_once('modalDerivar.php');
-// require_once('modalCerrar.php');
 require_once("../MainJs/js.php");
 ?>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdCMoRAl_-ARUflpa4Jn_qUoOpdXlxQEg&libraries=places"></script>
 </body>
-
+<script type="text/javascript" src="./derivar.js"></script>
 <script type="text/javascript" src="./evento.js"></script>
 <?php
 if (isset($_GET['id_evento'])) {

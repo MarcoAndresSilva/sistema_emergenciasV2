@@ -23,6 +23,7 @@ function cargarTablaGeneral() {
             "type": "POST",
             "dataSrc": "" 
         },
+        "order": [[6, "desc"]],
         "columns": [
             { "data": "ev_id" },
             { "data": "categoria" },

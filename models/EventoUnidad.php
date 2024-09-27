@@ -113,6 +113,25 @@ class EventoUnidad extends Conectar {
         }
     }
 
+
+    public function get_datos_UnidadesAsignadas_por_evento($unid_id) {
+        $sql = "SELECT * FROM `tm_asignado` as asg
+        JOIN tm_unidad as unid
+        on (unid.unid_id=asg.unid_id)
+        where asg.ev_id = :ev_id";
+        
+        $params = [':ev_id' => $unid_id];
+        $resultado = $this->ejecutarConsulta($sql, $params);
+    
+        if (is_array($resultado) && count($resultado) > 0) {
+            return $resultado;
+        } else {
+            return false;
+        }
+    }
+    
+
+
     //update_asignacion_evento segun id
 	public function update_asignacion_evento($ev_id, $unid_id) {
 		try {

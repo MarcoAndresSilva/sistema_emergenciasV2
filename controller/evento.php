@@ -142,7 +142,6 @@ if (isset($_GET["op"])) {
 
         case "tabla-control":
 
-
             $eventos = [];
         
             $datos = $evento->get_evento();
@@ -213,97 +212,6 @@ if (isset($_GET["op"])) {
                 echo json_encode([]);
             }
         break;
-
-        // case "tabla-general-historial":
-
-        //     $html = "";
-        //     $critico = "";
-        //     $medio = "";
-        //     $bajo = "";
-        //     $comun = "";
-            
-            
-        //     $datos = $evento->get_evento();
-        //     if (is_array($datos) == true and count($datos) > 0) {
-        
-        //         //Datos para Tabla comun variable = $html
-        //         //Recorre los resultados que entrego la funcion get_evento_nivel(1)
-        //         foreach ($datos as $row) {
-        //             //Variable temporar para recorrido y almacenamiento
-        //             $recorrido = "";
-        //             $recorrido .= "<tr class='modalInfo'>";
-        
-        //             $recorrido .= "<td id='id_evento_celda_historial' value='" . $row['ev_id'] . "'>" . $row['ev_id'] . "</td>";
-        //             //Llama a la funcion get_datos_categoria para obtener el nombre de la categoria
-        //             $datos_categoria = $categoria->get_datos_categoria($row['cat_id']);
-        //             foreach ($datos_categoria as $row_categoria) {
-        //                 $recorrido .= "<td>". $row_categoria['cat_nom']. "</td>";
-        //             }
-        
-        //             $direccion = $row['ev_direc'];
-        //             $recorrido .= "<td>" . $direccion . "</td>";
-
-        //             //Llama a la funcion get_datos_estado para obtener el estado
-        //             $dato_estado = $estado->get_datos_estado($row['ev_est']);
-        //                 foreach ($dato_estado as $row_estado) {
-        //                    if ($row_estado['est_nom'] == "En Proceso") {
-        //                        $recorrido .= "<td><span class='label label-pill label-warning'>" . $row_estado['est_nom'] . "</span></td>";
-        //                    } else if ($row_estado['est_nom'] == "Finalizado") {
-        //                        $recorrido .= "<td><span class='label label-pill label-success'>" . $row_estado['est_nom'] . "</span></td>";
-        //                    } else {
-        //                        $recorrido .= "<td>" . $row_estado['est_nom'] . "</td>";
-        //                    }
-        //             }
-        //             // fecha y hora apertura
-        //             $recorrido .= "<td>" . $row['ev_inicio'] . "</td>";
-
-        //             //btn modal
-        //             $recorrido .= "<td> <button id='btn' type='button' class='btn btn-inline btn-primary btn-sm ladda-button btnInfoEmergencia '> <i class='fa-regular fa-folder-open'></i></button>
-        //             </td>";
-
-        //             $recorrido .= "</tr>";
-
-                   
-
-        //             //Filtro de filas por nivel de peligro
-        //             if($row['ev_est'] == 1){
-        //                 if($row['ev_niv_id'] == 1){
-        //                     $critico .= $recorrido; 
-        //                 }else if($row['ev_niv_id'] == 2) {
-        //                     $medio .= $recorrido; 
-        //                 }else if($row['ev_niv_id'] == 3) {
-        //                     $bajo .= $recorrido; 
-        //                 }else if($row['ev_niv_id'] == 0) {
-        //                     $comun .= $recorrido;
-        //                 }
-        //             }
-        //             $html .= $recorrido;
-        //         }
-        //         $respuesta = array(
-        //             'html' => $html,
-        //             'critico' => $critico,
-        //             'medio' => $medio,
-        //             'bajo' => $bajo,
-        //             'comun' => $comun
-        //         );
-        //         echo json_encode($respuesta);
-        //     }else{
-        //         $html = "<tr><td colspan=5>No se encontraron registros</td></tr>";
-        //         $critico = "<tr><td colspan=5>No se encontraron registros</td></tr>";
-        //         $medio = "<tr><td colspan=5>No se encontraron registros</td></tr>";
-        //         $bajo = "<tr><td colspan=5>No se encontraron registros</td></tr>";
-        //         $comun = "<tr><td colspan=5>No se encontraron registros</td></tr>";
-        //         $respuesta = array(
-        //             'html' => $html,
-        //             'critico' => $critico,
-        //             'medio' => $medio,
-        //             'bajo' => $bajo,
-        //             'comun' => $comun
-        //         );
-                
-        //         echo json_encode($respuesta);
-        //     }
-        // break;
 
         case "tabla-historial-eventos": 
             $eventos = [];
@@ -551,14 +459,15 @@ if (isset($_GET["op"])) {
                 echo '<script> console.log(Error al obtener evento con la id: ' . $ev_id . ') </script>';
             }
         break;
-
         case "cerrar_evento":
-
-            $imagen = $_FILES["imagen"];
-            $carpeta = "imagenesCierres";
-
-            // Guardar la imagen usando la función guardarImagen
-            $adjunto = guardarImagen($imagen, $carpeta);
+            $adjunto = null;
+            if (isset($_POST["adjunto"])) {
+                $imagen = $_FILES["adjunto"];
+                $carpeta = "imagenesCierres";
+                // Guardar la imagen usando la función guardarImagen
+                $adjunto = guardarImagen($imagen, $carpeta);
+            }
+            
             
             $usu_id = $_SESSION["usu_id"];
             
@@ -573,16 +482,20 @@ if (isset($_GET["op"])) {
                     $usu_id,
                     $adjunto
                 );
-                
-                if ($datos == true) {
+        
+                // Verificar si cerrar_evento devuelve true
+                if ($datos === true) {
                     echo 1;
                 } else {
-                    echo 0;
+                    // Imprimir el error recibido para diagnóstico
+                    echo "Error al cerrar el evento. Detalles: ";
+                    var_dump($datos); // Asegúrate de revisar qué está devolviendo esta función
                 }
             } else {
-                echo 0; // No se encontró el usuario
+                echo "Error: Usuario no encontrado"; // Mensaje de error detallado si no se encuentra el usuario
             }
-            break;
+        break;
+
 
         case "cantidad-eventos":
             
