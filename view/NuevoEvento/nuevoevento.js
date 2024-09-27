@@ -1,21 +1,62 @@
 $(document).ready(function() {
 
-  // Obtener el elemento <a> por su clase
+  // Obtener el elemento <a> por su ID
   var enlace = document.querySelector('.NuevoEvento');
   // Añadir una clase al enlace
   enlace.classList.add('selected');
-
 });
 
-var defaultLocation = { lat: -33.7402, lng: -71.2060 }; // Coordenadas de Melipilla
-var mapContainer = document.getElementById('map');
-var map;
-var marker;
-var currentLat; // Variable para almacenar la latitud actual
-var currentLng; // Variable para almacenar la longitud actual
+
+
+var map, marker;
+var melipilla = {lat: -33.68546006255509, long: -71.21451520290904};
+var currentLat = melipilla.lat;
+var currentLng = melipilla.long;
+
+$(document).ready(function() {
+  initMap();
+  initAutocomplete();
+  cargarCategorias();
+
+  $('#solicitarUbicacion').on('change', function() {
+    if ($(this).is(':checked')) {
+      obtenerUbicacionUsuario();
+    } else {
+      resetMapToDefault();
+    }
+  });
+
+  $('#address').on('input', function() {
+    var address = $(this).val();
+    if (address) {
+      geocodeAddress(address);
+    }
+  });
+
+  $('#btnGuardar').on('click', function() {
+    if (validarFormulario()) {
+      var direccion = $('#address').val();
+      var latitud = currentLat;
+      var longitud = currentLng;
+      $('#ev_latitud').val(latitud);
+      $('#ev_longitud').val(longitud);
+      add_evento();
+    }
+  });
+
+  $('#imagen').on('change', function() {
+    var label = document.getElementById('archivoAdjuntado');
+    if (this.files && this.files.length > 0) {
+      label.textContent = this.files[0].name;
+    } else {
+      label.textContent = 'No hay archivo adjunto (.JPG/.JPEG/.PNG)';
+    }
+  });
+});
 
 function initMap() {
-  map = new google.maps.Map(mapContainer, {
+  var defaultLocation = { lat: currentLat, lng: currentLng };
+  map = new google.maps.Map(document.getElementById('map'), {
     zoom: 17,
     center: defaultLocation
   });
@@ -28,78 +69,156 @@ function initMap() {
   });
 
   google.maps.event.addListener(marker, 'dragend', function(event) {
-    currentLat = event.latLng.lat(); // Actualizar latitud
-    currentLng = event.latLng.lng(); // Actualizar longitud
-    console.log('Nuevas coordenadas: ' + currentLat + ',' + currentLng);
-    // Actualizar los campos ocultos de latitud y longitud
+    currentLat = event.latLng.lat();
+    currentLng = event.latLng.lng();
     $('#ev_latitud').val(currentLat);
     $('#ev_longitud').val(currentLng);
-    // Actualizar el campo de dirección
-    actualizarDireccion(currentLat, currentLng);
+    $('#address').val(updateAddressFromLatLng(currentLat, currentLng));
   });
 }
 
 function obtenerUbicacionUsuario() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(function(position) {
-      var userLocation = {
+      var pos = {
         lat: position.coords.latitude,
         lng: position.coords.longitude
       };
+      map.setCenter(pos);
+      marker.setPosition(pos);
+      currentLat = pos.lat;
+      currentLng = pos.lng;
+      $('#ev_latitud').val(currentLat);
+      $('#ev_longitud').val(currentLng);
 
-      map.setCenter(userLocation);
-      marker.setPosition(userLocation);
-      currentLat = userLocation.lat;
-      currentLng = userLocation.lng;
-      // Actualizar los campos ocultos de latitud y longitud
-      $('#ev_latitud').val(currentLat);
-      $('#ev_longitud').val(currentLng);
-      // Actualizar el campo de dirección
-      actualizarDireccion(currentLat, currentLng);
-    }, function(error) {
-      // Si la geolocalización falla, centrar el mapa en la ubicación predeterminada (Melipilla)
-      map.setCenter(defaultLocation);
-      marker.setPosition(defaultLocation);
-      currentLat = defaultLocation.lat;
-      currentLng = defaultLocation.lng;
-      // Actualizar los campos ocultos de latitud y longitud
-      $('#ev_latitud').val(currentLat);
-      $('#ev_longitud').val(currentLng);
-      // Actualizar el campo de dirección
       actualizarDireccion(currentLat, currentLng);
     });
   } else {
-    // Si el navegador no soporta geolocalización, centrar el mapa en la ubicación predeterminada (Melipilla)
-    map.setCenter(defaultLocation);
-    marker.setPosition(defaultLocation);
-    currentLat = defaultLocation.lat;
-    currentLng = defaultLocation.lng;
-    // Actualizar los campos ocultos de latitud y longitud
+    alert('Geolocalización no soportada por tu navegador.');
+  }
+}
+
+function resetMapToDefault() {
+  var defaultLocation = { lat: melipilla.lat, lng: melipilla.long };
+  map.setCenter(defaultLocation);
+  marker.setPosition(defaultLocation);
+  currentLat = melipilla.lat;
+  currentLng = melipilla.long;
+  $('#ev_latitud').val(currentLat);
+  $('#ev_longitud').val(currentLng);
+  $('#address').val('');
+}
+
+function initMap() {
+  var defaultLocation = { lat: currentLat, lng: currentLng };
+  map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 17,
+    center: defaultLocation
+  });
+
+  marker = new google.maps.Marker({
+    position: defaultLocation,
+    map: map,
+    title: 'Arrastrar',
+    draggable: true
+  });
+
+  google.maps.event.addListener(marker, 'dragend', function(event) {
+    currentLat = event.latLng.lat();
+    currentLng = event.latLng.lng();
     $('#ev_latitud').val(currentLat);
     $('#ev_longitud').val(currentLng);
-    // Actualizar el campo de dirección
-    actualizarDireccion(currentLat, currentLng);
+    $('#address').val(updateAddressFromLatLng(currentLat, currentLng));
+  });
+}
+
+function geocodeAddress(address) {
+  var geocoder = new google.maps.Geocoder();
+  geocoder.geocode({ 'address': address }, function(results, status) {
+    if (status === google.maps.GeocoderStatus.OK) {
+      var location = results[0].geometry.location;
+      currentLat = location.lat();
+      currentLng = location.lng();
+      map.setCenter(location);
+      marker.setPosition(location);
+      $('#ev_latitud').val(currentLat);
+      $('#ev_longitud').val(currentLng);
+    } else {
+      console.error('Geocoding falló debido a: ' + status);
+    }
+  });
+}
+
+function obtenerUbicacionUsuario() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      function(position) {
+        var pos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+        map.setCenter(pos);
+        marker.setPosition(pos);
+        currentLat = pos.lat;
+        currentLng = pos.lng;
+        $('#ev_latitud').val(currentLat);
+        $('#ev_longitud').val(currentLng);
+
+        actualizarDireccion(currentLat, currentLng);
+      },
+      function(error) {
+        // Manejar diferentes tipos de errores
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            swal("Advertencia", "Necesitas permitir el acceso al GPS para usar esta función.", "warning");
+            break;
+          case error.POSITION_UNAVAILABLE:
+            swal("Advertencia", "La información de ubicación no está disponible.", "warning");
+            break;
+          case error.TIMEOUT:
+            swal("Advertencia", "El tiempo de espera para obtener la ubicación ha expirado.", "warning");
+            break;
+          default:
+            swal("Error", "Error desconocido al obtener la ubicación.", "error");
+            break;
+        }
+      }
+    );
+  } else {
+    swal("Error", "Geolocalización no soportada por tu navegador.", "error");
   }
 }
 
 function initAutocomplete() {
   var input = document.getElementById('address');
   var autocomplete = new google.maps.places.Autocomplete(input);
-  autocomplete.setFields(['address_component', 'geometry']);
-
   autocomplete.addListener('place_changed', function() {
     var place = autocomplete.getPlace();
-
-    if (!place.geometry) {
-      console.error("No se pudo obtener la información de la dirección.");
-      return;
-    }
-
-    var formattedAddress = place.formatted_address;
-    if ($('#address').val() !== formattedAddress) {
-      $('#address').val(formattedAddress);
+    if (place.geometry) {
+      currentLat = place.geometry.location.lat();
+      currentLng = place.geometry.location.lng();
+      $('#ev_latitud').val(currentLat);
+      $('#ev_longitud').val(currentLng);
+      marker.setPosition(place.geometry.location);
+      map.setCenter(place.geometry.location);
     }
   });
+}
+
+function updateAddressFromLatLng(lat, lng) {
+  var geocoder = new google.maps.Geocoder();
+  var latLng = new google.maps.LatLng(lat, lng);
+  var address = '';
+
+  geocoder.geocode({ 'latLng': latLng }, function(results, status) {
+    if (status === google.maps.GeocoderStatus.OK && results[0]) {
+      address = results[0].formatted_address;
+      $('#address').val(address);
+    } else {
+      console.error('Geocoding falló debido a: ' + status);
+    }
+  });
+  return address;
 }
 
 function cargarCategorias() {
@@ -111,60 +230,13 @@ function cargarCategorias() {
   });
 }
 
-$(document).ready(function() {
-  initMap();
-  initAutocomplete();
-  cargarCategorias();
-  obtenerUbicacionUsuario();
-  $('#elegir-ubicacion').on('change', function() {
-    var selectedOption = $(this).val();
-    if (selectedOption === 'direccion-escrita') {
-      $('#direccion-escrita').show();
-      $('#direccion-geolocalizacion').hide();
-    } else if (selectedOption === 'ubicacion-content') {
-      $('#direccion-escrita').hide();
-      $('#direccion-geolocalizacion').show();
-    }
-  });
-
-  document.querySelectorAll('input[name="ubicacion"]').forEach(function(radio) {
-    radio.addEventListener('change', function() {
-      toggleMap();
-      if (this.value === 'permitir' || this.value === 'permitirActual') {
-        obtenerUbicacionUsuario();
-      }
-    });
-  });
-
-  $('#btnGuardar').off('click').on('click', function() {
-    if (validarFormulario()) {
-      var direccion = $('#address').val();
-      var latitud = currentLat; // Usar la variable de latitud actual
-      var longitud = currentLng; // Usar la variable de longitud actual
-      $('#ev_latitud').val(latitud);
-      $('#ev_longitud').val(longitud);
-      add_evento();
-    }
-  });
-
-  document.getElementById('btnCargarArchivo').addEventListener('click', function(event) {
-    event.preventDefault();
-    document.getElementById('imagen').click();
-  });
-
-  document.getElementById('imagen').addEventListener('change', function() {
-    var label = document.getElementById('archivoAdjuntado');
-    if (this.files && this.files.length > 0) {
-      label.textContent = this.files[0].name;
-    } else {
-      label.textContent = 'No hay archivo adjunto (.JPG/.JPEG/.PNG)';
-    }
-  });
-});
-
 function toggleMap() {
-  var permitirUbicacion = $('input[name="ubicacion"]:checked').val() === 'permitir' || $('input[name="ubicacion"]:checked').val() === 'permitirActual';
-  mapContainer.style.display = permitirUbicacion ? 'block' : 'none';
+  if ($('#permitirActual').is(':checked')) {
+    $('#map').show();
+    obtenerUbicacionUsuario();
+  } else {
+    $('#map').hide();
+  }
 }
 
 function validarFormulario() {
@@ -228,19 +300,33 @@ function obtenerDireccionDesdeCoordenadas(lat, lng) {
   });
 }
 
-async function actualizarDireccion(lat, lng) {
-  try {
-    const direccion = await obtenerDireccionDesdeCoordenadas(lat, lng);
-    $('#address').val(direccion);
-  } catch (error) {
-    console.error(error);
-    $('#address').val('Sin dirección');
-  }
+function actualizarDireccion(lat, lng) {
+  var geocoder = new google.maps.Geocoder();
+  var latlng = new google.maps.LatLng(lat, lng);
+
+  geocoder.geocode({ 'latLng': latlng }, function(results, status) {
+    if (status === google.maps.GeocoderStatus.OK) {
+      if (results[0]) {
+        $('#address').val(results[0].formatted_address);
+      }
+    }
+  });
 }
 
 
 
 async function add_evento() {
+  disableSubmit();
+
+  Swal.fire({
+    title: 'Guardando...',
+    html: 'Por favor, espera mientras procesamos tu solicitud.',
+    allowOutsideClick: false,
+    didOpen: () => {
+      Swal.showLoading();
+    }
+  });
+
   let ev_latitud = $('#ev_latitud').val();
   let ev_longitud = $('#ev_longitud').val();
 
@@ -316,9 +402,10 @@ async function add_evento() {
       }
 
 
+      enableSubmit();
+      Swal.close();
       if (data.status === 'success') {
         swal("Éxito", data.message, "success")
-          addNotification("Nuevo Evento", "evento nuevo por derivar", "../ControlEventos/");
           formulario = document.getElementById("event_form");
           formulario.reset();
       } else if (data.status === 'error') {
@@ -330,6 +417,27 @@ async function add_evento() {
     error: function(jqXHR, textStatus, errorThrown) {
       console.error("Error en la solicitud de agregar evento: ", textStatus, errorThrown);
       swal("Error al agregar evento", "No se pudo agregar el evento.", "error");
+      Swal.close();
     }
   });
+}
+
+function disableSubmit() {
+  $('#btnGuardar').prop('disabled', true);
+  let spiner = `<div class="spinner-border text-secondary" role="status">
+                  <span class="sr-only"></span>
+                </div>
+                <span>Enviando...</span>
+              `;
+
+  document.getElementById("btnGuardar").innerHTML = spiner;
+}
+
+function enableSubmit() {
+  $('#btnGuardar').prop('disabled', false);
+  changedtextsubimt("AGREGAR NUEVA EMERGENCIA");
+}
+
+function changedtextsubimt(text){
+  $('#btnGuardar').text(text)
 }

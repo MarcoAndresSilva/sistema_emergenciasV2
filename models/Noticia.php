@@ -40,10 +40,10 @@ class Noticia extends Conectar {
     if ($add_noticia["status"] !== "success"){
       return ["status"=>"error", "message"=>"Error al agregar", "add_noticia"=>$add_noticia];
     }
-    $tipo_usuario = $this->regla_usuario_enviar_por_asunto($asunto);
+    $lista_usuario = $this->usuarios_a_enviar_segun_regla($asunto);
     $ultima_noticia = $this->obtenerUltimoRegistro('tm_noticia',"noticia_id");
     $id_noticia_new = $ultima_noticia["noticia_id"];
-    $envio_usuario = $this->enviar_noticia_grupal_por_tipo($id_noticia_new,$tipo_usuario);
+    $envio_usuario = $this->enviar_noticia_grupal_por_lista_usuario($id_noticia_new,$lista_usuario);
     if ($envio_usuario["status"] !== "success"){
       return [
         "status"=>"error",
@@ -60,11 +60,11 @@ class Noticia extends Conectar {
     ];
   }
 
- public function enviar_noticia_grupal_por_tipo(int $noticia, int $tipo_usuario) {
+ public function enviar_noticia_grupal_por_lista_usuario(int $noticia, array $lista_usuario) {
     $sql = "INSERT INTO tm_noticia_usuario(usu_id,noticia_id) VALUES ";
-    $valores_usuario = $this->preparar_consulta_por_tipo_usuario($tipo_usuario,$noticia);
+    $valores_usuario = $this->preparar_consulta_por_lista_usuario($lista_usuario,$noticia);
     $sql .= $valores_usuario;
-    // ! FIX: puede ver error por sin dato en valores_usuario
+    // !FIX: puede ver error por sin dato en valores_usuario
     try {
         $result = $this->ejecutarAccion($sql);
         if ($result) {
@@ -89,13 +89,25 @@ class Noticia extends Conectar {
     return ["status"=>"warning", "message"=>"No se pudo enviar mensaje"];
 
   }
-  public  function preparar_consulta_por_tipo_usuario($tipo_usuario,$id_noticia){
-    $usuario = new Usuario();
-    $list_usuario = $usuario->get_full_usuarios_tipo($tipo_usuario);
-// ! FIX: en caso de que no tenga datos el list_usuario 
+  public function crear_y_enviar_noticia_simple($data) {
+    $asunto = $data['asunto'];
+    $mensaje = $data['mensaje'];
+    $url = $data['url'];
+    $usuario_id = $data['usuario_id'];
+    $news = $this->add_noticia($asunto,$mensaje,$url);
+    if($news["status"] !== "success"){
+      return ["status"=>"error"];
+    }
+    $news_last = $this->obtenerUltimoRegistro("tm_noticia","noticia_id");
+
+    $noticia_simple = $this->enviar_noticia_simple($news_last["noticia_id"],$usuario_id);
+
+    return $noticia_simple;
+  }
+  public  function preparar_consulta_por_lista_usuario($list_usuarios,$id_noticia){
     $consulta = "";
-    foreach($list_usuario as $item){
-        $id_usuario = $item["usu_id"];
+    foreach($list_usuarios as $usuario){
+        $id_usuario = $usuario["usu_id"];
         $consulta .= "($id_usuario,$id_noticia),";
     }
     if (!empty($consulta)){
@@ -122,6 +134,7 @@ class Noticia extends Conectar {
                     nti.mensaje AS 'mensaje',
                     ns.leido AS 'leido',
                     nti.noticia_id AS 'id',
+                    ns.fecha_lectura AS 'fecha_leido',
                     coalesce(nti.url,'#') AS 'url'
             FROM tm_noticia_usuario as ns
             JOIN tm_noticia as nti
@@ -132,30 +145,104 @@ class Noticia extends Conectar {
     if ($result){
       return $result;
     }
-    return array('status'=>'error', 'message'=>"Problemas al optener informacion de las noticias");
+    if ($result == null){
+      return [];
+    }
   }
-  public function regla_usuario_enviar_por_asunto(string $asunto){
-      $super_user = 1;
-      $admin = 2;
-      $basico = 3;
-      $actual = $_SESSION["usu_id"];
 
-      $enviar = [
-        "Nuevo Evento"=>$admin,
-        "Cambio Perfil"=>$actual,
-        "Cambio perfil"=>$basico,
-        "Derivado"=>$admin
-      ];
-
-       return $enviar[$asunto];
-  }
   public function lista_posibles_envios_por_ids(string $ids, string $id_name){
-    $sql = "SELECT * FROM tm_usuario WHERE :id_name in ( :ids );";
-    $params = [
-      ":id_name" => $id_name,
-      ":ids"=>$ids,
-    ];
-    return $this->ejecutarConsulta($sql,$params);
-  }
+    // WARNING: no se puede usar el ejecutarConsulta porque agrega comillas o 
+    // termina utilizando los numeros como un string
+    $conectar = parent::conexion();
+    parent::set_names();
+    $idsArray = explode(',', $ids);
+    $placeholders = implode(',', array_fill(0, count($idsArray), '?'));
+    $sql = "SELECT * FROM tm_usuario WHERE $id_name IN ($placeholders);";
+    $consulta = $conectar->prepare($sql);
+    $consulta->execute($idsArray);
+    return $consulta->fetchAll(PDO::FETCH_ASSOC);
+}
 
+public function eliminarDuplicadosPorUsuId(...$listas) {
+    $todosLosElementos = [];
+
+    foreach ($listas as $lista) {
+        $todosLosElementos = array_merge($todosLosElementos, $lista);
+    }
+    
+    // Utilizar un array asociativo para eliminar duplicados basados en usu_id
+    $usuariosUnicos = [];
+    
+    foreach ($todosLosElementos as $elemento) {
+        $usuariosUnicos[$elemento['usu_id']] = $elemento;
+    }
+    return array_values($usuariosUnicos);
+}
+ public function get_regla_envio_por_asunto(string $asunto = null) {
+    $sql = "SELECT * FROM tm_regla_envio WHERE asunto = :asunto;";
+    $params = [":asunto"=>$asunto];
+    return $this->ejecutarConsulta($sql,$params,false);
+ }
+
+ public function get_reglas() {
+    $sql = "SELECT * FROM tm_regla_envio;";
+    return $this->ejecutarConsulta($sql);
+ }
+public function usuarios_a_enviar_segun_regla(string $asunto) {
+    $list_regla = $this->get_regla_envio_por_asunto($asunto);
+
+    $filtro = [
+      "tipo_usuario" => [
+        "id_name" =>"usu_tipo",
+        "value"=> $list_regla["tipo_usuario"],
+      ],
+      "usuario" =>[
+        "id_name" =>"usu_id",
+        "value"=> $list_regla["usuario"],
+      ],
+      "seccion" =>[
+        "id_name" =>"usu_id",
+        "value"=> $list_regla["seccion"],
+      ],
+      "unidad" =>[
+        "id_name" =>"usu_unidad",
+        "value"=> $list_regla["unidad"],
+      ]
+    ];
+
+    // Si el valor es null, asigna un array vacío
+    $tipo_usuario = $filtro["tipo_usuario"]["value"] !== null
+        ? $this->lista_posibles_envios_por_ids($filtro["tipo_usuario"]["value"], $filtro["tipo_usuario"]["id_name"])
+        : [];
+
+    $usuario = $filtro["usuario"]["value"] !== null
+        ? $this->lista_posibles_envios_por_ids($filtro["usuario"]["value"], $filtro["usuario"]["id_name"])
+        : [];
+
+    $unidad = $filtro["unidad"]["value"] !== null
+        ? $this->lista_posibles_envios_por_ids($filtro["unidad"]["value"], $filtro["unidad"]["id_name"])
+        : [];
+
+    $seccion = $filtro["seccion"]["value"] !== null
+        ? $this->lista_posibles_envios_por_ids($filtro["seccion"]["value"], $filtro["seccion"]["id_name"])
+        : [];
+
+    return $this->eliminarDuplicadosPorUsuId($tipo_usuario,$usuario,$unidad,$seccion);
+  }
+  public function update_regla_envio(array $args) {
+    $sql = "UPDATE tm_regla_envio
+            SET unidad= :unidad , seccion= :seccion,usuario= :usuario ,tipo_usuario= :tipo_usuario WHERE id_regla= :id_regla";
+    $params = [
+      ":seccion"=> $args["seccion"],
+      ":usuario"=> $args["usuario"],
+      ":tipo_usuario"=> $args["tipo_usuario"],
+      ":unidad"=> $args["unidad"],
+      ":id_regla"=> $args["id_regla"],
+    ];
+    $result = $this->ejecutarAccion($sql,$params);
+    if ($result){
+        return ["status"=>"success", "message"=>"actualizacion exitosa"];
+    } 
+    return ["status"=>"warning", "message"=>"no se hizo ningun cambio"];
+  }
 }

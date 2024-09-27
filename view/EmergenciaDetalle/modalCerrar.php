@@ -35,8 +35,7 @@
 							</fieldset>
 							<fieldset class="form-group">
 								<label class="form-label semibold" for="exampleInput">Desea adjuntar una imagen de la emergencia?</label>
-								<input type="file" id="imagen" name="imagen" accept="image/*">
-								<button id="btnCargarArchivo" class="btn btn-round btn-inline btn-primary">Cargar Archivo</button>
+								<input class="form-control" type="file" id="imagen" name="imagen" accept="image/*">
 								<!-- <label id="archivoAdjuntado">No hay archivo adjunto (.JPG/.JPEG/.PNG)</label> -->
 							</fieldset>
 							<fieldset class="form-group box-selection" id="buttons-group">

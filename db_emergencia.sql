@@ -237,7 +237,7 @@ CREATE TABLE `tm_ev_cierre` (
   `ev_id` int(11) NOT NULL,
   `detalle` varchar(300) NOT NULL,
   `motivo` int NOT NULL,
-  `adjunto` blob
+  `adjunto` varchar(300)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -633,7 +633,7 @@ PRIMARY KEY (id_regla)
 
 INSERT INTO tm_regla_envio (asunto, unidad, seccion, usuario, tipo_usuario)
 VALUES  ('Nuevo Evento', '1,2,4', '1,2,4', '1,2,4', '1,2,4'),
-        ('Nuevo Evento', null, null, '4', '1');
+        ('Evento Cerrado', null, null, '4', '1');
 
 --
 -- Indices de la tabla `tm_camb_asig`

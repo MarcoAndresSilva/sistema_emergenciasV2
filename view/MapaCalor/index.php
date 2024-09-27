@@ -13,6 +13,11 @@ Permisos::redirigirSiNoAutorizado();
   <link rel="stylesheet" href="./stylemapacalor.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.bootstrap5.css" />
+  <script defer src="https://cdn.datatables.net/1.13.6/js/dataTables.js"></script>
+  <script defer src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.js"></script>
+  <script defer src="https://cdn.datatables.net/responsive/2.0.3/js/dataTables.responsive.min.js"></script>
+  <script defer src="https://cdn.datatables.net/responsive/2.0.3/js/responsive.dataTables.min.js"></script>
   <script type="module" src="./mapacalor.js"></script>
 </head>
 
@@ -47,12 +52,20 @@ Permisos::redirigirSiNoAutorizado();
   <i class="fas fa-eye btn-icon"></i> Mostrar Puntos de Interés
 </button>
 <button id="dateFilterButton" class="btn btn-warning"><i class="fa fa-filter btn-icon" aria-hidden="true"></i> Filtros</button>
+<button id="searchevento" class="btn btn-warning"><i class="fa fa-search btn-icon" aria-hidden="true"></i> Buscar evento</button>
 <div id="controls" class="row" role="group" aria-label="Controles de mapa">
   <!-- Aquí se insertarán los botones de categorías -->
 </div>
 <!-- Contenedor del mapa -->
+<div class="input-group mb-3">
+  <input class="form-control" type="text" id="searchInput" placeholder="Buscar calle" />
+  <button class="btn btn-outline-secondary" id="searchButton">Buscar</button>
+</div>
   <div id="map"></div>
-<div id="summaryTableContainer" class="table-responsive"></div>
+<div class="row bg-white">
+<div id="summaryTableContainer" class="col-6 table-responsive"></div>
+<div id="tableContainerFull" class="col-6 table-responsive"></div>
+</div>
   <!-- Controles de filtro por categoría -->
 
         </div><!--.container-fluid-->
@@ -85,7 +98,7 @@ Permisos::redirigirSiNoAutorizado();
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <?php require_once("../MainFooter/footer.php"); ?>
     <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdCMoRAl_-ARUflpa4Jn_qUoOpdXlxQEg&callback=initMap&libraries=visualization&v=weekly&loading=async"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAQrYCFSz7Q-a-WONxo4yymu9SAPgmaA6c&callback=initMap&libraries=visualization,places&v=weekly&loading=async"
       defer
     ></script>
 </body>

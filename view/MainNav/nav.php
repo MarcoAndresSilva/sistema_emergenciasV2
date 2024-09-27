@@ -30,7 +30,13 @@
         <?php 
         if ($_SESSION["usu_tipo"] == 2) {
         ?> 
-
+         <!-- Evento -->
+         <li class="blue-dirty">
+            <a class="ControlEventos" href="../ControlEventos/">
+                <span class="glyphicon glyphicon-th"></span>
+                <span class="lbl"> Control de Eventos</span>
+            </a>
+        </li>
         <!-- Evento -->
         <li class="blue-dirty">
             <a class="MapaCalor" href="../MapaCalor/">
@@ -39,13 +45,7 @@
             </a>
         </li>
 
-        <!-- Evento -->
-        <li class="blue-dirty">
-            <a class="ControlEventos" href="../ControlEventos/">
-                <span class="glyphicon glyphicon-th"></span>
-                <span class="lbl"> Control de Eventos</span>
-            </a>
-        </li>
+       
 
 
         <!-- Parametría -->
@@ -60,6 +60,10 @@
                     <a class="Unidad-Municipal" href="../UnidadMunicipal/">
                         <span class="glyphicon glyphicon-asterisk"></span>
                         <span class="lbl">Unidades Municipales</span>
+                    </a>
+                    <a class="GestionReglasNoticia" href="../GestionReglasNoticia/">
+                        <span class="glyphicon glyphicon-asterisk"></span>
+                        <span class="lbl"> Gestion Reglas Noticia</span>
                     </a>
 
                     <a class="" href="../NivelCategoria/">

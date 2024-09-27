@@ -12,7 +12,7 @@ function cargarTablaGeneral() {
     $('#tabla-historial').DataTable({
         "pageLength": 10,
         "lengthMenu": [[10, 20, 50], [10, 20, 50]],
-        "ordering": false,
+        "ordering": true,
         "searching": true,
         "paging": true,
         "info": true,
@@ -23,6 +23,7 @@ function cargarTablaGeneral() {
             "type": "POST",
             "dataSrc": "" 
         },
+        "order": [[6, "desc"]],
         "columns": [
             { "data": "ev_id" },
             { "data": "categoria" },
@@ -31,7 +32,7 @@ function cargarTablaGeneral() {
             { "data": "nivel_peligro" },
             { "data": "estado" },
             { "data": "fecha_apertura" },
-            { "data": "ver_detalle" }
+            { "data": "ver_documentos" }
         ],
         "drawCallback": function(settings) {
             // Aquí aplicas nuevamente los estilos o cambios de color que necesitas
@@ -43,7 +44,7 @@ function cargarTablaGeneral() {
     });
 
          // Asegúrate de que el evento de clic esté delegado correctamente
-    $('#tabla-historial').on('click', '.btnDetalleEmergencia', function() {
+    $('#tabla-historial').on('click', '.btnDocumentos', function() {     
         var ev_id = $(this).data('ev-id');
         ver(ev_id);
     });
@@ -51,7 +52,7 @@ function cargarTablaGeneral() {
 
 function ver(ev_id) {
     // Abrir una nueva pestaña con la ruta especificada
-    window.open(`../EmergenciaDetalle?ID=${ev_id}`, '_blank');
+    window.open(`../DocumentosDetalle?ID=${ev_id}`, '_blank');
     
 }
 

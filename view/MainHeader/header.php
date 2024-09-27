@@ -74,7 +74,7 @@
                                     <!-- Las notificaciones se agregarán aquí dinámicamente -->
                                 </div>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item text-center" href="#">Ver todas</a>
+                                <a class="dropdown-item text-center" href="../Noticia/">Ver todas</a>
                             </div>
                         </div>
                     </div>

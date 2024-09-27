@@ -358,10 +358,15 @@ class Evento extends Conectar {
         }
     }
 
-    public function cerrar_evento($ev_id, $ev_final, $ev_est, $detalle_cierre, $motivo_cierre, $usu_id) {
+    public function cerrar_evento($ev_id, $ev_final, $ev_est, $detalle_cierre, $motivo_cierre, $usu_id, $adjunto) {
         try {
             $conectar = parent::conexion();
             parent::set_names();
+    
+            // Verificar que todos los valores no estén vacíos
+            if (empty($ev_id) || empty($ev_final) || empty($ev_est) || empty($detalle_cierre) || empty($motivo_cierre) || empty($usu_id)) {
+                return "Error: Datos incompletos";
+            }
     
             // Iniciar transacción
             $conectar->beginTransaction();
@@ -372,16 +377,27 @@ class Evento extends Conectar {
             $consulta_evento->bindValue(':ev_final', $ev_final);
             $consulta_evento->bindValue(':ev_est', $ev_est);
             $consulta_evento->bindValue(':ev_id', $ev_id);
-            $consulta_evento->execute();
+            $resultado_evento = $consulta_evento->execute();
+    
+            // Verificar si la consulta de actualización fue exitosa
+            if (!$resultado_evento) {
+                throw new Exception("Error al actualizar el evento.");
+            }
     
             // Insertar en la tabla tm_ev_cierre
-            $sql_cierre = "INSERT INTO tm_ev_cierre (usu_id, ev_id, detalle, motivo) VALUES (:usu_id, :ev_id, :detalle, :motivo)";
+            $sql_cierre = "INSERT INTO tm_ev_cierre (usu_id, ev_id, detalle, motivo,adjunto) VALUES (:usu_id, :ev_id, :detalle, :motivo,:adjunto)";
             $consulta_cierre = $conectar->prepare($sql_cierre);
             $consulta_cierre->bindValue(':usu_id', $usu_id);
             $consulta_cierre->bindValue(':ev_id', $ev_id);
             $consulta_cierre->bindValue(':detalle', $detalle_cierre);
             $consulta_cierre->bindValue(':motivo', $motivo_cierre);
-            $consulta_cierre->execute();
+            $consulta_cierre->bindValue(':adjunto', $adjunto);
+            $resultado_cierre = $consulta_cierre->execute();
+    
+            // Verificar si la consulta de inserción fue exitosa
+            if (!$resultado_cierre) {
+                throw new Exception("Error al insertar el cierre del evento.");
+            }
     
             // Confirmar transacción
             $conectar->commit();
@@ -390,11 +406,14 @@ class Evento extends Conectar {
         } catch (Exception $e) {
             // Revertir transacción en caso de error
             $conectar->rollBack();
-            echo "<script>console.log('Error catch cerrar_evento')</script>";
-            throw $e;
+            
+            // Mostrar el mensaje de error completo
+            echo "<script>console.log('Error en cerrar_evento: " . $e->getMessage() . "')</script>";
+            
+            // Devolver el mensaje de error para depuración
+            return "Error: " . $e->getMessage();
         }
     }
-
     public function get_evento_where($where){
         try {
             $conectar = parent::conexion();
@@ -484,11 +503,12 @@ class Evento extends Conectar {
     }
 
 
-    public function get_eventos_categoria_latitud_longitud(){
+    public function get_eventos_categoria_latitud_longitud($startDate = null, $endDate = null) {
         $sql = 'SELECT ev.ev_latitud as "latitud",
               		ev.ev_longitud as "longitud",
               		ev.ev_id as "id",
               		ev.ev_desc as "detalles",
+              		ev.ev_direc as "direccion",
               		ev.ev_img as "img",
               		ev.ev_inicio as "fecha_inicio",
               		IFNULL(ev.ev_final, "En Proceso") as "fecha_cierre",
@@ -503,10 +523,23 @@ class Evento extends Conectar {
               JOIN tm_ev_niv as nv
               ON (ev.ev_niv = nv.ev_niv_id)
               JOIN tm_unidad as un 
-              ON ( un.unid_id=usu.usu_unidad);';
-    return $this->ejecutarConsulta($sql);
-    }
+              ON ( un.unid_id=usu.usu_unidad)
+              WHERE 1 = 1';
 
+
+        $params = [];
+
+        if ($startDate) {
+            $sql .= ' AND DATE(ev.ev_inicio) >= :startDate';
+            $params[':startDate'] = $startDate;
+        }
+        if ($endDate) {
+            $sql .= ' AND DATE(ev.ev_inicio) <= :endDate';
+            $params[':endDate'] = $endDate;
+        }
+
+        return $this->ejecutarConsulta($sql, $params);
+    }
 
     public function datos_categorias_eventos($fecha_inicio) {
         try {
@@ -540,10 +573,13 @@ class Evento extends Conectar {
                 tm_emergencia_detalle.ev_inicio,
                 tm_usuario.usu_nom,
                 tm_usuario.usu_ape,
-                tm_usuario.usu_tipo
+                tm_usuario.usu_tipo,
+                tm_usuario.usu_unidad, -- Incluimos la unidad del usuario
+                tm_unidad.unid_nom -- Agregamos el nombre de la unidad
             FROM 
                 tm_emergencia_detalle
             INNER JOIN tm_usuario on tm_emergencia_detalle.usu_id = tm_usuario.usu_id
+            LEFT JOIN tm_unidad ON tm_usuario.usu_unidad = tm_unidad.unid_id -- Unimos con la tabla de unidades
             WHERE
                 tm_emergencia_detalle.ev_id = ?";
             
@@ -570,6 +606,7 @@ class Evento extends Conectar {
                 tm_evento.ev_desc,
                 tm_evento.ev_est,
                 tm_evento.ev_inicio,
+                tm_evento.ev_final, 
                 tm_usuario.usu_nom,
                 tm_usuario.usu_ape,
                 tm_categoria.cat_nom
@@ -589,7 +626,6 @@ class Evento extends Conectar {
             return false;
         }
     }
-    
     public function insert_emergencia_detalle($ev_id, $usu_id, $ev_desc) {
     try {
         $conectar = parent::conexion();

@@ -43,17 +43,18 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
             <div class="box-typical box-typical-padding table table-responsive-sm">
 
                 <!-- tabla de asuntos inmediatos (Alto) -->
-                <table class="table tabla-media tabla-basica table-bordered table-striped table-vcenter js-dataTable-js">
+                <table id="tabla-control" class="table tabla-media tabla-basica table-bordered table-striped table-vcenter js-dataTable-js">
                     <thead>
                         <tr>
                             <th style="width:5%">ID</th>
                             <th style="width:9.5%">Categor&iacute;a</th>
                             <th style="width:9.5%">Direcci&oacute;n</th>
-                            <th style="width:25%">Asignaci&oacute;n</th>
+                            <th style="width:20%">Asignaci&oacute;n</th>
                             <th style="width:10%">Nivel Peligro</th>
                             <th style="width:10%">Estado</th>
                             <th style="width:15%">Hora Apertura</th>
-                            <th style="width:5%">Derivar</th>
+                            <th style="width:5%">Derivar Evento</th>
+                            <th style="width:5%">Chat del Evento</th>
                             
                         </tr>
                     </thead>
@@ -89,12 +90,48 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 
     <?php
 require_once('modalDerivar.php');
-// require_once('modalCerrar.php');
 require_once("../MainJs/js.php");
 ?>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdCMoRAl_-ARUflpa4Jn_qUoOpdXlxQEg&libraries=places"></script>
 </body>
-
+<script type="text/javascript" src="./derivar.js"></script>
 <script type="text/javascript" src="./evento.js"></script>
+<?php
+if (isset($_GET['id_evento'])) {
+    $id_eventos = explode(',', $_GET['id_evento']);
+    $id_eventos = array_map('intval', $id_eventos);
+
+    $id_eventos_js = json_encode($id_eventos);
+
+    echo "<script defer type='text/javascript'>
+            window.onload = function() {
+                const id_eventos = $id_eventos_js;
+
+                // Ejecutar la función highlightRow cada 1 segundo (1000 milisegundos)
+                setInterval(function() {
+                    highlightRows(id_eventos);
+                }, 1000);
+          };
+          </script>";
+}
+?>
+<script defer type="text/javascript">
+    function highlightRows(id_eventos) {
+        const rows = document.querySelectorAll("td#id_evento_celda");
+
+        rows.forEach(cell => {
+            // Obtener el <tr> padre de la celda
+            const row = cell.closest("tr");
+
+            // Verificar si el id_evento de la celda está en la lista de id_eventos
+            if (id_eventos.includes(parseInt(cell.textContent))) {
+                row.classList.add("table-success");
+            } else {
+                row.classList.remove("table-success");
+            }
+        });
+    }
+</script>
 </html>
 
 <?php

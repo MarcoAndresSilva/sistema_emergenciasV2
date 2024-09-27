@@ -1,6 +1,7 @@
 <?php
 require_once("../config/conexion.php");
 require_once("../models/Usuario.php");
+require_once("../models/Noticia.php");
 require_once("../models/SeguridadPassword.php");
 require_once("../models/RegistroLog.php");
 $usuario = new Usuario();
@@ -156,6 +157,15 @@ if (isset($_GET["op"])) {
             $usu_id = $_POST['usu_id'];
             $new_pass = $_POST['new_pass'];
             $data = $usuario->update_password_force($new_pass,$usu_id);
+            $data_noticia =[
+              "asunto"=> "Cambio Contraseña",
+              "mensaje"=> "el administrador cambio tu contraseña
+                            tu contraseña nueva: $new_pass ",
+              "url"=> null,
+              "usuario_id"=> $usu_id,
+            ];
+            $noticia = new Noticia();
+            $info = $noticia->crear_y_enviar_noticia_simple($data_noticia);
             echo json_encode($data);
         break;
         case "update_usuario_tipo":
