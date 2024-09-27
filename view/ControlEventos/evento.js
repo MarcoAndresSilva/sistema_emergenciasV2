@@ -21,8 +21,9 @@ function cargarTablaGeneral() {
         "ajax": {
             "url": "../../controller/evento.php?op=tabla-control",
             "type": "POST",
-            "dataSrc": "" 
+            "dataSrc": ""
         },
+        "order": [[6, "desc"]],
         "columns": [
             { "data": "ev_id" },
             { "data": "categoria" },
@@ -33,10 +34,9 @@ function cargarTablaGeneral() {
             { "data": "fecha_apertura" },
             { "data": "ver_derivar" },
             { "data": "ver_detalle" }
-
         ],
-        "createdRow": function(row,data, dataIndex){
-        $("td", row).eq(0).attr("id","id_evento_celda");
+        "createdRow": function(row, data, dataIndex) {
+            $("td", row).eq(0).attr("id", "id_evento_celda");
         },
         "drawCallback": function(settings) {
             // Aquí aplicas nuevamente los estilos o cambios de color que necesitas
@@ -46,8 +46,6 @@ function cargarTablaGeneral() {
             $('.peligro_comun').addClass('label label-pill label-default');
         }
     });
-
-         // Asegúrate de que el evento de clic esté delegado correctamente
     $('#tabla-control').on('click', '#btnDetalleEmergencia', function() {
         ev_id = $(this).data('ev-id');
         ver(ev_id);
@@ -59,22 +57,20 @@ function ver(ev_id) {
     window.open(`../EmergenciaDetalle?ID=${ev_id}`, '_blank');
     
 }
-
-
- //Variable id_evento
- $id_evento = $(this).data('ev-id');
+var id_evento = $(this).data('ev-id');
 
 
 //////////btn derivar//////////// 
 $(document).on("click", "#btnPanelDerivar", function(e) {
     console.log('Button Derivar clicked');
     mostrarModal('#modalDerivar');
-   
-    $id_evento = $(this).data('ev-id');
-    mostrarIdEvento($id_evento);
-    consultarCategoria($id_evento);
-    consultarNivelPeligro($id_evento);
-    consultarUnidadDisponible($id_evento);
+    id_evento = $(this).data('ev-id');
+
+
+    mostrarIdEvento(id_evento);
+    consultarCategoria(id_evento);
+    consultarNivelPeligro(id_evento);
+    consultarUnidadDisponible(id_evento);
 });
 
 
@@ -88,10 +84,6 @@ function mostrarModal(modalId) {
     }
 }
 
-
-        
-    
-    
     
 //////////////////////////////////////////////// Abrir mapa////////////////////////////////////////////////////////////
 

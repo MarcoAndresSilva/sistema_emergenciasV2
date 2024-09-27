@@ -10,7 +10,7 @@ function consultarCategoria(ev_id) {
         try {
             var jsonData = JSON.parse(data);
             if (jsonData && jsonData.cat_nom) {
-                $('#cat_nom').text(jsonData.cat_nom); // Usar .text() para establecer el contenido del div
+                $('#cat_nombre_derivar').text(jsonData.cat_nom); // Usar .text() para establecer el contenido del div
             } else {
                 console.log("No se encontró el cat_nom correspondiente para el evento con ID: " + ev_id);
             }
