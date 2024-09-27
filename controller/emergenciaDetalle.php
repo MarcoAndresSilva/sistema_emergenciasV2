@@ -38,9 +38,6 @@ if (isset($_GET["op"])) {
                                 <div class="activity-line-item-user-status">
                                     <?php echo ($row['usu_tipo'] == 1) ? 'Basico' : 'Administrador'; ?>
                                 </div>
-                                <div class="activity-line-item-user-unit">
-                                    <?php echo $row['unid_nom']; ?>
-                                </div>
                             </div>
                         </header>
                         <div class="activity-line-action-list">
@@ -62,6 +59,7 @@ if (isset($_GET["op"])) {
                 echo "Error: ev_id no definido.";
             }
         break;
+
         case "mostrar":
             $datos = $evento->listar_evento_por_id($_POST["ev_id"]);
             if (is_array($datos) == true && count($datos) > 0) {
@@ -86,18 +84,6 @@ if (isset($_GET["op"])) {
                     $output["usu_ape"] = $row["usu_ape"];
                     $output["cat_nom"] = $row["cat_nom"];
                 }
-        
-                // Obtener las unidades asignadas al evento
-                $unidades = $eventounidad->get_datos_UnidadesAsignadas_por_evento($_POST["ev_id"]);
-                $output["unidades"] = array();
-        
-                // Verificar si hay unidades asignadas
-                if (is_array($unidades) && count($unidades) > 0) {
-                    foreach ($unidades as $unidad) {
-                        $output["unidades"][] = $unidad['unid_nom']; // Ajusta si necesitas otros campos de la unidad
-                    }
-                }
-        
                 echo json_encode($output);
             }
         break;

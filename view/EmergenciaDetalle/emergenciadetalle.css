@@ -48,67 +48,12 @@
 #lblEstado span,
 #lblFechaCrea,
 #lblNomUsuario{
-    font-size: 1rem;
+    font-size: 1.2rem;
 }
-
-
-#btnPanelDerivar{
-    border: none;
-    color: #00A8FF;
-    font-size: 1.5rem;
-    background-color: transparent;
-}
- 
-.box-item{
-    text-align: center;
-}
-
 
 #lblEstado{
     background: transparent;
 }
-
-
-.datos-row {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-
-.datos-evento{
-    display: flex;
-    width: 50%;
-    /* flex-wrap: wrap; */
-   
-}
-
-.datos-evento .col-lg-2{
-    width: 25%;
-       
-}
-
-.datos-participantes{
-    display: flex;
-   width: 25%;
-   justify-content: center;
-}
-
-.datos-rederivar{
-display: flex;
-   width: 15%;
-   justify-content: center;
-}
-
-.datos-participantes .col-lg-2,
-.datos-rederivar .col-lg-2{
-    width: 90%;
-}
-
-.descripcion-row div{
-    text-align: left;
-    
-}
-
 /* Mapa  */
 #modal-mapa{
     display: none;

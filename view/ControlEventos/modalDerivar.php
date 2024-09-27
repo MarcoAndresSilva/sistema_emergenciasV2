@@ -17,7 +17,7 @@
               </fieldset>
               <fieldset class="form-group" id="grupito">
                 <label class="form-label bold" for="id_nivel_peligro" id="asignaciones-title">Categoria</label>
-                <div id="cat_nombre_derivar"></div>
+                <div id="cat_nom"></div>
               </fieldset>
               <fieldset class="form-group">
                 <label class="form-label bold" for="id_nivel_peligro" id="asignaciones-title">Nivel de Peligro </label>

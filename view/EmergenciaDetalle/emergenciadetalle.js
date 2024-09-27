@@ -42,42 +42,26 @@ var getUrlParameter = function getUrlParameter(sParam) {
     }
 };
 
-function listarDetalle(ev_id) {
-    // Mostrar los detalles del evento
-    $.post("../../controller/emergenciaDetalle.php?op=listar_detalle_emergencias", {ev_id: ev_id}, function(data) {
+function listarDetalle(ev_id){
+    $.post("../../controller/emergenciaDetalle.php?op=listar_detalle_emergencias", {ev_id : ev_id}, function(data) {
         $('#lblDetalle').html(data);
     });
 
-    // Obtener los datos del evento, incluyendo las unidades asignadas
     $.post("../../controller/emergenciaDetalle.php?op=mostrar", {ev_id: ev_id}, function(data) {
         data = JSON.parse(data);
         console.log(data);
         $("#lblNomIdTicket").html("Trazabilidad Evento Emergencia N° ID: " + data.ev_id);
         $('#lblEstado').html(data.ev_est);
+        
         $('#lblNomUsuario').html(data.usu_nom + ' ' + data.usu_ape);
         $('#lblFechaCrea').html(data.ev_inicio);
+
         $("#cat_nom").val(data.cat_nom);
         $("#ev_direc").val(data.ev_direc);
-        $("#tic_descripUsu").summernote("code", data.ev_desc);
+        $("#tic_descripUsu").summernote("code", data.ev_desc); 
 
-        // Mostrar las unidades asignadas en la lista de participantes
-        const listaParticipantes = $("#listaParticipantes");
-        listaParticipantes.empty(); // Limpiar lista antes de agregar nuevas unidades
-        let usuarioTieneUnidad = false; // Verificar si la unidad del usuario está en la lista de participantes
-        if (data.unidades && data.unidades.length > 0) {
-            data.unidades.forEach(function(unidad) {
-                listaParticipantes.append(`<li class="list-group-item">${unidad}</li>`);
-                // Verifica si la unidad del usuario está en la lista
-                if (unidad === data.usu_unidad_nom) {
-                    usuarioTieneUnidad = true;
-                }
-            });
-        } else {
-            listaParticipantes.append(`<li class="list-group-item">No hay unidades asignadas</li>`);
-        }
-
-        // Condicional para verificar si el evento tiene fecha de finalización
-        if (data.ev_final) {
+        // Verifica si el evento tiene fecha de finalización y deshabilita campos si es así
+        if (data.ev_final) { // Si ev_final no es nulo
             $("#ev_desc").summernote("disable");
             $("#btnEnviar").prop("disabled", true);
             $("#btnPanelCerrar").prop("disabled", true);
@@ -88,6 +72,7 @@ function listarDetalle(ev_id) {
         }
     });
 }
+
 $(document).on("click", "#btnEnviar", function () {
     console.log("test");
     var ev_id = getUrlParameter("ID");
@@ -111,8 +96,8 @@ $(document).on("click", "#btnEnviar", function () {
 
 
 
-// Modal Cerrar
-function mostrarModal(modalId) {
+//   Modal Cerrar
+  function mostrarModal(modalId) {
     var modal = $(modalId);
     if (modal.length) {
         modal.removeClass('fade');
@@ -122,34 +107,28 @@ function mostrarModal(modalId) {
     }
 }
 
-// REDERIVAR EVENTO
-$(document).on("click", "#btnPanelDerivar", function(e) {
-    console.log('Button Derivar clicked');
-    mostrarModal('#modalDerivar');
-    mostrarIdEvento(id_evento);
-    consultarCategoria(id_evento);
-    consultarNivelPeligro(id_evento);
-    consultarUnidadDisponible(id_evento);
-});
 
-var id_evento = getUrlParameter('ID');
-
-// CERRAR EVENTO
 $(document).on("click", "#btnPanelCerrar", function(e) {
     console.log('Button Cerrar clicked');
     mostrarModal('#modalCerrar');
+    var id_evento = getUrlParameter('ID');
     $('#ev_id_cierre').text(id_evento);
     consultarCategoriaCierre(id_evento);
 });
 
 
-// Función para obtener y mostrar la categoría de cierre del evento
+// Función para obtener el cat_id del evento y mostrarlo en el div cat_id
+function mostrarCatIdEventoCierre(ev_id) {
+    $('#ev_id_cierre').text(ev_id);
+}
+
+// Función para mostrar el cat_nom_cierre en el div y cargar los motivos de cierre
 function consultarCategoriaCierre(ev_id) {
     $.post("../../controller/categoria.php?op=get_cat_nom_by_ev_id", { ev_id: ev_id }, function(data, status) {
         try {
             var jsonData = JSON.parse(data);
             if (jsonData && jsonData.cat_nom) {
-                $('#cat_nom_cierre').text(jsonData.cat_nom);
+                $('#cat_nom_cierre').text(jsonData.cat_nom); // Usar .text() para establecer el contenido del div
                 cargarMotivosCierre(jsonData.cat_nom); // Cargar los motivos de cierre según la categoría
             } else {
                 console.log("No se encontró el cat_nom correspondiente para el evento con ID: " + ev_id);
@@ -160,30 +139,50 @@ function consultarCategoriaCierre(ev_id) {
     });
 }
 
-// Inicialización y agrupación de motivos de cierre por categoría
-var motivosCierre = {};
-
-function fillAndGroupByCategory() {
-    var agrupados = {};
-    $.post("../../controller/cierreMotivo.php?op=get_cierre_motivo_categoria", {}, function(data) {
-        var response = JSON.parse(data);
-        if (Array.isArray(response)) {
-            response.forEach(function(item) {
-                var categoria = item.categoria;
-                var motivo = { id: item.mov_id, nombre: item.motivo };
-                if (!agrupados[categoria]) {
-                    agrupados[categoria] = [];
-                }
-                agrupados[categoria].push(motivo);
-            });
-            motivosCierre = agrupados;
-        } else {
-            console.error("La respuesta no es un arreglo.");
-        }
-    });
+// Función para normalizar las claves de las categorías
+function normalizarCategoria(categoria) {
+    return categoria
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '') // Eliminar acentos
+        .replace(/ /g, ''); // Eliminar espacios
 }
 
-// Llamada inicial para cargar las categorías
+// Mapeo de motivos de cierre según la categoría
+
+var motivosCierre = {}; // Variable para almacenar los datos agrupados por categoría
+
+function fillAndGroupByCategory() {
+  var agrupados = {};
+
+  // Realizar la solicitud POST
+  $.post(
+    "../../controller/cierreMotivo.php?op=get_cierre_motivo_categoria",
+    {},
+    function(data) {
+      // Parsear la respuesta a JSON
+      var response = JSON.parse(data);
+
+      // Verificar si la respuesta es un arreglo
+      if (Array.isArray(response)) {
+        response.forEach(function(item) {
+          var categoria = item.categoria;
+          var motivo = { id: item.mov_id, nombre: item.motivo }; // Modificar la estructura del motivo
+
+          if (!agrupados[categoria]) {
+            agrupados[categoria] = [];
+          }
+          agrupados[categoria].push(motivo);
+        });
+        console.log(agrupados);
+        // Asignar los datos agrupados a motivosCierre
+        motivosCierre = agrupados;
+      } else {
+        console.error("La respuesta no es un arreglo.");
+      }
+    }
+  );
+}
+
+// Llamar a la función para llenar y agrupar los datos por categoría
 fillAndGroupByCategory();
 
 // Función para cargar los motivos de cierre en el select
@@ -191,6 +190,7 @@ function cargarMotivosCierre(categoria) {
     var motivos = motivosCierre[categoria] || [];
     var $select = $('#motivo_cierre');
     $select.empty();
+
     motivos.forEach(function(motivo) {
         $select.append($('<option>', { value: motivo.id, text: motivo.nombre }));
     });
@@ -199,32 +199,36 @@ function cargarMotivosCierre(categoria) {
 document.getElementById('imagen').addEventListener('change', function() {
     var label = document.getElementById('archivoAdjuntado');
     if (this.files && this.files.length > 0) {
-        label.textContent = this.files[0].name;
+      label.textContent = this.files[0].name; // Actualiza el contenido del label con el nombre del archivo seleccionado
     } else {
-        label.textContent = 'No hay archivo adjunto (.JPG/.JPEG/.PNG)';
+      label.textContent = 'No hay archivo adjunto (.JPG/.JPEG/.PNG)';
     }
 });
 
-// Botón para cerrar el evento
-$('.btnCerrarEvento').off('click').on('click', function() {
-    if (validarFormulario()) {
-        CerrarEvento();
-        swal({
-            title: "Evento Cerrado",
-            text: "El evento ha sido cerrado con éxito.",
-            icon: "warning",
-            button: "Aceptar",
-            closeOnClickOutside: false,
-            closeOnEsc: false
-        });
-        $('#modalCerrar').modal('hide');
-        // cargarTablaGeneral(); // Comentar o actualizar según sea necesario
+
+//Btn Cerrar evento (Añade hora cierre)
+
+$('.btnCerrarEvento').off('click').on('click',function(){
+    if(validarFormulario()){
+    CerrarEvento(); 
+    swal({
+        title: "Evento Cerrado",
+        text: "El evento ha sido cerrado con éxito.",
+        icon: "warning",
+        button: "Aceptar",
+        closeOnClickOutside: false,
+        closeOnEsc: false
+    });
+    $('#modalCerrar').modal('hide');
+    // cargarTablaGeneral();
     }
 });
 
-// Validación del formulario antes de cerrar el evento
-function validarFormulario() {
-    return validarCampoVacio('#detalle_cierre', 'Debes ingresar un detalle para cerrar el evento.');
+//Validación del formulario
+function validarFormulario() { 
+    return (
+        validarCampoVacio('#detalle_cierre', 'Debes ingresar un detalle para cerrar el evento.')
+    );
 }
 
 function validarCampoVacio(selector, mensajeError) {
@@ -235,27 +239,28 @@ function validarCampoVacio(selector, mensajeError) {
     }
     return true;
 }
-
 function mostrarMensajeError(mensaje) {
     console.error(mensaje);
-    swal("Validación de formulario", mensaje, "warning");
+    swal( "Validación de formulario",mensaje, "warning" ) ;
 }
 
-// Función para cerrar el evento y enviar datos al backend
 function CerrarEvento() {
-    var ev_id = getUrlParameter('ID');
+    ev_id = getUrlParameter('ID');
     var detalle_cierre = $('#detalle_cierre').val();
     var motivo_cierre = $('#motivo_cierre').val();
     var nombre_apellido = $('#nombre_apellido').val();
 
     // Fecha y Hora
     var ev_final = new Date();
-    var fechaFormateada = ev_final.getFullYear() + '-' +
-        (ev_final.getMonth() + 1) + '-' +
-        ev_final.getDate() + ' ' +
-        ev_final.getHours() + ':' +
-        ev_final.getMinutes() + ':' +
-        ev_final.getSeconds();
+    var año = ev_final.getFullYear();
+    var mes = ev_final.getMonth() + 1; // Mes en JavaScript es 0-indexado, así que suma 1
+    var dia = ev_final.getDate();
+    var horas = ev_final.getHours();
+    var minutos = ev_final.getMinutes();
+    var segundos = ev_final.getSeconds();
+
+    // Formatear la fecha y hora como desees
+    var fechaFormateada = año + '-' + mes + '-' + dia + ' ' + horas + ':' + minutos + ':' + segundos;
 
     // Estado del evento al cerrarse
     var ev_est = 2;
@@ -272,7 +277,7 @@ function CerrarEvento() {
     // Capturar la imagen del campo #imagen
     var imagen = $('#imagen')[0].files[0];
     if (imagen) {
-        formData.append('adjunto', imagen);
+        formData.append('imagen', imagen);
     }
 
     // Enviar la solicitud POST con todos los datos
@@ -294,11 +299,4 @@ function CerrarEvento() {
         }
     });
 }
-
-// Inicialización general del script
-function init() {
-    fillAndGroupByCategory();
-    // Otras inicializaciones que necesites
-}
-
 init();

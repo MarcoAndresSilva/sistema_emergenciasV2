@@ -38,66 +38,36 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
                     </div>
                 </div>
             </header>
+            
 
-            <div class="row datos-row">
-                <h3 class="m-t-lg" id="lblNomIdTicket"></h3>
+            <div class="tbl">
 
-                <div class="datos-evento">
-                    <div class="col-lg-2 box-item mt-4">
-                        <fieldset class="form-group">
-                        <label class="form-label semibold" for="lblEstado">Estado del evento:</label>
-                        <div class="label label-pill" id="lblEstado"></div>      
-                        </fieldset>
-                    </div>
-                    <div class="col-lg-2 box-item mt-4">
-                        <fieldset class="form-group">
-                        <label class="form-label semibold" for="lblNomUsuario">Evento creado por:</label>
-                        <div class="label label-pill label-primary" id="lblNomUsuario"></div>
-                        </fieldset>
-                    </div>
-                    <div class="col-lg-2 box-item mt-4">
-                        <fieldset class="form-group">
-                        <label class="form-label semibold" for="lblFechaCrea">Fecha de creación:</label>
-                        <div class="label label-pill label-warning" id="lblFechaCrea"></div>
-                        </fieldset>
+                <div class="tbl-row">
+                    <div class="tbl-cell">
+                        <h3 class="m-t-lg" id="lblNomIdTicket"></h3>
+                        <div class="col-lg-3 m-2 label label-pill" id="lblEstado"></div>      
+                        <div class="col-lg-3 m-2 label label-pill label-primary" id="lblNomUsuario"></div>
+                        <div class="col-lg-3 m-2 label label-pill label-warning" id="lblFechaCrea"></div>
                     </div>
                 </div>
-                <div class="datos-participantes">
-                    <div class="col-lg-2 box-item mt-4">
-                        <fieldset class="form-group">
-                        <label class="form-label semibold" for="listaParticipantes">Lista de Participantes:</label>
-                        <ul id="listaParticipantes" class="list-group">
-                            <li class="list-group-item"></li>
-                        </ul>
-                        </fieldset>
-                    </div>
-                </div>
-
-                <div class="datos-rederivar">
-                    <div class="col-lg-2 box-item mt-4">
-                            <fieldset class="form-group">
-                            <label class="form-label semibold" for="btnPanelDerivar">Rederivar:</label>
-                            <button id='btnPanelDerivar'><i class='fa-solid fa-up-right-from-square'></i></button>
-                            </fieldset>
-                    </div>
-                </div>
-            </div>   
-            <div class="row descripcion-row">
-                <div class="col-lg-2 box-item mt-4">
+            </div>
+           
+            <div class="row">
+                <div class="col-lg-4 mt-4">
                     <fieldset class="form-group">
                         <label class="form-label semibold" for="cat_nom">Categoria</label>
                         <input type="text" class="form-control" id="cat_nom" name="cat_nom" readonly>
                     </fieldset>
                 </div>
 
-                <div class="col-lg-3 box-item mt-4">
+                <div class="col-lg-4 mt-4">
                     <fieldset class="form-group">
                     <label class="form-label semibold" for="ev_direc">Dirección</label>
                         <input type="text" class="form-control" id="ev_direc" name="ev_direc" readonly>
                     </fieldset>
                 </div>
 
-                <div class="col-lg-12 box-item">
+                <div class="col-lg-12">
                     <fieldset class="form-group">
                         <label class="form-label semibold" for="tic_descripUsu">Descripción del evento</label>
                             <div class="summernote-theme-1">
@@ -143,14 +113,11 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 
     <?php
 require_once('modalCerrar.php');
-include("../../view/ControlEventos/modalDerivar.php"); 
 require_once("../MainJs/js.php");
 ?>
 </body>
 
-<script type="text/javascript" src="../ControlEventos/DERIVAR.JS"></script>
 <script type="text/javascript" src="./emergenciadetalle.js"></script>
-
 </html>
 
 <?php
