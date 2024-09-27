@@ -414,8 +414,6 @@ class Evento extends Conectar {
             return "Error: " . $e->getMessage();
         }
     }
-    
-
     public function get_evento_where($where){
         try {
             $conectar = parent::conexion();
