@@ -358,10 +358,15 @@ class Evento extends Conectar {
         }
     }
 
-    public function cerrar_evento($ev_id, $ev_final, $ev_est, $detalle_cierre, $motivo_cierre, $usu_id,$adjunto) {
+    public function cerrar_evento($ev_id, $ev_final, $ev_est, $detalle_cierre, $motivo_cierre, $usu_id, $adjunto) {
         try {
             $conectar = parent::conexion();
             parent::set_names();
+    
+            // Verificar que todos los valores no estén vacíos
+            if (empty($ev_id) || empty($ev_final) || empty($ev_est) || empty($detalle_cierre) || empty($motivo_cierre) || empty($usu_id)) {
+                return "Error: Datos incompletos";
+            }
     
             // Iniciar transacción
             $conectar->beginTransaction();
@@ -372,7 +377,12 @@ class Evento extends Conectar {
             $consulta_evento->bindValue(':ev_final', $ev_final);
             $consulta_evento->bindValue(':ev_est', $ev_est);
             $consulta_evento->bindValue(':ev_id', $ev_id);
-            $consulta_evento->execute();
+            $resultado_evento = $consulta_evento->execute();
+    
+            // Verificar si la consulta de actualización fue exitosa
+            if (!$resultado_evento) {
+                throw new Exception("Error al actualizar el evento.");
+            }
     
             // Insertar en la tabla tm_ev_cierre
             $sql_cierre = "INSERT INTO tm_ev_cierre (usu_id, ev_id, detalle, motivo,adjunto) VALUES (:usu_id, :ev_id, :detalle, :motivo,:adjunto)";
@@ -382,7 +392,12 @@ class Evento extends Conectar {
             $consulta_cierre->bindValue(':detalle', $detalle_cierre);
             $consulta_cierre->bindValue(':motivo', $motivo_cierre);
             $consulta_cierre->bindValue(':adjunto', $adjunto);
-            $consulta_cierre->execute();
+            $resultado_cierre = $consulta_cierre->execute();
+    
+            // Verificar si la consulta de inserción fue exitosa
+            if (!$resultado_cierre) {
+                throw new Exception("Error al insertar el cierre del evento.");
+            }
     
             // Confirmar transacción
             $conectar->commit();
@@ -391,10 +406,15 @@ class Evento extends Conectar {
         } catch (Exception $e) {
             // Revertir transacción en caso de error
             $conectar->rollBack();
-            echo "<script>console.log('Error catch cerrar_evento')</script>";
-            throw $e;
+            
+            // Mostrar el mensaje de error completo
+            echo "<script>console.log('Error en cerrar_evento: " . $e->getMessage() . "')</script>";
+            
+            // Devolver el mensaje de error para depuración
+            return "Error: " . $e->getMessage();
         }
     }
+    
 
     public function get_evento_where($where){
         try {
@@ -541,10 +561,13 @@ class Evento extends Conectar {
                 tm_emergencia_detalle.ev_inicio,
                 tm_usuario.usu_nom,
                 tm_usuario.usu_ape,
-                tm_usuario.usu_tipo
+                tm_usuario.usu_tipo,
+                tm_usuario.usu_unidad, -- Incluimos la unidad del usuario
+                tm_unidad.unid_nom -- Agregamos el nombre de la unidad
             FROM 
                 tm_emergencia_detalle
             INNER JOIN tm_usuario on tm_emergencia_detalle.usu_id = tm_usuario.usu_id
+            LEFT JOIN tm_unidad ON tm_usuario.usu_unidad = tm_unidad.unid_id -- Unimos con la tabla de unidades
             WHERE
                 tm_emergencia_detalle.ev_id = ?";
             
