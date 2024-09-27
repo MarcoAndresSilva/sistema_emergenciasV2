@@ -58,15 +58,11 @@ function ver(ev_id) {
     
 }
 var id_evento = $(this).data('ev-id');
-
-
 //////////btn derivar//////////// 
 $(document).on("click", "#btnPanelDerivar", function(e) {
     console.log('Button Derivar clicked');
     mostrarModal('#modalDerivar');
     id_evento = $(this).data('ev-id');
-
-
     mostrarIdEvento(id_evento);
     consultarCategoria(id_evento);
     consultarNivelPeligro(id_evento);
@@ -83,8 +79,6 @@ function mostrarModal(modalId) {
         console.error('Modal not found: ' + modalId);
     }
 }
-
-    
 //////////////////////////////////////////////// Abrir mapa////////////////////////////////////////////////////////////
 
 let lat;
