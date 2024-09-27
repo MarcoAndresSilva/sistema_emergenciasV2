@@ -81,10 +81,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
                             </fieldset>
                     </div>
                 </div>
-
-            </div>
-           
-           
+            </div>   
             <div class="row descripcion-row">
                 <div class="col-lg-2 box-item mt-4">
                     <fieldset class="form-group">
@@ -153,9 +150,6 @@ require_once("../MainJs/js.php");
 
 <script type="text/javascript" src="../ControlEventos/DERIVAR.JS"></script>
 <script type="text/javascript" src="./emergenciadetalle.js"></script>
-
-
-
 
 </html>
 
