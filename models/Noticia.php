@@ -1,9 +1,5 @@
 <?php 
 require_once 'Usuario.php';
-require_once 'Correo.php';
-require_once 'Evento.php';
-require_once 'Formato.php';
-
 class Noticia extends Conectar {
 
   public function add_noticia(string $asunto, string $mensaje, string $url=null){
@@ -48,11 +44,6 @@ class Noticia extends Conectar {
     $ultima_noticia = $this->obtenerUltimoRegistro('tm_noticia',"noticia_id");
     $id_noticia_new = $ultima_noticia["noticia_id"];
     $envio_usuario = $this->enviar_noticia_grupal_por_lista_usuario($id_noticia_new,$lista_usuario);
-    $formato = $this->formato_noticia_correo_segun_asunto($agrsNoticia);
-    $correo = new Correo('', $formato->asunto, $formato->mensaje);
-    $correo->setGrupoDestinatario($lista_usuario);
-    $resultado_correo = $correo->enviar();
-
     if ($envio_usuario["status"] !== "success"){
       return [
         "status"=>"error",
@@ -66,23 +57,7 @@ class Noticia extends Conectar {
       "message"=>"Crear y enviar Terminado",
       "add_noticia"=>$add_noticia,
       "enviar_grupo"=>$envio_usuario,
-      "enviar_correo"=>$resultado_correo,
     ];
-  }
-
-  private function formato_noticia_correo_segun_asunto(array $argsNoticia) {
-    $formato = new Formato();
-    $asunto = $argsNoticia["asunto"];
-    if ($asunto === "Nuevo Evento"){
-      $evento = new Evento();
-      $id_evento = $evento->get_id_ultimo_evento();
-      $datos_evento = $evento->informacion_evento_completa($id_evento);
-      $formato->setCuerpoNuevoEvento($datos_evento);
-      return $formato;
-    }
-    $formato->setAsunto($asunto);
-    $formato->setMensaje($argsNoticia["mensaje"]);
-    return $formato;
   }
 
  public function enviar_noticia_grupal_por_lista_usuario(int $noticia, array $lista_usuario) {
