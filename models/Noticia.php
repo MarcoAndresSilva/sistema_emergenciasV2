@@ -1,8 +1,8 @@
 <?php 
-require_once 'Usuario.php';
-require_once 'Correo.php';
-require_once 'Evento.php';
-require_once 'Formato.php';
+require_once '../models/Usuario.php';
+require_once '../models/Correo.php';
+require_once '../models/Evento.php';
+require_once '../models/Formato.php';
 
 class Noticia extends Conectar {
 
