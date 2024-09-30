@@ -5,18 +5,23 @@ class Correo {
     public $destinatario;
     public $asunto;
     public $mensaje;
-    public $encabezados;
+    public $encabezados = [];
+    private $remitente = "no-reply@emergencias.melipilla.cl";
     // Constructor para inicializar los atributos
-    public function __construct($destinatario, $asunto, $mensaje, $encabezados = '') {
+    public function __construct($destinatario = '', $asunto = '', $mensaje = '', $encabezados = []) {
         $this->destinatario = $destinatario;
         $this->asunto = $asunto;
         $this->mensaje = $mensaje;
         $this->encabezados = $encabezados;
+        $this->agregarEncabezado('From', $this->remitente);
     }
 
     // Método para enviar el correo
     public function enviar() {
-        if(mail($this->destinatario, $this->asunto, $this->mensaje, $this->encabezados)) {
+        // Unir todos los encabezados en una cadena
+        $encabezadosStr = implode("\r\n", $this->encabezados);
+
+        if(mail($this->destinatario, $this->asunto, $this->mensaje, $encabezadosStr)) {
             return "Correo enviado exitosamente a $this->destinatario";
         } else {
             return "Error al enviar el correo a $this->destinatario";
@@ -36,8 +41,21 @@ class Correo {
         $this->mensaje = $mensaje;
     }
 
-    public function setEncabezados($encabezados) {
-        $this->encabezados = $encabezados;
+    // Método para agregar un encabezado
+    public function agregarEncabezado($clave, $valor) {
+        $this->encabezados[] = "$clave: $valor";
+    }
+
+    // Método para definir un grupo de destinatarios
+    public function setGrupoDestinatario($listaUsuarios) {
+        $correos = [];
+
+        foreach ($listaUsuarios as $usuario) {
+            if (isset($usuario['usu_correo'])) {
+                $correos[] = $usuario['usu_correo'];
+            }
+        }
+        $this->setDestinatario(implode(", ", $correos));
     }
 }
 
