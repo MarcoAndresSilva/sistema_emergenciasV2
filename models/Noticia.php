@@ -50,6 +50,7 @@ class Noticia extends Conectar {
     $envio_usuario = $this->enviar_noticia_grupal_por_lista_usuario($id_noticia_new,$lista_usuario);
     $formato = $this->formato_noticia_correo_segun_asunto($agrsNoticia);
     $correo = new Correo('', $formato->asunto, $formato->mensaje);
+    $correo->agregarEncabezado('Content-Type', 'text/html; charset=utf-8');
     $correo->setGrupoDestinatario($lista_usuario);
     $resultado_correo = $correo->enviar();
 
