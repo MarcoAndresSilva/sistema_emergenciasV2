@@ -98,8 +98,7 @@ if (isset($_GET["op"])) {
             $mensaje .= "Atentamente,\n";
             $mensaje .= "Equipo de Emergencias";
 
-            $encabezados = "From: sistemaemergencia@munimelipilla.cl\r\n";
-            $correo = new Correo($_SESSION["usu_correo"], $asunto, $mensaje, $encabezados);
+            $correo = new Correo($_SESSION["usu_correo"], $asunto, $mensaje);
             $datos["correo"] = $correo->enviar();
 
             $last_evento = $noticia->obtenerUltimoRegistro("tm_evento","ev_id");
