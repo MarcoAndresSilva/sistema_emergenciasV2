@@ -88,19 +88,6 @@ if (isset($_GET["op"])) {
                 $ev_img
             );
             header('Content-Type: application/json');
-            $asunto = "Nuevo Evento Registrado: " . $ev_desc;
-
-            $mensaje = "Estimado(a),\n\n";
-            $mensaje .= "Se ha registrado un nuevo evento con los siguientes detalles:\n\n";
-            $mensaje .= "Descripción: $ev_desc\n";
-            $mensaje .= "Dirección: $ev_direc\n\n";
-            $mensaje .= "Por favor, revise la información y tome las acciones necesarias.\n\n";
-            $mensaje .= "Atentamente,\n";
-            $mensaje .= "Equipo de Emergencias";
-
-            $correo = new Correo($_SESSION["usu_correo"], $asunto, $mensaje);
-            $datos["correo"] = $correo->enviar();
-
             $last_evento = $noticia->obtenerUltimoRegistro("tm_evento","ev_id");
             $id_ultimo_evento = $last_evento["ev_id"];
             $args = [
