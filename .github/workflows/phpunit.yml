@@ -1,0 +1,44 @@
+name: Run PHPUnit
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  phpunit:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: 8.3
+        extensions: mbstring, intl, pdo_mysql
+    - name: Install sendmail
+      run: sudo apt-get install -y sendmail
+
+    - name: Install PHPUnit
+      run: |
+        wget -O phpunit https://phar.phpunit.de/phpunit-11.phar
+        chmod +x phpunit
+        sudo mv phpunit /usr/local/bin/phpunit
+
+    - name: lista de test
+      run: phpunit --list-tests
+    - name: Run PHPUnit
+      run: phpunit --testdox
+
+    - name: Notify if tests fail
+      if: steps.phpunit.outcome == 'failure'
+      run: |
+        echo "Algunas pruebas de PHPUnit han fallado. Por favor, revisa los registros."
+        echo "Salida de PHPUnit:"
