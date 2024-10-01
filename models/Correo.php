@@ -30,7 +30,27 @@ class Correo {
 
     // Métodos para cambiar los atributos
     public function setDestinatario($destinatario) {
-        $this->destinatario = $destinatario;
+        // Inicializa un array para los correos válidos
+        $correosValidos = [];
+
+        // Divide la cadena en correos usando ',' como separador
+        $listaCorreos = explode(',', $destinatario);
+
+        // Itera sobre cada correo en la lista
+        foreach ($listaCorreos as $correo) {
+            $correo = trim($correo); // Elimina espacios en blanco alrededor
+            // Valida el correo y lo agrega a la lista de correos válidos
+            if (filter_var($correo, FILTER_VALIDATE_EMAIL)) {
+                $correosValidos[] = $correo;
+            }
+        }
+
+        // Si hay correos válidos, únelos en una cadena y asigna a $this->destinatario
+        if (!empty($correosValidos)) {
+            $this->destinatario = implode(", ", $correosValidos);
+        } else {
+            throw new InvalidArgumentException("No se proporcionaron direcciones de correo válidas.");
+        }
     }
 
     public function setAsunto($asunto) {
@@ -52,7 +72,9 @@ class Correo {
 
         foreach ($listaUsuarios as $usuario) {
             if (isset($usuario['usu_correo'])) {
-                $correos[] = $usuario['usu_correo'];
+                if (filter_var($usuario['usu_correo'], FILTER_VALIDATE_EMAIL)) {
+                    $correos[] = $usuario['usu_correo'];
+                }
             }
         }
         $this->setDestinatario(implode(", ", $correos));
