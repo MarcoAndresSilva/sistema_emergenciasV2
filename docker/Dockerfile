@@ -6,7 +6,8 @@ RUN apt-get update && apt-get install -y \
     default-mysql-client
 
 RUN docker-php-ext-install pdo_mysql
-
+RUN  apt-get install -y ssmtp
+COPY ./etc/ssmtp.conf /etc/ssmtp/ssmtp.conf
 
 COPY ./etc/php.ini /usr/local/etc/php/php.ini
 
