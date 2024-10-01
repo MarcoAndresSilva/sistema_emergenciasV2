@@ -8,5 +8,7 @@ RUN apt-get update && apt-get install -y \
 RUN docker-php-ext-install pdo_mysql
 
 
+COPY ./etc/php.ini /usr/local/etc/php/php.ini
+
 # Expone el puerto 80 para el servidor web Apache
 EXPOSE 80
