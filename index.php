@@ -40,7 +40,7 @@ if (isset($_POST["enviar"]) and $_POST["enviar"] == "si") {
             <div class="box-login">
 
                 <div class="bg-illustration">
-                    <img src="public\img\Logotipo_municipal_vertical.png" alt="logo">
+                    <img src="public\img\login3.svg" alt="logo">
                 </div>
 
                 <div class="login-form-box">
