@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit
+    colors="true"
+    processIsolation="false"
+    stopOnFailure="false"
+  >
+
+    <testsuites>
+        <testsuite name="Project Test Suite">
+          <directory suffix=".php">./tests</directory>
+        </testsuite>
+    </testsuites>
+    <php>
+        <ini name="error_reporting" value="E_ALL | E_DEPRECATED | E_STRICT"/>
+        <ini name="display_errors" value="true"/>
+        <env name="APP_ENV" value="testing"/>
+    </php>
+
+</phpunit>
