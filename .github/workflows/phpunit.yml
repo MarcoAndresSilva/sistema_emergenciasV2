@@ -41,14 +41,12 @@ jobs:
           extensions: mbstring, intl, pdo_mysql
       - name: Install MySQL client
         run: sudo apt-get install -y mysql-client
-      - name: run mysql
-        run: sudo /etc/init.d/mysql start
 
       - name: Wait for MySQL to be ready
         run: |
           MAX_ATTEMPTS=25
           ATTEMPT=0
-          until mysql -h mysql -P 3306 -u root -prootpassword -e "SELECT 1"; do
+          until mysql -h mysql -P 3306 -u root -ptu -e "SELECT 1"; do
               if [ $ATTEMPT -ge $MAX_ATTEMPTS ]; then
                   echo "MySQL no está disponible después de $MAX_ATTEMPTS intentos."
                   exit 1  # Lanza un error
