@@ -74,7 +74,7 @@ jobs:
           chmod +x phpunit
           sudo mv phpunit /usr/local/bin/phpunit
 
-            - name: lista de test
+      - name: lista de test
         run: phpunit --list-tests
 
       - name: Run PHPUnit
