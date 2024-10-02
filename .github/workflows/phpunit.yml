@@ -46,7 +46,7 @@ jobs:
         run: |
           MAX_ATTEMPTS=25
           ATTEMPT=0
-          until mysql -h mysql -P 3306 -u root -ptu -e "SELECT 1"; do
+          until mysql -h 127.0.0.1 -u root -ptu -e "SELECT 1;"; do
               if [ $ATTEMPT -ge $MAX_ATTEMPTS ]; then
                   echo "MySQL no está disponible después de $MAX_ATTEMPTS intentos."
                   exit 1  # Lanza un error
