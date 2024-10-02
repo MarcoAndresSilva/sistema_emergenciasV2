@@ -46,7 +46,7 @@ jobs:
         run: |
           MAX_ATTEMPTS=25
           ATTEMPT=0
-          until mysql -P 3306 -u root -prootpassword -e "SELECT 1"; do
+          until mysql -h mysql -P 3306 -u root -prootpassword -e "SELECT 1"; do
               if [ $ATTEMPT -ge $MAX_ATTEMPTS ]; then
                   echo "MySQL no está disponible después de $MAX_ATTEMPTS intentos."
                   exit 1  # Lanza un error
@@ -57,11 +57,11 @@ jobs:
           done
       - name: Crear base de datos
         run: |
-          mysql -u root -ptu -e "CREATE DATABASE IF NOT EXISTS emergencia_db;"
+          mysql -h mysql -u root -ptu -e "CREATE DATABASE IF NOT EXISTS emergencia_db;"
 
       - name: Importar base de datos desde db_emergencias.sql
         run: |
-          mysql -u testuser -ptestpassword emergencia_db < db_emergencias.sql || echo "Error al importar db_emergencias.sql"
+          mysql -h mysql -u testuser -ptestpassword emergencia_db < db_emergencias.sql || echo "Error al importar db_emergencias.sql"
 
 
 
