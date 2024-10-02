@@ -14,31 +14,74 @@ jobs:
   phpunit:
     runs-on: ubuntu-latest
 
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: tu
+          MYSQL_DATABASE: emergencia_db
+          MYSQL_USER: testuser
+          MYSQL_PASSWORD: tu
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up PHP
-      uses: shivammathur/setup-php@v2
-      with:
-        php-version: 8.3
-        extensions: mbstring, intl, pdo_mysql
-    - name: Install sendmail
-      run: sudo apt-get install -y sendmail
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.3
+          extensions: mbstring, intl, pdo_mysql
+      - name: Install MySQL client
+        run: sudo apt-get install -y mysql-client
 
-    - name: Install PHPUnit
-      run: |
-        wget -O phpunit https://phar.phpunit.de/phpunit-11.phar
-        chmod +x phpunit
-        sudo mv phpunit /usr/local/bin/phpunit
+      - name: Wait for MySQL to be ready
+        run: |
+          MAX_ATTEMPTS=25
+          ATTEMPT=0
+          until mysql -h 127.0.0.1 -P 3306 -u root -prootpassword -e "SELECT 1"; do
+              if [ $ATTEMPT -ge $MAX_ATTEMPTS ]; then
+                  echo "MySQL no está disponible después de $MAX_ATTEMPTS intentos."
+                  exit 1  # Lanza un error
+              fi
+              echo "Esperando que MySQL esté listo... (Intento $((ATTEMPT+1)) de $MAX_ATTEMPTS)"
+              ATTEMPT=$((ATTEMPT+1))
+              sleep 5
+          done      - name: Crear base de datos
 
-    - name: lista de test
-      run: phpunit --list-tests
-    - name: Run PHPUnit
-      run: phpunit --testdox
+        run: |
+          mysql -h 127.0.0.1 -u root -ptu -e "CREATE DATABASE IF NOT EXISTS emergencia_db;"
 
-    - name: Notify if tests fail
-      if: steps.phpunit.outcome == 'failure'
-      run: |
-        echo "Algunas pruebas de PHPUnit han fallado. Por favor, revisa los registros."
-        echo "Salida de PHPUnit:"
+      - name: Importar base de datos desde db_emergencias.sql
+        run: |
+          mysql -h 127.0.0.1 -u testuser -ptestpassword emergencia_db < db_emergencias.sql || echo "Error al importar db_emergencias.sql"
+
+
+
+      - name: Install sendmail
+        run: sudo apt-get install -y sendmail
+
+      - name: Install PHPUnit
+        run: |
+          wget -O phpunit https://phar.phpunit.de/phpunit-11.phar
+          chmod +x phpunit
+          sudo mv phpunit /usr/local/bin/phpunit
+
+            - name: lista de test
+        run: phpunit --list-tests
+
+      - name: Run PHPUnit
+        run: phpunit --testdox
+
+      - name: Notify if tests fail
+        if: steps.phpunit.outcome == 'failure'
+        run: |
+          echo "Algunas pruebas de PHPUnit han fallado. Por favor, revisa los registros."
+           echo "Salida de PHPUnit:"
