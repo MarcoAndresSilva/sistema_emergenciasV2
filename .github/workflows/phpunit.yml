@@ -54,8 +54,8 @@ jobs:
               echo "Esperando que MySQL esté listo... (Intento $((ATTEMPT+1)) de $MAX_ATTEMPTS)"
               ATTEMPT=$((ATTEMPT+1))
               sleep 5
-          done      - name: Crear base de datos
-
+          done
+      - name: Crear base de datos
         run: |
           mysql -h 127.0.0.1 -u root -ptu -e "CREATE DATABASE IF NOT EXISTS emergencia_db;"
 
