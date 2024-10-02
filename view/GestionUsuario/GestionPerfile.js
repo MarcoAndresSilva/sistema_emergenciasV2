@@ -157,6 +157,7 @@ function initializeDataTable() {
         }
 
         const dataTable = $('table').DataTable({
+      language: { url: "../registrosLog/spanishDatatable.json"},
       responsive: true
         });
 
@@ -221,7 +222,7 @@ function createTableBody(users) {
         row.appendChild(createTableCell(user.usu_id));
         row.appendChild(createTableCell(user.Nombre));
         row.appendChild(createTableCell(user.Apellido));
-        row.appendChild(createTypeCell(user.id_tipo,user.usu_id));
+        row.appendChild(createTableCell(user.Tipo));
         row.appendChild(createTableCell(user.Unidad));
         row.appendChild(createTableCell(user.Telefono));
         row.appendChild(createStatusBadge(user.estado));
@@ -383,7 +384,7 @@ function createSelect(id, selectedValue) {
     let selectHTML = `<div class="form-floating">
 <select class="form-select" id="${id}" aria-label="Floating label select example">`;
     tiposDeUsuarios.forEach(optionData => {
-        selectHTML += `<option value="${optionData.usu_tipo_id}" ${selectedValue == optionData.usu_tipo_id ? 'selected' : ''}>${optionData.usu_tipo_nom}</option>`;
+        selectHTML += `<option value="${optionData.usu_tipo_id}" ${selectedValue === optionData.usu_tipo_nom ? 'selected' : ''}>${optionData.usu_tipo_nom}</option>`;
     });
     selectHTML += `</select>
 <label for="${id}">Tipo</label>
@@ -495,7 +496,7 @@ function editUser(userId) {
     const unidad = userRow.querySelector('td:nth-child(5)').textContent;
     const telefono = userRow.querySelector('td:nth-child(6)').textContent;
     const usuario = userRow.querySelector('td:nth-child(9)').textContent;
-    const tipo = userRow.querySelector('td:nth-child(4) select').value;
+    const tipo = userRow.querySelector('td:nth-child(4)').textContent;
 
     // Mostrar el SweetAlert con el formulario de edición
     Swal.fire({
