@@ -41,6 +41,8 @@ jobs:
           extensions: mbstring, intl, pdo_mysql
       - name: Install MySQL client
         run: sudo apt-get install -y mysql-client
+      - name: run mysql
+        run: sudo systemctl start mysql
 
       - name: Wait for MySQL to be ready
         run: |
