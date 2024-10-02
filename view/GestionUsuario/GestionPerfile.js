@@ -157,6 +157,7 @@ function initializeDataTable() {
         }
 
         const dataTable = $('table').DataTable({
+      language: { url: "../registrosLog/spanishDatatable.json"},
       responsive: true
         });
 
