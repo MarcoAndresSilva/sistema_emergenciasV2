@@ -221,7 +221,7 @@ function createTableBody(users) {
         row.appendChild(createTableCell(user.usu_id));
         row.appendChild(createTableCell(user.Nombre));
         row.appendChild(createTableCell(user.Apellido));
-        row.appendChild(createTypeCell(user.id_tipo,user.usu_id));
+        row.appendChild(createTableCell(user.Tipo));
         row.appendChild(createTableCell(user.Unidad));
         row.appendChild(createTableCell(user.Telefono));
         row.appendChild(createStatusBadge(user.estado));
