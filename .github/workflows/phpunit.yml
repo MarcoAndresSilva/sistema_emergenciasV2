@@ -41,7 +41,8 @@ jobs:
           extensions: mbstring, intl, pdo_mysql
       - name: Install MySQL client
         run: sudo apt-get install -y mysql-client
-
+      - name: Add hostname to /etc/hosts
+        run: echo "127.0.0.1 mysql" | sudo tee -a /etc/hosts
       - name: Wait for MySQL to be ready
         run: |
           MAX_ATTEMPTS=25
