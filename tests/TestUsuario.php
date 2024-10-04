@@ -44,6 +44,7 @@ class TestUsuario extends TestCase {
 
     // Test para verificar cuando el login es exitoso
     public function testLoginExitoso() {
+        // comprobar que si el usuario existe iniciar sesion
         $userData = [
             'usu_id' => 1,
             'usu_nom' => 'Juan',
@@ -61,6 +62,7 @@ class TestUsuario extends TestCase {
         $this->assertEquals('home', $resultado);
     }
     public function testLoginExitoso2() {
+        // comprobar que si el usuario existe iniciar sesion
         $userData = [
             'usu_id' => 1,
             'usu_nom' => 'maria',
@@ -78,6 +80,7 @@ class TestUsuario extends TestCase {
         $this->assertEquals('home', $resultado);
     }
     public function testLoginValidoSession() {
+       // comprobar que si inicia sesion se estan guardando datos en la sesion del usuario
         session_destroy();
         session_start();
         $userData = [
