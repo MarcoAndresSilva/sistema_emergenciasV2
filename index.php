@@ -9,7 +9,23 @@ require_once("config/conexion.php");
 if (isset($_POST["enviar"]) and $_POST["enviar"] == "si") {
     require_once("models/Usuario.php");
     $usuario = new Usuario();
-    $usuario->login();
+    $username = isset($_POST["usu_name"]) ? $_POST["usu_name"] : null;
+    $password = isset($_POST["usu_pass"]) ? $_POST["usu_pass"] : null;
+
+    $resultado = $usuario->login($username, $password);
+
+    // Manejo de redirecciones según el resultado
+    switch ($resultado) {
+        case 'camposvacios':
+            header("Location:" . Conectar::ruta() . "index.php?m=camposvacios");
+            exit();
+        case 'datoincorecto':
+            header("Location:" . Conectar::ruta() . "index.php?m=datoincorecto");
+            exit();
+        case 'home':
+            header("Location:" . Conectar::ruta() . "view/Home/");
+            exit();
+    }
 }
 ?>
 

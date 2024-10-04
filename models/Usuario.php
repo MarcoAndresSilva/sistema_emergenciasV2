@@ -3,21 +3,12 @@ require_once 'RegistroLog.php';
 require_once 'SeguridadPassword.php';
 class Usuario extends Conectar {
 
-public function login() {
-    if (!isset($_POST["enviar"])){
-        return;
-    }
-
-    $name = isset($_POST["usu_name"]) ? $_POST["usu_name"] : null;
-    $pass = isset($_POST["usu_pass"]) ? $_POST["usu_pass"] : null;
-
-
+  public function login($name, $pass) {
     $log = new RegistroLog();
     $ipCliente = $this->GetIpCliente();
 
-    if (is_null($name) || is_null($pass) ) {
-        header("Location:" . Conectar::ruta() . "index.php?m=camposvacios");
-        exit();
+    if (is_null($name) || is_null($pass) || empty($name) || empty($pass)) {
+      return 'camposvacios';
     }
 
     $hashedPass = md5($pass);
@@ -25,19 +16,15 @@ public function login() {
 
     if (!$info_usuario) {
         $mensaje = "El usuario $name intentó iniciar sesión, IP: $ipCliente";
-        $log->add_log_registro(0, 'Inicio sesion', $mensaje);
-
-        header("Location:" . Conectar::ruta() . "index.php?m=datoincorecto");
-        exit();
+        $log->add_log_registro(0, 'Inicio sesión', $mensaje);
+        return 'datoincorecto';
     }
 
     $this->crearSesionUsuario($info_usuario);
-
     $mensaje = "El usuario {$_SESSION['usu_nom']} {$_SESSION['usu_ape']} inició sesión desde la IP: $ipCliente";
-    $log->add_log_registro($_SESSION["usu_id"], 'Inicio sesion', $mensaje);
+    $log->add_log_registro($_SESSION["usu_id"], 'Inicio sesión', $mensaje);
 
-    header("Location:" . Conectar::ruta() . "view/Home/");
-    exit();
+    return 'home';
 }
 
 private function crearSesionUsuario($usuario) {
