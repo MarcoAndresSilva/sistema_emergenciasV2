@@ -106,5 +106,33 @@ class TestUsuario extends TestCase {
         $this->assertEquals($_SESSION["usu_telefono"] , $userData["usu_telefono"]);
         $this->assertEquals($_SESSION["usu_unidad"] , $userData["usu_unidad"]);
         session_destroy();
+  }
+    public function testLoginInvalidSession() {
+       // comprobar que si no inicia sesion no se estan guardando datos en la sesion
+        session_destroy();
+        session_start();
+        $userData = [
+            'usu_id' => 1,
+            'usu_nom' => 'maria',
+            'usu_ape' => 'jose',
+            'usu_tipo' => 'admin',
+            'usu_name' => 'maria.jose',
+            'usu_correo' => 'maria.jose@example.com',
+            'usu_telefono' => '123456789',
+            'usu_unidad' => 'dga'
+        ];
+
+        $this->usuario->method('ejecutarConsulta')->willReturn([]);
+
+        $resultado = $this->usuario->login('maria.jose', '123456789');
+        $this->assertEquals('datoincorecto', $resultado);
+        $this->assertEquals(null, $_SESSION["usu_id"]);
+        $this->assertEquals( null, $_SESSION["usu_nom"]);
+        $this->assertEquals( null, $_SESSION["usu_ape"]);
+        $this->assertEquals( null, $_SESSION["usu_tipo"]);
+        $this->assertEquals( null, $_SESSION["usu_correo"]);
+        $this->assertEquals( null, $_SESSION["usu_telefono"]);
+        $this->assertEquals( null, $_SESSION["usu_unidad"]);
+        session_destroy();
     }
 }
