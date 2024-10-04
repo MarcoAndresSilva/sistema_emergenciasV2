@@ -1,0 +1,107 @@
+<?php
+
+require_once __DIR__ . '/../config/conexion.php';
+require_once __DIR__.'/../models/Usuario.php';
+
+use PHPUnit\Framework\TestCase;
+
+class TestUsuario extends TestCase {
+    private $usuario;
+
+    protected function setUp(): void {
+        // Crear un mock de la clase Usuario, especificando los métodos que se simularán
+        $this->usuario = $this->getMockBuilder(Usuario::class)
+                              ->onlyMethods([
+                                'ejecutarConsulta',
+                                'ejecutarAccion',
+                                'crearSesionUsuario',
+                                'GetIpCliente',
+                                'get_login_usuario',
+                              ])
+                              ->getMock();
+    }
+
+    // Test para verificar cuando los campos están vacíos
+    public function testLoginCamposNulos() {
+        // Se espera que redirija a la página de campos vacíos
+        $resultado = $this->usuario->login('res', null);
+        $this->assertEquals('camposvacios', $resultado);
+    }
+    public function testLoginCamposStringVacios() {
+        // Se espera que redirija a la página de campos vacíos
+        $resultado = $this->usuario->login('', '');
+        $this->assertEquals('camposvacios', $resultado);
+    }
+
+    // Test para verificar cuando el usuario o la contraseña no son correctos
+    public function testLoginDatosIncorrectos() {
+        $this->usuario->method('ejecutarConsulta')->willReturn([]); // Simula que no se encuentra el usuario
+
+        // Espera una redirección a la página de error de credenciales incorrectas
+        $resultado = $this->usuario->login('usuario_incorrecto', 'clave_incorrecta');
+        $this->assertEquals('datoincorecto', $resultado);
+    }
+
+    // Test para verificar cuando el login es exitoso
+    public function testLoginExitoso() {
+        $userData = [
+            'usu_id' => 1,
+            'usu_nom' => 'Juan',
+            'usu_ape' => 'Pérez',
+            'usu_tipo' => 'admin',
+            'usu_name' => 'juan.perez',
+            'usu_correo' => 'juan.perez@example.com',
+            'usu_telefono' => '123456789',
+            'usu_unidad' => 'Ventas'
+        ];
+
+        $this->usuario->method('ejecutarConsulta')->willReturn($userData);
+
+        $resultado = $this->usuario->login('juan.perez', '123456789');
+        $this->assertEquals('home', $resultado);
+    }
+    public function testLoginExitoso2() {
+        $userData = [
+            'usu_id' => 1,
+            'usu_nom' => 'maria',
+            'usu_ape' => 'jose',
+            'usu_tipo' => 'admin',
+            'usu_name' => 'maria.jose',
+            'usu_correo' => 'maria.jose@example.com',
+            'usu_telefono' => '123456789',
+            'usu_unidad' => 'dga'
+        ];
+
+        $this->usuario->method('ejecutarConsulta')->willReturn($userData);
+
+        $resultado = $this->usuario->login('maria.jose', '123456789');
+        $this->assertEquals('home', $resultado);
+    }
+    public function testLoginValidoSession() {
+        session_destroy();
+        session_start();
+        $userData = [
+            'usu_id' => 1,
+            'usu_nom' => 'maria',
+            'usu_ape' => 'jose',
+            'usu_tipo' => 'admin',
+            'usu_name' => 'maria.jose',
+            'usu_correo' => 'maria.jose@example.com',
+            'usu_telefono' => '123456789',
+            'usu_unidad' => 'dga'
+        ];
+
+        $this->usuario->method('ejecutarConsulta')->willReturn($userData);
+
+        $resultado = $this->usuario->login('maria.jose', '123456789');
+        $this->assertEquals('home', $resultado);
+        $this->assertEquals($_SESSION["usu_id"] , $userData["usu_id"]);
+        $this->assertEquals($_SESSION["usu_nom"] , $userData["usu_nom"]);
+        $this->assertEquals($_SESSION["usu_ape"] , $userData["usu_ape"]);
+        $this->assertEquals($_SESSION["usu_tipo"] , $userData["usu_tipo"]);
+        $this->assertEquals($_SESSION["usu_correo"] , $userData["usu_correo"]);
+        $this->assertEquals($_SESSION["usu_telefono"] , $userData["usu_telefono"]);
+        $this->assertEquals($_SESSION["usu_unidad"] , $userData["usu_unidad"]);
+        session_destroy();
+    }
+}
