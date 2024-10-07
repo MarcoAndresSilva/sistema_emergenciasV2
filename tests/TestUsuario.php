@@ -135,4 +135,42 @@ class TestUsuario extends TestCase {
         $this->assertEquals( null, $_SESSION["usu_unidad"]);
         session_destroy();
     }
+  public function testGetTipoUsuario() {
+    $userData = [
+      "usu_id" => 1,
+      "usu_nom" => "maria",
+      "usu_ape" => "jose",
+      "usu_tipo" => "admin",
+      "usu_name" => "maria.jose",
+      "usu_correo" => "maria.jose@example.com",
+      "usu_telefono" => "123456789",
+      "usu_unidad" => "dga",
+    ];
+    $this->usuario->method('ejecutarConsulta')->willReturn($userData);
+    $resultado = $this->usuario->get_tipo(1);
+
+    $this->assertEquals($resultado, $userData);
+
+  }
+  public function testGetTipoUsuarioError() {
+    $userData = [];
+    $this->usuario->method('ejecutarConsulta')->willReturn($userData);
+    $resultado = $this->usuario->get_tipo(1);
+
+    $this->assertFalse($resultado);
+  }
+  public function testGetDatosUsuario() {
+    $userData = ["usuario" => "Maria Jose"];
+    $this->usuario->method('ejecutarConsulta')->willReturn($userData);
+    $resultado = $this->usuario->get_datos_contacto(1);
+
+    $this->assertEquals($resultado, $userData);
+  }
+  public function testGetDatosUsuarioError() {
+    $userData = [];
+    $this->usuario->method('ejecutarConsulta')->willReturn($userData);
+    $resultado = $this->usuario->get_datos_contacto(1);
+
+    $this->assertEquals(0,$resultado);
+  }
 }
