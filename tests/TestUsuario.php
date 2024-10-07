@@ -173,4 +173,52 @@ class TestUsuario extends TestCase {
 
     $this->assertEquals(0,$resultado);
   }
+  public function testAddUsuario() {
+    $userData = [
+      "usu_id" => 1,
+      "usu_nom" => "maria",
+      "usu_ape" => "jose",
+      "usu_tipo" => "admin",
+      "usu_name" => "maria.jose",
+      "usu_correo" => "maria.jose@example.com",
+      "usu_telefono" => "123456789",
+      "usu_unidad" => "dga",
+    ];
+    $this->usuario->method('ejecutarConsulta')->willReturn([]);
+    $this->usuario->method('ejecutarAccion')->willReturn(true);
+    $resultado = $this->usuario->add_usuario(
+      "maria",
+      "jose",
+      "maria.jose@example.com",
+      "maria.jose",
+      "P4ssw-rd",
+      "20-12-2021",
+      1,
+      1,
+      "123456789",
+      1,
+    );
+    $esperado = ["status" => "success", "message" => "Usuario agregado correctamente"];
+    $this->assertEquals($resultado, $esperado  );
+  }
+  public function testAddUsuarioExisteUsername(){
+
+    $this->usuario->method('ejecutarConsulta')->willReturn(true);
+    $resultado = $this->usuario->add_usuario(
+      "maria",
+      "jose",
+      "maria.jose@example.com",
+      "maria.jose",
+      "password",
+      "20-12-2021",
+      "1",
+      "1",
+      "123456789",
+      "dga",
+    );
+
+    $esperado = ['status' => 'warning', 'message' => 'El usuario ya existe con ese nombre de usuario'];
+    $this->assertEquals($resultado, $esperado  );
+  }
+
 }
