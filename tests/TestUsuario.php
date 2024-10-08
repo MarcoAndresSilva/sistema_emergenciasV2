@@ -327,4 +327,22 @@ public function testAddUsuarioPasswordInsegura(){
     $esperado =  ['status' => 'warning', 'message' => 'La contraseña no cumple con todos los requisitos de seguridad para esta unidad.'];
     $this->assertEquals($resultado, $esperado);
   }
+  public function testUpdatePhoneUsuario(){
+    $this->usuario->method("ejecutarAccion")->willReturn(true);
+    $resultado = $this->usuario->update_phone(123456789,1);
+    $esperado =  ['status' => 'success', 'message' => 'Número de teléfono actualizado con éxito'];
+
+    $this->assertEquals($resultado, $esperado);
+  }
+  public function testUpdatePhoneUsuarioFalse(){
+    $this->usuario->method("ejecutarAccion")->willReturn(false);
+    $resultado = $this->usuario->update_phone(123456789,1);
+    $esperado =  ['status' => 'info', 'message' => 'No se realizó ningún cambio'];
+    $this->assertEquals($resultado, $esperado);
+  }
+  public function testUpdatePhoneUsuarioNumeroCorto(){
+    $resultado = $this->usuario->update_phone(1234568,1);
+    $esperado =  ['status' => 'warning', 'message' => 'La longitud del número de teléfono no es correcta'];
+    $this->assertEquals($resultado, $esperado);
+  }
 }
