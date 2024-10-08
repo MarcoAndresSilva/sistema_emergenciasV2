@@ -233,5 +233,34 @@ class TestUsuario extends TestCase {
     $esperado = array('status' => 'success', 'message' => 'Usuario desactivado con éxito');
     $this->assertEquals($resultado, $esperado);
   }
+public function testAddUsuarioPasswordInsegura(){
+    $userData = [
+      "usu_id" => 1,
+      "usu_nom" => "maria",
+      "usu_ape" => "jose",
+      "usu_tipo" => "admin",
+      "usu_name" => "maria.jose",
+      "usu_correo" => "maria.jose@example.com",
+      "usu_telefono" => "123456789",
+      "usu_unidad" => "dga",
+    ];
+    $this->usuario->method('ejecutarConsulta')->willReturn([]);
+    $this->usuario->method('ejecutarAccion')->willReturn(true);
+    $resultado = $this->usuario->add_usuario(
+      "maria",
+      "jose",
+      "maria.jose@example.com",
+      "maria.jose",
+      "holamundo",
+      "20-12-2021",
+      1,
+      1,
+      "123456789",
+      1,
+    );
+    $esperado =  ["status" => "warning", "message" => "La contraseña no cumple con todos los requisitos de seguridad para esta unidad."];
+
+    $this->assertEquals($resultado, $esperado  );
+  }
 
 }
