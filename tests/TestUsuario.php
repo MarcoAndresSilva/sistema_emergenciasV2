@@ -396,4 +396,22 @@ public function testAddUsuarioPasswordInsegura(){
     $this->assertEquals('No se puede obtener los datos', $resultado['message']);
   }
 
+  public function testUpdateUsuarioTipoErrorTipoVacio(){
+    $resultado = $this->usuario->update_usuario_tipo(1,"");
+    $this->assertEquals("warning",$resultado["status"]);
+    $this->assertEquals('El tipo de usuario es obligatorio',$resultado["message"]);
+
+  }
+public function TestUpdateUsuarioTipoSinCambios(){
+    $this->usuario->method("ejecutarAccion")->willReturn(false);
+    $resultado = $this->usuario->update_usuario_tipo(1,1);
+    $this->assertEquals("info",$resultado["status"]);
+    $this->assertEquals('No se realizó ningún cambio',$resultado["message"]);
+  }
+  public function testUpdateUsuarioTipoCorrecto(){
+    $this->usuario->method("ejecutarAccion")->willReturn(true);
+    $resultado = $this->usuario->update_usuario_tipo(1,1);
+    $this->assertEquals("success",$resultado["status"]);
+    $this->assertEquals('Tipo de usuario actualizado con éxito',$resultado["message"]);
+  }
 }
