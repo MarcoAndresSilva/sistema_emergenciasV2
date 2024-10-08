@@ -17,6 +17,7 @@ class TestUsuario extends TestCase {
                                 'crearSesionUsuario',
                                 'GetIpCliente',
                                 'get_login_usuario',
+                                'get_info_usuario',
                               ])
                               ->getMock();
     }
@@ -275,4 +276,55 @@ public function testAddUsuarioPasswordInsegura(){
     $this->assertEquals($resultado, $esperado);
   }
 
+  public function testUpdatePassword(){
+
+    $this->usuario->method("ejecutarConsulta")->willReturn(["usu_unidad"=>1]);
+    $this->usuario->method("ejecutarAccion")->willReturn(true);
+    $resultado = $this->usuario->update_password(123,"P4ssw-rd",1);
+    $esperado = ["status"=>"success", "message"=>"Contraseña actualizada con éxito"];
+    $this->assertEquals($resultado,$esperado);
+  }
+
+  public function testUpdatePaswordNoCoincideOldPassword(){
+    $this->usuario->method("ejecutarConsulta")->willReturn([]);
+    $this->usuario->method("ejecutarAccion")->willReturn(true);
+    $resultado = $this->usuario->update_password(123,"P4ssw-rd",1);
+    $esperado = ["status"=>"warning", "message"=>"La contraseña antigua no coincide"];
+    $this->assertEquals($resultado,$esperado);
+  }
+
+  public function testUpdatePasswordOldYNewNoPuedenSerIguales(){
+
+    $this->usuario->method("ejecutarConsulta")->willReturn([
+      "usu_unidad"=>1,
+      "usu_pass"=>md5("P4ssw-rd")
+    ]);
+
+    $resultado = $this->usuario->update_password("P4ssw-rd","P4ssw-rd",1);
+    $esperado = ["status"=>"info", "message"=>"La nueva contraseña debe ser distinta a la antigua"];
+    $this->assertEquals($resultado,$esperado);
+  }
+
+  public function testUpdatePasswordForce(){
+     $this->usuario->method("get_info_usuario")->willReturn([
+      "result"=>[
+        "UNIDAD"=>1
+      ]
+    ]);
+    $this->usuario->method("ejecutarAccion")->willReturn(true);
+    $resultado = $this->usuario->update_password_force("P4ssw-rd",1);
+    $esperado =  ['status' => 'success', 'message' => 'Contraseña actualizada con éxito'];
+    $this->assertEquals($resultado, $esperado);
+  }
+  public function testUpdatePasswordForceConPasswordInsegura(){
+    $this->usuario->method("get_info_usuario")->willReturn([
+      "result"=>[
+        "UNIDAD"=>1
+      ]
+    ]);
+    $this->usuario->method("ejecutarAccion")->willReturn(true);
+    $resultado = $this->usuario->update_password_force("holamundo",1);
+    $esperado =  ['status' => 'warning', 'message' => 'La contraseña no cumple con todos los requisitos de seguridad para esta unidad.'];
+    $this->assertEquals($resultado, $esperado);
+  }
 }
