@@ -17,7 +17,6 @@ class TestUsuario extends TestCase {
                                 'crearSesionUsuario',
                                 'GetIpCliente',
                                 'get_login_usuario',
-                                'get_info_usuario',
                               ])
                               ->getMock();
     }
@@ -306,22 +305,14 @@ public function testAddUsuarioPasswordInsegura(){
   }
 
   public function testUpdatePasswordForce(){
-     $this->usuario->method("get_info_usuario")->willReturn([
-      "result"=>[
-        "UNIDAD"=>1
-      ]
-    ]);
+    $this->usuario->method("ejecutarConsulta")->willReturn(["UNIDAD"=>1]);
     $this->usuario->method("ejecutarAccion")->willReturn(true);
     $resultado = $this->usuario->update_password_force("P4ssw-rd",1);
     $esperado =  ['status' => 'success', 'message' => 'Contraseña actualizada con éxito'];
     $this->assertEquals($resultado, $esperado);
   }
   public function testUpdatePasswordForceConPasswordInsegura(){
-    $this->usuario->method("get_info_usuario")->willReturn([
-      "result"=>[
-        "UNIDAD"=>1
-      ]
-    ]);
+    $this->usuario->method("ejecutarConsulta")->willReturn(["UNIDAD"=>1]);
     $this->usuario->method("ejecutarAccion")->willReturn(true);
     $resultado = $this->usuario->update_password_force("holamundo",1);
     $esperado =  ['status' => 'warning', 'message' => 'La contraseña no cumple con todos los requisitos de seguridad para esta unidad.'];
@@ -345,4 +336,64 @@ public function testAddUsuarioPasswordInsegura(){
     $esperado =  ['status' => 'warning', 'message' => 'La longitud del número de teléfono no es correcta'];
     $this->assertEquals($resultado, $esperado);
   }
+  public function testGetInfoUsuarioExitoso() {
+    $userData = [
+        "Nombre Completo" => "Juan Pérez",
+        "Tipo" => "admin",
+        "Telefono" => "123456789",
+        "Correo" => "juan.perez@example.com",
+        "Unidad" => "Ventas",
+        "Usuario" => "juan.perez"
+    ];
+
+    $this->usuario->method('ejecutarConsulta')->willReturn($userData);
+
+    $resultado = $this->usuario->get_info_usuario(1);
+    $this->assertEquals('success', $resultado['status']);
+  }
+  public function testGetInfoUsuarioError() {
+
+    $this->usuario->method('ejecutarConsulta')->willReturn([]);
+
+    $resultado = $this->usuario->get_info_usuario(9999);
+    $this->assertEquals('error', $resultado['status']);
+    $this->assertEquals('No se puede obtener los datos', $resultado['message']);
+    $this->assertEquals($userData, $resultado["result"]);
+  }
+
+  public function testGetFullUsuarios(){
+    $usersData = [[
+        "Nombre Completo" => "Juan Pérez",
+        "Tipo" => "admin",
+        "Telefono" => "123456789",
+        "Correo" => "juan.perez@example.com",
+        "Unidad" => "Ventas",
+        "Usuario" => "juan.perez"
+    ],[
+        "Nombre Completo" => "Juan Pérez",
+        "Tipo" => "admin",
+        "Telefono" => "123456789",
+        "Correo" => "juan.perez@example.com",
+        "Unidad" => "Ventas",
+        "Usuario" => "juan.perez"
+    ]];
+
+    $this->usuario->method("ejecutarConsulta")->willReturn($usersData);
+    $resultado=$this->usuario->get_full_usuarios();
+
+    $this->assertEquals('success', $resultado['status']);
+    $this->assertEquals('Se obtienen los datos', $resultado['message']);
+    $this->assertEquals($usersData, $resultado['result']);
+  }
+
+  public function testGetFullUsuariosSinDatos(){
+    $usersData = [];
+
+    $this->usuario->method("ejecutarConsulta")->willReturn($usersData);
+    $resultado=$this->usuario->get_full_usuarios();
+
+    $this->assertEquals('error', $resultado['status']);
+    $this->assertEquals('No se puede obtener los datos', $resultado['message']);
+  }
+
 }
