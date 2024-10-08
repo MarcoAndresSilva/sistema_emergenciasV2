@@ -221,4 +221,17 @@ class TestUsuario extends TestCase {
     $this->assertEquals($resultado, $esperado  );
   }
 
+  public function testEnableUsuario(){
+    $this->usuario->method("ejecutarAccion")->willReturn(true);
+    $resultado = $this->usuario->enable_usuario(1);
+    $esperado = array('status' => 'success', 'message' => 'Usuario activado con éxito');
+    $this->assertEquals($resultado, $esperado);
+  }
+  public function testDisableUsuario(){
+    $this->usuario->method("ejecutarAccion")->willReturn(true);
+    $resultado = $this->usuario->disable_usuario(2);
+    $esperado = array('status' => 'success', 'message' => 'Usuario desactivado con éxito');
+    $this->assertEquals($resultado, $esperado);
+  }
+
 }
