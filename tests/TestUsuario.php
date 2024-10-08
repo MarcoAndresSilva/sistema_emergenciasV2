@@ -262,5 +262,17 @@ public function testAddUsuarioPasswordInsegura(){
 
     $this->assertEquals($resultado, $esperado  );
   }
+  public function testUpdateUsuario(){
+    $this->usuario->method("ejecutarAccion")->willReturn(true);
+    $resultado = $this->usuario->update_usuario(4,"test","TestApellido","test@correo.cl","123456789","testmemo",1,1);
+    $esperado = array('status'=>"success","message"=>"Usuario actualizado con éxito");
+    $this->assertEquals($resultado, $esperado);
+  }
+
+  public function testUpdateUsuarioCampoVacio(){
+    $resultado = $this->usuario->update_usuario("","","","","","","","");
+    $esperado = array('status' => 'warning', 'message' => 'Todos los campos son obligatorios');
+    $this->assertEquals($resultado, $esperado);
+  }
 
 }
