@@ -414,4 +414,27 @@ public function TestUpdateUsuarioTipoSinCambios(){
     $this->assertEquals("success",$resultado["status"]);
     $this->assertEquals('Tipo de usuario actualizado con éxito',$resultado["message"]);
   }
+  public function testDatosUsuariosPorTipo(){
+    $usersData = [[
+        "Nombre Completo" => "Juan Pérez",
+        "Tipo" => "admin",
+        "Telefono" => "123456789",
+        "Correo" => "juan.perez@example.com",
+        "Unidad" => "Ventas",
+        "Usuario" => "juan.perez"
+    ],[
+      "Nombre Completo" => "maria jose",
+      "Tipo" => "admin",
+      "Correo" => "maria.jose@example.com",
+      "Telefono" => "123456789",
+      "Unidad" => "dga",
+      "Usuario"=>"maria.jose"
+    ]];
+
+
+    $this->usuario->method("ejecutarConsulta")->willReturn($usersData);
+    $resultado = $this->usuario->get_full_usuarios_tipo(1);
+    $this->assertEquals($usersData,$resultado);
+  }
+
 }
