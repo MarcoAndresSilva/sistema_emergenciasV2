@@ -77,4 +77,17 @@
     margin-right: 8px;
 }
 
+#notification-list {
+    max-height: 200px; /* Altura máxima antes de activar el scroll */
+    overflow-y: auto; /* Añade el scroll vertical */
+}
+
+#notification-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+#notification-list::-webkit-scrollbar-thumb {
+    background-color: #b18ac1; /* Color de la barra de desplazamiento */
+    border-radius: 10px; /* Estilo redondeado */
+}
 
