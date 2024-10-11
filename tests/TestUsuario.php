@@ -292,7 +292,7 @@ public function testAddUsuarioPasswordInsegura(){
     $this->assertEquals($resultado,$esperado);
   }
 
-  public function testUpdatePasswordOldYNewNoPuedenSerIguales(){
+   public function testUpdatePasswordOldYNewNoPuedenSerIguales(){
 
     $this->usuario->method("ejecutarConsulta")->willReturn([
       "usu_unidad"=>1,
@@ -402,7 +402,7 @@ public function testAddUsuarioPasswordInsegura(){
     $this->assertEquals('El tipo de usuario es obligatorio',$resultado["message"]);
 
   }
-public function TestUpdateUsuarioTipoSinCambios(){
+  public function testUpdateUsuarioTipoSinCambios(){
     $this->usuario->method("ejecutarAccion")->willReturn(false);
     $resultado = $this->usuario->update_usuario_tipo(1,1);
     $this->assertEquals("info",$resultado["status"]);
