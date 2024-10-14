@@ -175,7 +175,7 @@ if (isset($_GET["op"])) {
                     $dato_estado = $estado->get_datos_estado($row['ev_est']);
                     if (isset($dato_estado[0]['est_nom'])) {
                         if ($dato_estado[0]['est_nom'] == "En Proceso") {
-                            $evento['estado'] = '<span class="label label-pill label-success">' . $dato_estado[0]['est_nom'] . '</span>';
+                            $evento['estado'] = '<span class="label label-pill label-warning">' . $dato_estado[0]['est_nom'] . '</span>';
                         } elseif ($dato_estado[0]['est_nom'] == "Finalizado") {
                             $evento['estado'] = '<span class="label label-pill label-danger ">' . $dato_estado[0]['est_nom'] . '</span>';
                         } else {
