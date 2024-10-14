@@ -663,25 +663,24 @@ ALTER TABLE `tm_usuario`
 -- AUTO_INCREMENT de la tabla `tm_camb_asig`
 --
 ALTER TABLE `tm_camb_asig`
-  MODIFY `camb_asig_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
+  MODIFY `camb_asig_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `tm_categoria`
 --
 ALTER TABLE `tm_categoria`
-  MODIFY `cat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `cat_id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `tm_estado`
 --
 ALTER TABLE `tm_estado`
-  MODIFY `est_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `est_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `tm_est_unidad`
 --
 ALTER TABLE `tm_est_unidad`
-  MODIFY `est_un_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
+  MODIFY `est_un_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `tm_ev_cierre`
@@ -693,12 +692,12 @@ ALTER TABLE `tm_ev_cierre`
 -- AUTO_INCREMENT de la tabla `tm_ev_niv`
 --
 ALTER TABLE `tm_ev_niv`
-  MODIFY `ev_niv_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `ev_niv_id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- AUTO_INCREMENT de la tabla `tm_usu_tipo`
 --
 ALTER TABLE `tm_usu_tipo`
-  MODIFY `usu_tipo_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `usu_tipo_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `tm_unidad`
@@ -710,7 +709,7 @@ ALTER TABLE `tm_unidad`
 -- AUTO_INCREMENT de la tabla `tm_usuario`
 --
 ALTER TABLE `tm_usuario`
-  MODIFY `usu_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `usu_id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
