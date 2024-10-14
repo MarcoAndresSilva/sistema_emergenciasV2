@@ -181,50 +181,51 @@ INSERT INTO `tm_est_unidad` (`est_un_id`, `est_un_nom`) VALUES
 --
 
 CREATE TABLE `tm_evento` (
-  `ev_id` int(11) NOT NULL,
+  `ev_id` int(11) NOT NULL AUTO_INCREMENT,
   `usu_id` int(11) NOT NULL,
   `ev_desc` varchar(50) NOT NULL,
   `ev_est` int(11) NOT NULL,
-  `ev_inicio` datetime NOT NULL,
+  `ev_inicio` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `ev_final` datetime DEFAULT NULL,
   `ev_direc` varchar(100) NOT NULL,
   `ev_latitud`  DOUBLE NOT NULL,
   `ev_longitud` DOUBLE NOT NULL,
   `cat_id` int(11) NOT NULL,
   `ev_niv` int(11) NOT NULL,
-  `ev_img` varchar(123)
+  `ev_img` varchar(123),
+  PRIMARY KEY (`ev_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `tm_evento`
 --
 
-INSERT INTO `tm_evento` (`ev_id`, `usu_id`, `ev_desc`, `ev_est`, `ev_inicio`, `ev_final`, `ev_direc`, `ev_latitud`, `ev_longitud`, `cat_id`, `ev_niv`, `ev_img`) VALUES
-(10, 1, 'Descripcion', 2, '2024-01-08 12:09:06', NULL, 'Anita Fresno 327', -33.6860493, -71.2150019, 9, 1, NULL),
-(16, 1, 'Descripcion', 2, '2024-01-08 17:03:26', NULL, 'loica parcela 7', -33.6860493, -71.2150019, 1, 3, NULL),
-(19, 1, 'Descripcion', 2, '2024-01-11 12:53:31', NULL, 'Colonial 2', -33.6855446, -71.2171806, 7, 1, NULL),
-(21, 1, 'Descripcion', 2, '2024-01-15 13:11:52', NULL, 'Libertad 2031', -33.6855446, -71.2171806, 5, 3, NULL),
-(22, 1, 'Constado de carretera km18', 2, '2024-01-16 18:44:15', NULL, 'Ruta 78', -33.6855446, -71.2171806, 1, 3, NULL),
-(24, 1, 'Costado de Carretera direccion santiago', 2, '2024-01-16 19:21:18', NULL, 'Ruta 78', -33.6855446, -71.2171806, 1, 2, NULL),
-(85, 1, 'Planta interior', 2, '2024-01-21 20:35:37', NULL, 'Anita Fresno 327', -33.6860493, -71.2150019, 1, 2, NULL),
-(114, 2, 'caso de incendio en la villa colonial', 2, '2024-01-31 09:13:23', '2024-05-24 15:48:12', 'colonial 13', -33.6855421, -71.2171669, 1, 1, ''),
-(141, 2, 'Planta interior', 2, '2024-02-02 08:18:52', '2024-02-06 10:45:59', 'Plaza cardenales', -33.6855446, -71.2171806, 1, 1, ''),
-(143, 2, 'Planta interior', 2, '2024-02-06 11:26:10', '2024-02-15 11:27:38', 'Sin dirección', -33.6855446, -71.2171806, 1, 0, ''),
-(144, 2, 'Asalto', 2, '2024-02-15 11:30:32', '2024-05-24 10:19:11', 'cunco2207', -33.6779895, -71.1743368, 1, 2, ''),
-(145, 2, 'evento test', 2, '2024-02-16 09:29:05', '2024-05-24 12:13:39', 'muni melipilla', -33.6860493, -71.2150019, 4, 2, ''),
-(146, 2, 'gdfhfgdh', 2, '2024-03-21 17:21:00', '2024-03-22 11:17:20', 'gfhfdghhggh', -33.6860493, -71.2150019, 9, 3, ''),
-(147, 2, 'se cayo un arbol', 2, '2024-03-22 09:37:49', '2024-05-24 10:03:19', 'Sin dirección', -33.6856435, -71.2230970, 7, 0, ''),
-(148, 2, 'asaltacion', 2, '2024-03-22 16:10:33', '2024-05-24 15:49:22', 'Sin dirección', -33.6855738, -71.2172411, 2, 1, ''),
-(149, 2, 'efsdfsdfds', 2, '2024-03-25 16:50:19', '2024-05-24 12:13:42', 'Sin dirección', -33.6855794, -71.2172355, 9, 2, ''),
-(150, 2, 'barristas quemando neumaticos', 2, '2024-03-26 10:08:15', '2024-05-24 15:49:19', 'centro de melipila', -33.6855446, -71.2171806, 4, 1, ''),
-(151, 2, 'barristas quemando neumaticos', 2, '2024-05-22 10:08:15', '2024-05-24 15:39:45', 'centro de melipila', -33.6855446, -71.2171806, 4, 1, ''),
-(152, 3, 'dfsafdsrgde', 2, '2024-05-22 23:27:39', '2024-05-24 15:07:47', 'Sin dirección', -33.6855446, -71.2171806, 2, 1, ''),
-(153, 3, 'accidente arma corta', 2, '2024-05-24 09:56:27', '2024-05-24 10:03:30', 'Sin dirección', -33.6809571, -71.2166493, 2, 0, ''),
-(154, 3, 'barricadas', 2, '2024-05-24 10:01:55', '2024-05-24 10:03:33', 'mackena #5465', -33.6855446, -71.2171806, 4, 0, ''),
-(155, 3, 'casa habitacion', 2, '2024-05-24 10:02:36', '2024-05-24 10:03:36', 'bernardo leigthon 87687', -33.6855446, -71.2171806, 1, 0, ''),
-(156, 3, 'casa habitacion', 1, '2024-05-24 15:50:11', NULL, 'los jazmines 342', -33.6855446, -71.2171806, 1, 0, ''),
-(157, 3, 'niño intoxicado', 1, '2024-05-24 15:50:49', NULL, 'colegio melipilla', -33.6855446, -71.2171806, 9, 0, ''),
-(158, 3, 'caída de árbol obstruye la vía', 1, '2024-05-24 15:51:40', NULL, 'Av. Loreto', -33.6855446, -71.2171806, 1, 1, '');
+INSERT INTO `tm_evento` (`usu_id`, `ev_desc`, `ev_est`, `ev_inicio`, `ev_final`, `ev_direc`, `ev_latitud`, `ev_longitud`, `cat_id`, `ev_niv`, `ev_img`) VALUES
+( 1, 'Descripcion', 2, '2024-01-08 12:09:06', NULL, 'Anita Fresno 327', -33.6860493, -71.2150019, 9, 1, NULL),
+( 1, 'Descripcion', 2, '2024-01-08 17:03:26', NULL, 'loica parcela 7', -33.6860493, -71.2150019, 1, 3, NULL),
+( 1, 'Descripcion', 2, '2024-01-11 12:53:31', NULL, 'Colonial 2', -33.6855446, -71.2171806, 7, 1, NULL),
+( 1, 'Descripcion', 2, '2024-01-15 13:11:52', NULL, 'Libertad 2031', -33.6855446, -71.2171806, 5, 3, NULL),
+( 1, 'Constado de carretera km18', 2, '2024-01-16 18:44:15', NULL, 'Ruta 78', -33.6855446, -71.2171806, 1, 3, NULL),
+( 1, 'Costado de Carretera direccion santiago', 2, '2024-01-16 19:21:18', NULL, 'Ruta 78', -33.6855446, -71.2171806, 1, 2, NULL),
+( 1, 'Planta interior', 2, '2024-01-21 20:35:37', NULL, 'Anita Fresno 327', -33.6860493, -71.2150019, 1, 2, NULL),
+( 2, 'caso de incendio en la villa colonial', 2, '2024-01-31 09:13:23', '2024-05-24 15:48:12', 'colonial 13', -33.6855421, -71.2171669, 1, 1, ''),
+( 2, 'Planta interior', 2, '2024-02-02 08:18:52', '2024-02-06 10:45:59', 'Plaza cardenales', -33.6855446, -71.2171806, 1, 1, ''),
+( 2, 'Planta interior', 2, '2024-02-06 11:26:10', '2024-02-15 11:27:38', 'Sin dirección', -33.6855446, -71.2171806, 1, 0, ''),
+( 2, 'Asalto', 2, '2024-02-15 11:30:32', '2024-05-24 10:19:11', 'cunco2207', -33.6779895, -71.1743368, 1, 2, ''),
+( 2, 'evento test', 2, '2024-02-16 09:29:05', '2024-05-24 12:13:39', 'muni melipilla', -33.6860493, -71.2150019, 4, 2, ''),
+( 2, 'gdfhfgdh', 2, '2024-03-21 17:21:00', '2024-03-22 11:17:20', 'gfhfdghhggh', -33.6860493, -71.2150019, 9, 3, ''),
+( 2, 'se cayo un arbol', 2, '2024-03-22 09:37:49', '2024-05-24 10:03:19', 'Sin dirección', -33.6856435, -71.2230970, 7, 0, ''),
+( 2, 'asaltacion', 2, '2024-03-22 16:10:33', '2024-05-24 15:49:22', 'Sin dirección', -33.6855738, -71.2172411, 2, 1, ''),
+( 2, 'efsdfsdfds', 2, '2024-03-25 16:50:19', '2024-05-24 12:13:42', 'Sin dirección', -33.6855794, -71.2172355, 9, 2, ''),
+( 2, 'barristas quemando neumaticos', 2, '2024-03-26 10:08:15', '2024-05-24 15:49:19', 'centro de melipila', -33.6855446, -71.2171806, 4, 1, ''),
+( 2, 'barristas quemando neumaticos', 2, '2024-05-22 10:08:15', '2024-05-24 15:39:45', 'centro de melipila', -33.6855446, -71.2171806, 4, 1, ''),
+( 3, 'dfsafdsrgde', 2, '2024-05-22 23:27:39', '2024-05-24 15:07:47', 'Sin dirección', -33.6855446, -71.2171806, 2, 1, ''),
+( 3, 'accidente arma corta', 2, '2024-05-24 09:56:27', '2024-05-24 10:03:30', 'Sin dirección', -33.6809571, -71.2166493, 2, 0, ''),
+( 3, 'barricadas', 2, '2024-05-24 10:01:55', '2024-05-24 10:03:33', 'mackena #5465', -33.6855446, -71.2171806, 4, 0, ''),
+( 3, 'casa habitacion', 2, '2024-05-24 10:02:36', '2024-05-24 10:03:36', 'bernardo leigthon 87687', -33.6855446, -71.2171806, 1, 0, ''),
+( 3, 'casa habitacion', 1, '2024-05-24 15:50:11', NULL, 'los jazmines 342', -33.6855446, -71.2171806, 1, 0, ''),
+( 3, 'niño intoxicado', 1, '2024-05-24 15:50:49', NULL, 'colegio melipilla', -33.6855446, -71.2171806, 9, 0, ''),
+( 3, 'caída de árbol obstruye la vía', 1, '2024-05-24 15:51:40', NULL, 'Av. Loreto', -33.6855446, -71.2171806, 1, 1, '');
 -- --------------------------------------------------------
 
 --
@@ -658,13 +659,6 @@ ALTER TABLE `tm_estado`
 --
 ALTER TABLE `tm_est_unidad`
   ADD PRIMARY KEY (`est_un_id`);
-
---
--- Indices de la tabla `tm_evento`
---
-ALTER TABLE `tm_evento`
-  ADD PRIMARY KEY (`ev_id`);
-
 --
 -- Indices de la tabla `tm_ev_cierre`
 --
@@ -728,11 +722,6 @@ ALTER TABLE `tm_estado`
 ALTER TABLE `tm_est_unidad`
   MODIFY `est_un_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
---
--- AUTO_INCREMENT de la tabla `tm_evento`
---
-ALTER TABLE `tm_evento`
-  MODIFY `ev_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=159;
 
 --
 -- AUTO_INCREMENT de la tabla `tm_ev_cierre`
