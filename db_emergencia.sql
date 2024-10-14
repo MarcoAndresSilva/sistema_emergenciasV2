@@ -384,10 +384,10 @@ CREATE TABLE `tm_usuario` (
 --
 
 INSERT INTO `tm_usuario` (`usu_id`, `usu_nom`, `usu_ape`, `usu_correo`, `usu_telefono`, `usu_name`, `usu_pass`, `fecha_crea`, `fecha_modi`, `fecha_elim`, `estado`, `usu_tipo`, `usu_unidad`) VALUES
-(1, 'Cristian', 'Suazo', 'crhiiss26@gmail.com', 968093527, 'csuazo', 'e10adc3949ba60abbe56e057f20f883e', '2023-12-30 13:15:58', NULL, NULL, 1, 2,1),
-(2, 'Admin', 'admin', 'admin@mail.com', 961718297, 'admin', '202cb962ac59075b964b07152d234b70', '2024-01-03 18:09:32', NULL, NULL, 1, 2,1),
-(3, 'Marco', 'Silva', 'marco.silvaponce10@gmail.com', 997827161, 'msilva', '827ccb0eea8a706c4c34a16891f84e7b', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 3,2),
-(4, 'marquisio', 'Silviña', 'memo@test.com', 965412724, 'marquisio', '827ccb0eea8a706c4c34a16891f84e7b', '2024-03-20 13:01:58', NULL, NULL, 1, 3,3);
+(1, 'Cristian', 'Suazo', 'cristian.suazo@munimelipilla.cl', 968093527, 'csuazo', 'e10adc3949ba60abbe56e057f20f883e', '2023-12-30 13:15:58', NULL, NULL, 1, 2,5),
+(2, 'Admin', 'admin', 'admin@mail.com', 961718297, 'admin', '202cb962ac59075b964b07152d234b70', '2024-01-03 18:09:32', NULL, NULL, 1, 2,5),
+(3, 'Marco', 'Silva', 'marco.silva@munimelipilla.cl', 997827161, 'msilva', '827ccb0eea8a706c4c34a16891f84e7b', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 3,5),
+(4, 'Nelson', 'Navarro', 'nelson.navarro@munimelipilla.cl', 965412724, 'nnavarro', 'b08cab3a853b8d1e609905d7161daf80', '2024-03-20 13:01:58', NULL, NULL, 1, 3,5);
 
 
 
@@ -434,7 +434,7 @@ insert into tm_rob_pass(`usu_id`,`mayuscula`,`minuscula`,`especiales`,`numeros`,
 (1,false,false,false,true,false,'2024-05-16 15:47:31'),
 (2,false,false,false,true,false,'2024-05-16 15:47:31'),
 (3,false,false,false,true,false,'2024-05-16 15:47:31'),
-(4,false,false,false,true,false,'2024-05-16 15:47:31');
+(4,true,true,true,true,true,'2024-05-16 15:47:31');
 --
 -- Estructua de tabla para tm_reg_log
 --
