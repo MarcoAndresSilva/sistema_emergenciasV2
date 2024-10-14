@@ -552,11 +552,11 @@ CREATE TABLE tm_emergencia_detalle(
 --
 
 INSERT INTO `tm_emergencia_detalle`(`emergencia_id`,`ev_id`,`usu_id`,`ev_desc`,`ev_est`) VALUES
-(1,161,1,'Requiero Soporte',1),
-(2,161,2,'Como puedo ayudarte',1),
-(3,161,1,'Requiero su ayuda para cambiar la SSD de mi laptop',1),
-(4,161,2,'No hay problema indicame numero de serie',1),
-(5,161,1,'SN:816511616XX',1);
+(1,1,1,'Requiero Soporte',1),
+(2,1,2,'Como puedo ayudarte',1),
+(3,1,1,'Requiero su ayuda para cambiar la SSD de mi laptop',1),
+(4,1,2,'No hay problema indicame numero de serie',1),
+(5,1,1,'SN:816511616XX',1);
 
 --
 -- estructura de tm_noticia 
