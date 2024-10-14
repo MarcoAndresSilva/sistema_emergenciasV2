@@ -269,82 +269,49 @@ INSERT INTO `tm_ev_niv` (`ev_niv_id`, `ev_niv_nom`) VALUES
 --
 
 CREATE TABLE `tm_asignado` (
-  `id_inter` int(11) NOT NULL,
+  `id_inter` int(11) NOT NULL AUTO_INCREMENT,
   `ev_id` int(11) DEFAULT NULL,
-  `unid_id` int(11) NOT NULL
+  `unid_id` int(11) NOT NULL,
+  PRIMARY KEY (`id_inter`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `tm_asignado`
 --
 
-INSERT INTO `tm_asignado` (`id_inter`, `ev_id`, `unid_id`) VALUES
-(6, 85, 2),
-(7, 85, 5),
-(8, 84, 3),
-(9, 84, 4),
-(10, 84, 5),
-(11, 83, 1),
-(12, 37, 1),
-(13, 24, 3),
-(14, 24, 4),
-(15, 24, 5),
-(16, 22, 1),
-(17, 22, 2),
-(18, 22, 3),
-(19, 21, 1),
-(20, 21, 2),
-(21, 21, 5),
-(22, 19, 2),
-(23, 16, 4),
-(24, 10, 1),
-(25, 10, 3),
-(26, 10, 5),
-(111, 137, 2),
-(115, 138, 3),
-(116, 138, 4),
-(118, 139, 2),
-(119, 140, 2),
-(121, 140, 4),
-(220, 115, 2),
-(229, 141, 4),
-(230, 142, 2),
-(231, 142, 3),
-(232, 142, 4),
-(233, 142, 5),
-(244, 143, 2),
-(245, 143, 3),
-(246, 143, 4),
-(247, 143, 5),
-(274, 146, 1),
-(288, 147, 2),
-(289, 147, 4),
-(290, 147, 3),
-(299, 149, 5),
-(301, 148, 3),
-(302, 114, 4),
-(303, 144, 4),
-(304, 145, 3),
-(308, 150, 3),
-(309, 150, 5),
-(310, 151, 3),
-(312, 152, 3),
-(313, 153, 3),
-(314, 154, 2),
-(315, 154, 3),
-(316, 155, 2),
-(317, 155, 3),
-(318, 155, 4),
-(319, 155, 5),
-(320, 156, 2),
-(321, 156, 5),
-(322, 156, 4),
-(323, 156, 3),
-(324, 157, 2),
-(325, 157, 4),
-(326, 157, 3),
-(327, 157, 5),
-(329, 158, 1);
+INSERT INTO `tm_asignado` ( `ev_id`, `unid_id`) VALUES
+( 10, 2),( 10, 5),
+( 9, 3),( 9, 4), ( 9, 5), 
+( 8, 1),
+( 12, 1),
+( 13, 3),( 13, 4),( 13, 5),
+( 14, 1),( 14, 2),( 14, 3),
+( 15, 1),( 15, 2),( 15, 5),
+( 16, 2),
+( 17, 4),
+( 18, 1),( 18, 3),( 18, 5),
+( 19, 2),( 20, 3),( 20, 4),
+( 21, 2),( 22, 2),( 22, 4),
+( 23, 2),
+( 24, 4),
+( 25, 2),( 25, 3),( 25, 4),( 25, 5),
+( 1, 2), ( 1, 3), ( 1, 4), ( 1, 5),
+( 2, 1),
+( 3, 2), ( 3, 4), ( 3, 3),
+( 4, 5), 
+( 5, 3), 
+( 6, 4), 
+( 7, 4), 
+( 8, 3), 
+( 9, 3), ( 9, 5),
+( 10, 3),
+( 11, 3),
+( 12, 3),
+( 13, 2),( 13, 3),
+( 14, 2),( 14, 3),( 14, 4),( 14, 5),
+( 15, 2),( 15, 5),( 15, 4),( 15, 3),
+( 16, 2),( 16, 4),( 16, 3),( 16, 5),
+( 17, 1);
 
 
 --
@@ -670,13 +637,6 @@ ALTER TABLE `tm_ev_cierre`
 --
 ALTER TABLE `tm_ev_niv`
   ADD PRIMARY KEY (`ev_niv_id`);
-
---
--- Indices de la tabla `tm_asignado`
---
-ALTER TABLE `tm_asignado`
-  ADD PRIMARY KEY (`id_inter`);
-
 --
 -- Indices de la tabla `tm_usu_tipo`
 --
@@ -735,12 +695,6 @@ ALTER TABLE `tm_ev_cierre`
 ALTER TABLE `tm_ev_niv`
   MODIFY `ev_niv_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
---
--- AUTO_INCREMENT de la tabla `tm_asignado`
---
-ALTER TABLE `tm_asignado`
-  MODIFY `id_inter` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=330;
---
 -- AUTO_INCREMENT de la tabla `tm_usu_tipo`
 --
 ALTER TABLE `tm_usu_tipo`
