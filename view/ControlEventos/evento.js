@@ -35,6 +35,10 @@ function cargarTablaGeneral() {
             { "data": "ver_derivar" },
             { "data": "ver_detalle" }
         ],
+        language: {
+                url: "../registrosLog/spanishDatatable.json"
+        },
+        destroy: true, // Permite volver a inicializar la tabla si ya ha sido creada,
         "createdRow": function(row, data, dataIndex) {
             $("td", row).eq(0).attr("id", "id_evento_celda");
         },

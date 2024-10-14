@@ -53,7 +53,11 @@ document.addEventListener("DOMContentLoaded", function () {
                     return `<button class="edit-btn btn btn-primary" data-id="${data}">Editar</button>`;
                 }
             }
-        ]
+        ],
+         language: {
+                url: "../registrosLog/spanishDatatable.json"
+            },
+            destroy: true // Permite volver a inicializar la tabla si ya ha sido creada
     });
 
     // Function to fetch and map filter data
