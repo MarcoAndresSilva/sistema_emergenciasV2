@@ -16,7 +16,11 @@ const Toast = Swal.mixin({
 
 // Inicializar DataTable
 let table = $('#miTabla').DataTable({
-    responsive: true
+    responsive: true,
+        language: {
+                url: "../registrosLog/spanishDatatable.json"
+            },
+            destroy: true // Permite volver a inicializar la tabla si ya ha sido creada
 });
 
 // Obtener los niveles de peligro y luego actualizar la tabla

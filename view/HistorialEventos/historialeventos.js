@@ -34,6 +34,10 @@ function cargarTablaGeneral() {
             { "data": "fecha_apertura" },
             { "data": "ver_documentos" }
         ],
+          language: {
+                url: "../registrosLog/spanishDatatable.json"
+            },
+          destroy: true, // Permite volver a inicializar la tabla si ya ha sido creada
         "drawCallback": function(settings) {
             // Aquí aplicas nuevamente los estilos o cambios de color que necesitas
             $('.peligro_critico').addClass('label label-pill label-primary');

@@ -17,11 +17,14 @@ function obtenerSeguridadRobusta() {
     })
     .then(response => response.json())
     .then(data => {
-        // Inicializar DataTable
-        const table = $('#example').DataTable();
-        table.clear();
+        const table = $('#example').DataTable({
+            language: {
+                url: "../registrosLog/spanishDatatable.json"
+            },
+            destroy: true // Permite volver a inicializar la tabla si ya ha sido creada
+        });
 
-        // Agregar datos a la tabla
+        table.clear();        // Agregar datos a la tabla
         data.forEach(item => {
             const unidadNombre = unidades.find(unid => unid.unid_id === item.usu_unidad)?.unid_nom || 'sin definir';
             table.row.add([
