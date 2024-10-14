@@ -351,11 +351,11 @@ CREATE TABLE `tm_unidad` (
 --
 
 INSERT INTO `tm_unidad` (`unid_id`, `unid_nom`, `unid_est`, `responsable_rut`, `reemplazante_rut`) VALUES
-(1, 'DGA', 2, 20879105, 20879105),
+(1, 'DGA', 2, 20879107, 20879105),
 (2, 'Seguridad Publica', 1, 20879105, 20879105),
-(3, 'Carabineros', 1, 20879105, 20879105),
-(4, 'Bomberos', 1, 20879105, 20879105),
-(5, 'Ambulancia', 3, 20879105, 20879105);
+(3, 'Control', 1, 20879106, 20879105),
+(4, 'Emergencias', 1, 20879139, 20879106),
+(5, 'Informatica', 3, 20879111, 20879106);
 
 -- --------------------------------------------------------
 
@@ -704,7 +704,7 @@ ALTER TABLE `tm_usu_tipo`
 -- AUTO_INCREMENT de la tabla `tm_unidad`
 --
 ALTER TABLE `tm_unidad`
-  MODIFY `unid_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `unid_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `tm_usuario`
