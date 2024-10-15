@@ -227,7 +227,7 @@ public function update_password_force($new_pass, $usu_id){
 
     // Verificar si la contraseña se actualizó correctamente
     if ($resultado) {
-        $seguridad->update_password_info($new_pass, $usu_id);
+        $seguridad->update_password_info( $usu_id,$new_pass);
         return array('status' => 'success', 'message' => 'Contraseña actualizada con éxito');
     } else {
         return array('status' => 'info', 'message' => 'No se realizó ningún cambio');
