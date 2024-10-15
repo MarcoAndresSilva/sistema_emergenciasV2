@@ -60,9 +60,9 @@ jobs:
         run: |
           mysql -h 127.0.0.1  -u root -ptu -e "CREATE DATABASE IF NOT EXISTS emergencia_db;"
 
-      - name: Importar base de datos desde db_emergencias.sql
+      - name: Importar base de datos desde db_emergencia.sql
         run: |
-          mysql -h 127.0.0.1 -u root -ptu emergencia_db < db_emergencias.sql || echo "Error al importar db_emergencias.sql"
+          mysql -h 127.0.0.1 -u root -ptu emergencia_db < db_emergencia.sql || echo "Error al importar db_emergencia.sql"
 
       - name: Mostrar tablas de la base de datos
         run: |
