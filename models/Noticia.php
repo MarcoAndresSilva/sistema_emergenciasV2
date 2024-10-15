@@ -73,12 +73,17 @@ class Noticia extends Conectar {
 
   private function formato_noticia_correo_segun_asunto(array $argsNoticia) {
     $formato = new Formato();
+    $evento = new Evento();
     $asunto = $argsNoticia["asunto"];
     if ($asunto === "Nuevo Evento"){
-      $evento = new Evento();
       $id_evento = $evento->get_id_ultimo_evento();
       $datos_evento = $evento->informacion_evento_completa($id_evento);
       $formato->setCuerpoNuevoEvento($datos_evento);
+      return $formato;
+    }elseif( $asunto === "Evento Cerrado"){
+      $id_evento = $argsNoticia["id_evento"];
+      $datos_evento = $evento->get_evento_motivo_cierre($id_evento);
+      $formato->SetCuerpoCierreEvento($datos_evento);
       return $formato;
     }
     $formato->setAsunto($asunto);
