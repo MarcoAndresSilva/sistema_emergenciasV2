@@ -22,6 +22,11 @@ if (isset($_GET["op"])) {
                 $_POST['unid_id']
             );
             if ($datos == true) {
+             $usu_id = $_SESSION["usu_id"];
+            $unidad_data = $unidad->get_datos_unidad($_POST['unid_id']);
+            $unidad_nom = $unidad_data[0]['unid_nom'];
+            $ev_desc = "Se deriva a unidad: " . $unidad_nom;
+            $evento->insert_emergencia_detalle($_POST['ev_id'], $usu_id, $ev_desc);
                 echo 1;
             } else {
                 echo 0;
@@ -33,6 +38,12 @@ if (isset($_GET["op"])) {
             $datos = $eventoUnidad->update_asignacion_evento($_POST['ev_id'],$_POST['unid_id']);
             
             if ($datos == true) {
+
+            $usu_id = $_SESSION["usu_id"];
+            $unidad_data = $unidad->get_datos_unidad($_POST['unid_id']);
+            $unidad_nom = $unidad_data[0]['unid_nom'];
+            $ev_desc = "Se actualiza la unidad: " . $unidad_nom;
+            $evento->insert_emergencia_detalle($_POST['ev_id'], $usu_id, $ev_desc);
                 echo 1;
             } else {
                 echo 0;
@@ -69,6 +80,11 @@ if (isset($_GET["op"])) {
         case "delete_unidad":
             $datos = $eventoUnidad->delete_unidad($_POST['ev_id'],$_POST['unid_id']);
             if ($datos == true){
+            $usu_id = $_SESSION["usu_id"];
+            $unidad_data = $unidad->get_datos_unidad($_POST['unid_id']);
+            $unidad_nom = $unidad_data[0]['unid_nom'];
+            $ev_desc = "Se ha eliminado la unidad: " . $unidad_nom;
+            $evento->insert_emergencia_detalle($_POST['ev_id'], $usu_id, $ev_desc);
                 echo 1;
             } else {
                 echo 0;
