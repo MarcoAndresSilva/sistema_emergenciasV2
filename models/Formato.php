@@ -89,5 +89,24 @@ class Formato {
     $this->setAsuntoCierreEvento($datos_evento);
   }
 
+  private function setAsuntoDerivadoAgregado(array $datos_evento){
+    $id_evento = $datos_evento['id_evento'];
+    $asunto = "🔄️ Derivado al 📎Ticket $id_evento";
+    $this->setAsunto($asunto);
+  }
+  private function setMensajeDerivadoAgregado(array $datos_evento){
+    $id_evento = $datos_evento['id_evento'];
+    $unidad = $datos_evento['unidad'];
+    $mensaje = "Estimado(a),";
+    $mensaje .= "<p>Se ha agregado la unidad <strong>$unidad</strong> al ticket $id_evento.</p>";
+    $mensaje .= "<p>Saludos cordiales,<br>";
+    $mensaje .= "El equipo de eventos.</p>";
+    $this->setMensaje($mensaje);
+  }
+  public function setCuerpoDerivadoAgregado(array $datos_evento) {
+    $this->setMensajeDerivadoAgregado($datos_evento);
+    $this->setAsuntoDerivadoAgregado($datos_evento);
+  }
+
 
 }
