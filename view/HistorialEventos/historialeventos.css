@@ -3,6 +3,14 @@
     padding: 0%;
 }
 
+#tabla-historial tbody, thead{
+  font-size:1.1rem;
+}
+
+#tabla-historial tbody tr td span.label{
+  font-size:1.1rem;
+}
+
 .estructura-tablas{
     width: 100%;
     display: grid;
