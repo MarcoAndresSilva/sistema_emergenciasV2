@@ -96,6 +96,11 @@ class Noticia extends Conectar {
       $datos_evento = $evento->get_evento_motivo_cierre($id_evento);
       $formato->SetCuerpoCierreEvento($datos_evento);
       return $formato;
+    }elseif ($asunto === "Derivado"){
+      $id_evento = $argsNoticia["id_evento"];
+      $datos_evento = $argsNoticia;
+      $formato->setCuerpoDerivadoAgregado($datos_evento);
+      return $formato;
     }
     $formato->setAsunto($asunto);
     $formato->setMensaje($argsNoticia["mensaje"]);
