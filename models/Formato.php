@@ -51,9 +51,61 @@ class Formato {
     $nuevo_asunto="🚨Nuevo evento en $categoria - 📎ticket $id_evento";
     $this->setAsunto($nuevo_asunto);
   }
+  private function setAsuntoCierreEvento(array $datos_evento){
+    $id_evento = $datos_evento['id_evento'];
+
+    $nuevo_asunto = "✨ Evento Cerrado - 📎ticket $id_evento";
+
+    $this->setAsunto($nuevo_asunto);
+
+  }
+
+  private function setMensajeCierreEvento(array $datos_evento) {
+    // WARNING: este formato de correo puede ser detectado como spam por algunos proveedores de correo
+    $motivo = $datos_evento["motivo"];
+    $detalle = $datos_evento["detalle"];
+    $usuario = $datos_evento['usu_nom']. " " . $datos_evento['usu_ape'];
+    $id_evento = $datos_evento['id_evento'];
+    $fecha_cierre = $datos_evento["fecha_cierre"];
+
+    $mensaje = "<p>Estimado(a),</p>";
+    $mensaje .= "<p>Se ha cerrado el evento $id_evento.</p>";
+    $mensaje .= "<p><strong>Evento Cerrado por :</strong> $usuario</p>";
+    $mensaje .= "<p><strong>Fecha Cierre:</strong> $fecha_cierre</p>";
+
+    $mensaje .= "<storng>Motivo:</strong> $motivo</p>";
+    $mensaje .= "<p><strong>Detalles Cierre:</strong> $detalle<br>";
+
+    $mensaje .= "<p>Saludos cordiales,<br>";
+    $mensaje .= "El equipo de eventos.</p>";
+    $this->setMensaje($mensaje);
+  }
   public function setCuerpoNuevoEvento(array $datos_evento) {
     $this->setMensajeNuevoEvento($datos_evento);
     $this->setAsuntoNuevoEvento($datos_evento);
+  }
+  public function SetCuerpoCierreEvento(array $datos_evento) {
+    $this->setMensajeCierreEvento($datos_evento);
+    $this->setAsuntoCierreEvento($datos_evento);
+  }
+
+  private function setAsuntoDerivadoAgregado(array $datos_evento){
+    $id_evento = $datos_evento['id_evento'];
+    $asunto = "🔄️ Derivado al 📎Ticket $id_evento";
+    $this->setAsunto($asunto);
+  }
+  private function setMensajeDerivadoAgregado(array $datos_evento){
+    $id_evento = $datos_evento['id_evento'];
+    $unidad = $datos_evento['unidad'];
+    $mensaje = "Estimado(a),";
+    $mensaje .= "<p>Se ha agregado la unidad <strong>$unidad</strong> al ticket $id_evento.</p>";
+    $mensaje .= "<p>Saludos cordiales,<br>";
+    $mensaje .= "El equipo de eventos.</p>";
+    $this->setMensaje($mensaje);
+  }
+  public function setCuerpoDerivadoAgregado(array $datos_evento) {
+    $this->setMensajeDerivadoAgregado($datos_evento);
+    $this->setAsuntoDerivadoAgregado($datos_evento);
   }
 
 

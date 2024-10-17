@@ -478,9 +478,10 @@ if (isset($_GET["op"])) {
                     $usu_id,
                     $adjunto
                 );
-        
+               $args_noticia = ["asunto"=>"Evento Cerrado","mensaje"=>$_POST["detalle_cierre"],"id_evento"=>$_POST["ev_id"],"url"=>"#"];
                 // Verificar si cerrar_evento devuelve true
                 if ($datos === true) {
+                    $noticia->crear_noticia_y_enviar_grupo_usuario($args_noticia);
                     echo 1;
                 } else {
                     // Imprimir el error recibido para diagnóstico

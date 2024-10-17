@@ -695,4 +695,24 @@ class Evento extends Conectar {
         return $resultado = $sql->fetchAll();
       }
 
+    function get_evento_motivo_cierre($ev_id){
+    $sql = "SELECT
+               cie.ev_id as 'id_evento',
+               usr.usu_nom as 'usu_nom',
+               usr.usu_ape as 'usu_ape',
+               usr.usu_name as 'usu_name',
+               mov.motivo as 'motivo',
+               cie.detalle as 'detalle',
+               DATE_FORMAT(ev.ev_final, '%d/%m/%Y - hrs %H:%i' )as 'fecha_cierre'
+         FROM tm_ev_cierre as cie
+         JOIN tm_usuario as usr
+         on (usr.usu_id = cie.usu_id)
+         JOIN tm_cierre_motivo as mov
+         on (mov.mov_id = cie.motivo)
+         JOIN tm_evento as ev
+         on (ev.ev_id=cie.ev_id)
+         WHERE cie.ev_id=:ev_id;";
+    $params = [":ev_id"=>$ev_id];
+    return $this->ejecutarConsulta($sql,$params,false);
+  }
 }

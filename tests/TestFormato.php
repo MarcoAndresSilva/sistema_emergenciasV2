@@ -50,4 +50,68 @@ final class TestFormato extends TestCase
 
         $this->assertEquals($mensajeEsperado, $formato->mensaje);
     }
+    public function testSetMensajeCierreEvento(): void{
+        $formato = new Formato();
+        $datos_evento = [
+            'usu_nom' => "Nelson",
+            'usu_ape' => "Navarro",
+            'detalle' => 'el incendio no quemo nada importante',
+            'motivo' => 'Se controla el incendio',
+            'fecha_cierre' => '10-25-2333',
+            'id_evento' => 999,
+        ];
+
+        // Llama al método que configura el asunto y mensaje.
+        $formato->setCuerpoCierreEvento($datos_evento);
+
+        $mensajeEsperado = "<p>Estimado(a),</p>";
+        $mensajeEsperado .= "<p>Se ha cerrado el evento 999.</p>";
+        $mensajeEsperado .= "<p><strong>Evento Cerrado por :</strong> Nelson Navarro</p>";
+        $mensajeEsperado .= "<p><strong>Fecha Cierre:</strong> 10-25-2333</p>";
+
+        $mensajeEsperado .= "<storng>Motivo:</strong> Se controla el incendio</p>";
+        $mensajeEsperado .= "<p><strong>Detalles Cierre:</strong> el incendio no quemo nada importante<br>";
+
+        $mensajeEsperado .= "<p>Saludos cordiales,<br>";
+        $mensajeEsperado .= "El equipo de eventos.</p>";
+        $this->assertEquals($mensajeEsperado, $formato->mensaje);
+  }
+  public function testSetAsuntoCierreEvento(): void{
+        $formato = new Formato();
+        $datos_evento = [
+            'usu_nom' => "Nelson",
+            'usu_ape' => "Navarro",
+            'detalle' => 'el incendio no quemo nada importante',
+            'motivo' => 'Se controla el incendio',
+            'fecha_cierre' => '10-25-2333',
+            'id_evento' => 999,
+        ];
+
+        // Llama al método que configura el asunto y mensaje.
+        $formato->setCuerpoCierreEvento($datos_evento);
+
+        $asuntoEsperado = "✨ Evento Cerrado - 📎ticket 999";
+        $this->assertEquals($asuntoEsperado, $formato->asunto);
+  }
+  public function testSetAsuntoDerivadoEvento(){
+    $formato = new Formato();
+    $datos_evento = [
+      "unidad" => "Unidad 1",
+      "id_evento" => 999,];
+    $asuntoEsperado = "🔄️ Derivado al 📎Ticket 999";
+    $formato->setCuerpoDerivadoAgregado($datos_evento);
+    $this->assertEquals($asuntoEsperado, $formato->asunto);
+  }
+  public function testSetMensajeDerivadoEvento(){
+    $formato = new Formato();
+    $datos_evento = [
+      "unidad" => "Unidad 1",
+      "id_evento" => 999,];
+    $mensajeEsperado = "Estimado(a),";
+    $mensajeEsperado .= "<p>Se ha agregado la unidad <strong>Unidad 1</strong> al ticket 999.</p>";
+    $mensajeEsperado .= "<p>Saludos cordiales,<br>";
+    $mensajeEsperado .= "El equipo de eventos.</p>";
+    $formato->setCuerpoDerivadoAgregado($datos_evento);
+    $this->assertEquals($mensajeEsperado, $formato->mensaje);
+  }
 }

@@ -426,6 +426,12 @@ public function update_usuario_tipo($usu_id, $usu_tipo){
     $result = $this->ejecutarConsulta($sql,$params);
     return $result;
   }
+  public function get_usuario_derivados_por_evento($evento_id){
+    $sql = "SELECT usr.usu_correo as 'usu_correo' from tm_usuario as usr JOIN tm_asignado as asig ON (asig.unid_id = usr.usu_unidad) WHERE asig.ev_id = :evento_id;";
+    $params=[":evento_id"=>$evento_id];
+    $result = $this->ejecutarConsulta($sql,$params);
+    return $result;
+  }
 
 }
 ?>
