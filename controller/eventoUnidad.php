@@ -6,6 +6,7 @@ require_once("../models/Unidad.php");
 require_once("../models/Estado.php");
 require_once("../models/EventoUnidad.php");
 require_once("../models/RegistroLog.php");
+require_once("../models/Noticia.php");
 
 $evento = new Evento();
 $categoria = new Categoria();
@@ -13,6 +14,7 @@ $unidad = new Unidad();
 $estado = new Estado();
 $eventoUnidad = new EventoUnidad();
 $registroLog = new RegistroLog();
+$noticia  = new Noticia();
 if (isset($_GET["op"])) {
     switch ($_GET["op"]) {
 
@@ -27,6 +29,14 @@ if (isset($_GET["op"])) {
             $unidad_nom = $unidad_data[0]['unid_nom'];
             $ev_desc = "Se deriva a unidad: " . $unidad_nom;
             $evento->insert_emergencia_detalle($_POST['ev_id'], $usu_id, $ev_desc);
+            $ags_noticia = [
+              "asunto" => "Derivado",
+              "mensaje" => $ev_desc,
+              "id_evento"=>$_POST['ev_id'],
+              "usuario"=>$_SESSION['usu_nom'],
+              "unidad"=>$unidad_nom,
+            ];
+            $noticia->crear_y_enviar_noticia_para_derivados($ags_noticia);
                 echo 1;
             } else {
                 echo 0;
