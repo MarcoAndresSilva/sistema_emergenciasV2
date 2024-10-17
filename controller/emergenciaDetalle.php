@@ -5,7 +5,9 @@ require_once("../models/Categoria.php");
 require_once("../models/Unidad.php");
 require_once("../models/Estado.php");
 require_once("../models/EventoUnidad.php");
+require_once("../models/Noticia.php");
 
+$noticia = new Noticia();
 $evento = new Evento();
 $categoria = new Categoria();
 $unidad = new Unidad();
@@ -105,6 +107,13 @@ if (isset($_GET["op"])) {
             
         case "insertdetalle":
             $evento->insert_emergencia_detalle($_POST["ev_id"], $_POST["usu_id"], $_POST["ev_desc"]);
+            $noticia->crear_y_enviar_noticia_para_derivados([
+              "asunto" => "Detalle Evento",
+              "mensaje" => $_POST["ev_desc"],
+              "url" => "#",
+              "id_evento"=>$_POST["ev_id"],
+              "usuario"=>$_SESSION['usu_nom']. " ".$_SESSION['usu_ape'],
+            ]);
         break;
 
         case "updatedetalle":
