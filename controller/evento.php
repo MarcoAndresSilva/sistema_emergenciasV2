@@ -59,7 +59,9 @@ if (isset($_GET["op"])) {
             $ev_latitud = $_POST['ev_latitud'];
             $ev_longitud = $_POST['ev_longitud'];
             $cat_id = $_POST['cat_id'];
-            $ev_niv = $_POST['ev_niv'];
+            $cate = new Categoria();
+            $cate_info = $cate->get_datos_categoria($cat_id);
+            $ev_niv = $cate_info[0]['nivel'];
         
             $ev_img = null;
 
