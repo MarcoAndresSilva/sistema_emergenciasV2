@@ -114,4 +114,23 @@ final class TestFormato extends TestCase
     $formato->setCuerpoDerivadoAgregado($datos_evento);
     $this->assertEquals($mensajeEsperado, $formato->mensaje);
   }
+  public function testSetMensajeActualizarEvento(){
+    $formato = new Formato();
+    $datos_evento = ["usuario" => "Nelson Navarro", "id_evento" => 999,];
+    $formato->setCuerpoActualizarEvento($datos_evento);
+    $mensajeEsperado = "Estimado(a),";
+    $mensajeEsperado .= "<p>Se ha actualizado el evento 999.</p>";
+    $mensajeEsperado .= "<p><strong>Usuario:</strong> Nelson Navarro</p>";
+    $mensajeEsperado .= "<p>agrego informacion</p>";
+    $mensajeEsperado .= "<p>Saludos cordiales,<br>";
+    $mensajeEsperado .= "El equipo de eventos.</p>";
+    $this->assertEquals($mensajeEsperado, $formato->mensaje);
+   }
+  public function testSetAsuntoActualizarEvento(){
+    $formato = new Formato();
+    $datos_evento = ["usuario" => "Nelson Navarro", "id_evento" => 999,];
+    $asuntoEsperado = "📨 Actualizacion  al 📎Ticket 999 ";
+    $formato->setCuerpoActualizarEvento($datos_evento);
+    $this->assertEquals($asuntoEsperado, $formato->asunto);
+  }
 }

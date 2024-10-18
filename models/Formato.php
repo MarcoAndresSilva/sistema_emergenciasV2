@@ -88,6 +88,26 @@ class Formato {
     $this->setMensajeCierreEvento($datos_evento);
     $this->setAsuntoCierreEvento($datos_evento);
   }
+  private function setAsuntoActualizarEvento(array $datos_evento) {
+    $id = $datos_evento['id_evento'];
+    $asunto = "📨 Actualizacion  al 📎Ticket $id ";
+    $this->setAsunto($asunto);
+  }
+  private function setMensajeActualizarEvento(array $datos_evento) {
+    $id = $datos_evento['id_evento'];
+    $usuario = $datos_evento['usuario'];
+    $mensaje = "Estimado(a),";
+    $mensaje .= "<p>Se ha actualizado el evento $id.</p>";
+    $mensaje .= "<p><strong>Usuario:</strong> $usuario</p>";
+    $mensaje .= "<p>agrego informacion</p>";
+    $mensaje .= "<p>Saludos cordiales,<br>";
+    $mensaje .= "El equipo de eventos.</p>";
+    $this->setMensaje($mensaje);
+  }
+  public function setCuerpoActualizarEvento(array $datos_evento) {
+    $this->setMensajeActualizarEvento($datos_evento);
+    $this->setAsuntoActualizarEvento($datos_evento);
+  }
 
   private function setAsuntoDerivadoAgregado(array $datos_evento){
     $id_evento = $datos_evento['id_evento'];
