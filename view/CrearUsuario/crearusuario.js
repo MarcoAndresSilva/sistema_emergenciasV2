@@ -25,6 +25,36 @@ $('#btnGuardar').off('click').on('click', function() {
     }
 });
 
+$('#usu_unidad').on('change', function() {
+    const unidadId = $(this).val();
+    data = {
+        unidad: unidadId
+    };
+    $('#usu_seccion').html('');
+    abilitarSelectSeccion();
+  $.post("../../controller/seccion.php?op=get_secciones", data, function(data) {
+        const secciones = data;
+        const selectElement = document.getElementById("usu_seccion");
+        console.log( "secciones", secciones);
+        if (secciones.status === 'warning') {
+            $('#usu_seccion').prop('disabled', true);
+            swal("Cuidado", "Pida al administrador que cree una seccion para esta unidad", "warning");
+            return;
+        }
+        selectElement.innerHTML = "<option value=''>-------------</option>";
+        secciones.forEach((seccion) => {
+            const option = document.createElement("option");
+            option.value = seccion.sec_id;
+            option.textContent = seccion.sec_nombre;
+            selectElement.appendChild(option);
+        });
+    });
+})
+
+function abilitarSelectSeccion(){
+  $('#usu_seccion').prop('disabled', false);
+}
+
 function add_usuario() {
     const usuarioData = {
         usu_nom: $('#nombre').val(),
@@ -33,6 +63,7 @@ function add_usuario() {
         usu_name: $('#usuario').val(),
         usu_pass: $('#contrasena').val(),
         usu_telefono: $('#telefono').val(),
+        usu_seccion: $('#usu_seccion').val(),
         estado: 1,
         usu_unidad: $('#usu_unidad').val(),
         fecha_crea: getFormattedDate(),
@@ -73,7 +104,9 @@ function validarFormulario() {
         { selector: '#apellido', mensaje: 'Debes ingresar un apellido sin caracteres especiales', validacion: validarNombre },
         { selector: '#mail', mensaje: 'Debes ingresar una dirección de correo electrónico válida', validacion: validarEmail },
         { selector: '#usuario', mensaje: 'Debes ingresar un nombre de usuario', validacion: validarCampoVacio },
-        { selector: '#contrasena', mensaje: 'Debes ingresar una contraseña', validacion: validarCampoVacio }
+        { selector: '#contrasena', mensaje: 'Debes ingresar una contraseña', validacion: validarCampoVacio },
+        { selector: '#usu_unidad', mensaje: 'Debes ingresar una unidad', validacion: validarCampoVacio },
+        { selector: '#usu_seccion', mensaje: 'Debes seleccionar una sección', validacion: validarCampoVacio }
     ];
 
     return campos.every(campo => {

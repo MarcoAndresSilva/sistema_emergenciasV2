@@ -30,6 +30,7 @@ class Evento extends Conectar {
                         te.est_id = tme.ev_est
                     INNER JOIN tm_usuario us
                     on us.usu_id=tme.usu_id
+                    INNER JOIN tm_seccion ts ON us.usu_seccion = ts.sec_id
                     ORDER BY
                         ev_id
                     DESC;';

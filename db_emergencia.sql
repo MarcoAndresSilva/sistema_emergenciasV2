@@ -271,7 +271,7 @@ INSERT INTO `tm_ev_niv` (`ev_niv_id`, `ev_niv_nom`) VALUES
 CREATE TABLE `tm_asignado` (
   `id_inter` int(11) NOT NULL AUTO_INCREMENT,
   `ev_id` int(11) DEFAULT NULL,
-  `unid_id` int(11) NOT NULL,
+  `sec_id` int(11) NOT NULL,
   PRIMARY KEY (`id_inter`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -279,7 +279,7 @@ CREATE TABLE `tm_asignado` (
 -- Volcado de datos para la tabla `tm_asignado`
 --
 
-INSERT INTO `tm_asignado` ( `ev_id`, `unid_id`) VALUES
+INSERT INTO `tm_asignado` ( `ev_id`, `sec_id`) VALUES
 ( 10, 2),( 10, 5),
 ( 9, 3),( 9, 4), ( 9, 5), 
 ( 8, 1),
@@ -363,6 +363,22 @@ INSERT INTO `tm_unidad` (`unid_id`, `unid_nom`, `unid_est`, `responsable_rut`, `
 -- Estructura de tabla para la tabla `tm_usuario`
 --
 
+CREATE TABLE IF NOT EXISTS `tm_seccion` (
+  `sec_id` int(11) NOT NULL auto_increment,
+  `sec_unidad` int(11) NOT NULL,
+  `sec_nombre` varchar(150) NOT NULL,
+  `sec_detalle` varchar(250) NOT NULL,
+  `sec_est` varchar(250) DEFAULT 1,
+  PRIMARY KEY (`sec_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+INSERT INTO `tm_seccion` (`sec_id`, `sec_nombre`, `sec_detalle`, `sec_unidad`) VALUES
+(1, 'grupo1', 'Administracion de la aplicacion', '1'),
+(2, 'grupo2', 'Administracion de usuarios', '1'),
+(3, 'grupo3', 'Desarrollo de la aplicacion', '5'),
+(4, 'grupo4', 'Desarrollo de la aplicacion', '5'),
+(5, 'grupo5', 'Desarrollo de la aplicacion', '5');
+
 CREATE TABLE `tm_usuario` (
   `usu_id` int(11) NOT NULL,
   `usu_nom` varchar(150) DEFAULT NULL,
@@ -376,6 +392,7 @@ CREATE TABLE `tm_usuario` (
   `fecha_elim` datetime DEFAULT NULL,
   `estado` int(11) NOT NULL,
   `usu_unidad` int(11) NOT NULL,
+  `usu_seccion` int(11) NOT NULL,
   `usu_tipo` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci COMMENT='Tabla mantenedor de usuarios';
 
@@ -383,11 +400,11 @@ CREATE TABLE `tm_usuario` (
 -- Volcado de datos para la tabla `tm_usuario`
 --
 
-INSERT INTO `tm_usuario` (`usu_id`, `usu_nom`, `usu_ape`, `usu_correo`, `usu_telefono`, `usu_name`, `usu_pass`, `fecha_crea`, `fecha_modi`, `fecha_elim`, `estado`, `usu_tipo`, `usu_unidad`) VALUES
-(1, 'Cristian', 'Suazo', 'cristian.suazo@munimelipilla.cl', 968093527, 'csuazo', 'e10adc3949ba60abbe56e057f20f883e', '2023-12-30 13:15:58', NULL, NULL, 1, 2,5),
-(2, 'Admin', 'admin', 'admin@mail.com', 961718297, 'admin', '202cb962ac59075b964b07152d234b70', '2024-01-03 18:09:32', NULL, NULL, 1, 2,5),
-(3, 'Marco', 'Silva', 'marco.silva@munimelipilla.cl', 997827161, 'msilva', '827ccb0eea8a706c4c34a16891f84e7b', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 3,5),
-(4, 'Nelson', 'Navarro', 'nelson.navarro@munimelipilla.cl', 965412724, 'nnavarro', 'b08cab3a853b8d1e609905d7161daf80', '2024-03-20 13:01:58', NULL, NULL, 1, 3,5);
+INSERT INTO `tm_usuario` (`usu_id`, `usu_nom`, `usu_ape`, `usu_correo`, `usu_telefono`, `usu_name`, `usu_pass`, `fecha_crea`, `fecha_modi`, `fecha_elim`, `estado`, `usu_tipo`, `usu_unidad`, `usu_seccion`) VALUES
+(1, 'Cristian', 'Suazo', 'cristian.suazo@munimelipilla.cl', 968093527, 'csuazo', 'e10adc3949ba60abbe56e057f20f883e', '2023-12-30 13:15:58', NULL, NULL, 1, 2,5,3),
+(2, 'Admin', 'admin', 'admin@mail.com', 961718297, 'admin', md5('123'), '2024-01-03 18:09:32', NULL, NULL, 1, 2,5,2),
+(3, 'Marco', 'Silva', 'marco.silva@munimelipilla.cl', 997827161, 'msilva', '827ccb0eea8a706c4c34a16891f84e7b', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 3,5,5),
+(4, 'Nelson', 'Navarro', 'nelson.navarro@munimelipilla.cl', 965412724, 'nnavarro', 'b08cab3a853b8d1e609905d7161daf80', '2024-03-20 13:01:58', NULL, NULL, 1, 3,5,5);
 
 
 

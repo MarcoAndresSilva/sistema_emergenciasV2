@@ -35,6 +35,7 @@ private function crearSesionUsuario($usuario) {
     $_SESSION["usu_correo"] = $usuario["usu_correo"];
     $_SESSION["usu_telefono"] = $usuario["usu_telefono"];
     $_SESSION["usu_unidad"] = $usuario["usu_unidad"];
+    $_SESSION["usu_seccion"] = $usuario["usu_seccion"];
 }
 
 private function get_login_usuario($name, $hashedPass) {
@@ -110,7 +111,7 @@ public function get_todos_usuarios() {
     }
 }
 
-public function add_usuario($usu_nom, $usu_ape, $usu_correo, $usu_name, $usu_pass, $fecha_crea, $estado, $usu_tipo, $usu_telefono, $usu_unidad) {
+public function add_usuario($usu_nom, $usu_ape, $usu_correo, $usu_name, $usu_pass, $fecha_crea, $estado, $usu_tipo, $usu_telefono, $usu_unidad,$usu_seccion) {
     try {
         // Verificar si el nombre de usuario ya existe
         $sql_check = "SELECT usu_name FROM tm_usuario WHERE usu_name = :usu_name";
@@ -130,7 +131,8 @@ public function add_usuario($usu_nom, $usu_ape, $usu_correo, $usu_name, $usu_pas
         }
 
         // Insertar nuevo usuario
-        $sql = "INSERT INTO tm_usuario (usu_nom, usu_ape, usu_correo, usu_name, usu_pass, fecha_crea, estado, usu_tipo, usu_telefono, usu_unidad) VALUES (:usu_nom, :usu_ape, :usu_correo, :usu_name, :usu_pass, :fecha_crea, :estado, :usu_tipo, :usu_telefono, :usu_unidad)";
+      $sql = "INSERT INTO tm_usuario (usu_nom, usu_ape, usu_correo, usu_name, usu_pass, fecha_crea, estado, usu_tipo, usu_telefono, usu_unidad, usu_seccion)
+      VALUES (:usu_nom, :usu_ape, :usu_correo, :usu_name, :usu_pass, :fecha_crea, :estado, :usu_tipo, :usu_telefono, :usu_unidad,:usu_seccion)";
         $pass_cifrado = md5($usu_pass);
         $params = [
             ':usu_nom' => $usu_nom,
@@ -142,6 +144,7 @@ public function add_usuario($usu_nom, $usu_ape, $usu_correo, $usu_name, $usu_pas
             ':estado' => $estado,
             ':usu_tipo' => $usu_tipo,
             ':usu_telefono' => $usu_telefono,
+            ':usu_seccion' => $usu_seccion,
             ':usu_unidad' => $usu_unidad
         ];
 
@@ -270,12 +273,16 @@ public function get_info_usuario($usu_id){
                 usu.usu_telefono as "Telefono",
                 usu.usu_correo as "Correo",
                 unid.unid_nom as "Unidad",
+                unid.unid_nom as "Unidad",
+                secc.sec_nombre as "Seccion",
                 usu.usu_name as "Usuario"
             FROM `tm_usuario` as usu
             JOIN tm_usu_tipo as tp
             ON(tp.usu_tipo_id=usu.usu_tipo)
             JOIN tm_unidad as unid
             ON (usu.usu_unidad=unid.unid_id)
+            JOIN tm_seccion as secc
+            ON (secc.sec_id=usu.usu_seccion)
             WHERE usu.usu_id = :usu_id';
 
     $params = [':usu_id' => $usu_id];
@@ -299,11 +306,14 @@ public function get_full_usuarios(){
                 tp.usu_tipo_id as "id_tipo",
                 usu.usu_telefono as "Telefono",
                 usu.usu_correo as "Correo",
+                secc.sec_nombre as "Seccion",
                 unid.unid_nom as "Unidad",
                 usu.usu_name as "Usuario"
             FROM `tm_usuario` as usu
             JOIN tm_usu_tipo as tp
             ON(tp.usu_tipo_id=usu.usu_tipo)
+            JOIN tm_seccion as secc
+            ON (secc.sec_id=usu.usu_seccion)
             JOIN tm_unidad as unid
             ON (usu.usu_unidad=unid.unid_id);';
 
@@ -355,8 +365,8 @@ public function enable_usuario($usu_id){
 }
  
 
-public function update_usuario($usu_id, $usu_nom, $usu_ape, $usu_correo, $usu_telefono, $usu_name, $usu_tipo, $usu_unidad){
-    if (empty($usu_nom) || empty($usu_ape) || empty($usu_correo) || empty($usu_telefono) || empty($usu_name) || empty($usu_tipo) || empty($usu_unidad)) {
+public function update_usuario($usu_id, $usu_nom, $usu_ape, $usu_correo, $usu_telefono, $usu_name, $usu_tipo, $usu_unidad,$usu_seccion){
+    if (empty($usu_nom) || empty($usu_ape) || empty($usu_correo) || empty($usu_telefono) || empty($usu_name) || empty($usu_tipo)|| empty($usu_unidad) || empty($usu_seccion)) {
         return array('status' => 'warning', 'message' => 'Todos los campos son obligatorios');
     }
 
@@ -378,7 +388,8 @@ public function update_usuario($usu_id, $usu_nom, $usu_ape, $usu_correo, $usu_te
     }
 
     // Proceed with the update if username is not being used by another user
-    $sql = "UPDATE tm_usuario SET usu_nom = :usu_nom, usu_ape = :usu_ape, usu_correo = :usu_correo, usu_telefono = :usu_telefono, usu_name = :usu_name, usu_tipo = :usu_tipo, usu_unidad = :usu_unidad WHERE usu_id = :usu_id";
+    $sql = "UPDATE tm_usuario SET usu_nom = :usu_nom, usu_ape = :usu_ape, usu_correo = :usu_correo,
+    usu_telefono = :usu_telefono, usu_name = :usu_name, usu_tipo = :usu_tipo, usu_unidad = :usu_unidad, usu_seccion = :usu_seccion WHERE usu_id = :usu_id";
     $params = [
         ':usu_nom' => $usu_nom,
         ':usu_ape' => $usu_ape,
@@ -387,6 +398,7 @@ public function update_usuario($usu_id, $usu_nom, $usu_ape, $usu_correo, $usu_te
         ':usu_name' => $usu_name,
         ':usu_tipo' => $usu_tipo,
         ':usu_unidad' => $usu_unidad,
+        ':usu_seccion' => $usu_seccion,
         ':usu_id' => $usu_id
     ];
 

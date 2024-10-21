@@ -20,7 +20,8 @@ if (isset($_GET["op"])) {
             $_POST['estado'],
             $_POST['usu_tipo'],
             $_POST['usu_telefono'],
-            $_POST['usu_unidad']
+            $_POST['usu_unidad'],
+            $_POST['usu_seccion']
             );
             if ($datos['status'] === 'success') {
                 $seguridadPassword = new SeguridadPassword();
@@ -149,8 +150,8 @@ if (isset($_GET["op"])) {
             $usu_name = $_POST['usu_name'];
             $usu_tipo = $_POST['usu_tipo'];
             $usu_unidad = $_POST['usu_unidad'];
-        
-            $data = $usuario->update_usuario($usu_id, $usu_nom, $usu_ape, $usu_correo, $usu_telefono, $usu_name, $usu_tipo, $usu_unidad);
+            $usu_seccion = $_POST['usu_seccion'];
+            $data = $usuario->update_usuario($usu_id, $usu_nom, $usu_ape, $usu_correo, $usu_telefono, $usu_name, $usu_tipo, $usu_unidad, $usu_seccion);
             echo json_encode($data);
       break;
         case "update_password_force":

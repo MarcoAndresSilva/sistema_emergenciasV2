@@ -174,16 +174,6 @@ class TestUsuario extends TestCase {
     $this->assertEquals(0,$resultado);
   }
   public function testAddUsuario() {
-    $userData = [
-      "usu_id" => 1,
-      "usu_nom" => "maria",
-      "usu_ape" => "jose",
-      "usu_tipo" => "admin",
-      "usu_name" => "maria.jose",
-      "usu_correo" => "maria.jose@example.com",
-      "usu_telefono" => "123456789",
-      "usu_unidad" => "dga",
-    ];
     $this->usuario->method('ejecutarConsulta')->willReturn([]);
     $this->usuario->method('ejecutarAccion')->willReturn(true);
     $resultado = $this->usuario->add_usuario(
@@ -197,6 +187,7 @@ class TestUsuario extends TestCase {
       1,
       "123456789",
       1,
+      2
     );
     $esperado = ["status" => "success", "message" => "Usuario agregado correctamente"];
     $this->assertEquals($resultado, $esperado  );
@@ -215,6 +206,7 @@ class TestUsuario extends TestCase {
       "1",
       "123456789",
       "dga",
+      1
     );
 
     $esperado = ['status' => 'warning', 'message' => 'El usuario ya existe con ese nombre de usuario'];
@@ -234,16 +226,6 @@ class TestUsuario extends TestCase {
     $this->assertEquals($resultado, $esperado);
   }
 public function testAddUsuarioPasswordInsegura(){
-    $userData = [
-      "usu_id" => 1,
-      "usu_nom" => "maria",
-      "usu_ape" => "jose",
-      "usu_tipo" => "admin",
-      "usu_name" => "maria.jose",
-      "usu_correo" => "maria.jose@example.com",
-      "usu_telefono" => "123456789",
-      "usu_unidad" => "dga",
-    ];
     $this->usuario->method('ejecutarConsulta')->willReturn([]);
     $this->usuario->method('ejecutarAccion')->willReturn(true);
     $resultado = $this->usuario->add_usuario(
@@ -257,6 +239,7 @@ public function testAddUsuarioPasswordInsegura(){
       1,
       "123456789",
       1,
+      1
     );
     $esperado =  ["status" => "warning", "message" => "La contraseña no cumple con todos los requisitos de seguridad para esta unidad."];
 
@@ -264,13 +247,13 @@ public function testAddUsuarioPasswordInsegura(){
   }
   public function testUpdateUsuario(){
     $this->usuario->method("ejecutarAccion")->willReturn(true);
-    $resultado = $this->usuario->update_usuario(4,"test","TestApellido","test@correo.cl","123456789","testmemo",1,1);
+    $resultado = $this->usuario->update_usuario(4,"test","TestApellido","test@correo.cl","123456789","testmemo",1,1,2);
     $esperado = array('status'=>"success","message"=>"Usuario actualizado con éxito");
     $this->assertEquals($resultado, $esperado);
   }
 
   public function testUpdateUsuarioCampoVacio(){
-    $resultado = $this->usuario->update_usuario("","","","","","","","");
+    $resultado = $this->usuario->update_usuario("","","","","","","","","");
     $esperado = array('status' => 'warning', 'message' => 'Todos los campos son obligatorios');
     $this->assertEquals($resultado, $esperado);
   }
