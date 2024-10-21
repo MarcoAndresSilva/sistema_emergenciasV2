@@ -1,16 +1,16 @@
 <?php
 
 class EventoUnidad extends Conectar {
-    public function add_eventoUnidad($ev_id, $unid_id) {
+    public function add_eventoUnidad($ev_id, $sec_id) {
         try{
             $conectar = parent::conexion();
             parent::set_names();
-            $sql = "INSERT INTO tm_asignado (ev_id, unid_id) VALUES ( :ev_id, :unid_id)";
+            $sql = "INSERT INTO tm_asignado (ev_id, sec_id) VALUES ( :ev_id, :sec_id)";
             
             $consulta  = $conectar->prepare($sql);
         
             $consulta->bindParam(':ev_id', $ev_id);
-            $consulta->bindParam(':unid_id', $unid_id);
+            $consulta->bindParam(':sec_id', $sec_id);
             
             $consulta->execute();
             
@@ -31,16 +31,16 @@ class EventoUnidad extends Conectar {
     }
 
 
-    public function delete_unidad($ev_id, $unid_id) {
+    public function delete_unidad($ev_id, $sec_id) {
         try{
             $conectar = parent::conexion();
             parent::set_names();
-            $sql = "DELETE FROM tm_asignado WHERE ev_id = :ev_id AND unid_id = :unid_id";
+            $sql = "DELETE FROM tm_asignado WHERE ev_id = :ev_id AND sec_id = :sec_id";
             
             $consulta  = $conectar->prepare($sql);
         
             $consulta->bindParam(':ev_id', $ev_id);
-            $consulta->bindParam(':unid_id', $unid_id);
+            $consulta->bindParam(':sec_id', $sec_id);
             
             $consulta->execute();
             
@@ -96,7 +96,7 @@ class EventoUnidad extends Conectar {
         try {
             $conectar = parent::conexion();
             parent::set_names();
-            $sql = "SELECT unid_id FROM tm_asignado WHERE ev_id = ". $ev_id. "";
+            $sql = "SELECT sec_id FROM tm_asignado WHERE ev_id = ". $ev_id. "";
             $consulta  = $conectar->prepare($sql);
             $consulta->execute();
             $resultado = $consulta->fetchAll();
@@ -114,13 +114,13 @@ class EventoUnidad extends Conectar {
     }
 
 
-    public function get_datos_UnidadesAsignadas_por_evento($unid_id) {
+    public function get_datos_UnidadesAsignadas_por_evento($sec_id) {
         $sql = "SELECT * FROM `tm_asignado` as asg
         JOIN tm_unidad as unid
-        on (unid.unid_id=asg.unid_id)
+        on (unid.sec_id=asg.sec_id)
         where asg.ev_id = :ev_id";
         
-        $params = [':ev_id' => $unid_id];
+        $params = [':ev_id' => $sec_id];
         $resultado = $this->ejecutarConsulta($sql, $params);
     
         if (is_array($resultado) && count($resultado) > 0) {
@@ -133,14 +133,14 @@ class EventoUnidad extends Conectar {
 
 
     //update_asignacion_evento segun id
-	public function update_asignacion_evento($ev_id, $unid_id) {
+	public function update_asignacion_evento($ev_id, $sec_id) {
 		try {
 			$conectar = parent::conexion();
 			parent::set_names();
-			$sql = "UPDATE tm_asignado SET  unid_id=:unid_id WHERE ev_id = :ev_id and unid_id=:unid_id";
+			$sql = "UPDATE tm_asignado SET  sec_id=:sec_id WHERE ev_id = :ev_id and sec_id=:sec_id";
 			$consulta = $conectar->prepare($sql);
 
-            $consulta->bindParam(':unid_id',$unid_id);
+            $consulta->bindParam(':sec_id',$sec_id);
             $consulta->bindParam(':ev_id',$ev_id);
 
             $consulta->execute();
