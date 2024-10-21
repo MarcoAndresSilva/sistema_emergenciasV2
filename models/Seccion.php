@@ -72,9 +72,22 @@ class Seccion extends Conectar {
             return false;
         }
     }
+    private function seccion_tiene_evento_asignado($seccion){
+      $sql = "SELECT * FROM tm_evento WHERE evento_seccion = :seccion LIMIT 1";
+      $params = [':seccion' => $seccion];
+      $resultado = $this->ejecutarConsulta($sql, $params, false);
+      if (is_array($resultado) && count($resultado) > 0) {
+        return true;
+      } else {
+        return false;
+      }
+    }
   public function delete_seccion($sec_id){
     if ($this->seccion_tiene_usuarios($sec_id)){
-      return array('status' => 'error', 'message' => 'No se puede eliminar la sección porque tiene usuarios asignados');
+      return array('status' => 'Warning', 'message' => 'No se puede eliminar la sección porque tiene usuarios asignados');
+    }
+    if ($this->seccion_tiene_evento_asignado($sec_id)){
+      return array('status' => 'warning', 'message' => 'No se puede eliminar la sección porque tiene eventos asignados');
     }
     $sql = "DELETE FROM tm_seccion WHERE sec_id = :sec_id";
     $params = [':sec_id' => $sec_id];
