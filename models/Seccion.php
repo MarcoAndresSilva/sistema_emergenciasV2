@@ -143,6 +143,31 @@ class Seccion extends Conectar {
     }
     return $secciones;
   }
-
+  public function get_secciones_evento($id_evento){
+    $sql = "SELECT * FROM tm_asignado as asig
+            INNER JOIN tm_seccion as sec
+            ON (sec.sec_id = asig.sec_id)
+            INNER JOIN tm_evento as ev
+            ON (ev.ev_id = asig.ev_id)
+            WHERE ev.ev_id = :id_evento";
+    $params = [':id_evento' => $id_evento];
+    $resultado = $this->ejecutarConsulta($sql, $params);
+    if (is_array($resultado) && count($resultado) > 0) {
+      return $resultado;
+    }
+  }
+  public function update_disponible_todos_de_evento_cerrado($id_evento){
+      $secciones = $this->get_secciones_evento($id_evento);
+      foreach ($secciones as $seccion){
+        $this->seccion_disponible($seccion['sec_id']);
+      }
+  }
+  public function seccion_estado($id_seccion){
+    $seccion = $this->get_seccion($id_seccion);
+    if ($seccion['sec_est']==1){
+      return true;
+    }
+    return false;
+  }
 }
 ?>
