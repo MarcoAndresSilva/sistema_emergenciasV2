@@ -153,12 +153,13 @@ if (isset($_GET["op"])) {
                   $asignacion = [];
                   if (is_array($datos_asignaciones) && count($datos_asignaciones) > 0) {
                       foreach ($datos_asignaciones as $row_asignaciones) {
-                          $unid_id = $row_asignaciones['unid_id'];
-                          $datos_unidad = $unidad->get_datos_unidad($unid_id);
+                          $unid_id = $row_asignaciones['sec_id'];
+                          $datos_unidad = $unidad->get_seccion_unidad($unid_id);
                           foreach ($datos_unidad as $row_unidad) {
                               $asignacion[] = $row_unidad['unid_nom'];
                           }
                       }
+                   $asignacion = array_unique($asignacion);
                       // Si hay asignaciones, mostrar las unidades asignadas
                       $evento['asignacion'] = '<span class="label label-pill label-primary">' . implode(' - ', $asignacion) . '</span>';
                   } else {
@@ -230,12 +231,13 @@ if (isset($_GET["op"])) {
               $asignacion = [];
               if (is_array($datos_asignaciones) && count($datos_asignaciones) > 0) {
                   foreach ($datos_asignaciones as $row_asignaciones) {
-                      $unid_id = $row_asignaciones['unid_id'];
-                      $datos_unidad = $unidad->get_datos_unidad($unid_id);
+                      $unid_id = $row_asignaciones['sec_id'];
+                      $datos_unidad = $unidad->get_seccion_unidad($unid_id);
                       foreach ($datos_unidad as $row_unidad) {
                           $asignacion[] = $row_unidad['unid_nom'];
                       }
                   }
+                  $asignacion = array_unique($asignacion);
                   // Si hay asignaciones, mostrar las unidades asignadas
                   $evento['asignacion'] = '<span class="label label-pill label-primary">' . implode(' - ', $asignacion) . '</span>';
               } else {
