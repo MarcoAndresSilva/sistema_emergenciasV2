@@ -271,7 +271,7 @@ INSERT INTO `tm_ev_niv` (`ev_niv_id`, `ev_niv_nom`) VALUES
 CREATE TABLE `tm_asignado` (
   `id_inter` int(11) NOT NULL AUTO_INCREMENT,
   `ev_id` int(11) DEFAULT NULL,
-  `unid_id` int(11) NOT NULL,
+  `sec_id` int(11) NOT NULL,
   PRIMARY KEY (`id_inter`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -279,7 +279,7 @@ CREATE TABLE `tm_asignado` (
 -- Volcado de datos para la tabla `tm_asignado`
 --
 
-INSERT INTO `tm_asignado` ( `ev_id`, `unid_id`) VALUES
+INSERT INTO `tm_asignado` ( `ev_id`, `sec_id`) VALUES
 ( 10, 2),( 10, 5),
 ( 9, 3),( 9, 4), ( 9, 5), 
 ( 8, 1),
