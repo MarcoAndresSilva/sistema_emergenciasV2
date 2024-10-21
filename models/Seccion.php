@@ -61,5 +61,58 @@ class Seccion extends Conectar {
             return ["status"=>"warning","message"=>"No se pudo obtener las secciones del unidad"];
         }
     }
+    private function seccion_tiene_usuarios($seccion){
+        $sql = "SELECT * FROM tm_usuario WHERE usu_seccion = :seccion LIMIT 1";
+        $params = [':seccion' => $seccion];
+        $resultado = $this->ejecutarConsulta($sql, $params, false);
+        if (is_array($resultado) && count($resultado) > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+  public function delete_seccion($sec_id){
+    if ($this->seccion_tiene_usuarios($sec_id)){
+      return array('status' => 'error', 'message' => 'No se puede eliminar la sección porque tiene usuarios asignados');
+    }
+    $sql = "DELETE FROM tm_seccion WHERE sec_id = :sec_id";
+    $params = [':sec_id' => $sec_id];
+    $resultado = $this->ejecutarAccion($sql, $params);
+    if ($resultado) {
+      return array('status' => 'success', 'message' => 'Sección eliminada correctamente');
+    } else {
+      return array('status' => 'error', 'message' => 'No se pudo eliminar la sección');
+    }
+
+  }
+  public function lista_usuarios($seccion){
+    $sql = "SELECT * FROM tm_usuario WHERE usu_seccion = :seccion";
+    $params = [':seccion' => $seccion];
+    $resultado = $this->ejecutarConsulta($sql, $params);
+    if (is_array($resultado) && count($resultado) > 0) {
+      return $resultado;
+    } else {
+      return [];
+    }
+  }
+
+  public function seccion_ocupado($seccion){
+    $sql = "UPDATE tm_seccion SET sec_est = 0 WHERE sec_id = :seccion";
+    $params = [':seccion' => $seccion];
+    $resultado = $this->ejecutarAccion($sql, $params);
+    if ($resultado) {
+      return array('status' => 'success', 'message' => 'Sección actualizada correctamente');
+    }
+  }
+
+  public function seccion_disponible($seccion){
+    $sql = "UPDATE tm_seccion SET sec_est = 1 WHERE sec_id = :seccion";
+    $params = [':seccion' => $seccion];
+    $resultado = $this->ejecutarAccion($sql, $params);
+    if ($resultado) {
+      return array('status' => 'success', 'message' => 'Sección actualizada correctamente');
+    }
+  }
+
 }
 ?>
