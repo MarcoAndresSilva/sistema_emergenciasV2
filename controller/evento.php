@@ -8,7 +8,9 @@ require_once("../models/EventoUnidad.php");
 require_once("../models/NivelPeligro.php");
 require_once("../models/Correo.php");
 require_once("../models/Noticia.php");
+require_once("../models/Seccion.php");
 
+$seccion = new Seccion();
 $evento = new Evento();
 $categoria = new Categoria();
 $unidad = new Unidad();
@@ -485,6 +487,7 @@ if (isset($_GET["op"])) {
                $args_noticia = ["asunto"=>"Evento Cerrado","mensaje"=>$_POST["detalle_cierre"],"id_evento"=>$_POST["ev_id"],"url"=>"#"];
                 // Verificar si cerrar_evento devuelve true
                 if ($datos === true) {
+                    $seccion->update_disponible_todos_de_evento_cerrado($_POST['ev_id']);
                     $noticia->crear_noticia_y_enviar_grupo_usuario($args_noticia);
                     echo 1;
                 } else {
