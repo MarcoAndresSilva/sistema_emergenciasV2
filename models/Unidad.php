@@ -16,6 +16,14 @@ class Unidad extends Conectar
         $params = [':unid_id' => $unid_id];
         return $this->ejecutarConsulta($sql, $params);
     }
+   public function get_seccion_unidad($sec_id)
+    {
+    $sql = "SELECT * FROM tm_seccion sec
+    INNER JOIN tm_unidad uni ON uni.unid_id = sec.sec_unidad
+    WHERE sec_id = :sec_id";
+        $params = [':sec_id' => $sec_id];
+        return $this->ejecutarConsulta($sql, $params);
+    }
 
     // get_unidad_est según disponibilidad
     public function get_unidad_est($unid_est)
