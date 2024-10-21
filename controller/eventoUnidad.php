@@ -22,10 +22,15 @@ if (isset($_GET["op"])) {
 
         case "insert_asignacion_unidades":
             $id_seccion = $_POST['unid_id'];
-            $datos = $eventoUnidad->add_eventoUnidad(
+           $est =  $seccion->seccion_estado($id_seccion);
+           if ($est == true){
+                $datos = $eventoUnidad->add_eventoUnidad(
                 $_POST['ev_id'],
                 $_POST['unid_id']
-            );
+                );
+           }else {
+                $datos = false;
+               }
             if ($datos == true) {
              $seccion->seccion_ocupado($id_seccion);
              $usu_id = $_SESSION["usu_id"];
