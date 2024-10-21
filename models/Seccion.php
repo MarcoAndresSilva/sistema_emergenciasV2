@@ -35,7 +35,7 @@ class Seccion extends Conectar {
     public function get_seccion($sec_id){
         $sql = "SELECT * FROM tm_seccion WHERE sec_id = :sec_id";
         $params = [':sec_id' => $sec_id];
-        $resultado = $this->ejecutarConsulta($sql, $params);
+        $resultado = $this->ejecutarConsulta($sql, $params, false);
         if (is_array($resultado) && count($resultado) > 0) {
             return $resultado;
         } else {
