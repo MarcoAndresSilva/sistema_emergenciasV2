@@ -17,5 +17,10 @@ if (isset($_GET["op"])) {
                 $resultado = $datos;
                 echo json_encode($resultado);
         break;
+        case "lista_secciones_con_unidad":
+            $datos = $seccion->lista_secciones_con_unidad();
+                $resultado = $datos;
+                echo json_encode($resultado);
+        break;
        }
 }

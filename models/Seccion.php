@@ -1,5 +1,6 @@
 <?php
 require_once '../config/conexion.php';
+require_once '../models/Unidad.php';
 
 class Seccion extends Conectar {
     public function add_seccion($sec_nombre, $sec_detalle, $sec_unidad){
@@ -112,6 +113,22 @@ class Seccion extends Conectar {
     if ($resultado) {
       return array('status' => 'success', 'message' => 'Sección actualizada correctamente');
     }
+  }
+  public function lista_secciones_con_unidad(){
+    $unidad = new Unidad();
+    $lista_unidades = $unidad->get_unidad();
+    $secciones = [];
+    foreach ($lista_unidades as $unidad){
+      $lista_secciones = $this->get_secciones($unidad['unid_id']);
+      if (isset($lista_secciones["status"])){
+         $lista_secciones=[];
+      }
+      $secciones[] = [
+        'unidad' => $unidad['unid_nom'],
+        'secciones' => $lista_secciones,
+      ];
+    }
+    return $secciones;
   }
 
 }
