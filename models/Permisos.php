@@ -10,12 +10,39 @@ class Permisos extends Conectar{
             return false;
         }
   }
-  public static function redirigirSiNoAutorizado() {
-        if (!self::verificarLogin()) {
+  public static function redirigirSiNoAutorizado($pagina = null) {
+        // INFO: Default deja que el usuario pueda ver la pagina si se logea
+       $resultado = false;
+       if ($pagina != null && !self::verificarLogin()) {
             header("Location: " . Conectar::ruta() . "index.php");
             exit();
+       }elseif(self::verificarLogin()){
+            $resultado = true;
+       }
+       if(!empty($pagina)){
+          // NOTE: crear una instancia de la clase para que pueda llamar a la funcion
+          $permisos = new Permisos();
+          $resultado = $permisos->verificarPermiso($pagina);
+       }
+       if(!$resultado){
+          header("Location: " . Conectar::ruta() . "index.php");
+          exit();
+       }
+  }
+  }
+
+  public function verificarPermiso($permiso){
+    $usuario = $_SESSION["usu_id"];
+    $permisos = $this->usuarios_permitidos($permiso);
+    if(count($permisos) > 0){
+      foreach ($permisos as $permiso){
+        if($permiso["usu_id"] == $usuario){
+          return true;
         }
+      }
     }
+    return false;
+  }
 
   public function usuarios_permitidos($permiso){
     $sql = "select * from tm_permisos where permiso=:permiso";
