@@ -1,3 +1,4 @@
+<?php require_once("../../models/Permisos.php"); ?>
 <header class="site-header">
 	<div class="container-fluid container-fluid-header">
 		
