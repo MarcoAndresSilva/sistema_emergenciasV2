@@ -29,6 +29,10 @@ class Permisos extends Conectar{
           exit();
        }
   }
+
+  public static function isPermited($permiso){
+    $permisos = new Permisos();
+    return $permisos->verificarPermiso($permiso);
   }
 
   public function verificarPermiso($permiso){
