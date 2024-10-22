@@ -8,6 +8,9 @@ require_once("../models/EventoUnidad.php");
 require_once("../models/RegistroLog.php");
 require_once("../models/Noticia.php");
 require_once("../models/Seccion.php");
+require_once("../models/Permisos.php");
+Permisos::redirigirSiNoAutorizado();
+
 
 $evento = new Evento();
 $categoria = new Categoria();

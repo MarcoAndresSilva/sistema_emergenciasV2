@@ -9,6 +9,9 @@ require_once("../models/NivelPeligro.php");
 require_once("../models/Correo.php");
 require_once("../models/Noticia.php");
 require_once("../models/Seccion.php");
+require_once("../models/Permisos.php");
+Permisos::redirigirSiNoAutorizado();
+
 
 $seccion = new Seccion();
 $evento = new Evento();
@@ -48,7 +51,6 @@ function guardarImagen($archivo, $carpeta) {
     return $ruta_relativa;
 }
 
-if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_tipo"] == 2)) {
 if (isset($_GET["op"])) {
     switch ($_GET["op"]) {
 
@@ -758,5 +760,4 @@ if (isset($_GET["op"])) {
     }
 
 
-}        
 }

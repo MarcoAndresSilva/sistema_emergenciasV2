@@ -2,6 +2,8 @@
 require_once("../config/conexion.php");
 require_once("../models/Usuario.php");
 require_once("../models/Seccion.php");
+require_once("../models/Permisos.php");
+Permisos::redirigirSiNoAutorizado();
 
 $usuario = new Usuario();
 $RegistroLog= new RegistroLog();

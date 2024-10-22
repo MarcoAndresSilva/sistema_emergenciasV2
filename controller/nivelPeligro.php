@@ -2,6 +2,8 @@
 require_once("../config/conexion.php");
 require_once("../models/NivelPeligro.php");
 $nivelPeligro = new NivelPeligro();
+require_once("../models/Permisos.php");
+Permisos::redirigirSiNoAutorizado();
 
 if (isset($_GET["op"])) {
     switch ($_GET["op"]) {

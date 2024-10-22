@@ -1,6 +1,8 @@
 <?php
 require_once("../config/conexion.php");
 require_once("../models/Unidad.php");
+require_once("../models/Permisos.php");
+Permisos::redirigirSiNoAutorizado();
 
 $unidad = new Unidad();
 if (isset($_GET["unidad"])) {
