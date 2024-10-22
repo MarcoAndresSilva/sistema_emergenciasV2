@@ -621,6 +621,23 @@ VALUES  ('Nuevo Evento', '1,2,4', '1,2,4', '1,2,4', '1,2,4'),
         ('Evento Cerrado', null, null, '4', '1');
 
 --
+-- estructura de tm_permisos
+--
+CREATE TABLE tm_permisos(
+  id_permiso INT  NOT NULL auto_increment,
+  permiso VARCHAR(150) UNIQUE,
+  unidad VARCHAR(150),
+  seccion VARCHAR(150),
+  usuario VARCHAR(150),
+  tipo_usuario VARCHAR(50),
+PRIMARY KEY (id_permiso)
+);
+
+INSERT INTO tm_permisos(permiso,unidad,seccion,usuario,tipo_usuario) VALUES
+('Crear Nuevo Evento','','3','',''),
+('Cerrar Evento','1,2,4','1,2,4','4','1'),
+('Crear Usuario','1,2,4','1,2,4','1,2,4','1,2,4');
+--
 -- Indices de la tabla `tm_camb_asig`
 --
 ALTER TABLE `tm_camb_asig`

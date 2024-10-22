@@ -1,6 +1,6 @@
 <?php
-class Permisos{
-    public static function verificarPermisos() {
+require_once(__DIR__."/../config/conexion.php");
+class Permisos extends Conectar{
         try {
             return isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_tipo"] == 2);
         } catch (Exception $e) {
