@@ -96,7 +96,7 @@ if (isset($_GET["op"])) {
                 // Verificar si hay unidades asignadas
                 if (is_array($unidades) && count($unidades) > 0) {
                     foreach ($unidades as $unidad) {
-                        $output["unidades"][] = $unidad['unid_nom']; // Ajusta si necesitas otros campos de la unidad
+                         $output["unidades"][] = $unidad['unid_nom']. "-". $unidad["sec_nombre"];
                     }
                 }
         
