@@ -1,7 +1,8 @@
 <?php
 require_once("../config/conexion.php");
 require_once("../models/RegistroLog.php");
-if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_tipo"] == 2)) {
+require_once("../models/Permisos.php");
+Permisos::redirigirSiNoAutorizado();
 
 $RegistroLog= new RegistroLog();
 if (isset($_POST["op"])) {
@@ -16,5 +17,4 @@ if (isset($_POST["op"])) {
             }
         break; 
     }
-}
 }

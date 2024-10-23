@@ -7,6 +7,10 @@ require_once("../models/Estado.php");
 require_once("../models/EventoUnidad.php");
 require_once("../models/RegistroLog.php");
 require_once("../models/Noticia.php");
+require_once("../models/Seccion.php");
+require_once("../models/Permisos.php");
+Permisos::redirigirSiNoAutorizado();
+
 
 $evento = new Evento();
 $categoria = new Categoria();
@@ -15,20 +19,28 @@ $estado = new Estado();
 $eventoUnidad = new EventoUnidad();
 $registroLog = new RegistroLog();
 $noticia  = new Noticia();
+$seccion = new Seccion();
 if (isset($_GET["op"])) {
     switch ($_GET["op"]) {
 
         case "insert_asignacion_unidades":
-            $datos = $eventoUnidad->add_eventoUnidad(
+            $id_seccion = $_POST['unid_id'];
+           $est =  $seccion->seccion_estado($id_seccion);
+           if ($est == true){
+                $datos = $eventoUnidad->add_eventoUnidad(
                 $_POST['ev_id'],
                 $_POST['unid_id']
-            );
+                );
+           }else {
+                $datos = false;
+               }
             if ($datos == true) {
+             $seccion->seccion_ocupado($id_seccion);
              $usu_id = $_SESSION["usu_id"];
-            $unidad_data = $unidad->get_datos_unidad($_POST['unid_id']);
+            $unidad_data = $unidad->get_seccion_unidad($id_seccion);
             $unidad_nom = $unidad_data[0]['unid_nom'];
             $ev_desc = "Se deriva a unidad: " . $unidad_nom;
-            $evento->insert_emergencia_detalle($_POST['ev_id'], $usu_id, $ev_desc);
+            $evento->insert_emergencia_detalle($_POST["ev_id"], $usu_id, $ev_desc);
             $ags_noticia = [
               "asunto" => "Derivado",
               "mensaje" => $ev_desc,
@@ -91,9 +103,11 @@ if (isset($_GET["op"])) {
             $datos = $eventoUnidad->delete_unidad($_POST['ev_id'],$_POST['unid_id']);
             if ($datos == true){
             $usu_id = $_SESSION["usu_id"];
-            $unidad_data = $unidad->get_datos_unidad($_POST['unid_id']);
+            $id_seccion = $_POST['unid_id'];
+            $unidad_data = $unidad->get_seccion_unidad($id_seccion);
             $unidad_nom = $unidad_data[0]['unid_nom'];
             $ev_desc = "Se ha eliminado la unidad: " . $unidad_nom;
+            $seccion->seccion_disponible($id_seccion);
             $evento->insert_emergencia_detalle($_POST['ev_id'], $usu_id, $ev_desc);
                 echo 1;
             } else {

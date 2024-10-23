@@ -8,7 +8,12 @@ require_once("../models/EventoUnidad.php");
 require_once("../models/NivelPeligro.php");
 require_once("../models/Correo.php");
 require_once("../models/Noticia.php");
+require_once("../models/Seccion.php");
+require_once("../models/Permisos.php");
+Permisos::redirigirSiNoAutorizado();
 
+
+$seccion = new Seccion();
 $evento = new Evento();
 $categoria = new Categoria();
 $unidad = new Unidad();
@@ -46,7 +51,6 @@ function guardarImagen($archivo, $carpeta) {
     return $ruta_relativa;
 }
 
-if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_tipo"] == 2)) {
 if (isset($_GET["op"])) {
     switch ($_GET["op"]) {
 
@@ -485,6 +489,7 @@ if (isset($_GET["op"])) {
                $args_noticia = ["asunto"=>"Evento Cerrado","mensaje"=>$_POST["detalle_cierre"],"id_evento"=>$_POST["ev_id"],"url"=>"#"];
                 // Verificar si cerrar_evento devuelve true
                 if ($datos === true) {
+                    $seccion->update_disponible_todos_de_evento_cerrado($_POST['ev_id']);
                     $noticia->crear_noticia_y_enviar_grupo_usuario($args_noticia);
                     echo 1;
                 } else {
@@ -755,5 +760,4 @@ if (isset($_GET["op"])) {
     }
 
 
-}        
 }

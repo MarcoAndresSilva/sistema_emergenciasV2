@@ -1,6 +1,10 @@
 <?php
 require_once("../config/conexion.php");
 require_once("../models/Estado.php");
+require_once("../models/Permisos.php");
+Permisos::redirigirSiNoAutorizado();
+
+
 $estado = new Estado();
 
 if (isset($_GET["solicitud"])) {

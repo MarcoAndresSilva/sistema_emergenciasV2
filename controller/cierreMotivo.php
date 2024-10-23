@@ -2,6 +2,9 @@
 
 require_once("../config/conexion.php");
 require_once '../models/CierreMotivo.php';
+require_once("../models/Permisos.php");
+Permisos::redirigirSiNoAutorizado();
+
 
 $model = new CierreMotivo();
 

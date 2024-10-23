@@ -2,7 +2,8 @@
 require_once("../config/conexion.php");
 require_once("../models/SeguridadPassword.php");
 require_once("../models/RegistroLog.php");
-if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_tipo"] == 2)) {
+require_once("../models/Permisos.php");
+Permisos::redirigirSiNoAutorizado();
 
 $RegistroLog= new RegistroLog();
 
@@ -83,4 +84,3 @@ case 'update_unidad_robusta':
     break;
         }
     }
-}

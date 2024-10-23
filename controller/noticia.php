@@ -3,6 +3,9 @@ require_once '../config/conexion.php';
 require_once '../models/Noticia.php';
 require_once '../models/Unidad.php';
 require_once '../models/Usuario.php';
+require_once("../models/Permisos.php");
+Permisos::redirigirSiNoAutorizado();
+
 
 if (isset($_GET["op"])) {
   $noticia = new Noticia();

@@ -4,6 +4,8 @@ require_once("../models/Usuario.php");
 require_once("../models/Noticia.php");
 require_once("../models/SeguridadPassword.php");
 require_once("../models/RegistroLog.php");
+require_once("../models/Permisos.php");
+Permisos::redirigirSiNoAutorizado();
 $usuario = new Usuario();
 $RegistroLog= new RegistroLog();
 

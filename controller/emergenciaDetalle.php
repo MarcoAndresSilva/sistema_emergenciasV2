@@ -6,6 +6,9 @@ require_once("../models/Unidad.php");
 require_once("../models/Estado.php");
 require_once("../models/EventoUnidad.php");
 require_once("../models/Noticia.php");
+require_once("../models/Permisos.php");
+Permisos::redirigirSiNoAutorizado();
+
 
 $noticia = new Noticia();
 $evento = new Evento();
@@ -13,7 +16,7 @@ $categoria = new Categoria();
 $unidad = new Unidad();
 $estado = new Estado();
 $eventounidad = new EventoUnidad();
-if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_tipo"] == 2)) {
+
 if (isset($_GET["op"])) {
     switch ($_GET["op"]) {
 
@@ -96,7 +99,7 @@ if (isset($_GET["op"])) {
                 // Verificar si hay unidades asignadas
                 if (is_array($unidades) && count($unidades) > 0) {
                     foreach ($unidades as $unidad) {
-                        $output["unidades"][] = $unidad['unid_nom']; // Ajusta si necesitas otros campos de la unidad
+                         $output["unidades"][] = $unidad['unid_nom']. "-". $unidad["sec_nombre"];
                     }
                 }
         
@@ -121,5 +124,4 @@ if (isset($_GET["op"])) {
         break;
 
         }
-    }        
 }

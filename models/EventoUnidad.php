@@ -115,9 +115,10 @@ class EventoUnidad extends Conectar {
 
 
     public function get_datos_UnidadesAsignadas_por_evento($sec_id) {
-        $sql = "SELECT * FROM `tm_asignado` as asg
-        JOIN tm_unidad as unid
-        on (unid.sec_id=asg.sec_id)
+         $sql = "SELECT * FROM `tm_asignado` as asg
+        JOIN tm_seccion as sec
+        on (sec.sec_id=asg.sec_id)
+        JOIN tm_unidad as unid  on(unid.unid_id=sec.sec_unidad)
         where asg.ev_id = :ev_id";
         
         $params = [':ev_id' => $sec_id];

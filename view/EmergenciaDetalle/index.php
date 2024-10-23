@@ -1,6 +1,7 @@
 <?php
 require_once("../../config/conexion.php");
-if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_tipo"] == 2)) {
+require_once("../../models/Permisos.php");
+Permisos::redirigirSiNoAutorizado();
 ?>
 
 <!DOCTYPE html>
@@ -152,9 +153,3 @@ require_once("../MainJs/js.php");
 <script type="text/javascript" src="./emergenciadetalle.js"></script>
 
 </html>
-
-<?php
-} else {
-    header("location:" . Conectar::ruta() . "index.php");
-}
-?>
