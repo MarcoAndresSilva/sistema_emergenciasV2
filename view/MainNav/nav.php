@@ -1,117 +1,105 @@
+<?php
+// Definir el menú como una variable PHP
+$menu_items = [
+    [
+        "nombre" => "Inicio",
+        "url" => "../Home/",
+        "permiso_requerido" => null
+    ],
+    [
+        "nombre" => "Nuevo Evento",
+        "url" => "../NuevoEvento/",
+        "permiso_requerido" => null
+    ],
+    [
+        "nombre" => "Historial Eventos",
+        "url" => "../HistorialEventos/",
+        "permiso_requerido" => null
+    ],
+    [
+        "nombre" => "Administración",
+        "url" => "#collapseParametria",
+        "permiso_requerido" => null,
+        "submenu" => [
+            [
+                "nombre" => "Unidades Municipales",
+                "url" => "../UnidadMunicipal/",
+                "permiso_requerido" => null
+            ],
+            [
+                "nombre" => "Gestion Reglas Noticia",
+                "url" => "../GestionReglasNoticia/",
+                "permiso_requerido" => null
+            ],
+            [
+                "nombre" => "Nivel Categoria",
+                "url" => "../NivelCategoria/",
+                "permiso_requerido" => null
+            ],
+            [
+                "nombre" => "Gestion Motivos",
+                "url" => "../GestionMotivo/",
+                "permiso_requerido" => null
+            ]
+        ]
+    ],
+    [
+        "nombre" => "Gestión de usuarios",
+        "url" => "#collapseGestionEventos",
+        "permiso_requerido" => null,
+        "submenu" => [
+            [
+                "nombre" => "Seguridad contraseña",
+                "url" => "../SeguridadPassword/",
+                "permiso_requerido" => null
+            ],
+            [
+                "nombre" => "Gestionar Usuarios",
+                "url" => "../GestionUsuario/",
+                "permiso_requerido" => null
+            ],
+            [
+                "nombre" => "Seguridad Unidad",
+                "url" => "../SeguridadUnidad/",
+                "permiso_requerido" => null
+            ],
+        ]
+    ]
+];
+
+function render_menu($items) {
+    foreach ($items as $item) {
+        // Verificar permisos si es necesario
+        if (is_null($item['permiso_requerido']) || Permisos::isPermited($item['permiso_requerido'])) {
+            // Si el elemento tiene un submenú, agregar el toggle y el contenedor colapsable
+            if (isset($item['submenu']) && !empty($item['submenu'])) {
+                echo '<a href="' . $item['url'] . '" data-toggle="collapse-personal" role="button" aria-controls="' . substr($item['url'], 1) . '">';
+                echo '<span class="glyphicon glyphicon-th"></span>';
+                echo '<span class="lbl">' . $item['nombre'] . '</span>';
+                echo '</a>';
+                echo '<div class="collapse-personal" id="' . substr($item['url'], 1) . '">';
+                echo '<div class="card card-body" style="padding-left: 5px; border: none">';
+                // Renderizar el submenú
+                render_menu($item['submenu']);
+                echo '</div></div>';
+            } else {
+                // Si no tiene submenú, renderizar un solo enlace
+                echo '<li class="blue-dirty">';
+                echo '<a href="' . $item['url'] . '">';
+                echo '<span class="glyphicon glyphicon-th"></span>';
+                echo '<span class="lbl">' . $item['nombre'] . '</span>';
+                echo '</a></li>';
+            }
+        }
+    }
+}
+?>
 
 <nav class="side-menu">
     <ul class="side-menu-list">
-
-        <li class="blue-dirty">
-            <a class="home" href="../Home/">
-                <span class="glyphicon glyphicon-th"></span>
-                <span class="lbl">Inicio</span>
-            </a>
-        </li>
-        <li class="blue-dirty">
-            <a class="NuevoEvento" href="../NuevoEvento/">
-                <span class="glyphicon glyphicon-th"></span>
-                <span class="lbl">Nuevo Evento</span>
-            </a>
-        </li>
-        <!-- <li class="blue-dirty">
-            <a class="Historial" href="../Historial/">
-                <span class="glyphicon glyphicon-th"></span>
-                <span class="lbl">Historial </span>
-            </a>
-        </li> -->
-        <li class="blue-dirty">
-            <a class="HistorialEventos" href="../HistorialEventos/">
-                <span class="glyphicon glyphicon-th"></span>
-                <span class="lbl">Historial Eventos </span>
-            </a>
-        </li>
-        
-        <?php 
-        if ($_SESSION["usu_tipo"] == 2) {
-        ?> 
-         <!-- Evento -->
-         <li class="blue-dirty">
-            <a class="ControlEventos" href="../ControlEventos/">
-                <span class="glyphicon glyphicon-th"></span>
-                <span class="lbl"> Control de Eventos</span>
-            </a>
-        </li>
-        <!-- Evento -->
-        <li class="blue-dirty">
-            <a class="MapaCalor" href="../MapaCalor/">
-                <span class="glyphicon glyphicon-th"></span>
-                <span class="lbl"> Mapa De Eventos</span>
-            </a>
-        </li>
-
-       
-
-
-        <!-- Parametría -->
-        <li class="blue-dirty">
-            <a class="Parametria" data-toggle="collapse-personal" href="#collapseParametria" role="button"  aria-controls="collapseParametria" >
-                <span class="glyphicon glyphicon-th"></span>
-                <span class="lbl">Administración</span>
-            </a>
-            <div class="collapse-personal" id="collapseParametria"  >
-                <div class="card card-body" style="padding-left: 5px; border: none" style="padding-left: 5px; border: none">
-
-                    <a class="Unidad-Municipal" href="../UnidadMunicipal/">
-                        <span class="glyphicon glyphicon-asterisk"></span>
-                        <span class="lbl">Unidades Municipales</span>
-                    </a>
-                    <a class="GestionReglasNoticia" href="../GestionReglasNoticia/">
-                        <span class="glyphicon glyphicon-asterisk"></span>
-                        <span class="lbl"> Gestion Reglas Noticia</span>
-                    </a>
-
-                    <a class="" href="../NivelCategoria/">
-                        <span class="glyphicon glyphicon-asterisk"></span>
-                        <span class="lbl">Nivel Categoria </span>
-                    </a>
-                    <a class="" href="../GestionMotivo/">
-                        <span class="glyphicon glyphicon-asterisk"></span>
-                        <span class="lbl">Gestion Motivos </span>
-                    </a>
-                   
-                </div>
-            </div>
-        </li>
-        <!-- Fin Parametría -->
-        <!-- Gestión de Eventos de Emergencia -->
-        <li class="blue-dirty">
-            <a class="" data-toggle="collapse-personal" href="#collapseGestionEventos" role="button"  aria-controls="collapseGestionEventos" >
-                <span class="glyphicon glyphicon-th"></span>
-                <span class="lbl">Gestión de usuarios</span>
-            </a>
-            <div class="collapse-personal" id="collapseGestionEventos"  >
-                <div class="card card-body" style="padding-left: 5px; border: none" style="padding-left: 5px; border: none">
-                    
-                    <a class="" href="../SeguridadPassword/">
-                        <span class="glyphicon glyphicon-asterisk"></span>
-                        <span class="lbl"> Seguridad contrase&ntilde;a</span>
-                    </a>
-                    <a class="" href="../GestionUsuario/">
-                        <span class="glyphicon glyphicon-asterisk"></span>
-                        <span class="lbl">Gestionar Usuarios</span>
-                    </a>
-                    <a class="" href="../SeguridadUnidad/">
-                        <span class="glyphicon glyphicon-asterisk"></span>
-                        <span class="lbl">Seguridad Unidad</span>
-                    </a>
-                </div>
-            </div>
-        </li>
-                
-        <?php
-        }
-        ?>
-
-</ul>
-</nav><!--.side-menu-->
-
-    <script >
+        <?php render_menu($menu_items); ?>
+    </ul>
+</nav><!--.side-menu-->    <script >
 
 document.addEventListener("DOMContentLoaded", function() {
   // Encuentra todos los elementos <a> con el atributo data-toggle="collapse-personal"
