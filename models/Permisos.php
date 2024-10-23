@@ -49,7 +49,8 @@ class Permisos extends Conectar{
   }
 
   public function usuarios_permitidos($permiso){
-    $sql = "select * from tm_permisos where permiso=:permiso";
+    //  NOTE: no importa las mayusculas o minusculas
+    $sql = "select * from tm_permisos where LOWER(permiso)= LOWER(:permiso)";
     $params = [":permiso" => $permiso];
     $informacionBruta = $this->ejecutarConsulta($sql, $params, false);
     $lista_usuario = $this->limpiarIds($informacionBruta);
