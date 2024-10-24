@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
             dataMappings.seccion = {};
             if (data.seccion) {
                 data.seccion.forEach(item => {
-                    dataMappings.seccion[item.seccion_id] = item.seccion_nom;
+                    dataMappings.seccion[item.sec_id] = item.sec_nombre;
                 });
             }
 
