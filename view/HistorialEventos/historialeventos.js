@@ -1,10 +1,4 @@
 $(document).ready(function() {
-
-    // Obtener el elemento <a> por su ID
-    var enlace = document.querySelector('.HistorialEventos');
-    // Añadir una clase al enlace
-    enlace.classList.add('selected');
-
     cargarTablaGeneral();
 });
 

@@ -147,10 +147,37 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   });
 });
+// Obtener la ruta actual de la página, eliminando el prefijo del dominio
+var currentPage = location.pathname;
 
+// Normalizar currentPage para asegurarnos de que empiece por '../'
+if (!currentPage.startsWith("../")) {
+    currentPage = "../" + currentPage;
+}
 
-  
+// Limpiar el currentPage para eliminar cualquier parte de 'view' y barras dobles
+currentPage = currentPage.replace(/\/view\//g, '/').replace(/\/{2,}/g, '/'); // Reemplaza '/view/' y '//' con '/'
 
+// Obtener todos los elementos <a> del menú
+var menuLinks = document.querySelectorAll('.side-menu-list a');
+
+// Recorrer todos los enlaces del menú
+menuLinks.forEach(function(link) {
+    // Obtener el href de cada enlace
+    var linkHref = link.getAttribute('href');
+
+    // Limpiar linkHref para eliminar barras dobles y '/view/'
+    linkHref = linkHref.replace(/\/view\//g, '/').replace(/\/{2,}/g, '/'); // Reemplaza '/view/' y '//' con '/'
+
+    // Depuración: ver las rutas actuales
+    console.log([linkHref, currentPage]);
+
+    // Verificar si el href coincide con la ruta actual
+    if (linkHref === currentPage) {
+        // Agregar la clase 'selected' al enlace correspondiente
+        link.classList.add('selected');
+    }
+});
     </script>
     <style>
         .collapse-in {

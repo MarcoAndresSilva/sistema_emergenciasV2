@@ -1,11 +1,4 @@
 $(document).ready(function () {
-
-  
-  // Obtener el elemento <a> por su ID
-  var enlace = document.querySelector('.home');
-
-  enlace.classList.add('selected');
-
   $(".panel").lobiPanel({
     sortable: true,
   });
