@@ -28,31 +28,31 @@ $menu_items = [
     [
         "nombre" => "Administración",
         "url" => "#collapseParametria",
-        "className" => "Home",
+        "className" => "Administracion",
         "permiso_requerido" => null,
         "submenu" => [
             [
                 "nombre" => "Unidades Municipales",
                 "url" => "../UnidadMunicipal/",
-                "className" => "Home",
+                "className" => "UnidadMunicipal",
                 "permiso_requerido" => null
             ],
             [
                 "nombre" => "Gestion Reglas Noticia",
                 "url" => "../GestionReglasNoticia/",
-                "className" => "Home",
+                "className" => "ReglasNoticia",
                 "permiso_requerido" => null
             ],
             [
                 "nombre" => "Nivel Categoria",
                 "url" => "../NivelCategoria/",
-                "className" => "Home",
+                "className" => "NivelCategoria",
                 "permiso_requerido" => null
             ],
             [
                 "nombre" => "Gestion Motivos",
                 "url" => "../GestionMotivo/",
-                "className" => "Home",
+                "className" => "GestionMotivo",
                 "permiso_requerido" => null
             ]
         ]
@@ -61,24 +61,24 @@ $menu_items = [
         "nombre" => "Gestión de usuarios",
         "url" => "#collapseGestionEventos",
         "permiso_requerido" => null,
-        "className" => "Home",
+        "className" => "ControlUsuario",
         "submenu" => [
             [
                 "nombre" => "Seguridad contraseña",
                 "url" => "../SeguridadPassword/",
-                "className" => "Home",
+                "className" => "SeguridadPassword",
                 "permiso_requerido" => null
             ],
             [
                 "nombre" => "Gestionar Usuarios",
                 "url" => "../GestionUsuario/",
-                "className" => "Home",
+                "className" => "GestionarUsuario",
                 "permiso_requerido" => null
             ],
             [
                 "nombre" => "Seguridad Unidad",
                 "url" => "../SeguridadUnidad/",
-                "className" => "Home",
+                "className" => "SeguridadUnidades",
                 "permiso_requerido" => null
             ],
         ]
