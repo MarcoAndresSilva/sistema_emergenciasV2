@@ -32,8 +32,10 @@ function cargarTablaGeneral() {
             { "data": "nivel_peligro" },
             { "data": "estado" },
             { "data": "fecha_apertura" },
+            { "data": "ver_niv_peligro" },
             { "data": "ver_derivar" },
             { "data": "ver_detalle" }
+
         ],
         language: {
                 url: "../registrosLog/spanishDatatable.json"
@@ -71,7 +73,20 @@ $(document).on("click", "#btnPanelDerivar", function(e) {
     consultarCategoria(id_evento);
     consultarNivelPeligro(id_evento);
     consultarUnidadDisponible(id_evento);
+    cargarSecciones();
 });
+
+
+
+//////////btn peligro//////////// 
+$(document).on("click", "#btnPanelPeligro", function(e) {
+    console.log('Button Nivel Peligro clicked');
+    mostrarModal('#modalNivelPeligro');
+   id_evento = $(this).data('ev_id');
+    console.log(id_evento);
+    mostrarIdEventoNivelPeligro(id_evento);
+    consultarCategoriaNivelPeligro(id_evento);
+    });
 
 
 function mostrarModal(modalId) {
@@ -83,6 +98,7 @@ function mostrarModal(modalId) {
         console.error('Modal not found: ' + modalId);
     }
 }
+
 //////////////////////////////////////////////// Abrir mapa////////////////////////////////////////////////////////////
 
 let lat;
