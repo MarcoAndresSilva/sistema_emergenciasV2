@@ -4,11 +4,13 @@ require_once '../models/Noticia.php';
 require_once '../models/Unidad.php';
 require_once '../models/Usuario.php';
 require_once("../models/Permisos.php");
+require_once("../models/Seccion.php");
 Permisos::redirigirSiNoAutorizado();
 
 
 if (isset($_GET["op"])) {
   $noticia = new Noticia();
+  header("Content-Type: application/json");
     switch ($_GET["op"]) {
         case "add_noticia":
             $asunto = $_POST["asunto"];
@@ -31,10 +33,11 @@ if (isset($_GET["op"])) {
         case "get_reglas_relaciones":
               $unidad = new Unidad();
               $usuario = new Usuario();
+              $seccion = new Seccion();
               $result=[
                   "unidad" =>  $unidad->get_unidad(),
                   "tipo_usuario" =>  $usuario->get_todos_usuarios(),
-                  "tipo_usuario" =>  $usuario->get_todos_usuarios(),
+                  "seccion" =>  $seccion->get_todos_secciones(),
                   "usuarios" =>  $usuario->get_full_usuarios(),
                 ];
 
