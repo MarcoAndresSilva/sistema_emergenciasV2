@@ -122,5 +122,30 @@ class Permisos extends Conectar{
        }
        return array_values($usuariosUnicos);
   }
+  public function update_permisos($id, $unidad, $seccion, $usuario, $tipo_usuario){
+    $sql = "UPDATE tm_permisos SET unidad = :unidad, seccion = :seccion, usuario = :usuario, tipo_usuario = :tipo_usuario WHERE id_permiso = :id";
+    $params = [
+      ":unidad" => $unidad,
+      ":seccion" => $seccion,
+      ":usuario" => $usuario,
+      ":tipo_usuario" => $tipo_usuario,
+      ":id" => $id
+    ];
+    $resultado = $this->ejecutarAccion($sql, $params);
+    if($resultado){
+      return ["status"=> "success", "message"=> "Permisos actualizados correctamente"];
+    }else{
+      return ["status"=> "warning", "message"=> "no se pudo actualizar los permisos"];
+    }
+  }
+  public function get_permisos(){
+      $sql = "SELECT * FROM tm_permisos";
+      $resultado = $this->ejecutarConsulta($sql);
+      if($resultado){
+        return $resultado;
+      }else{
+        return [];
+      }
+   }
 }
 ?>
