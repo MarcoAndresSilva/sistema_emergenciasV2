@@ -11,6 +11,7 @@ class Permisos extends Conectar{
         }
   }
   public static function redirigirSiNoAutorizado($pagina = null) {
+    try {
         // INFO: Default deja que el usuario pueda ver la pagina si se logea
        $resultado = false;
        if ($pagina != null && !self::verificarLogin()) {
@@ -28,11 +29,19 @@ class Permisos extends Conectar{
           header("Location: " . Conectar::ruta() . "index.php");
           exit();
        }
+    } catch (Exception $e) {
+      header("Location: " . Conectar::ruta() . "index.php");
+      exit();
+    }
   }
 
   public static function isPermited($permiso){
+    try {
     $permisos = new Permisos();
     return $permisos->verificarPermiso($permiso);
+    } catch (Exception $e) {
+      return false;
+    }
   }
 
   public function verificarPermiso($permiso){
