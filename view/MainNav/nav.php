@@ -11,7 +11,7 @@ $menu_items = [
         "nombre" => "Nuevo Evento",
         "url" => "../NuevoEvento/",
         "className" => "NuevoEvento",
-        "permiso_requerido" => null
+        "permiso_requerido" => "crear nuevo evento"
     ],
     [
         "nombre" => "Historial Eventos",
