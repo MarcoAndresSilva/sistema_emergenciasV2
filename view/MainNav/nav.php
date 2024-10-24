@@ -11,7 +11,7 @@ $menu_items = [
         "nombre" => "Nuevo Evento",
         "url" => "../NuevoEvento/",
         "className" => "NuevoEvento",
-        "permiso_requerido" => null
+        "permiso_requerido" => "crear nuevo evento"
     ],
     [
         "nombre" => "Historial Eventos",
@@ -22,7 +22,7 @@ $menu_items = [
     [
         "nombre" => "Control De Evento",
         "url" => "../ControlEventos/",
-        "permiso_requerido" => null,
+        "permiso_requerido" => "derivar",
         "className" => "ControlEventos"
     ],
     [
@@ -35,25 +35,25 @@ $menu_items = [
                 "nombre" => "Unidades Municipales",
                 "url" => "../UnidadMunicipal/",
                 "className" => "UnidadMunicipal",
-                "permiso_requerido" => null
+                "permiso_requerido" => "control unidad"
             ],
             [
                 "nombre" => "Gestion Reglas Noticia",
                 "url" => "../GestionReglasNoticia/",
                 "className" => "ReglasNoticia",
-                "permiso_requerido" => null
+                "permiso_requerido" => "control noticia"
             ],
             [
                 "nombre" => "Nivel Categoria",
                 "url" => "../NivelCategoria/",
                 "className" => "NivelCategoria",
-                "permiso_requerido" => null
+                "permiso_requerido" => "control categoria"
             ],
             [
                 "nombre" => "Gestion Motivos",
                 "url" => "../GestionMotivo/",
                 "className" => "GestionMotivo",
-                "permiso_requerido" => null
+                "permiso_requerido" => "control motivos"
             ]
         ]
     ],
@@ -67,19 +67,25 @@ $menu_items = [
                 "nombre" => "Seguridad contraseña",
                 "url" => "../SeguridadPassword/",
                 "className" => "SeguridadPassword",
-                "permiso_requerido" => null
+                "permiso_requerido" => "control password"
             ],
             [
                 "nombre" => "Gestionar Usuarios",
                 "url" => "../GestionUsuario/",
                 "className" => "GestionarUsuario",
-                "permiso_requerido" => null
+                "permiso_requerido" => "control usuario"
             ],
             [
                 "nombre" => "Seguridad Unidad",
                 "url" => "../SeguridadUnidad/",
                 "className" => "SeguridadUnidades",
-                "permiso_requerido" => null
+                "permiso_requerido" => "Control passunidad"
+            ],
+            [
+              "nombre"=> "Gestion Permisos",
+              "url" => "../GestionarPermisos/",
+              "className"=> "ControlarPermisos",
+              "permiso_requerido"=> "agregar permisos",
             ],
         ]
     ]

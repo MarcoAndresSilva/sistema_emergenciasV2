@@ -42,6 +42,15 @@ class Seccion extends Conectar {
             return false;
         }
     }
+  public function get_todos_secciones(){
+    $sql = "SELECT * FROM tm_seccion";
+    $resultado = $this->ejecutarConsulta($sql);
+    if (is_array($resultado) && count($resultado) > 0) {
+      return $resultado;
+    } else {
+      return [];
+    }
+  }
     public function get_usuarios_por_seccion($sec_id){
         $sql = "SELECT * FROM tm_usuario WHERE usu_seccion = :sec_id";
         $params = [':sec_id' => $sec_id];
