@@ -176,6 +176,20 @@ menuLinks.forEach(function(link) {
     if (linkHref === currentPage) {
         // Agregar la clase 'selected' al enlace correspondiente
         link.classList.add('selected');
+
+        var parentCollapse = link.closest('.collapse-personal');
+
+        if (parentCollapse) {
+            // Desplegar el submenú padre
+            parentCollapse.classList.remove('collapse-personal');
+            parentCollapse.classList.add('collapse-in');
+
+            // También cambiar la clase del enlace que activa el colapso del submenú (el toggle)
+            var toggleLink = document.querySelector('a[href="#' + parentCollapse.id + '"]');
+            if (toggleLink) {
+                toggleLink.classList.add('selected');
+            }
+        }
     }
 });
     </script>
