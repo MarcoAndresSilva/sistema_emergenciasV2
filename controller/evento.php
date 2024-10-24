@@ -135,15 +135,13 @@ if (isset($_GET["op"])) {
     
       $datos = $evento->get_evento();
       if (is_array($datos) && count($datos) > 0) {
-    
         foreach ($datos as $row) {
           $evento = [];
             $evento['ev_id'] = $row['ev_id'];
-    
               // Obtener la categoría del evento
               $datos_categoria = $categoria->get_datos_categoria($row['cat_id']);
               $evento['categoria'] = isset($datos_categoria[0]['cat_nom']) ? $datos_categoria[0]['cat_nom'] : 'Sin Categoría';
-        
+
                   // Dirección con botón de mapa
                   $direccion = $row['ev_direc'] . " <button class='btn btn-inline btn-primary btn-sm btnDireccionarMapa'><i class='fa-solid fa-location-dot'></i></button>";
                   $evento['direccion'] = str_replace(["No hay coordenadas", "Sin dirección"], "", $direccion);
@@ -166,7 +164,6 @@ if (isset($_GET["op"])) {
                       // Si no hay asignaciones, mostrar mensaje estilizado con ícono de advertencia
                       $evento['asignacion'] = '<span class="label label-warning"><i class="fa-solid fa-minus-circle"></i> No asignada</span>';
                   }
-        
                   // Nivel de peligro con estilos e íconos
                   if ($row['ev_niv_id'] == 1) {
                       $evento['nivel_peligro'] = '<span class="label label-pill label-danger"><i class="fa-solid fa-exclamation-triangle"></i> Crítico</span>';
@@ -191,42 +188,35 @@ if (isset($_GET["op"])) {
                   } else {
                       $evento['estado'] = 'Desconocido';
                   }
-        
                   // Fecha de apertura
                   $evento['fecha_apertura'] = $row['ev_inicio'];
-        
                   // Botones para derivar y ver detalles
+                  $evento['ver_niv_peligro'] = "<button id='btnPanelPeligro' data-ev-id='" . $row['ev_id'] . "'><i class='fa-solid fa-exclamation-triangle'></i></button>";
                   $evento['ver_derivar'] = "<button id='btnPanelDerivar' data-ev-id='" . $row['ev_id'] . "'><i class='fa-solid fa-up-right-from-square'></i></button>";
                   $evento['ver_detalle'] = "<button id='btnDetalleEmergencia' data-ev-id='" . $row['ev_id'] . "'><i class='fa-regular fa-comments'></i></button>";
-        
+      
                   $eventos[] = $evento;
                 }
-          
                 echo json_encode($eventos);
             } else {
                 echo json_encode([]);
             }
-          break;    
+          break;
           case "tabla-historial-eventos": 
             $eventos = [];
-            
             $datos = $evento->get_evento();
             if (is_array($datos) && count($datos) > 0) {
-          
                 foreach ($datos as $row) {
                     $evento = [];
-          
                     $evento['ev_id'] = $row['ev_id'];
-          
                     // Obtener la categoría del evento
                     $datos_categoria = $categoria->get_datos_categoria($row['cat_id']);
                     $evento['categoria'] = isset($datos_categoria[0]['cat_nom']) ? $datos_categoria[0]['cat_nom'] : 'Sin Categoría';
-          
                     // Dirección con botón de mapa
                     $direccion = $row['ev_direc'] . " <button class='btn btn-inline btn-primary btn-sm btnDireccionarMapa'><i class='fa-solid fa-location-dot'></i></button>";
                     $evento['direccion'] = str_replace(["No hay coordenadas", "Sin dirección"], "", $direccion);
           
-  // Obtener las asignaciones
+              // Obtener las asignaciones
               $datos_asignaciones = $eventounidad->get_datos_eventoUnidad($row['ev_id']);
               $asignacion = [];
               if (is_array($datos_asignaciones) && count($datos_asignaciones) > 0) {
@@ -237,14 +227,14 @@ if (isset($_GET["op"])) {
                           $asignacion[] = $row_unidad['unid_nom'];
                       }
                   }
-                  $asignacion = array_unique($asignacion);
+                  $asignacion = array_unique($asignacion)
                   // Si hay asignaciones, mostrar las unidades asignadas
                   $evento['asignacion'] = '<span class="label label-pill label-primary">' . implode(' - ', $asignacion) . '</span>';
               } else {
                   // Si no hay asignaciones, mostrar mensaje estilizado con ícono de advertencia
                   $evento['asignacion'] = '<span class="label label-warning"><i class="fa-solid fa-minus-circle"></i> No asignada</span>';
               }
-  
+
               // Nivel de peligro con estilos e íconos
               if ($row['ev_niv_id'] == 1) {
                   $evento['nivel_peligro'] = '<span class="label label-pill label-danger"><i class="fa-solid fa-exclamation-triangle"></i> Crítico</span>';
@@ -255,7 +245,6 @@ if (isset($_GET["op"])) {
               } else {
                   $evento['nivel_peligro'] = '<span class="label label-pill label-default"><i class="fa-solid fa-circle"></i> Común</span>';
               }
-  
               // Estado con estilos e íconos
               $dato_estado = $estado->get_datos_estado($row['ev_est']);
               if (isset($dato_estado[0]['est_nom'])) {
@@ -269,14 +258,11 @@ if (isset($_GET["op"])) {
               } else {
                   $evento['estado'] = 'Desconocido';
               }
-  
-        
                     // Fecha de apertura
                     $evento['fecha_apertura'] = $row['ev_inicio'];
           
                     // Botón para ver documentos
                     $evento['ver_documentos'] = "<button class='btnDocumentos' data-ev-id='" . $row['ev_id'] . "'><i class='fa-regular fa-folder-open'></i></button>";
-          
                     $eventos[] = $evento;
                 }
                 
