@@ -618,6 +618,7 @@ PRIMARY KEY (id_regla)
 
 INSERT INTO tm_regla_envio (asunto, unidad, seccion, usuario, tipo_usuario)
 VALUES  ('Nuevo Evento', '1,2,4', '1,2,4', '1,2,4', '1,2,4'),
+        ('Agregar Permisos',"5", null,null, null),
         ('Evento Cerrado', null, null, '4', '1');
 
 --
@@ -635,6 +636,15 @@ PRIMARY KEY (id_permiso)
 
 INSERT INTO tm_permisos(permiso,unidad,seccion,usuario,tipo_usuario) VALUES
 ('Crear Nuevo Evento','','3','',''),
+('Agregar Permisos','5','','','3'),
+('Derivar','5','','','3'),
+('Control Unidad','5','','','3'),
+('Control Noticia','5','','','3'),
+('Control Categoria','5','','','3'),
+('Control Motivos','5','','','3'),
+('Control password','5','','','3'),
+('Control passunidad','5','','','3'),
+('Control usuario','5','','','3'),
 ('Cerrar Evento','1,2,4','1,2,4','4','1'),
 ('Crear Usuario','1,2,4','1,2,4','1,2,4','1,2,4');
 --
