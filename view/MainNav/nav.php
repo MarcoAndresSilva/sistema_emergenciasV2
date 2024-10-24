@@ -4,41 +4,55 @@ $menu_items = [
     [
         "nombre" => "Inicio",
         "url" => "../Home/",
+        "className" => "home",
         "permiso_requerido" => null
     ],
     [
         "nombre" => "Nuevo Evento",
         "url" => "../NuevoEvento/",
+        "className" => "NuevoEvento",
         "permiso_requerido" => null
     ],
     [
         "nombre" => "Historial Eventos",
         "url" => "../HistorialEventos/",
+        "className" => "HistorialEventos",
         "permiso_requerido" => null
+    ],
+    [
+        "nombre" => "Control De Evento",
+        "url" => "../ControlEventos/",
+        "permiso_requerido" => null,
+        "className" => "ControlEventos"
     ],
     [
         "nombre" => "Administración",
         "url" => "#collapseParametria",
+        "className" => "Home",
         "permiso_requerido" => null,
         "submenu" => [
             [
                 "nombre" => "Unidades Municipales",
                 "url" => "../UnidadMunicipal/",
+                "className" => "Home",
                 "permiso_requerido" => null
             ],
             [
                 "nombre" => "Gestion Reglas Noticia",
                 "url" => "../GestionReglasNoticia/",
+                "className" => "Home",
                 "permiso_requerido" => null
             ],
             [
                 "nombre" => "Nivel Categoria",
                 "url" => "../NivelCategoria/",
+                "className" => "Home",
                 "permiso_requerido" => null
             ],
             [
                 "nombre" => "Gestion Motivos",
                 "url" => "../GestionMotivo/",
+                "className" => "Home",
                 "permiso_requerido" => null
             ]
         ]
@@ -47,20 +61,24 @@ $menu_items = [
         "nombre" => "Gestión de usuarios",
         "url" => "#collapseGestionEventos",
         "permiso_requerido" => null,
+        "className" => "Home",
         "submenu" => [
             [
                 "nombre" => "Seguridad contraseña",
                 "url" => "../SeguridadPassword/",
+                "className" => "Home",
                 "permiso_requerido" => null
             ],
             [
                 "nombre" => "Gestionar Usuarios",
                 "url" => "../GestionUsuario/",
+                "className" => "Home",
                 "permiso_requerido" => null
             ],
             [
                 "nombre" => "Seguridad Unidad",
                 "url" => "../SeguridadUnidad/",
+                "className" => "Home",
                 "permiso_requerido" => null
             ],
         ]
@@ -73,7 +91,7 @@ function render_menu($items) {
         if (is_null($item['permiso_requerido']) || Permisos::isPermited($item['permiso_requerido'])) {
             // Si el elemento tiene un submenú, agregar el toggle y el contenedor colapsable
             if (isset($item['submenu']) && !empty($item['submenu'])) {
-                echo '<a href="' . $item['url'] . '" data-toggle="collapse-personal" role="button" aria-controls="' . substr($item['url'], 1) . '">';
+                echo '<a class="'.$item["className"].'"  href="' . $item['url'] . '" data-toggle="collapse-personal" role="button" aria-controls="' . substr($item['url'], 1) . '">';
                 echo '<span class="glyphicon glyphicon-th"></span>';
                 echo '<span class="lbl">' . $item['nombre'] . '</span>';
                 echo '</a>';
@@ -84,8 +102,8 @@ function render_menu($items) {
                 echo '</div></div>';
             } else {
                 // Si no tiene submenú, renderizar un solo enlace
-                echo '<li class="blue-dirty">';
-                echo '<a href="' . $item['url'] . '">';
+                echo '<li class="blue-dirty" ">';
+                echo '<a class ="'.$item['className'].'" href="'.$item['url'].'">';
                 echo '<span class="glyphicon glyphicon-th"></span>';
                 echo '<span class="lbl">' . $item['nombre'] . '</span>';
                 echo '</a></li>';
