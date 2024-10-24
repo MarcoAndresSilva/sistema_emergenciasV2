@@ -1,7 +1,6 @@
-
 // Función para obtener el id del evento y mostrarlo en el label
 function mostrarIdEvento(ev_id) {
-    $('#ev_id').text(ev_id);
+    $('#derivar_ev_id').text(ev_id);
 }
 
 // Función para mostrar el cat_nom en el label
@@ -10,12 +9,66 @@ function consultarCategoria(ev_id) {
         try {
             var jsonData = JSON.parse(data);
             if (jsonData && jsonData.cat_nom) {
-                $('#cat_nombre_derivar').text(jsonData.cat_nom); // Usar .text() para establecer el contenido del div
+                $('#derivar_cat_nombre').text(jsonData.cat_nom); // Usar .text() para establecer el contenido del div
             } else {
                 console.log("No se encontró el cat_nom correspondiente para el evento con ID: " + ev_id);
             }
         } catch (error) {
             console.log("Error al analizar la respuesta JSON:", error);
+        }
+    });
+}
+
+// Función para cargar dinámicamente las secciones en el select
+function cargarSecciones() {
+    $.ajax({
+        url: '../../controller/seccion.php?op=lista_secciones_con_unidad',
+        method: 'POST',
+        dataType: 'json',
+        success: function(data) {
+            // Limpiamos el select antes de rellenarlo
+            $('#multipleSelect').empty();
+
+            // Recorremos el array JSON y añadimos las opciones agrupadas por unidad
+            $.each(data, function(index, unidad) {
+                // Crear un optgroup para cada unidad
+                var optgroup = $('<optgroup>', {
+                    label: unidad.unidad // El nombre de la unidad como título del grupo
+                });
+
+                if (unidad.secciones.length > 0) {
+                    // Si la unidad tiene secciones, añadimos cada sección al optgroup
+                    $.each(unidad.secciones, function(i, seccion) {
+                        optgroup.append(
+                            $('<option>', {
+                                value: seccion.sec_id,
+                                text: seccion.sec_nombre
+                            })
+                        );
+                    });
+                } else {
+                    // Si no tiene secciones, añadimos un "opción vacía"
+                    optgroup.append(
+                        $('<option>', {
+                            text: 'Esta unidad no tiene secciones',
+                            disabled: true
+                        })
+                    );
+                }
+
+                // Añadimos el optgroup al select
+                $('#multipleSelect').append(optgroup);
+            });
+
+            // Inicializar Select2 después de añadir las opciones
+            $('#multipleSelect').select2({
+                placeholder: 'Selecciona las secciones',
+                allowClear: true,
+                width: '100%' // Ajustar el ancho a 100% si es necesario
+            });
+        },
+        error: function(error) {
+            console.error("Error al cargar las secciones: ", error);
         }
     });
 }
