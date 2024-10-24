@@ -231,7 +231,7 @@ if (isset($_GET["op"])) {
                           $asignacion[] = $row_unidad['unid_nom'];
                       }
                   }
-                  $asignacion = array_unique($asignacion)
+                  $asignacion = array_unique($asignacion);
                   // Si hay asignaciones, mostrar las unidades asignadas
                   $evento['asignacion'] = '<span class="label label-pill label-primary">' . implode(' - ', $asignacion) . '</span>';
               } else {
