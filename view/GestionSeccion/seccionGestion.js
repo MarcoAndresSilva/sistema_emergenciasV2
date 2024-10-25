@@ -200,6 +200,8 @@ function openModal(seccion = null) {
 
 // Funciones para eliminar
 function eliminarSeccion(secId) {
+  const formEliminar = new FormData();
+  formEliminar.append('id', secId);
   Swal.fire({
     title: "¿Estás seguro?",
     text: "Esta acción no se puede deshacer",
@@ -211,12 +213,12 @@ function eliminarSeccion(secId) {
     if (result.isConfirmed) {
       fetch(url.deleteSeccion, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ secId })
+        body: formEliminar
       })
         .then(response => response.json())
         .then(responseData => {
-          Swal.fire("Eliminado", responseData.message, "success");
+          texto = {sucess:"Eliminado",warning:"Cuidado"}
+          Swal.fire(responseData.status, responseData.message, responseData.status);
           fetchData(); // Recargar la tabla después de eliminar
         })
         .catch(error => Swal.fire("Error", "No se pudo eliminar la sección", "error"));
