@@ -103,7 +103,10 @@ class Seccion extends Conectar {
         }
     }
     private function seccion_tiene_evento_asignado($seccion){
-      $sql = "SELECT * FROM tm_evento WHERE evento_seccion = :seccion LIMIT 1";
+    $sql = "SELECT * FROM tm_evento as ev
+            INNER JOIN tm_asignado as asig
+            ON (asig.ev_id = ev.ev_id)
+            WHERE asig.sec_id = :seccion LIMIT 1";
       $params = [':seccion' => $seccion];
       $resultado = $this->ejecutarConsulta($sql, $params, false);
       if (is_array($resultado) && count($resultado) > 0) {
