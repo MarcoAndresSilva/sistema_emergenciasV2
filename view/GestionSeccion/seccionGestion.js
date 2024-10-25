@@ -140,7 +140,7 @@ function openModal(seccion = null) {
     .then(response => response.json())
     .then(unidades => {
       const unidadOptions = unidades.result.map(unidad =>
-        `<option value="${unidad.id}" ${seccion && seccion.sec_unidad == unidad.unid_id ? "selected" : ""}>${unidad.unid_nom}</option>`
+        `<option value="${unidad.unid_id}" ${seccion && seccion.sec_unidad == unidad.unid_id ? "selected" : ""}>${unidad.unid_nom}</option>`
       ).join("");
 
       Swal.fire({
