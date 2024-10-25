@@ -33,7 +33,16 @@ class Seccion extends Conectar {
         }
     }
     public function get_seccion($sec_id){
-        $sql = "SELECT * FROM tm_seccion WHERE sec_id = :sec_id";
+        $sql = "SELECT sec.sec_id as 'sec_id',
+                     sec.sec_nombre as 'sec_nombre',
+                     sec.sec_detalle as 'sec_detalle',
+                     sec.sec_est as 'sec_est',
+                     sec.sec_unidad as 'sec_unidad',
+                     uni.unid_nom as 'sec_unidad_nom'
+               FROM tm_seccion as sec
+               JOIN tm_unidad as uni
+               on(uni.unid_id=sec.sec_unidad)
+               WHERE sec_id = :sec_id";
         $params = [':sec_id' => $sec_id];
         $resultado = $this->ejecutarConsulta($sql, $params, false);
         if (is_array($resultado) && count($resultado) > 0) {
@@ -62,13 +71,25 @@ class Seccion extends Conectar {
         }
     }
     public function get_secciones($unidad){
-        $sql = "SELECT * FROM tm_seccion WHERE sec_unidad = :unidad";
+        $sql = "SELECT sec.sec_id as 'sec_id',
+                     sec.sec_nombre as 'sec_nombre',
+                     sec.sec_detalle as 'sec_detalle',
+                     sec.sec_est as 'sec_est',
+                     sec.sec_unidad as 'sec_unidad',
+                     uni.unid_nom as 'sec_unidad_nombre'
+               FROM tm_seccion as sec
+               JOIN tm_unidad as uni
+               on(uni.unid_id=sec.sec_unidad)
+               WHERE sec_unidad = :unidad";
         $params = [':unidad' => $unidad];
         $resultado = $this->ejecutarConsulta($sql, $params);
         if (is_array($resultado) && count($resultado) > 0) {
             return $resultado;
         } else {
-            return ["status"=>"warning","message"=>"No se pudo obtener las secciones del unidad"];
+            return [
+              "status"=>"warning",
+              "message"=>"No se pudo obtener las secciones del unidad",
+            ];
         }
     }
     private function seccion_tiene_usuarios($seccion){
