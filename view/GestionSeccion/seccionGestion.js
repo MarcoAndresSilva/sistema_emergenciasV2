@@ -175,12 +175,16 @@ function openModal(seccion = null) {
         if (result.isConfirmed) {
           const { secId, unidadId, nombre, detalle } = result.value;
           const actionUrl = secId ? url.editSeccion : url.addSeccion;
+          const formt = new FormData();
+          formt.append('id', secId);
+          formt.append('unidad', unidadId);
+          formt.append('nombre', nombre);
+          formt.append('detalle', detalle);
 
           // Llamar al controlador con fetch
           fetch(actionUrl, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ secId, unidadId, nombre, detalle })
+            body: formt
           })
             .then(response => response.json())
             .then(responseData => {
