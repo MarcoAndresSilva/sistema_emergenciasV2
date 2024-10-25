@@ -44,5 +44,10 @@ if (isset($_GET["op"])) {
             $datos = $seccion->add_seccion($nombre, $detalle, $unidad);
             echo json_encode($datos);
         break;
+        case "eliminar_seccion":
+            $id_seccion = $_POST['id'];
+            $result = $seccion->delete_seccion($id_seccion);
+            echo json_encode($result);
+        break;
         }
 }
