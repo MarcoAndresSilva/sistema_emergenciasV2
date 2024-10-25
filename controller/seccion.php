@@ -24,5 +24,30 @@ if (isset($_GET["op"])) {
                 $resultado = $datos;
                 echo json_encode($resultado);
         break;
-       }
+        case "update_seccion":
+            $id_seccion = $_POST['id'];
+            $nombre = $_POST['nombre'];
+            $id_unidad = $_POST['unidad'];
+            $detalle = $_POST['detalle'];
+            $datos = $seccion->update($id_seccion, $nombre, $detalle,$id_unidad);
+            echo json_encode($datos);
+        break;
+        case "info_seccion":
+            $id_seccion = $_POST['id'];
+            $datos = $seccion->get_seccion($id_seccion);
+            echo json_encode($datos);
+        break;
+        case "agregar_seccion":
+            $unidad = $_POST['unidad'];
+            $nombre = $_POST['nombre'];
+            $detalle = $_POST['detalle'];
+            $datos = $seccion->add_seccion($nombre, $detalle, $unidad);
+            echo json_encode($datos);
+        break;
+        case "eliminar_seccion":
+            $id_seccion = $_POST['id'];
+            $result = $seccion->delete_seccion($id_seccion);
+            echo json_encode($result);
+        break;
+        }
 }

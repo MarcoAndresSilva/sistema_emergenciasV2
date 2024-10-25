@@ -87,6 +87,11 @@ $menu_items = [
               "className"=> "ControlarPermisos",
               "permiso_requerido"=> "agregar permisos",
             ],
+            ["nombre"=> "Gestion Seccion",
+              "url" => "../GestionSeccion/",
+              "className"=> "GestionSeccion",
+              "permiso_requerido"=> null,
+            ],
         ]
     ]
 ];
