@@ -24,5 +24,17 @@ if (isset($_GET["op"])) {
                 $resultado = $datos;
                 echo json_encode($resultado);
         break;
-       }
+        case "update_seccion":
+            $id_seccion = $_POST['id'];
+            $nombre = $_POST['nombre'];
+            $id_unidad = $_POST['unidad'];
+            $datos = $seccion->update($id_seccion, $nombre, $detalle,$id_unidad);
+            echo json_encode($datos);
+        break;
+        case "info_seccion":
+            $id_seccion = $_POST['id'];
+            $datos = $seccion->get_seccion($id_seccion);
+            echo json_encode($datos);
+        break;
+        }
 }
