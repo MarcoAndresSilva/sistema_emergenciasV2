@@ -1,7 +1,7 @@
 let selectedUnits = [];
 const url = {
     datos: "../../controller/seccion.php?op=lista_secciones_con_unidad",
-    editSeccion: "../../controller/seccion.php?op=editar_seccion",
+    editSeccion: "../../controller/seccion.php?op=update_seccion",
     deleteSeccion: "../../controller/seccion.php?op=eliminar_seccion",
     addSeccion: "../../controller/seccion.php?op=agregar_seccion",
     listaunidad: "../../controller/unidad.php?op=get_unidad",
