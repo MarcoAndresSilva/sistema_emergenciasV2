@@ -28,6 +28,7 @@ if (isset($_GET["op"])) {
             $id_seccion = $_POST['id'];
             $nombre = $_POST['nombre'];
             $id_unidad = $_POST['unidad'];
+            $detalle = $_POST['detalle'];
             $datos = $seccion->update($id_seccion, $nombre, $detalle,$id_unidad);
             echo json_encode($datos);
         break;
