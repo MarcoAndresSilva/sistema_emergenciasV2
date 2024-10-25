@@ -36,5 +36,11 @@ if (isset($_GET["op"])) {
             $datos = $seccion->get_seccion($id_seccion);
             echo json_encode($datos);
         break;
+        case "agregar_seccion":
+            $unidad = $_POST['unidad'];
+            $nombre = $_POST['nombre'];
+            $detalle = $_POST['detalle'];
+            $datos = $seccion->add_seccion($nombre, $detalle, $unidad);
+            echo json_encode($datos);
         }
 }
