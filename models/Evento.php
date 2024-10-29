@@ -716,4 +716,28 @@ class Evento extends Conectar {
     $params = [":ev_id"=>$ev_id];
     return $this->ejecutarConsulta($sql,$params,false);
   }
+  public function get_documentos($evento_id){
+    $sql = "SELECT ev.ev_img as 'inicio_documento',
+    cie.adjunto as 'cierre_documento'
+    FROM tm_evento as ev
+    left JOIN tm_ev_cierre as cie
+    ON (cie.ev_id = ev.ev_id)
+    WHERE ev.ev_id = :evento_id";
+    $params=[":evento_id"=>$evento_id];
+    $query = $this->ejecutarConsulta($sql,$params,false);
+    if (is_array($query) && count($query) > 0) {
+      $respuesta = [
+         "status"=>"success",
+         "message"=>"Se obtienen los datos",
+         "result"=>$query
+      ];
+    }else{
+      $respuesta = [
+        "status"=>"error",
+        "message"=>"No se obtienen los datos",
+        "result"=>[]
+      ];
+    }
+    return $respuesta;
+  }
 }
