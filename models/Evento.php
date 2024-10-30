@@ -657,20 +657,21 @@ class Evento extends Conectar {
             return false;
         }
     }
-    public function insert_emergencia_detalle($ev_id, $usu_id, $ev_desc) {
+    public function insert_emergencia_detalle($ev_id, $usu_id, $ev_desc, $secreto=0) {
     try {
         $conectar = parent::conexion();
         parent::set_names();
 
         // Insertar en la tabla tm_emergencia_detalle
         $sql = "INSERT INTO tm_emergencia_detalle 
-                (ev_id, usu_id, ev_desc, ev_inicio, ev_est) 
-                VALUES (?, ?, ?, now(), 1);";
+                (ev_id, usu_id, ev_desc, ev_inicio, ev_est, privado)
+                VALUES (?, ?, ?, now(), 1,?);";
 
         $sql = $conectar->prepare($sql);
         $sql->bindValue(1, $ev_id, PDO::PARAM_INT);
         $sql->bindValue(2, $usu_id, PDO::PARAM_INT);
         $sql->bindValue(3, $ev_desc, PDO::PARAM_STR);
+        $sql->bindValue(4, $secreto, PDO::PARAM_INT);
         $sql->execute();
 
         // Verificar si se ha insertado alguna fila
