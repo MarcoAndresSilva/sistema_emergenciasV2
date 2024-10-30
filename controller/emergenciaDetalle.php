@@ -109,7 +109,8 @@ if (isset($_GET["op"])) {
 
             
         case "insertdetalle":
-            $evento->insert_emergencia_detalle($_POST["ev_id"], $_POST["usu_id"], $_POST["ev_desc"]);
+            $privado = isset($_POST["privado"]) ? $_POST["privado"] : 0;
+            $evento->insert_emergencia_detalle($_POST["ev_id"], $_POST["usu_id"], $_POST["ev_desc"], $privado);
             $noticia->crear_y_enviar_noticia_para_derivados([
               "asunto" => "Detalle Evento",
               "mensaje" => $_POST["ev_desc"],
