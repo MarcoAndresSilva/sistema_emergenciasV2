@@ -105,6 +105,10 @@ if (isset($_GET["op"])) {
 
             echo json_encode($datos);
         break;
+        case "get_documentos":
+            $datos = $evento->get_documentos($_POST['evento_id']);
+            echo json_encode($datos);
+        break;
 
         case "carga-imagen-cierre":
             //verificar si se obtuvo el ID del evento

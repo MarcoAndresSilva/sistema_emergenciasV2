@@ -594,13 +594,14 @@ class Evento extends Conectar {
     }
 
     public function listar_eventosdetalle_por_evento($ev_id) {
+    $msgprivado ="<span class='badge bg-info text-dark'> mensaje privado</span>";
         try {
             $conectar = parent::conexion();
             parent::set_names();
             
             $sql = "SELECT 
                 tm_emergencia_detalle.emergencia_id,
-                tm_emergencia_detalle.ev_desc,
+                IF (tm_emergencia_detalle.privado = 0, tm_emergencia_detalle.ev_desc, ?) as 'ev_desc',
                 tm_emergencia_detalle.ev_inicio,
                 tm_usuario.usu_nom,
                 tm_usuario.usu_ape,
@@ -615,7 +616,8 @@ class Evento extends Conectar {
                 tm_emergencia_detalle.ev_id = ?";
             
             $sql = $conectar->prepare($sql);
-            $sql->bindValue(1, $ev_id);
+            $sql->bindValue(1, $msgprivado);
+            $sql->bindValue(2, $ev_id);
             $sql->execute();
             
             $resultado = $sql->fetchAll();
@@ -657,20 +659,21 @@ class Evento extends Conectar {
             return false;
         }
     }
-    public function insert_emergencia_detalle($ev_id, $usu_id, $ev_desc) {
+    public function insert_emergencia_detalle($ev_id, $usu_id, $ev_desc, $secreto=0) {
     try {
         $conectar = parent::conexion();
         parent::set_names();
 
         // Insertar en la tabla tm_emergencia_detalle
         $sql = "INSERT INTO tm_emergencia_detalle 
-                (ev_id, usu_id, ev_desc, ev_inicio, ev_est) 
-                VALUES (?, ?, ?, now(), 1);";
+                (ev_id, usu_id, ev_desc, ev_inicio, ev_est, privado)
+                VALUES (?, ?, ?, now(), 1,?);";
 
         $sql = $conectar->prepare($sql);
         $sql->bindValue(1, $ev_id, PDO::PARAM_INT);
         $sql->bindValue(2, $usu_id, PDO::PARAM_INT);
         $sql->bindValue(3, $ev_desc, PDO::PARAM_STR);
+        $sql->bindValue(4, $secreto, PDO::PARAM_INT);
         $sql->execute();
 
         // Verificar si se ha insertado alguna fila
@@ -715,5 +718,29 @@ class Evento extends Conectar {
          WHERE cie.ev_id=:ev_id;";
     $params = [":ev_id"=>$ev_id];
     return $this->ejecutarConsulta($sql,$params,false);
+  }
+  public function get_documentos($evento_id){
+    $sql = "SELECT ev.ev_img as 'inicio_documento',
+    cie.adjunto as 'cierre_documento'
+    FROM tm_evento as ev
+    left JOIN tm_ev_cierre as cie
+    ON (cie.ev_id = ev.ev_id)
+    WHERE ev.ev_id = :evento_id";
+    $params=[":evento_id"=>$evento_id];
+    $query = $this->ejecutarConsulta($sql,$params,false);
+    if (is_array($query) && count($query) > 0) {
+      $respuesta = [
+         "status"=>"success",
+         "message"=>"Se obtienen los datos",
+         "result"=>$query
+      ];
+    }else{
+      $respuesta = [
+        "status"=>"error",
+        "message"=>"No se obtienen los datos",
+        "result"=>[]
+      ];
+    }
+    return $respuesta;
   }
 }
