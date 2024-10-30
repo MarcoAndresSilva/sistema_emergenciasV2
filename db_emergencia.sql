@@ -561,6 +561,7 @@ CREATE TABLE tm_emergencia_detalle(
   `ev_desc` MEDIUMTEXT NOT NULL, 
   `ev_inicio` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `ev_est` INT NOT NULL,
+  `privado` INT DEFAULT 0,
   PRIMARY KEY (`emergencia_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
