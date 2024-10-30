@@ -594,13 +594,14 @@ class Evento extends Conectar {
     }
 
     public function listar_eventosdetalle_por_evento($ev_id) {
+    $msgprivado ="<span class='badge bg-info text-dark'> mensaje privado</span>";
         try {
             $conectar = parent::conexion();
             parent::set_names();
             
             $sql = "SELECT 
                 tm_emergencia_detalle.emergencia_id,
-                tm_emergencia_detalle.ev_desc,
+                IF (tm_emergencia_detalle.privado = 0, tm_emergencia_detalle.ev_desc, ?) as 'ev_desc',
                 tm_emergencia_detalle.ev_inicio,
                 tm_usuario.usu_nom,
                 tm_usuario.usu_ape,
@@ -615,7 +616,8 @@ class Evento extends Conectar {
                 tm_emergencia_detalle.ev_id = ?";
             
             $sql = $conectar->prepare($sql);
-            $sql->bindValue(1, $ev_id);
+            $sql->bindValue(1, $msgprivado);
+            $sql->bindValue(2, $ev_id);
             $sql->execute();
             
             $resultado = $sql->fetchAll();
