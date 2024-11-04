@@ -94,23 +94,14 @@ class EventoUnidad extends Conectar {
 
     public function get_datos_eventoUnidad($ev_id) {
         try {
-            $conectar = parent::conexion();
-            parent::set_names();
-            $sql = "SELECT sec_id FROM tm_asignado WHERE ev_id = ". $ev_id. "";
-            $consulta  = $conectar->prepare($sql);
-            $consulta->execute();
-            $resultado = $consulta->fetchAll();
-            if (is_array($resultado) && count($resultado) > 0) {
-                return $resultado;
-            } else {
-                return 0;
-            }
+            $sql = "SELECT sec_id FROM tm_asignado WHERE ev_id = :ev_id";
+            $params = [":ev_id"=>$ev_id];
+            $data= $this->ejecutarConsulta($sql, $params);
+            $resultado= ["status"=> "success","message"=> "consulta exitosa","data"=>$data];
         } catch (Exception $e) {
-            ?> 
-            <script>console.log("Error catch     get_evento")</script>
-            <?php
-            throw $e;
+            $resultado = ["status"=>"error", "message"=>$e->getMessage()];
         }
+        return $resultado;
     }
 
 

@@ -21,16 +21,21 @@ $derivado = new EventoUnidad();
 $registroLog = new RegistroLog();
 $noticia  = new Noticia();
 $seccion = new Seccion();
+
+header('Content-Type: application/json; charset=utf-8');
+
 if (isset($_GET["op"])) {
     switch ($_GET["op"]) {
 
         case "agregar_derivado":
-            $id_seccion = $_POST['unid_id'];
+            $id_seccion = $_POST['sec_id'];
+
            $est =  $seccion->seccion_estado($id_seccion);
            if ($est == true){
                 $datos = $derivado->add_eventoUnidad(
                 $_POST['ev_id'],
-                $_POST['unid_id']);
+                $_POST['sec_id']);
+
            }else {
                 $datos = false;
                }
@@ -57,8 +62,13 @@ if (isset($_GET["op"])) {
             $registroLog->add_log_registro($_SESSION['usu_id'],$_GET['op'],"evento id:{$_POST['ev_id']} unid:{unid_id}");
             break;
         case "get_seccion_asignados_evento":
-            $datos = $derivado->get_datos_eventoUnidad($_GET['ev_id']);
-            echo "<p>holi</p>";
+            if (!isset($_POST['ev_id']) || !is_numeric($_POST['ev_id'])) {
+                echo json_encode(['status'=>'warning','message'=>'Falta el parametro ev_id']);
+                break;
+            }
+            $evento_id = intval($_POST['ev_id']);
+            $datos = $derivado->get_datos_eventoUnidad($evento_id);
+            echo json_encode($datos);
             break;
 
         case "reporte_actualizacion" :
