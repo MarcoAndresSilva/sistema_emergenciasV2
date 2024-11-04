@@ -58,8 +58,13 @@ if (isset($_GET["op"])) {
             $registroLog->add_log_registro($_SESSION['usu_id'],$_GET['op'],"evento id:{$_POST['ev_id']} unid:{unid_id}");
             break;
         case "get_seccion_asignados_evento":
-            $datos = $derivado->get_datos_eventoUnidad($_GET['ev_id']);
-            echo "<p>holi</p>";
+            if (!isset($_GET['ev_id']) || !is_numeric($_GET['ev_id'])) {
+                echo json_encode(['status'=>'warning','message'=>'Falta el parametro ev_id']);
+                break;
+            }
+            $evento_id = intval($_POST['ev_id']);
+            $datos = $derivado->get_datos_eventoUnidad($evento_id);
+            echo json_encode($datos);
             break;
 
         case "reporte_actualizacion" :
