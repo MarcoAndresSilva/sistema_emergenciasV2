@@ -58,7 +58,7 @@ if (isset($_GET["op"])) {
             $registroLog->add_log_registro($_SESSION['usu_id'],$_GET['op'],"evento id:{$_POST['ev_id']} unid:{unid_id}");
             break;
         case "get_seccion_asignados_evento":
-            if (!isset($_GET['ev_id']) || !is_numeric($_GET['ev_id'])) {
+            if (!isset($_POST['ev_id']) || !is_numeric($_POST['ev_id'])) {
                 echo json_encode(['status'=>'warning','message'=>'Falta el parametro ev_id']);
                 break;
             }
