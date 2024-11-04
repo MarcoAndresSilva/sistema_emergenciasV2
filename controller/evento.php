@@ -158,7 +158,7 @@ if (isset($_GET["op"])) {
                   $datos_asignaciones = $eventounidad->get_datos_eventoUnidad($row['ev_id']);
                   $asignacion = [];
                   if (is_array($datos_asignaciones) && count($datos_asignaciones) > 0) {
-                      foreach ($datos_asignaciones as $row_asignaciones) {
+                      foreach ($datos_asignaciones["data"] as $row_asignaciones) {
                           $unid_id = $row_asignaciones['sec_id'];
                           $datos_unidad = $unidad->get_seccion_unidad($unid_id);
                           foreach ($datos_unidad as $row_unidad) {
@@ -228,7 +228,7 @@ if (isset($_GET["op"])) {
               $datos_asignaciones = $eventounidad->get_datos_eventoUnidad($row['ev_id']);
               $asignacion = [];
               if (is_array($datos_asignaciones) && count($datos_asignaciones) > 0) {
-                  foreach ($datos_asignaciones as $row_asignaciones) {
+                  foreach ($datos_asignaciones["data"] as $row_asignaciones) {
                       $unid_id = $row_asignaciones['sec_id'];
                       $datos_unidad = $unidad->get_seccion_unidad($unid_id);
                       foreach ($datos_unidad as $row_unidad) {
