@@ -26,12 +26,12 @@ if (isset($_GET["op"])) {
     switch ($_GET["op"]) {
 
         case "agregar_derivado":
-            $id_seccion = $_POST['unid_id'];
+            $id_seccion = $_POST['sec_id'];
            $est =  $seccion->seccion_estado($id_seccion);
            if ($est == true){
                 $datos = $derivado->add_eventoUnidad(
                 $_POST['ev_id'],
-                $_POST['unid_id']);
+                $_POST['sec_id']);
            }else {
                 $datos = false;
                }
