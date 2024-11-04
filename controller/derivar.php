@@ -21,17 +21,21 @@ $derivado = new EventoUnidad();
 $registroLog = new RegistroLog();
 $noticia  = new Noticia();
 $seccion = new Seccion();
+
 header('Content-Type: application/json; charset=utf-8');
+
 if (isset($_GET["op"])) {
     switch ($_GET["op"]) {
 
         case "agregar_derivado":
             $id_seccion = $_POST['sec_id'];
+
            $est =  $seccion->seccion_estado($id_seccion);
            if ($est == true){
                 $datos = $derivado->add_eventoUnidad(
                 $_POST['ev_id'],
                 $_POST['sec_id']);
+
            }else {
                 $datos = false;
                }
