@@ -191,7 +191,8 @@ class Noticia extends Conectar {
             FROM tm_noticia_usuario as ns
             JOIN tm_noticia as nti
             ON (nti.noticia_id=ns.noticia_id)
-            WHERE usu_id=:usuario_id;";
+    WHERE usu_id=:usuario_id
+    ORDER BY nti.noticia_id DESC";
     $params = [":usuario_id"=>$usuario_id];
     $result = $this->ejecutarConsulta($sql,$params);
     if ($result){
