@@ -38,7 +38,8 @@ if (isset($_GET["op"])) {
 
            }else {
                 $datos = false;
-               }
+                $resultado = ["status"=>"warning","message"=>"no esta diponible la seccion"];
+            }
             if ($datos == true) {
              $seccion->seccion_ocupado($id_seccion);
              $usu_id = $_SESSION["usu_id"];
@@ -54,12 +55,10 @@ if (isset($_GET["op"])) {
               "unidad"=>$unidad_nom,
             ];
             $noticia->crear_y_enviar_noticia_para_derivados($ags_noticia);
-             $resutado = ["status"=>"success","message"=>"se agrego la seccion"];
-            } else {
-             $resutado = ["status"=>"warning","message"=>"no se pudo hacer el cambio"];
+             $resultado = ["status"=>"success","message"=>"se agrego la seccion"];
             }
             echo json_encode($resultado);
-            $registroLog->add_log_registro($_SESSION['usu_id'],$_GET['op'],"evento id:{$_POST['ev_id']} unid:{unid_id}");
+            $registroLog->add_log_registro($_SESSION['usu_id'],$_POST['op'],"evento id:{$_POST['ev_id']} unid:{unid_id}");
             break;
         case "get_seccion_asignados_evento":
             if (!isset($_POST['ev_id']) || !is_numeric($_POST['ev_id'])) {
