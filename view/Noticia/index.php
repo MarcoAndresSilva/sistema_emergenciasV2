@@ -30,6 +30,7 @@ Permisos::redirigirSiNoAutorizado();
         <div class="container-fluid">
             <div class="box-typical box-typical-padding table-responsive-sm" id="tabla-password">
                     <div class="input-group rounded">
+                    <button id="mark-all-read" class="btn btn-success mb-3">Marcar como leído todos</button>
                     </div> <!-- .input-group -->
                     
                     
