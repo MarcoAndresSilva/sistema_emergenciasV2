@@ -26,6 +26,12 @@ $menu_items = [
         "className" => "ControlEventos"
     ],
     [
+        "nombre" => "Mapa de Emergencias",
+        "url" => "../MapaCalor/",
+        "className" => "MapaCalor",
+        "permiso_requerido" => null
+    ],
+    [
         "nombre" => "Administración",
         "url" => "#collapseParametria",
         "className" => "Administracion",
