@@ -106,6 +106,11 @@ class Noticia extends Conectar {
       $datos_evento = $argsNoticia;
       $formato->setCuerpoActualizarEvento($datos_evento);
       return $formato;
+    }elseif ($asunto === "Eliminar Derivado"){
+      $id_evento = $argsNoticia["id_evento"];
+      $datos_evento = $argsNoticia;
+      $formato->setCuerpoDerivadorEliminado($datos_evento);
+      return $formato;
     }
     $formato->setAsunto($asunto);
     $formato->setMensaje($argsNoticia["mensaje"]);
