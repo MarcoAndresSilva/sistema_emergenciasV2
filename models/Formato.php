@@ -128,5 +128,24 @@ class Formato {
     $this->setAsuntoDerivadoAgregado($datos_evento);
   }
 
+  private function setMensajeDerivadorEliminado(array $datos_evento){
+    $id_evento = $datos_evento['id_evento'];
+    $unidad = $datos_evento['unidad'];
+    $mensaje = "Estimado(a),";
+    $mensaje .= "<p>Se delega el ticket $id_evento a la unidad $unidad.</p>";
+    $mensaje .= "<p>Saludos cordiales,<br>";
+    $mensaje .= "El equipo de eventos.</p>";
+    $this->setMensaje($mensaje);
+  }
+  private function setAsuntoDerivadorEliminado(array $datos_evento){
+    $id_evento = $datos_evento['id_evento'];
+    $asunto = "🔄️ Derivado al 📎Ticket $id_evento";
+    $this->setAsunto($asunto);
+  }
+
+  public function setCuerpoDerivadorEliminado(array $datos_evento) {
+    $this->setMensajeDerivadorEliminado($datos_evento);
+    $this->setAsuntoDerivadorEliminado($datos_evento);
+  }
 
 }
