@@ -133,4 +133,21 @@ final class TestFormato extends TestCase
     $formato->setCuerpoActualizarEvento($datos_evento);
     $this->assertEquals($asuntoEsperado, $formato->asunto);
   }
+  public function testSetMensajeDerivadorEliminado(){
+    $formato = new Formato();
+    $datos_evento = ["id_evento" => 999, "unidad" => "Unidad 1"];
+    $mensajeEsperado = "Estimado(a),";
+    $mensajeEsperado .= "<p>Se delega el ticket 999 a la unidad Unidad 1.</p>";
+    $mensajeEsperado .= "<p>Saludos cordiales,<br>";
+    $mensajeEsperado .= "El equipo de eventos.</p>";
+    $formato->setCuerpoDerivadorEliminado($datos_evento);
+    $this->assertEquals($mensajeEsperado, $formato->mensaje);
+  }
+  public function testSetAsuntoDerivadorEliminado(){
+    $formato = new Formato();
+    $datos_evento = ["id_evento" => 999];
+    $asuntoEsperado = "🔄️ Derivado al 📎Ticket 999";
+    $formato->setCuerpoDerivadorEliminado($datos_evento);
+    $this->assertEquals($asuntoEsperado, $formato->asunto);
+  }
 }
