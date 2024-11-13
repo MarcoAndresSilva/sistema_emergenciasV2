@@ -92,9 +92,20 @@ if (isset($_GET["op"])) {
             $id_seccion = $_POST['sec_id'];
             $unidad_data = $unidad->get_seccion_unidad($id_seccion);
             $unidad_nom = $unidad_data[0]['unid_nom'];
-            $ev_desc = "Se ha eliminado la unidad: " . $unidad_nom;
+            $ev_desc = "Se ha delega la unidad: " . $unidad_nom;
             $seccion->seccion_disponible($id_seccion);
             $evento->insert_emergencia_detalle($_POST['ev_id'], $usu_id, $ev_desc);
+
+            $ags_noticia = [
+              "asunto" => "Eliminar Derivado",
+              "mensaje" => $ev_desc,
+              "id_evento"=>$_POST['ev_id'],
+              "usuario"=>$_SESSION['usu_nom'],
+              "unidad"=>$unidad_nom,
+            ];
+
+            $noticia->crear_y_enviar_noticia_para_derivados($ags_noticia);
+
             $resutado = ["status"=>"success","message"=>"se eliminado"];
             } else {
              $resutado = ["status"=>"warning","message"=>"no se pudo hacer el cambio"];
