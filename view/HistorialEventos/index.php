@@ -101,7 +101,7 @@ Permisos::redirigirSiNoAutorizado();
 
 require_once("../MainJs/js.php");
 ?>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdCMoRAl_-ARUflpa4Jn_qUoOpdXlxQEg&libraries=places"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdCMoRAl_-ARUflpa4Jn_qUoOpdXlxQEg&libraries=places&v=3.55"></script>
 </body>
 
 <script type="text/javascript" src="./historialeventos.js"></script>
