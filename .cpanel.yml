@@ -1,0 +1,10 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/admem/public_html/
+    - /bin/rsync -av controller/ $DEPLOYPATH
+    - /bin/rsync -av models/ $DEPLOYPATH
+    - /bin/rsync -av view/ $DEPLOYPATH
+    - /bin/rsync -av public/ $DEPLOYPATH
+    - /bin/rsync -av index.php $DEPLOYPATH
+    - /bin/rsync -av index.js $DEPLOYPATH
