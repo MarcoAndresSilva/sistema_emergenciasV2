@@ -46,7 +46,8 @@ final class TestFormato extends TestCase
         $mensajeEsperado .= "<p>Si el botón no funciona, copie y pegue el siguiente enlace en su navegador:</p>";
         $mensajeEsperado .= "<p><a href='https://emergencias.melipilla.cl/view/ControlEventos/index.php?id_evento=ID del evento'>https://emergencias.melipilla.cl/view/ControlEventos/index.php?id_evento=ID del evento</a></p>";
         $mensajeEsperado .= "<p>Saludos cordiales,<br>";
-        $mensajeEsperado .= "El equipo de eventos.</p>";
+        $mensajeEsperado .= "El equipo de eventos.</p><br>";
+        $mensajeEsperado .= $formato->get_tarjeta();
 
         $this->assertEquals($mensajeEsperado, $formato->mensaje);
     }
@@ -73,7 +74,8 @@ final class TestFormato extends TestCase
         $mensajeEsperado .= "<p><strong>Detalles Cierre:</strong> el incendio no quemo nada importante<br>";
 
         $mensajeEsperado .= "<p>Saludos cordiales,<br>";
-        $mensajeEsperado .= "El equipo de eventos.</p>";
+        $mensajeEsperado .= "El equipo de eventos.</p><br>";
+        $mensajeEsperado .= $formato->get_tarjeta();
         $this->assertEquals($mensajeEsperado, $formato->mensaje);
   }
   public function testSetAsuntoCierreEvento(): void{
@@ -110,7 +112,8 @@ final class TestFormato extends TestCase
     $mensajeEsperado = "Estimado(a),";
     $mensajeEsperado .= "<p>Se ha agregado la unidad <strong>Unidad 1</strong> al ticket 999.</p>";
     $mensajeEsperado .= "<p>Saludos cordiales,<br>";
-    $mensajeEsperado .= "El equipo de eventos.</p>";
+    $mensajeEsperado .= "El equipo de eventos.</p><br>";
+    $mensajeEsperado .= $formato->get_tarjeta();
     $formato->setCuerpoDerivadoAgregado($datos_evento);
     $this->assertEquals($mensajeEsperado, $formato->mensaje);
   }
@@ -123,7 +126,8 @@ final class TestFormato extends TestCase
     $mensajeEsperado .= "<p><strong>Usuario:</strong> Nelson Navarro</p>";
     $mensajeEsperado .= "<p>agrego informacion</p>";
     $mensajeEsperado .= "<p>Saludos cordiales,<br>";
-    $mensajeEsperado .= "El equipo de eventos.</p>";
+    $mensajeEsperado .= "El equipo de eventos.</p><br>";
+    $mensajeEsperado .= $formato->get_tarjeta();
     $this->assertEquals($mensajeEsperado, $formato->mensaje);
    }
   public function testSetAsuntoActualizarEvento(){
@@ -139,7 +143,8 @@ final class TestFormato extends TestCase
     $mensajeEsperado = "Estimado(a),";
     $mensajeEsperado .= "<p>Se delega el ticket 999 a la unidad Unidad 1.</p>";
     $mensajeEsperado .= "<p>Saludos cordiales,<br>";
-    $mensajeEsperado .= "El equipo de eventos.</p>";
+    $mensajeEsperado .= "El equipo de eventos.</p><br>";
+    $mensajeEsperado .= $formato->get_tarjeta();
     $formato->setCuerpoDerivadorEliminado($datos_evento);
     $this->assertEquals($mensajeEsperado, $formato->mensaje);
   }
