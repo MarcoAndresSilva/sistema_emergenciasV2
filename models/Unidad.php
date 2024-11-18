@@ -97,6 +97,11 @@ class Unidad extends Conectar
             if ($this->ejecutarConsulta($sql_check_usuario, $params)) {
                 return ['status' => 'warning', 'message' => 'La unidad no se puede eliminar porque está en uso en otros registros.'];
             }
+            $sql_check_seccion = "SELECT * FROM tm_seccion WHERE sec_unidad=:unid_id";
+            if ($this->ejecutarConsulta($sql_check_seccion, $params)) {
+                return ['status' => 'warning', 'message' => 'La unidad no se puede eliminar porque está en uso en otros registros.'];
+            }
+
 
             // La unidad no está en uso, proceder a eliminarla
             $sql_delete = "DELETE FROM tm_unidad WHERE unid_id = :unid_id";
