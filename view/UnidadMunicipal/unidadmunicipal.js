@@ -118,8 +118,6 @@ const columnConfig = {
   unid_id: 'ID',
   unid_nom: 'Nombre',
   unid_est: 'Estado',
-  responsable_rut: 'Responsable RUT',
-  reemplazante_rut: 'Reemplazante RUT',
   acciones: 'Acciones'
 };
 
@@ -322,20 +320,14 @@ function fn_agregar_unidad() {
          <option value="1">En servicio</option>
          <option value="2">En proceso</option>
          <option value="3">Sin servicio</option>
-       </select>` +
-      `<input id="addResponsableRut" class="swal2-input" placeholder="Responsable RUT" required>` +
-      `<input id="addReemplazanteRut" class="swal2-input" placeholder="Reemplazante RUT" required>`,
+       </select>`,
     focusConfirm: false,
     preConfirm: () => {
       const nombre = document.getElementById('addUnidNom').value;
       const estado = document.getElementById('addUnidEst').value;
-      let responsableRut = document.getElementById('addResponsableRut').value;
-      let reemplazanteRut = document.getElementById('addReemplazanteRut').value;
-      responsableRut = limpiarRut(responsableRut);
-      reemplazanteRut = limpiarRut(reemplazanteRut);
 
       // Validar los datos si es necesario antes de enviar
-      if (!nombre || !estado || !responsableRut || !reemplazanteRut) {
+      if (!nombre || !estado ) {
         Swal.showValidationMessage('Todos los campos son obligatorios');
         return false;
       }
@@ -343,8 +335,6 @@ function fn_agregar_unidad() {
       const postData = {
         unid_nom: nombre,
         unid_est: estado,
-        responsable_rut: responsableRut,
-        reemplazante_rut: reemplazanteRut
       };
 
       // Realizar la solicitud para agregar la nueva unidad
