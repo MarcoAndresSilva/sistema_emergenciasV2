@@ -109,10 +109,8 @@ if (isset($_GET["op"])) {
    case 'add_unidad':
         $unid_nom = $_POST["unid_nom"];
         $unid_est = $_POST["unid_est"];
-        $responsable_rut = $_POST["responsable_rut"];
-        $reemplazante_rut = $_POST["reemplazante_rut"];
 
-        $resultado = $unidad->add_unidad($unid_nom, $unid_est, $responsable_rut, $reemplazante_rut);
+        $resultado = $unidad->add_unidad($unid_nom, $unid_est);
 
         // Verificar el resultado y construir la respuesta JSON en base al status y message
         if (!empty($resultado)) {
