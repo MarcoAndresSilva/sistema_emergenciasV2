@@ -34,19 +34,16 @@ class Unidad extends Conectar
     }
 
     // add_unidad
-    public function add_unidad($unid_nom, $unid_est, $responsable_rut, $reemplazante_rut)
+    public function add_unidad($unid_nom, $unid_est)
     {
-        if (empty($unid_nom) || empty($unid_est) || empty($responsable_rut) || empty($reemplazante_rut)) {
+        if (empty($unid_nom) || empty($unid_est) ) {
             return ['status' => 'warning', 'message' => 'Todos los campos son obligatorios.'];
         }
 
-        $sql = "INSERT INTO tm_unidad (unid_nom, unid_est, responsable_rut, reemplazante_rut) 
-                VALUES (:unid_nom, :unid_est, :responsable_rut, :reemplazante_rut)";
+        $sql = "INSERT INTO tm_unidad (unid_nom, unid_est) VALUES (:unid_nom, :unid_est)";
         $params = [
             ':unid_nom' => $unid_nom,
             ':unid_est' => $unid_est,
-            ':responsable_rut' => $responsable_rut,
-            ':reemplazante_rut' => $reemplazante_rut
         ];
 
         if ($this->ejecutarAccion($sql, $params)) {
