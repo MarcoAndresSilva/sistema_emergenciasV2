@@ -29,6 +29,7 @@
 							</fieldset>
 							<fieldset class="form-group">
 								<label class="form-label bold" id="asignaciones-title">Seleccione el motivo</label>
+                <div id="mensaje_error" class="alert alert-danger m-1" role="alert" style="display: none;">No se asignó motivo de cierre para la categoría "<span id="categoria_cierre"></span>"</div>
 								<select id="motivo_cierre" class="form-control">
 									<!-- Datos de consulta -->
 								</select>
