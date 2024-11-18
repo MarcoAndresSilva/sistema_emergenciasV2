@@ -191,9 +191,16 @@ function cargarMotivosCierre(categoria) {
     var motivos = motivosCierre[categoria] || [];
     var $select = $('#motivo_cierre');
     $select.empty();
-    motivos.forEach(function(motivo) {
-        $select.append($('<option>', { value: motivo.id, text: motivo.nombre }));
-    });
+    if (motivos.length > 0) {
+        motivos.forEach(function(motivo) {
+            $select.append($('<option>', { value: motivo.id, text: motivo.nombre }));
+        });
+    }else if(motivos.length === 0){
+        $select.append($('<option>', { value: 0, text: '------------------------------------------' }));
+        $select.prop('disabled', true);
+        $('#mensaje_error').show();
+        $('#categoria_cierre').text(categoria);
+    }
 }
 
 document.getElementById('imagen').addEventListener('change', function() {
