@@ -341,21 +341,19 @@ INSERT INTO `tm_usu_tipo` (`usu_tipo_id`, `usu_tipo_nom`) VALUES
 CREATE TABLE `tm_unidad` (
   `unid_id` int(11) NOT NULL,
   `unid_nom` varchar(20) NOT NULL,
-  `unid_est` int(11) NOT NULL,
-  `responsable_rut` int(8) DEFAULT NULL,
-  `reemplazante_rut` int(8) DEFAULT NULL
+  `unid_est` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `tm_unidad`
 --
 
-INSERT INTO `tm_unidad` (`unid_id`, `unid_nom`, `unid_est`, `responsable_rut`, `reemplazante_rut`) VALUES
-(1, 'DGA', 2, 20879107, 20879105),
-(2, 'Seguridad Publica', 1, 20879105, 20879105),
-(3, 'Control', 1, 20879106, 20879105),
-(4, 'Emergencias', 1, 20879139, 20879106),
-(5, 'Informatica', 3, 20879111, 20879106);
+INSERT INTO `tm_unidad` (`unid_id`, `unid_nom`, `unid_est`) VALUES
+(1, 'DGA', 2),
+(2, 'Seguridad Publica', 1),
+(3, 'Control', 1),
+(4, 'Emergencias', 1),
+(5, 'Informatica', 3);
 
 -- --------------------------------------------------------
 
