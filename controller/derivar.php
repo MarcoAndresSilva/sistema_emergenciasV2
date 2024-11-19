@@ -62,7 +62,7 @@ if (isset($_GET["op"])) {
              $resultado = ["status"=>"success","message"=>"se agrego la seccion","correo"=>$correo_resultado];
             }
             echo json_encode($resultado);
-            $registroLog->add_log_registro($_SESSION['usu_id'],$_POST['op'],"evento id:{$_POST['ev_id']} unid:{unid_id}");
+            $registroLog->add_log_registro($_SESSION['usu_id'],$_GET['op'],"evento id:{$_POST['ev_id']} unid:{unid_id}");
             break;
         case "get_seccion_asignados_evento":
             if (!isset($_POST['ev_id']) || !is_numeric($_POST['ev_id'])) {
@@ -99,7 +99,6 @@ if (isset($_GET["op"])) {
             $ev_desc = "Se ha delega la unidad: " . $unidad_nom;
             $seccion->seccion_disponible($id_seccion);
             $evento->insert_emergencia_detalle($_POST['ev_id'], $usu_id, $ev_desc);
-
             $ags_noticia = [
               "asunto" => "Eliminar Derivado",
               "mensaje" => $ev_desc,
@@ -114,11 +113,12 @@ if (isset($_GET["op"])) {
                 $correoResultado = $e->getMessage();
             }
             $resultado = ["status"=>"success","message"=>"se eliminado","correo"=>$correoResultado];
+
             } else {
              $resultado = ["status"=>"warning","message"=>"no se pudo hacer el cambio"];
             }
             echo json_encode($resultado);
-            $registroLog->add_log_registro($_SESSION['usu_id'],$_GET['op'],"Eliminar unidad:{$_POST['unid_id']} de evento id {$_POST['ev_id']}");
+            $registroLog->add_log_registro($_SESSION['usu_id'],$_GET['op'],"Eliminar unidad:{$_POST['sec_id']} de evento id {$_POST['ev_id']}");
             break;
 
 

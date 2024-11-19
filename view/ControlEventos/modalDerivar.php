@@ -8,8 +8,14 @@
             </div>
             <div class="modal-body">
                 <!-- Dependencias CSS -->
-                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css">
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css"> 
+                <!-- Agrega las librerías de DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
                 <link rel="stylesheet" href="./estilopersonaleventos.css">
+               <!-- Agrega el script de DataTables -->
+                <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+                <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 
                 <form>
                     <div id="distribucion-box">
@@ -28,24 +34,50 @@
                                 </div>
                             </div> 
                         </div>        
-
                         <div id="distribucion-espacios">
-                             <div class="card">
+                            <div class="card">
                                 <div class="card-body"> 
-                                    <h6 class="card-subtitle mb-2 text-muted">SECCIONES</h6>
-                                    <select id="multipleSelect" multiple name="native-select" placeholder="Native Select" data-search="false" data-silent-initial-value-set="true">
-                                    </select> 
+                                    <h6 class="card-subtitle mb-2 text-muted">SECCIONES ASIGNADAS</h6>
+                                    <div class="datos-participantes">
+                                        <div class="col-lg-2 box-item mt-2 secciones-box">
+                                            <fieldset class="form-group">
+                                                <ul id="listaParticipantes" class="list-group">
+                                                    <li class="list-group-item"></li>
+                                                </ul>
+                                            </fieldset>
+                                        </div>
+                                    </div>
                                 </div>
-                             </div>
-                            <fieldset class="form-group box-selection" id="buttons-group">
-                                <div class="btn-box">
-                                    <button id="btn" type='button' class='btn btn-inline btn-success btn-sm ladda-button btnActualizarTodos'>
-                                        Derivar
-                                        <span><i class="fa-solid fa-arrow-up-from-bracket"></i></span>
-                                    </button>		
-                                </div>
-                            </fieldset>	
+                            </div>
                         </div>
+                        <div id="distribucion-espacios">
+                            <div class="card">
+                                <div class="card-body"> 
+                                    <h6 class="card-subtitle mb-2 text-muted">SECCIONES DISPONIBLES PARA ASIGNAR</h6>
+                                    <div class="datos-participantes">
+                                        <div class="col-lg-2 box-item mt-4">
+                                            <fieldset class="form-group">
+                                               <table id="tablaSecciones" class="table table-bordered">
+                                                  <thead>
+                                                      <tr>
+                                                          <th>Unidad</th>
+                                                          <th>Sección</th>
+                                                          <th>Detalle</th>
+                                                          <th>Estado</th>
+                                                          <th>Acción</th>
+                                                      </tr>
+                                                  </thead>
+                                                  <tbody>
+                                                  <!-- Aquí se insertarán las filas de datos -->
+                                                  </tbody>
+                                                </table>
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </form>
             </div>
