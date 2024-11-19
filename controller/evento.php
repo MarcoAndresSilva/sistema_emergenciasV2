@@ -157,17 +157,19 @@ if (isset($_GET["op"])) {
                   // Obtener las asignaciones
                   $datos_asignaciones = $eventounidad->get_datos_eventoUnidad($row['ev_id']);
                   $asignacion = [];
-                  if (is_array($datos_asignaciones) && count($datos_asignaciones) > 0) {
-                      foreach ($datos_asignaciones["data"] as $row_asignaciones) {
+                  if (!empty($datos_asignaciones['data']) && is_array($datos_asignaciones['data'])) {
+                      foreach ($datos_asignaciones['data'] as $row_asignaciones) {
                           $unid_id = $row_asignaciones['sec_id'];
                           $datos_unidad = $unidad->get_seccion_unidad($unid_id);
-                          foreach ($datos_unidad as $row_unidad) {
-                              $asignacion[] = $row_unidad['unid_nom'];
+                          if (!empty($datos_unidad) && is_array($datos_unidad)) {
+                              foreach ($datos_unidad as $row_unidad) {
+                                  $asignacion[] = $row_unidad['unid_nom'];
+                              }
                           }
                       }
                    $asignacion = array_unique($asignacion);
-                      // Si hay asignaciones, mostrar las unidades asignadas
-                      $evento['asignacion'] = '<span class="label label-pill label-primary">' . implode(' - ', $asignacion) . '</span>';
+                      $assignacion = !empty($asignacion) ? implode(' - ', $asignacion) : 'No asignada';
+                      $evento['asignacion'] = '<span class="label label-pill label-primary">' . htmlspecialchars($assignacion) . '</span>';
                   } else {
                       // Si no hay asignaciones, mostrar mensaje estilizado con ícono de advertencia
                       $evento['asignacion'] = '<span class="label label-warning"><i class="fa-solid fa-minus-circle"></i> No asignada</span>';

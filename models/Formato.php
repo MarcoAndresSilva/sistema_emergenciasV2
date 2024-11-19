@@ -3,6 +3,70 @@
 class Formato {
   public $asunto;
   public $mensaje;
+  private $tarjeta;
+
+  public function __construct() {
+    $this->tarjeta = $this->generarTarjeta();
+  }
+  public function get_tarjeta() {
+    return $this->tarjeta;
+  }
+
+  private function generarTarjeta() {
+    return '
+        <style>
+            .card {
+                width: 100%;
+                max-width: 600px;
+                background-color: #fff;
+                border-radius: 8px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                margin: 20px auto;
+                padding: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+            }
+            .card img {
+                border-radius: 50%;
+                width: 80px;
+                height: 80px;
+                margin-right: 20px;
+            }
+            .card-content {
+                display: flex;
+                flex-direction: column;
+            }
+            .card-content h2 {
+                font-size: 20px;
+                margin: 5px 0;
+                color: #333;
+            }
+            .card-content p {
+                color: #777;
+                font-size: 14px;
+                margin: 2px 0;
+            }
+            .card-footer a {
+                text-decoration: none;
+                color: #007bff;
+                font-size: 14px;
+            }
+            .card-footer a:hover {
+                text-decoration: underline;
+            }
+        </style>
+
+        <div class="card">
+            <img src="https://via.placeholder.com/80" alt="Imagen de perfil">
+
+            <div class="card-content">
+                <h2>Sistema de Emergencia</h2>
+                <p>Desarrollado por Departamento de Informática</p>
+                <p> &copy; 2024 Departamento de Informática</p>
+            </div>
+        </div>';
+  }
 
   public function setAsunto($asunto) {
     $this->asunto = $asunto;
@@ -41,7 +105,8 @@ class Formato {
     $mensaje .= "<p>Si el botón no funciona, copie y pegue el siguiente enlace en su navegador:</p>";
     $mensaje .= "<p><a href='$rutaEvento'>$rutaEvento</a></p>";
     $mensaje .= "<p>Saludos cordiales,<br>";
-    $mensaje .= "El equipo de eventos.</p>";
+    $mensaje .= "El equipo de eventos.</p><br>";
+    $mensaje .= $this->tarjeta;
     // Establecer el mensaje en el correo
     $this->setMensaje($mensaje);
   }
@@ -77,7 +142,8 @@ class Formato {
     $mensaje .= "<p><strong>Detalles Cierre:</strong> $detalle<br>";
 
     $mensaje .= "<p>Saludos cordiales,<br>";
-    $mensaje .= "El equipo de eventos.</p>";
+    $mensaje .= "El equipo de eventos.</p><br>";
+    $mensaje .= $this->tarjeta;
     $this->setMensaje($mensaje);
   }
   public function setCuerpoNuevoEvento(array $datos_evento) {
@@ -101,7 +167,8 @@ class Formato {
     $mensaje .= "<p><strong>Usuario:</strong> $usuario</p>";
     $mensaje .= "<p>agrego informacion</p>";
     $mensaje .= "<p>Saludos cordiales,<br>";
-    $mensaje .= "El equipo de eventos.</p>";
+    $mensaje .= "El equipo de eventos.</p><br>";
+    $mensaje .= $this->tarjeta;
     $this->setMensaje($mensaje);
   }
   public function setCuerpoActualizarEvento(array $datos_evento) {
@@ -120,7 +187,8 @@ class Formato {
     $mensaje = "Estimado(a),";
     $mensaje .= "<p>Se ha agregado la unidad <strong>$unidad</strong> al ticket $id_evento.</p>";
     $mensaje .= "<p>Saludos cordiales,<br>";
-    $mensaje .= "El equipo de eventos.</p>";
+    $mensaje .= "El equipo de eventos.</p><br>";
+    $mensaje .= $this->tarjeta;
     $this->setMensaje($mensaje);
   }
   public function setCuerpoDerivadoAgregado(array $datos_evento) {
@@ -128,5 +196,25 @@ class Formato {
     $this->setAsuntoDerivadoAgregado($datos_evento);
   }
 
+  private function setMensajeDerivadorEliminado(array $datos_evento){
+    $id_evento = $datos_evento['id_evento'];
+    $unidad = $datos_evento['unidad'];
+    $mensaje = "Estimado(a),";
+    $mensaje .= "<p>Se delega el ticket $id_evento a la unidad $unidad.</p>";
+    $mensaje .= "<p>Saludos cordiales,<br>";
+    $mensaje .= "El equipo de eventos.</p><br>";
+    $mensaje .= $this->tarjeta;
+    $this->setMensaje($mensaje);
+  }
+  private function setAsuntoDerivadorEliminado(array $datos_evento){
+    $id_evento = $datos_evento['id_evento'];
+    $asunto = "🔄️ Derivado al 📎Ticket $id_evento";
+    $this->setAsunto($asunto);
+  }
+
+  public function setCuerpoDerivadorEliminado(array $datos_evento) {
+    $this->setMensajeDerivadorEliminado($datos_evento);
+    $this->setAsuntoDerivadorEliminado($datos_evento);
+  }
 
 }

@@ -99,29 +99,6 @@ function resetMapToDefault() {
   $('#address').val('');
 }
 
-function initMap() {
-  var defaultLocation = { lat: currentLat, lng: currentLng };
-  map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 17,
-    center: defaultLocation
-  });
-
-  marker = new google.maps.Marker({
-    position: defaultLocation,
-    map: map,
-    title: 'Arrastrar',
-    draggable: true
-  });
-
-  google.maps.event.addListener(marker, 'dragend', function(event) {
-    currentLat = event.latLng.lat();
-    currentLng = event.latLng.lng();
-    $('#ev_latitud').val(currentLat);
-    $('#ev_longitud').val(currentLng);
-    $('#address').val(updateAddressFromLatLng(currentLat, currentLng));
-  });
-}
-
 function geocodeAddress(address) {
   var geocoder = new google.maps.Geocoder();
   geocoder.geocode({ 'address': address }, function(results, status) {
