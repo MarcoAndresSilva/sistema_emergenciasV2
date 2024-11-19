@@ -114,7 +114,31 @@
 #distribucion-espacios-datos .card{
   width: 45%;
 }
+#listaParticipantes{
+    width: 100%;
+    flex-direction: row;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
 
+#tablaSecciones_wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.select-info{
+  visibility: hidden;
+}
+
+.dataTables_length{
+  visibility:hidden;
+}
+
+.secciones-box{
+  width: 100%;
+}
 
 .select2-container--open {
     z-index: 99999999999999;
