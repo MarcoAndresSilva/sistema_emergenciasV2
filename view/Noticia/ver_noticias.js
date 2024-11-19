@@ -75,3 +75,45 @@ document.addEventListener("DOMContentLoaded", function() {
         .catch(error => console.error('Error al marcar como leída:', error));
     });
 });
+
+// Función para marcar todas las noticias como leídas
+document.getElementById('mark-all-read').addEventListener('click', function() {
+    // Obtener todas las noticias que no están marcadas como leídas
+    const rows = $("#noticias-table").DataTable().rows().data();
+
+    // Crear un array con los IDs de las noticias que no están leídas
+    const noticiasNoLeidas = [];
+    rows.each(function(rowData, index) {
+        if (rowData[2] !== "Leído") {  // Estado no leído
+            noticiasNoLeidas.push(rowData[4]);  // Agregar ID de la noticia
+        }
+    });
+
+    // Si hay noticias no leídas, enviamos una solicitud para marcarlas como leídas
+    if (noticiasNoLeidas.length > 0) {
+        // Iterar sobre los IDs de las noticias no leídas y enviar una solicitud por cada uno
+        noticiasNoLeidas.forEach(function(noticiaId) {
+            const formData = new URLSearchParams();
+            formData.append('noticia_id', noticiaId);  // Enviar el ID de la noticia
+
+            fetch('../../controller/noticia.php?op=read_noticia', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Error al marcar la noticia con ID ${noticiaId} como leída`);
+                }
+                // Aquí puedes agregar alguna lógica si lo necesitas para cada respuesta exitosa
+                console.log(`Noticia con ID ${noticiaId} marcada como leída`);
+            })
+            .catch(error => console.error(`Error al marcar la noticia con ID ${noticiaId} como leída:`, error));
+        });
+
+        // Recargar la tabla después de intentar marcar todas las noticias como leídas
+        fetchNoticias(); // Esta función recarga la tabla para reflejar los cambios
+    } else {
+        alert("No hay noticias no leídas para marcar.");
+    }
+});
+

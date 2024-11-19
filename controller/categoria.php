@@ -3,10 +3,12 @@ require_once("../config/conexion.php");
 require_once("../models/Categoria.php");
 require_once("../models/Evento.php");
 require_once("../models/RegistroLog.php");
+require_once("../models/Permisos.php");
+
+Permisos::redirigirSiNoAutorizado();
+
 $categoria = new Categoria();
 $evento = new Evento();
-if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_tipo"] == 2)) {
-
 $RegistroLog= new RegistroLog();
 if (isset($_GET["op"])) {
     switch ($_GET["op"]) {
@@ -134,4 +136,4 @@ if (isset($_POST["op"])) {
             $RegistroLog->add_log_registro($_SESSION['usu_id'],$_POST['op'],"eliminar {$cat_id}".$response['mensaje']);
             echo json_encode($response);
         break;
-}}}
+}}

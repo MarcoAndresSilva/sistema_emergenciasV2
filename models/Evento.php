@@ -30,6 +30,7 @@ class Evento extends Conectar {
                         te.est_id = tme.ev_est
                     INNER JOIN tm_usuario us
                     on us.usu_id=tme.usu_id
+                    INNER JOIN tm_seccion ts ON us.usu_seccion = ts.sec_id
                     ORDER BY
                         ev_id
                     DESC;';
@@ -335,6 +336,36 @@ class Evento extends Conectar {
         }
 
     }
+    public function informacion_evento_completa($ev_id) {
+      $sql = 'SELECT
+                cat.cat_nom as "cat_nom",
+                usr.usu_nom as "usu_nom",
+                usr.usu_ape as "usu_ape",
+                est.est_nom as "est_nom",
+                eve.ev_desc as "ev_desc",
+                nv.ev_niv_nom as "ev_niv_nom",
+                eve.ev_latitud as "eve_latitud",
+                eve.ev_longitud as "eve_longitud",
+                eve.ev_id as "id_evento",
+                eve.ev_direc as "ev_direc"
+              FROM tm_evento as eve
+              JOIN tm_categoria as cat
+              ON(cat.cat_id=eve.cat_id)
+              JOIN tm_usuario as usr
+              ON(usr.usu_id=eve.usu_id)
+              JOIN tm_estado as est
+              ON(est.est_id=eve.ev_est)
+              JOIN tm_ev_niv as nv
+              ON(nv.ev_niv_id=eve.ev_niv)
+              WHERE eve.ev_id=:id_evento';
+
+    $params = [':id_evento' => $ev_id];
+    $resultado = $this->ejecutarConsulta($sql, $params,false);
+
+    if (is_array($resultado) && count($resultado) > 0) {
+            return $resultado;
+        }
+    }
 
     public function obtener_usuario_id($nombre, $apellido) {
         try {
@@ -563,13 +594,14 @@ class Evento extends Conectar {
     }
 
     public function listar_eventosdetalle_por_evento($ev_id) {
+    $msgprivado ="<span class='badge bg-info text-dark'> mensaje privado</span>";
         try {
             $conectar = parent::conexion();
             parent::set_names();
             
             $sql = "SELECT 
                 tm_emergencia_detalle.emergencia_id,
-                tm_emergencia_detalle.ev_desc,
+                IF (tm_emergencia_detalle.privado = 0, tm_emergencia_detalle.ev_desc, ?) as 'ev_desc',
                 tm_emergencia_detalle.ev_inicio,
                 tm_usuario.usu_nom,
                 tm_usuario.usu_ape,
@@ -584,7 +616,8 @@ class Evento extends Conectar {
                 tm_emergencia_detalle.ev_id = ?";
             
             $sql = $conectar->prepare($sql);
-            $sql->bindValue(1, $ev_id);
+            $sql->bindValue(1, $msgprivado);
+            $sql->bindValue(2, $ev_id);
             $sql->execute();
             
             $resultado = $sql->fetchAll();
@@ -626,20 +659,21 @@ class Evento extends Conectar {
             return false;
         }
     }
-    public function insert_emergencia_detalle($ev_id, $usu_id, $ev_desc) {
+    public function insert_emergencia_detalle($ev_id, $usu_id, $ev_desc, $secreto=0) {
     try {
         $conectar = parent::conexion();
         parent::set_names();
 
         // Insertar en la tabla tm_emergencia_detalle
         $sql = "INSERT INTO tm_emergencia_detalle 
-                (ev_id, usu_id, ev_desc, ev_inicio, ev_est) 
-                VALUES (?, ?, ?, now(), 1);";
+                (ev_id, usu_id, ev_desc, ev_inicio, ev_est, privado)
+                VALUES (?, ?, ?, now(), 1,?);";
 
         $sql = $conectar->prepare($sql);
         $sql->bindValue(1, $ev_id, PDO::PARAM_INT);
         $sql->bindValue(2, $usu_id, PDO::PARAM_INT);
         $sql->bindValue(3, $ev_desc, PDO::PARAM_STR);
+        $sql->bindValue(4, $secreto, PDO::PARAM_INT);
         $sql->execute();
 
         // Verificar si se ha insertado alguna fila
@@ -665,4 +699,48 @@ class Evento extends Conectar {
         return $resultado = $sql->fetchAll();
       }
 
+    function get_evento_motivo_cierre($ev_id){
+    $sql = "SELECT
+               cie.ev_id as 'id_evento',
+               usr.usu_nom as 'usu_nom',
+               usr.usu_ape as 'usu_ape',
+               usr.usu_name as 'usu_name',
+               mov.motivo as 'motivo',
+               cie.detalle as 'detalle',
+               DATE_FORMAT(ev.ev_final, '%d/%m/%Y - hrs %H:%i' )as 'fecha_cierre'
+         FROM tm_ev_cierre as cie
+         JOIN tm_usuario as usr
+         on (usr.usu_id = cie.usu_id)
+         JOIN tm_cierre_motivo as mov
+         on (mov.mov_id = cie.motivo)
+         JOIN tm_evento as ev
+         on (ev.ev_id=cie.ev_id)
+         WHERE cie.ev_id=:ev_id;";
+    $params = [":ev_id"=>$ev_id];
+    return $this->ejecutarConsulta($sql,$params,false);
+  }
+  public function get_documentos($evento_id){
+    $sql = "SELECT ev.ev_img as 'inicio_documento',
+    cie.adjunto as 'cierre_documento'
+    FROM tm_evento as ev
+    left JOIN tm_ev_cierre as cie
+    ON (cie.ev_id = ev.ev_id)
+    WHERE ev.ev_id = :evento_id";
+    $params=[":evento_id"=>$evento_id];
+    $query = $this->ejecutarConsulta($sql,$params,false);
+    if (is_array($query) && count($query) > 0) {
+      $respuesta = [
+         "status"=>"success",
+         "message"=>"Se obtienen los datos",
+         "result"=>$query
+      ];
+    }else{
+      $respuesta = [
+        "status"=>"error",
+        "message"=>"No se obtienen los datos",
+        "result"=>[]
+      ];
+    }
+    return $respuesta;
+  }
 }

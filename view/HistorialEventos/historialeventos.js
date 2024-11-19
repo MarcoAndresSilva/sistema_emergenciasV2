@@ -1,10 +1,4 @@
 $(document).ready(function() {
-
-    // Obtener el elemento <a> por su ID
-    var enlace = document.querySelector('.HistorialEventos');
-    // Añadir una clase al enlace
-    enlace.classList.add('selected');
-
     cargarTablaGeneral();
 });
 
@@ -34,6 +28,10 @@ function cargarTablaGeneral() {
             { "data": "fecha_apertura" },
             { "data": "ver_documentos" }
         ],
+          language: {
+                url: "../registrosLog/spanishDatatable.json"
+            },
+          destroy: true, // Permite volver a inicializar la tabla si ya ha sido creada
         "drawCallback": function(settings) {
             // Aquí aplicas nuevamente los estilos o cambios de color que necesitas
             $('.peligro_critico').addClass('label label-pill label-primary');
@@ -46,17 +44,9 @@ function cargarTablaGeneral() {
          // Asegúrate de que el evento de clic esté delegado correctamente
     $('#tabla-historial').on('click', '.btnDocumentos', function() {     
         var ev_id = $(this).data('ev-id');
-        ver(ev_id);
+        cargar_documentos(ev_id);
     });
 }
-
-function ver(ev_id) {
-    // Abrir una nueva pestaña con la ruta especificada
-    window.open(`../DocumentosDetalle?ID=${ev_id}`, '_blank');
-    
-}
-
-
 /////////////////////////////////////////////////////////////////////////////////////////////
 let lat;
 let long;

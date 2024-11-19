@@ -854,14 +854,18 @@ function generateSummaryTable(groupedData) {
   table.appendChild(tbody);
   tableContainer.appendChild(table);
   $("#resumenTable").DataTable({
-    responsive: true
+    responsive: true,
+    language: {
+                url: "../registrosLog/spanishDatatable.json"
+            },
+    destroy: true // Permite volver a inicializar la tabla si ya ha sido creada
   });
 }
 function createBadgeNivel(contenido, nivel) {
     const badgeClasses = {
         "Critico": "bg-danger",
-        "Bajo": "bg-primary",
-        "Medio": "bg-warning text-bg-warning",
+        "Bajo": "bg-success",
+        "Medio": "bg-warning",
         "General": "bg-secondary",
     };
     const defautl = "bg-secondary";
@@ -1000,6 +1004,9 @@ function generateFullTable(groupedData) {
     $(document).ready(function () {
         $("#eventosTable").DataTable({
             responsive: true,
+            language: {
+                url: "../registrosLog/spanishDatatable.json"
+            },
             order: [[0, 'desc']],
             paging: false,
             scrollCollapse: true,

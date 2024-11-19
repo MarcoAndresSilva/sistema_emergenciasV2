@@ -23,6 +23,7 @@ function addNotification(asunto, mensaje, url) {
             notificaciones.push(data);
             updateNotificationCount();
             renderNotifications();
+            scrollToTop();
         })
         .catch(error => {
             console.error('Error al guardar la notificación:', error);
@@ -44,10 +45,16 @@ document.addEventListener("DOMContentLoaded", function() {
                 notificaciones = data;
                 updateNotificationCount();
                 renderNotifications();
+                scrollToTop();
             })
             .catch(error => {
                 console.error('Error al obtener las notificaciones:', error);
             });
+    }
+
+    function scrollToTop() {
+      const notificationListElement = document.getElementById('notification-list');
+      notificationListElement.scrollTop = 0;  // Asegura que el scroll se mantenga arriba
     }
 
     setInterval(fetchNotifications, 10000);
@@ -71,6 +78,9 @@ document.addEventListener("DOMContentLoaded", function() {
         const now = new Date();
         const time_hrs_limite_live_noticia = 8;
         notificationListElement.innerHTML = '';
+
+        const notificationsToShow = notificaciones.slice(0,5);
+        
         notificaciones.forEach((notif, index) => {
             if (!notif.leido) {
                 // Mostrar notificación no leída

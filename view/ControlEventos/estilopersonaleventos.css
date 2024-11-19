@@ -8,6 +8,15 @@
     display: grid;
 }
 
+#tabla-control tbody, thead{
+  font-size:1.1rem;
+}
+
+#tabla-control tbody tr td span.label{
+  font-size:1.1rem;
+}
+
+
 .tabla-basica {
     width: 100%;
     border-collapse: collapse;
@@ -46,7 +55,8 @@
 }
 
 #btnDetalleEmergencia,
-#btnPanelDerivar{
+#btnPanelDerivar,
+#btnPanelPeligro{
     border: none;
     color: #00A8FF;
     font-size: 1.5rem;
@@ -92,4 +102,71 @@
     color: black !important;
     font-size: 25px;
     text-decoration: none;
+}
+
+/*Modals styles*/
+#distribucion-espacios-datos{
+  display: flex;
+  justify-content: space-around;
+
+}
+
+#distribucion-espacios-datos .card{
+  width: 45%;
+}
+#listaParticipantes{
+    width: 100%;
+    flex-direction: row;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+#tablaSecciones_wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.select-info{
+  visibility: hidden;
+}
+
+.dataTables_length{
+  visibility:hidden;
+}
+
+.secciones-box{
+  width: 100%;
+}
+
+.select2-container--open {
+    z-index: 99999999999999;
+}
+
+.select2-results__option--highlighted {
+    color: blue !important;
+}
+
+.select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
+    background-color: #5897fb;
+    color: aqua;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #007bff;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    box-sizing: border-box;
+    display: inline-block;
+    margin-left: 5px;
+    margin-top: 4px;
+    padding: 0;
+    padding-left: 27px;
+    position: relative;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: bottom;
+    white-space: nowrap;
 }

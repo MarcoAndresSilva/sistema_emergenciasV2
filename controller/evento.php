@@ -8,7 +8,12 @@ require_once("../models/EventoUnidad.php");
 require_once("../models/NivelPeligro.php");
 require_once("../models/Correo.php");
 require_once("../models/Noticia.php");
+require_once("../models/Seccion.php");
+require_once("../models/Permisos.php");
+Permisos::redirigirSiNoAutorizado();
 
+
+$seccion = new Seccion();
 $evento = new Evento();
 $categoria = new Categoria();
 $unidad = new Unidad();
@@ -46,7 +51,6 @@ function guardarImagen($archivo, $carpeta) {
     return $ruta_relativa;
 }
 
-if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_tipo"] == 2)) {
 if (isset($_GET["op"])) {
     switch ($_GET["op"]) {
 
@@ -59,7 +63,9 @@ if (isset($_GET["op"])) {
             $ev_latitud = $_POST['ev_latitud'];
             $ev_longitud = $_POST['ev_longitud'];
             $cat_id = $_POST['cat_id'];
-            $ev_niv = $_POST['ev_niv'];
+            $cate = new Categoria();
+            $cate_info = $cate->get_datos_categoria($cat_id);
+            $ev_niv = $cate_info[0]['nivel'];
         
             $ev_img = null;
 
@@ -88,20 +94,6 @@ if (isset($_GET["op"])) {
                 $ev_img
             );
             header('Content-Type: application/json');
-            $asunto = "Nuevo Evento Registrado: " . $ev_desc;
-
-            $mensaje = "Estimado(a),\n\n";
-            $mensaje .= "Se ha registrado un nuevo evento con los siguientes detalles:\n\n";
-            $mensaje .= "Descripción: $ev_desc\n";
-            $mensaje .= "Dirección: $ev_direc\n\n";
-            $mensaje .= "Por favor, revise la información y tome las acciones necesarias.\n\n";
-            $mensaje .= "Atentamente,\n";
-            $mensaje .= "Equipo de Emergencias";
-
-            $encabezados = "From: sistemaemergencia@munimelipilla.cl\r\n";
-            $correo = new Correo($_SESSION["usu_correo"], $asunto, $mensaje, $encabezados);
-            $datos["correo"] = $correo->enviar();
-
             $last_evento = $noticia->obtenerUltimoRegistro("tm_evento","ev_id");
             $id_ultimo_evento = $last_evento["ev_id"];
             $args = [
@@ -111,6 +103,10 @@ if (isset($_GET["op"])) {
             ];
             $noticia->crear_noticia_y_enviar_grupo_usuario($args);
 
+            echo json_encode($datos);
+        break;
+        case "get_documentos":
+            $datos = $evento->get_documentos($_POST['evento_id']);
             echo json_encode($datos);
         break;
 
@@ -141,140 +137,142 @@ if (isset($_GET["op"])) {
             }
         break;
 
-        case "tabla-control":
+       case "tabla-control":
 
-            $eventos = [];
-        
-            $datos = $evento->get_evento();
-            if (is_array($datos) && count($datos) > 0) {
-        
-                foreach ($datos as $row) {
-                    $evento = [];
-        
-                    $evento['ev_id'] = $row['ev_id'];
-        
-                    $datos_categoria = $categoria->get_datos_categoria($row['cat_id']);
-                    $evento['categoria'] = isset($datos_categoria[0]['cat_nom']) ? $datos_categoria[0]['cat_nom'] : 'Sin Categoría';
-        
-                    $direccion = $row['ev_direc'] . " <button class='btn btn-inline btn-primary btn-sm btnDireccionarMapa'><i class='fa-solid fa-location-dot'></i></button>";
-                    $evento['direccion'] = str_replace(["No hay coordenadas", "Sin dirección"], "", $direccion);
-        
-                    // Obtener las asignaciones
-                    $datos_asignaciones = $eventounidad->get_datos_eventoUnidad($row['ev_id']);
-                    $asignacion = [];
-                    if (is_array($datos_asignaciones) && count($datos_asignaciones) > 0) {
-                        foreach ($datos_asignaciones as $row_asignaciones) {
-                            $unid_id = $row_asignaciones['unid_id'];
-                            $datos_unidad = $unidad->get_datos_unidad($unid_id);
-                            foreach ($datos_unidad as $row_unidad) {
-                                $asignacion[] = $row_unidad['unid_nom'];
-                            }
-                        }
-                    }
-                    // Si no hay asignaciones, asignar un valor por defecto
-                    $evento['asignacion'] = count($asignacion) > 0 ? implode(' - ', $asignacion) : 'No asignada';
-        
-                    // Nivel de peligro con estilos
-                    if ($row['ev_niv_id'] == 1) {
-                        $evento['nivel_peligro'] = '<span class="label label-pill label-primary peligro_critico">Critico</span>';
-                    } elseif ($row['ev_niv_id'] == 2) {
-                        $evento['nivel_peligro'] = '<span class="label label-pill label-primary peligro_medio">Medio</span>';
-                    } elseif ($row['ev_niv_id'] == 3) {
-                        $evento['nivel_peligro'] = '<span class="label label-pill label-primary peligro_bajo">Bajo</span>';
-                    } else {
-                        $evento['nivel_peligro'] = '<span class="label label-pill label-primary peligro_comun">Comun</span>';
-                    }
-        
-                    // Estado con estilos
-                    $dato_estado = $estado->get_datos_estado($row['ev_est']);
-                    if (isset($dato_estado[0]['est_nom'])) {
-                        if ($dato_estado[0]['est_nom'] == "En Proceso") {
-                            $evento['estado'] = '<span class="label label-pill label-success">' . $dato_estado[0]['est_nom'] . '</span>';
-                        } elseif ($dato_estado[0]['est_nom'] == "Finalizado") {
-                            $evento['estado'] = '<span class="label label-pill label-danger ">' . $dato_estado[0]['est_nom'] . '</span>';
-                        } else {
-                            $evento['estado'] = $dato_estado[0]['est_nom'];
-                        }
-                    } else {
-                        $evento['estado'] = 'Desconocido';
-                    }
-        
-                    $evento['fecha_apertura'] = $row['ev_inicio'];
-        
-                    $evento['ver_derivar'] = "<button id='btnPanelDerivar' data-ev-id='" . $row['ev_id'] . "'><i class='fa-solid fa-up-right-from-square'></i></button>";
+      $eventos = [];
+    
+      $datos = $evento->get_evento();
+      if (is_array($datos) && count($datos) > 0) {
+        foreach ($datos as $row) {
+          $evento = [];
+            $evento['ev_id'] = $row['ev_id'];
+              // Obtener la categoría del evento
+              $datos_categoria = $categoria->get_datos_categoria($row['cat_id']);
+              $evento['categoria'] = isset($datos_categoria[0]['cat_nom']) ? $datos_categoria[0]['cat_nom'] : 'Sin Categoría';
 
-                    $evento['ver_detalle'] = "<button id='btnDetalleEmergencia' data-ev-id='" . $row['ev_id'] . "'><i class='fa-regular fa-comments'></i></button>";
+                  // Dirección con botón de mapa
+                  $direccion = $row['ev_direc'] . " <button class='btn btn-inline btn-primary btn-sm btnDireccionarMapa'><i class='fa-solid fa-location-dot'></i></button>";
+                  $evento['direccion'] = str_replace(["No hay coordenadas", "Sin dirección"], "", $direccion);
         
-                    $eventos[] = $evento;
+                  // Obtener las asignaciones
+                  $datos_asignaciones = $eventounidad->get_datos_eventoUnidad($row['ev_id']);
+                  $asignacion = [];
+                  if (!empty($datos_asignaciones['data']) && is_array($datos_asignaciones['data'])) {
+                      foreach ($datos_asignaciones['data'] as $row_asignaciones) {
+                          $unid_id = $row_asignaciones['sec_id'];
+                          $datos_unidad = $unidad->get_seccion_unidad($unid_id);
+                          if (!empty($datos_unidad) && is_array($datos_unidad)) {
+                              foreach ($datos_unidad as $row_unidad) {
+                                  $asignacion[] = $row_unidad['unid_nom'];
+                              }
+                          }
+                      }
+                   $asignacion = array_unique($asignacion);
+                      $assignacion = !empty($asignacion) ? implode(' - ', $asignacion) : 'No asignada';
+                      $evento['asignacion'] = '<span class="label label-pill label-primary">' . htmlspecialchars($assignacion) . '</span>';
+                  } else {
+                      // Si no hay asignaciones, mostrar mensaje estilizado con ícono de advertencia
+                      $evento['asignacion'] = '<span class="label label-warning"><i class="fa-solid fa-minus-circle"></i> No asignada</span>';
+                  }
+                  // Nivel de peligro con estilos e íconos
+                  if ($row['ev_niv_id'] == 1) {
+                      $evento['nivel_peligro'] = '<span class="label label-pill label-danger"><i class="fa-solid fa-exclamation-triangle"></i> Crítico</span>';
+                  } elseif ($row['ev_niv_id'] == 2) {
+                      $evento['nivel_peligro'] = '<span class="label label-pill label-warning"><i class="fa-solid fa-exclamation-circle"></i> Medio</span>';
+                  } elseif ($row['ev_niv_id'] == 3) {
+                      $evento['nivel_peligro'] = '<span class="label label-pill label-success"><i class="fa-solid fa-info-circle"></i> Bajo</span>';
+                  } else {
+                      $evento['nivel_peligro'] = '<span class="label label-pill label-default"><i class="fa-solid fa-circle"></i> Común</span>';
+                  }
+        
+                  // Estado con estilos e íconos
+                  $dato_estado = $estado->get_datos_estado($row['ev_est']);
+                  if (isset($dato_estado[0]['est_nom'])) {
+                      if ($dato_estado[0]['est_nom'] == "En Proceso") {
+                          $evento['estado'] = '<span class="label label-pill label-success"><i class="fa-solid fa-hourglass-half"></i> ' . $dato_estado[0]['est_nom'] . '</span>';
+                      } elseif ($dato_estado[0]['est_nom'] == "Finalizado") {
+                          $evento['estado'] = '<span class="label label-pill label-danger"><i class="fa-solid fa-check-circle"></i> ' . $dato_estado[0]['est_nom'] . '</span>';
+                      } else {
+                          $evento['estado'] = '<span class="label label-pill label-secondary"><i class="fa-solid fa-question-circle"></i> ' . $dato_estado[0]['est_nom'] . '</span>';
+                      }
+                  } else {
+                      $evento['estado'] = 'Desconocido';
+                  }
+                  // Fecha de apertura
+                  $evento['fecha_apertura'] = $row['ev_inicio'];
+                  // Botones para derivar y ver detalles
+                  $evento['ver_niv_peligro'] = "<button id='btnPanelPeligro' data-ev-id='" . $row['ev_id'] . "'><i class='fa-solid fa-exclamation-triangle'></i></button>";
+                  $evento['ver_derivar'] = "<button id='btnPanelDerivar' data-ev-id='" . $row['ev_id'] . "'><i class='fa-solid fa-up-right-from-square'></i></button>";
+                  $evento['ver_detalle'] = "<button id='btnDetalleEmergencia' data-ev-id='" . $row['ev_id'] . "'><i class='fa-regular fa-comments'></i></button>";
+      
+                  $eventos[] = $evento;
                 }
-                
                 echo json_encode($eventos);
             } else {
                 echo json_encode([]);
             }
-        break;
-
-        case "tabla-historial-eventos": 
+          break;
+          case "tabla-historial-eventos": 
             $eventos = [];
-        
             $datos = $evento->get_evento();
             if (is_array($datos) && count($datos) > 0) {
-        
                 foreach ($datos as $row) {
                     $evento = [];
-        
                     $evento['ev_id'] = $row['ev_id'];
-        
+                    // Obtener la categoría del evento
                     $datos_categoria = $categoria->get_datos_categoria($row['cat_id']);
                     $evento['categoria'] = isset($datos_categoria[0]['cat_nom']) ? $datos_categoria[0]['cat_nom'] : 'Sin Categoría';
-        
+                    // Dirección con botón de mapa
                     $direccion = $row['ev_direc'] . " <button class='btn btn-inline btn-primary btn-sm btnDireccionarMapa'><i class='fa-solid fa-location-dot'></i></button>";
                     $evento['direccion'] = str_replace(["No hay coordenadas", "Sin dirección"], "", $direccion);
-        
-                    // Obtener las asignaciones
-                    $datos_asignaciones = $eventounidad->get_datos_eventoUnidad($row['ev_id']);
-                    $asignacion = [];
-                    if (is_array($datos_asignaciones) && count($datos_asignaciones) > 0) {
-                        foreach ($datos_asignaciones as $row_asignaciones) {
-                            $unid_id = $row_asignaciones['unid_id'];
-                            $datos_unidad = $unidad->get_datos_unidad($unid_id);
-                            foreach ($datos_unidad as $row_unidad) {
-                                $asignacion[] = $row_unidad['unid_nom'];
-                            }
-                        }
-                    }
-                    // Si no hay asignaciones, asignar un valor por defecto
-                    $evento['asignacion'] = count($asignacion) > 0 ? implode(' - ', $asignacion) : 'No asignada';
-        
-                    // Nivel de peligro con estilos
-                    if ($row['ev_niv_id'] == 1) {
-                        $evento['nivel_peligro'] = '<span class="label label-pill label-primary peligro_critico">Critico</span>';
-                    } elseif ($row['ev_niv_id'] == 2) {
-                        $evento['nivel_peligro'] = '<span class="label label-pill label-primary peligro_medio">Medio</span>';
-                    } elseif ($row['ev_niv_id'] == 3) {
-                        $evento['nivel_peligro'] = '<span class="label label-pill label-primary peligro_bajo">Bajo</span>';
-                    } else {
-                        $evento['nivel_peligro'] = '<span class="label label-pill label-primary peligro_comun">Comun</span>';
-                    }
-        
-                    // Estado con estilos
-                    $dato_estado = $estado->get_datos_estado($row['ev_est']);
-                    if (isset($dato_estado[0]['est_nom'])) {
-                        if ($dato_estado[0]['est_nom'] == "En Proceso") {
-                            $evento['estado'] = '<span class="label label-pill label-warning">' . $dato_estado[0]['est_nom'] . '</span>';
-                        } elseif ($dato_estado[0]['est_nom'] == "Finalizado") {
-                            $evento['estado'] = '<span class="label label-pill label-danger">' . $dato_estado[0]['est_nom'] . '</span>';
-                        } else {
-                            $evento['estado'] = $dato_estado[0]['est_nom'];
-                        }
-                    } else {
-                        $evento['estado'] = 'Desconocido';
-                    }
-        
+          
+              // Obtener las asignaciones
+              $datos_asignaciones = $eventounidad->get_datos_eventoUnidad($row['ev_id']);
+              $asignacion = [];
+              if (is_array($datos_asignaciones) && count($datos_asignaciones) > 0) {
+                  foreach ($datos_asignaciones["data"] as $row_asignaciones) {
+                      $unid_id = $row_asignaciones['sec_id'];
+                      $datos_unidad = $unidad->get_seccion_unidad($unid_id);
+                      foreach ($datos_unidad as $row_unidad) {
+                          $asignacion[] = $row_unidad['unid_nom'];
+                      }
+                  }
+                  $asignacion = array_unique($asignacion);
+                  // Si hay asignaciones, mostrar las unidades asignadas
+                  $evento['asignacion'] = '<span class="label label-pill label-primary">' . implode(' - ', $asignacion) . '</span>';
+              } else {
+                  // Si no hay asignaciones, mostrar mensaje estilizado con ícono de advertencia
+                  $evento['asignacion'] = '<span class="label label-warning"><i class="fa-solid fa-minus-circle"></i> No asignada</span>';
+              }
+
+              // Nivel de peligro con estilos e íconos
+              if ($row['ev_niv_id'] == 1) {
+                  $evento['nivel_peligro'] = '<span class="label label-pill label-danger"><i class="fa-solid fa-exclamation-triangle"></i> Crítico</span>';
+              } elseif ($row['ev_niv_id'] == 2) {
+                  $evento['nivel_peligro'] = '<span class="label label-pill label-warning"><i class="fa-solid fa-exclamation-circle"></i> Medio</span>';
+              } elseif ($row['ev_niv_id'] == 3) {
+                  $evento['nivel_peligro'] = '<span class="label label-pill label-success"><i class="fa-solid fa-info-circle"></i> Bajo</span>';
+              } else {
+                  $evento['nivel_peligro'] = '<span class="label label-pill label-default"><i class="fa-solid fa-circle"></i> Común</span>';
+              }
+              // Estado con estilos e íconos
+              $dato_estado = $estado->get_datos_estado($row['ev_est']);
+              if (isset($dato_estado[0]['est_nom'])) {
+                  if ($dato_estado[0]['est_nom'] == "En Proceso") {
+                      $evento['estado'] = '<span class="label label-pill label-success"><i class="fa-solid fa-hourglass-half"></i> ' . $dato_estado[0]['est_nom'] . '</span>';
+                  } elseif ($dato_estado[0]['est_nom'] == "Finalizado") {
+                      $evento['estado'] = '<span class="label label-pill label-danger"><i class="fa-solid fa-check-circle"></i> ' . $dato_estado[0]['est_nom'] . '</span>';
+                  } else {
+                      $evento['estado'] = '<span class="label label-pill label-secondary"><i class="fa-solid fa-question-circle"></i> ' . $dato_estado[0]['est_nom'] . '</span>';
+                  }
+              } else {
+                  $evento['estado'] = 'Desconocido';
+              }
+                    // Fecha de apertura
                     $evento['fecha_apertura'] = $row['ev_inicio'];
-        
+          
+                    // Botón para ver documentos
                     $evento['ver_documentos'] = "<button class='btnDocumentos' data-ev-id='" . $row['ev_id'] . "'><i class='fa-regular fa-folder-open'></i></button>";
-        
                     $eventos[] = $evento;
                 }
                 
@@ -282,10 +280,7 @@ if (isset($_GET["op"])) {
             } else {
                 echo json_encode([]);
             }
-            break;
-        
-        
-
+          break;
         
             case "tablas-dashboard":
 
@@ -483,9 +478,11 @@ if (isset($_GET["op"])) {
                     $usu_id,
                     $adjunto
                 );
-        
+               $args_noticia = ["asunto"=>"Evento Cerrado","mensaje"=>$_POST["detalle_cierre"],"id_evento"=>$_POST["ev_id"],"url"=>"#"];
                 // Verificar si cerrar_evento devuelve true
                 if ($datos === true) {
+                    $seccion->update_disponible_todos_de_evento_cerrado($_POST['ev_id']);
+                    $noticia->crear_noticia_y_enviar_grupo_usuario($args_noticia);
                     echo 1;
                 } else {
                     // Imprimir el error recibido para diagnóstico
@@ -755,5 +752,4 @@ if (isset($_GET["op"])) {
     }
 
 
-}        
 }

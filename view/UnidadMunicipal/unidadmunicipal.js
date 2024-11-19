@@ -118,8 +118,6 @@ const columnConfig = {
   unid_id: 'ID',
   unid_nom: 'Nombre',
   unid_est: 'Estado',
-  responsable_rut: 'Responsable RUT',
-  reemplazante_rut: 'Reemplazante RUT',
   acciones: 'Acciones'
 };
 
@@ -191,18 +189,14 @@ const editItem = (id) => {
          <option value="1" ${cells[2].textContent === 'En servicio' ? 'selected' : ''}>En servicio</option>
          <option value="2" ${cells[2].textContent === 'En proceso' ? 'selected' : ''}>En proceso</option>
          <option value="3" ${cells[2].textContent === 'Sin servicio' ? 'selected' : ''}>Sin servicio</option>
-       </select>` +
-      `<input id="editResponsableRut" class="swal2-input" value="${cells[3].textContent.split('-')[0].replace(/\./g, '')}" placeholder="Responsable RUT" required>` +
-      `<input id="editReemplazanteRut" class="swal2-input" value="${cells[4].textContent.split('-')[0].replace(/\./g, '')}" placeholder="Reemplazante RUT" required>`,
+       </select>`,
     focusConfirm: false,
     preConfirm: () => {
       const nombre = document.getElementById('editUnidNom').value;
       const estado = document.getElementById('editUnidEst').value;
-      const responsableRut = document.getElementById('editResponsableRut').value;
-      const reemplazanteRut = document.getElementById('editReemplazanteRut').value;
 
       // Validar los datos si es necesario antes de enviar
-      if (!nombre || !estado || !responsableRut || !reemplazanteRut) {
+      if (!nombre || !estado) {
         Swal.showValidationMessage('Todos los campos son obligatorios');
         return false;
       }
@@ -211,8 +205,6 @@ const editItem = (id) => {
         unid_id: id,
         unid_nom: nombre,
         unid_est: estado,
-        responsable_rut: responsableRut,
-        reemplazante_rut: reemplazanteRut
       };
 
       // Realizar la solicitud para actualizar los datos
@@ -322,20 +314,14 @@ function fn_agregar_unidad() {
          <option value="1">En servicio</option>
          <option value="2">En proceso</option>
          <option value="3">Sin servicio</option>
-       </select>` +
-      `<input id="addResponsableRut" class="swal2-input" placeholder="Responsable RUT" required>` +
-      `<input id="addReemplazanteRut" class="swal2-input" placeholder="Reemplazante RUT" required>`,
+       </select>`,
     focusConfirm: false,
     preConfirm: () => {
       const nombre = document.getElementById('addUnidNom').value;
       const estado = document.getElementById('addUnidEst').value;
-      let responsableRut = document.getElementById('addResponsableRut').value;
-      let reemplazanteRut = document.getElementById('addReemplazanteRut').value;
-      responsableRut = limpiarRut(responsableRut);
-      reemplazanteRut = limpiarRut(reemplazanteRut);
 
       // Validar los datos si es necesario antes de enviar
-      if (!nombre || !estado || !responsableRut || !reemplazanteRut) {
+      if (!nombre || !estado ) {
         Swal.showValidationMessage('Todos los campos son obligatorios');
         return false;
       }
@@ -343,8 +329,6 @@ function fn_agregar_unidad() {
       const postData = {
         unid_nom: nombre,
         unid_est: estado,
-        responsable_rut: responsableRut,
-        reemplazante_rut: reemplazanteRut
       };
 
       // Realizar la solicitud para agregar la nueva unidad

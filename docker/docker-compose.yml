@@ -9,6 +9,10 @@ services:
       - ../../sistema_emergenciasV2:/var/www/html
     networks:
       - mi_red
+    environment:
+      SMTP_HOST: mailhog
+      SMTP_PORT: 1025
+      MAILHOG_HOST: mailhog
 
   mysql:
     image: mysql:8.4.0
@@ -43,5 +47,14 @@ services:
       - "8000:8000"
     networks:
       - mi_red
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "8025:8025" # La interfaz web de MailHog
+      - "1025:1025" # El puerto SMTP que PHP usará
+    networks:
+      - mi_red
+
 networks:
   mi_red:

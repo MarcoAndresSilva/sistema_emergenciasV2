@@ -181,50 +181,51 @@ INSERT INTO `tm_est_unidad` (`est_un_id`, `est_un_nom`) VALUES
 --
 
 CREATE TABLE `tm_evento` (
-  `ev_id` int(11) NOT NULL,
+  `ev_id` int(11) NOT NULL AUTO_INCREMENT,
   `usu_id` int(11) NOT NULL,
   `ev_desc` varchar(50) NOT NULL,
   `ev_est` int(11) NOT NULL,
-  `ev_inicio` datetime NOT NULL,
+  `ev_inicio` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `ev_final` datetime DEFAULT NULL,
   `ev_direc` varchar(100) NOT NULL,
   `ev_latitud`  DOUBLE NOT NULL,
   `ev_longitud` DOUBLE NOT NULL,
   `cat_id` int(11) NOT NULL,
   `ev_niv` int(11) NOT NULL,
-  `ev_img` varchar(123)
+  `ev_img` varchar(123),
+  PRIMARY KEY (`ev_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `tm_evento`
 --
 
-INSERT INTO `tm_evento` (`ev_id`, `usu_id`, `ev_desc`, `ev_est`, `ev_inicio`, `ev_final`, `ev_direc`, `ev_latitud`, `ev_longitud`, `cat_id`, `ev_niv`, `ev_img`) VALUES
-(10, 1, 'Descripcion', 2, '2024-01-08 12:09:06', NULL, 'Anita Fresno 327', -33.6860493, -71.2150019, 9, 1, NULL),
-(16, 1, 'Descripcion', 2, '2024-01-08 17:03:26', NULL, 'loica parcela 7', -33.6860493, -71.2150019, 1, 3, NULL),
-(19, 1, 'Descripcion', 2, '2024-01-11 12:53:31', NULL, 'Colonial 2', -33.6855446, -71.2171806, 7, 1, NULL),
-(21, 1, 'Descripcion', 2, '2024-01-15 13:11:52', NULL, 'Libertad 2031', -33.6855446, -71.2171806, 5, 3, NULL),
-(22, 1, 'Constado de carretera km18', 2, '2024-01-16 18:44:15', NULL, 'Ruta 78', -33.6855446, -71.2171806, 1, 3, NULL),
-(24, 1, 'Costado de Carretera direccion santiago', 2, '2024-01-16 19:21:18', NULL, 'Ruta 78', -33.6855446, -71.2171806, 1, 2, NULL),
-(85, 1, 'Planta interior', 2, '2024-01-21 20:35:37', NULL, 'Anita Fresno 327', -33.6860493, -71.2150019, 1, 2, NULL),
-(114, 2, 'caso de incendio en la villa colonial', 2, '2024-01-31 09:13:23', '2024-05-24 15:48:12', 'colonial 13', -33.6855421, -71.2171669, 1, 1, ''),
-(141, 2, 'Planta interior', 2, '2024-02-02 08:18:52', '2024-02-06 10:45:59', 'Plaza cardenales', -33.6855446, -71.2171806, 1, 1, ''),
-(143, 2, 'Planta interior', 2, '2024-02-06 11:26:10', '2024-02-15 11:27:38', 'Sin dirección', -33.6855446, -71.2171806, 1, 0, ''),
-(144, 2, 'Asalto', 2, '2024-02-15 11:30:32', '2024-05-24 10:19:11', 'cunco2207', -33.6779895, -71.1743368, 1, 2, ''),
-(145, 2, 'evento test', 2, '2024-02-16 09:29:05', '2024-05-24 12:13:39', 'muni melipilla', -33.6860493, -71.2150019, 4, 2, ''),
-(146, 2, 'gdfhfgdh', 2, '2024-03-21 17:21:00', '2024-03-22 11:17:20', 'gfhfdghhggh', -33.6860493, -71.2150019, 9, 3, ''),
-(147, 2, 'se cayo un arbol', 2, '2024-03-22 09:37:49', '2024-05-24 10:03:19', 'Sin dirección', -33.6856435, -71.2230970, 7, 0, ''),
-(148, 2, 'asaltacion', 2, '2024-03-22 16:10:33', '2024-05-24 15:49:22', 'Sin dirección', -33.6855738, -71.2172411, 2, 1, ''),
-(149, 2, 'efsdfsdfds', 2, '2024-03-25 16:50:19', '2024-05-24 12:13:42', 'Sin dirección', -33.6855794, -71.2172355, 9, 2, ''),
-(150, 2, 'barristas quemando neumaticos', 2, '2024-03-26 10:08:15', '2024-05-24 15:49:19', 'centro de melipila', -33.6855446, -71.2171806, 4, 1, ''),
-(151, 2, 'barristas quemando neumaticos', 2, '2024-05-22 10:08:15', '2024-05-24 15:39:45', 'centro de melipila', -33.6855446, -71.2171806, 4, 1, ''),
-(152, 3, 'dfsafdsrgde', 2, '2024-05-22 23:27:39', '2024-05-24 15:07:47', 'Sin dirección', -33.6855446, -71.2171806, 2, 1, ''),
-(153, 3, 'accidente arma corta', 2, '2024-05-24 09:56:27', '2024-05-24 10:03:30', 'Sin dirección', -33.6809571, -71.2166493, 2, 0, ''),
-(154, 3, 'barricadas', 2, '2024-05-24 10:01:55', '2024-05-24 10:03:33', 'mackena #5465', -33.6855446, -71.2171806, 4, 0, ''),
-(155, 3, 'casa habitacion', 2, '2024-05-24 10:02:36', '2024-05-24 10:03:36', 'bernardo leigthon 87687', -33.6855446, -71.2171806, 1, 0, ''),
-(156, 3, 'casa habitacion', 1, '2024-05-24 15:50:11', NULL, 'los jazmines 342', -33.6855446, -71.2171806, 1, 0, ''),
-(157, 3, 'niño intoxicado', 1, '2024-05-24 15:50:49', NULL, 'colegio melipilla', -33.6855446, -71.2171806, 9, 0, ''),
-(158, 3, 'caída de árbol obstruye la vía', 1, '2024-05-24 15:51:40', NULL, 'Av. Loreto', -33.6855446, -71.2171806, 1, 1, '');
+INSERT INTO `tm_evento` (`usu_id`, `ev_desc`, `ev_est`, `ev_inicio`, `ev_final`, `ev_direc`, `ev_latitud`, `ev_longitud`, `cat_id`, `ev_niv`, `ev_img`) VALUES
+( 1, 'Descripcion', 2, '2024-01-08 12:09:06', NULL, 'Anita Fresno 327', -33.6860493, -71.2150019, 9, 1, NULL),
+( 1, 'Descripcion', 2, '2024-01-08 17:03:26', NULL, 'loica parcela 7', -33.6860493, -71.2150019, 1, 3, NULL),
+( 1, 'Descripcion', 2, '2024-01-11 12:53:31', NULL, 'Colonial 2', -33.6855446, -71.2171806, 7, 1, NULL),
+( 1, 'Descripcion', 2, '2024-01-15 13:11:52', NULL, 'Libertad 2031', -33.6855446, -71.2171806, 5, 3, NULL),
+( 1, 'Constado de carretera km18', 2, '2024-01-16 18:44:15', NULL, 'Ruta 78', -33.6855446, -71.2171806, 1, 3, NULL),
+( 1, 'Costado de Carretera direccion santiago', 2, '2024-01-16 19:21:18', NULL, 'Ruta 78', -33.6855446, -71.2171806, 1, 2, NULL),
+( 1, 'Planta interior', 2, '2024-01-21 20:35:37', NULL, 'Anita Fresno 327', -33.6860493, -71.2150019, 1, 2, NULL),
+( 2, 'caso de incendio en la villa colonial', 2, '2024-01-31 09:13:23', '2024-05-24 15:48:12', 'colonial 13', -33.6855421, -71.2171669, 1, 1, ''),
+( 2, 'Planta interior', 2, '2024-02-02 08:18:52', '2024-02-06 10:45:59', 'Plaza cardenales', -33.6855446, -71.2171806, 1, 1, ''),
+( 2, 'Planta interior', 2, '2024-02-06 11:26:10', '2024-02-15 11:27:38', 'Sin dirección', -33.6855446, -71.2171806, 1, 0, ''),
+( 2, 'Asalto', 2, '2024-02-15 11:30:32', '2024-05-24 10:19:11', 'cunco2207', -33.6779895, -71.1743368, 1, 2, ''),
+( 2, 'evento test', 2, '2024-02-16 09:29:05', '2024-05-24 12:13:39', 'muni melipilla', -33.6860493, -71.2150019, 4, 2, ''),
+( 2, 'gdfhfgdh', 2, '2024-03-21 17:21:00', '2024-03-22 11:17:20', 'gfhfdghhggh', -33.6860493, -71.2150019, 9, 3, ''),
+( 2, 'se cayo un arbol', 2, '2024-03-22 09:37:49', '2024-05-24 10:03:19', 'Sin dirección', -33.6856435, -71.2230970, 7, 0, ''),
+( 2, 'asaltacion', 2, '2024-03-22 16:10:33', '2024-05-24 15:49:22', 'Sin dirección', -33.6855738, -71.2172411, 2, 1, ''),
+( 2, 'efsdfsdfds', 2, '2024-03-25 16:50:19', '2024-05-24 12:13:42', 'Sin dirección', -33.6855794, -71.2172355, 9, 2, ''),
+( 2, 'barristas quemando neumaticos', 2, '2024-03-26 10:08:15', '2024-05-24 15:49:19', 'centro de melipila', -33.6855446, -71.2171806, 4, 1, ''),
+( 2, 'barristas quemando neumaticos', 2, '2024-05-22 10:08:15', '2024-05-24 15:39:45', 'centro de melipila', -33.6855446, -71.2171806, 4, 1, ''),
+( 3, 'dfsafdsrgde', 2, '2024-05-22 23:27:39', '2024-05-24 15:07:47', 'Sin dirección', -33.6855446, -71.2171806, 2, 1, ''),
+( 3, 'accidente arma corta', 2, '2024-05-24 09:56:27', '2024-05-24 10:03:30', 'Sin dirección', -33.6809571, -71.2166493, 2, 0, ''),
+( 3, 'barricadas', 2, '2024-05-24 10:01:55', '2024-05-24 10:03:33', 'mackena #5465', -33.6855446, -71.2171806, 4, 0, ''),
+( 3, 'casa habitacion', 2, '2024-05-24 10:02:36', '2024-05-24 10:03:36', 'bernardo leigthon 87687', -33.6855446, -71.2171806, 1, 0, ''),
+( 3, 'casa habitacion', 1, '2024-05-24 15:50:11', NULL, 'los jazmines 342', -33.6855446, -71.2171806, 1, 0, ''),
+( 3, 'niño intoxicado', 1, '2024-05-24 15:50:49', NULL, 'colegio melipilla', -33.6855446, -71.2171806, 9, 0, ''),
+( 3, 'caída de árbol obstruye la vía', 1, '2024-05-24 15:51:40', NULL, 'Av. Loreto', -33.6855446, -71.2171806, 1, 1, '');
 -- --------------------------------------------------------
 
 --
@@ -268,82 +269,49 @@ INSERT INTO `tm_ev_niv` (`ev_niv_id`, `ev_niv_nom`) VALUES
 --
 
 CREATE TABLE `tm_asignado` (
-  `id_inter` int(11) NOT NULL,
+  `id_inter` int(11) NOT NULL AUTO_INCREMENT,
   `ev_id` int(11) DEFAULT NULL,
-  `unid_id` int(11) NOT NULL
+  `sec_id` int(11) NOT NULL,
+  PRIMARY KEY (`id_inter`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `tm_asignado`
 --
 
-INSERT INTO `tm_asignado` (`id_inter`, `ev_id`, `unid_id`) VALUES
-(6, 85, 2),
-(7, 85, 5),
-(8, 84, 3),
-(9, 84, 4),
-(10, 84, 5),
-(11, 83, 1),
-(12, 37, 1),
-(13, 24, 3),
-(14, 24, 4),
-(15, 24, 5),
-(16, 22, 1),
-(17, 22, 2),
-(18, 22, 3),
-(19, 21, 1),
-(20, 21, 2),
-(21, 21, 5),
-(22, 19, 2),
-(23, 16, 4),
-(24, 10, 1),
-(25, 10, 3),
-(26, 10, 5),
-(111, 137, 2),
-(115, 138, 3),
-(116, 138, 4),
-(118, 139, 2),
-(119, 140, 2),
-(121, 140, 4),
-(220, 115, 2),
-(229, 141, 4),
-(230, 142, 2),
-(231, 142, 3),
-(232, 142, 4),
-(233, 142, 5),
-(244, 143, 2),
-(245, 143, 3),
-(246, 143, 4),
-(247, 143, 5),
-(274, 146, 1),
-(288, 147, 2),
-(289, 147, 4),
-(290, 147, 3),
-(299, 149, 5),
-(301, 148, 3),
-(302, 114, 4),
-(303, 144, 4),
-(304, 145, 3),
-(308, 150, 3),
-(309, 150, 5),
-(310, 151, 3),
-(312, 152, 3),
-(313, 153, 3),
-(314, 154, 2),
-(315, 154, 3),
-(316, 155, 2),
-(317, 155, 3),
-(318, 155, 4),
-(319, 155, 5),
-(320, 156, 2),
-(321, 156, 5),
-(322, 156, 4),
-(323, 156, 3),
-(324, 157, 2),
-(325, 157, 4),
-(326, 157, 3),
-(327, 157, 5),
-(329, 158, 1);
+INSERT INTO `tm_asignado` ( `ev_id`, `sec_id`) VALUES
+( 10, 2),( 10, 5),
+( 9, 3),( 9, 4), ( 9, 5), 
+( 8, 1),
+( 12, 1),
+( 13, 3),( 13, 4),( 13, 5),
+( 14, 1),( 14, 2),( 14, 3),
+( 15, 1),( 15, 2),( 15, 5),
+( 16, 2),
+( 17, 4),
+( 18, 1),( 18, 3),( 18, 5),
+( 19, 2),( 20, 3),( 20, 4),
+( 21, 2),( 22, 2),( 22, 4),
+( 23, 2),
+( 24, 4),
+( 25, 2),( 25, 3),( 25, 4),( 25, 5),
+( 1, 2), ( 1, 3), ( 1, 4), ( 1, 5),
+( 2, 1),
+( 3, 2), ( 3, 4), ( 3, 3),
+( 4, 5), 
+( 5, 3), 
+( 6, 4), 
+( 7, 4), 
+( 8, 3), 
+( 9, 3), ( 9, 5),
+( 10, 3),
+( 11, 3),
+( 12, 3),
+( 13, 2),( 13, 3),
+( 14, 2),( 14, 3),( 14, 4),( 14, 5),
+( 15, 2),( 15, 5),( 15, 4),( 15, 3),
+( 16, 2),( 16, 4),( 16, 3),( 16, 5),
+( 17, 1);
 
 
 --
@@ -373,27 +341,41 @@ INSERT INTO `tm_usu_tipo` (`usu_tipo_id`, `usu_tipo_nom`) VALUES
 CREATE TABLE `tm_unidad` (
   `unid_id` int(11) NOT NULL,
   `unid_nom` varchar(20) NOT NULL,
-  `unid_est` int(11) NOT NULL,
-  `responsable_rut` int(8) DEFAULT NULL,
-  `reemplazante_rut` int(8) DEFAULT NULL
+  `unid_est` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `tm_unidad`
 --
 
-INSERT INTO `tm_unidad` (`unid_id`, `unid_nom`, `unid_est`, `responsable_rut`, `reemplazante_rut`) VALUES
-(1, 'DGA', 2, 20879105, 20879105),
-(2, 'Seguridad Publica', 1, 20879105, 20879105),
-(3, 'Carabineros', 1, 20879105, 20879105),
-(4, 'Bomberos', 1, 20879105, 20879105),
-(5, 'Ambulancia', 3, 20879105, 20879105);
+INSERT INTO `tm_unidad` (`unid_id`, `unid_nom`, `unid_est`) VALUES
+(1, 'DGA', 2),
+(2, 'Seguridad Publica', 1),
+(3, 'Control', 1),
+(4, 'Emergencias', 1),
+(5, 'Informatica', 3);
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `tm_usuario`
 --
+
+CREATE TABLE IF NOT EXISTS `tm_seccion` (
+  `sec_id` int(11) NOT NULL auto_increment,
+  `sec_unidad` int(11) NOT NULL,
+  `sec_nombre` varchar(150) NOT NULL,
+  `sec_detalle` varchar(250) NOT NULL,
+  `sec_est` varchar(250) DEFAULT 1,
+  PRIMARY KEY (`sec_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+INSERT INTO `tm_seccion` (`sec_id`, `sec_nombre`, `sec_detalle`, `sec_unidad`) VALUES
+(1, 'grupo1', 'Administracion de la aplicacion', '1'),
+(2, 'grupo2', 'Administracion de usuarios', '2'),
+(3, 'grupo3', 'Administrar Evento', '3'),
+(4, 'grupo4', 'Encargados de tramposte', '4'),
+(5, 'grupo5', 'Desarrollo de la aplicacion', '5');
 
 CREATE TABLE `tm_usuario` (
   `usu_id` int(11) NOT NULL,
@@ -408,6 +390,7 @@ CREATE TABLE `tm_usuario` (
   `fecha_elim` datetime DEFAULT NULL,
   `estado` int(11) NOT NULL,
   `usu_unidad` int(11) NOT NULL,
+  `usu_seccion` int(11) NOT NULL,
   `usu_tipo` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci COMMENT='Tabla mantenedor de usuarios';
 
@@ -415,11 +398,13 @@ CREATE TABLE `tm_usuario` (
 -- Volcado de datos para la tabla `tm_usuario`
 --
 
-INSERT INTO `tm_usuario` (`usu_id`, `usu_nom`, `usu_ape`, `usu_correo`, `usu_telefono`, `usu_name`, `usu_pass`, `fecha_crea`, `fecha_modi`, `fecha_elim`, `estado`, `usu_tipo`, `usu_unidad`) VALUES
-(1, 'Cristian', 'Suazo', 'crhiiss26@gmail.com', 968093527, 'csuazo', 'e10adc3949ba60abbe56e057f20f883e', '2023-12-30 13:15:58', NULL, NULL, 1, 2,1),
-(2, 'Admin', 'admin', 'admin@mail.com', 961718297, 'admin', '202cb962ac59075b964b07152d234b70', '2024-01-03 18:09:32', NULL, NULL, 1, 2,1),
-(3, 'Marco', 'Silva', 'marco.silvaponce10@gmail.com', 997827161, 'msilva', '827ccb0eea8a706c4c34a16891f84e7b', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 3,2),
-(4, 'marquisio', 'Silviña', 'memo@test.com', 965412724, 'marquisio', '827ccb0eea8a706c4c34a16891f84e7b', '2024-03-20 13:01:58', NULL, NULL, 1, 3,3);
+INSERT INTO `tm_usuario` (`usu_id`, `usu_nom`, `usu_ape`, `usu_correo`, `usu_telefono`, `usu_name`, `usu_pass`, `fecha_crea`, `fecha_modi`, `fecha_elim`, `estado`, `usu_tipo`, `usu_unidad`, `usu_seccion`) VALUES
+(1, 'Cristian', 'Suazo', 'cristian.suazo@munimelipilla.cl', 968093527, 'csuazo', 'e10adc3949ba60abbe56e057f20f883e', '2023-12-30 13:15:58', NULL, NULL, 1, 2,1,3),
+(2, 'Admin', 'admin', 'admin@mail.com', 961718297, 'admin', md5('123'), '2024-01-03 18:09:32', NULL, NULL, 1, 2,5,5),
+(3, 'Marco', 'Silva', 'marco.silva@munimelipilla.cl', 997827161, 'msilva', '827ccb0eea8a706c4c34a16891f84e7b', '0000-00-00 00:00:00', '0000-00-00 00:00:00', '0000-00-00 00:00:00', 1, 3,3,5),
+(4, 'Nelson', 'Navarro', 'nelson.navarro@munimelipilla.cl', 965412724, 'nnavarro', 'b08cab3a853b8d1e609905d7161daf80', '2024-03-20 13:01:58', NULL, NULL, 1, 3,4,5),
+(5, 'Dangelo', 'Contreras', 'dangelo.contreras@munimelipilla.cl', 965412724, 'dcontreras',  md5('Dcontrer!123') , '2024-03-20 13:01:58', NULL, NULL, 1, 3,2,2),
+(6, 'Jose', 'Ruminot', 'joseluis.ruminot@munimelipilla.cl', 965412724, 'JRumino',  md5('JRumino!1234') , '2024-03-20 13:01:58', NULL, NULL, 1, 3,2,2);
 
 
 
@@ -466,7 +451,7 @@ insert into tm_rob_pass(`usu_id`,`mayuscula`,`minuscula`,`especiales`,`numeros`,
 (1,false,false,false,true,false,'2024-05-16 15:47:31'),
 (2,false,false,false,true,false,'2024-05-16 15:47:31'),
 (3,false,false,false,true,false,'2024-05-16 15:47:31'),
-(4,false,false,false,true,false,'2024-05-16 15:47:31');
+(4,true,true,true,true,true,'2024-05-16 15:47:31');
 --
 -- Estructua de tabla para tm_reg_log
 --
@@ -576,6 +561,7 @@ CREATE TABLE tm_emergencia_detalle(
   `ev_desc` MEDIUMTEXT NOT NULL, 
   `ev_inicio` DATETIME DEFAULT CURRENT_TIMESTAMP,
   `ev_est` INT NOT NULL,
+  `privado` INT DEFAULT 0,
   PRIMARY KEY (`emergencia_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -584,11 +570,11 @@ CREATE TABLE tm_emergencia_detalle(
 --
 
 INSERT INTO `tm_emergencia_detalle`(`emergencia_id`,`ev_id`,`usu_id`,`ev_desc`,`ev_est`) VALUES
-(1,161,1,'Requiero Soporte',1),
-(2,161,2,'Como puedo ayudarte',1),
-(3,161,1,'Requiero su ayuda para cambiar la SSD de mi laptop',1),
-(4,161,2,'No hay problema indicame numero de serie',1),
-(5,161,1,'SN:816511616XX',1);
+(1,1,1,'Requiero Soporte',1),
+(2,1,2,'Como puedo ayudarte',1),
+(3,1,1,'Requiero su ayuda para cambiar la SSD de mi laptop',1),
+(4,1,2,'No hay problema indicame numero de serie',1),
+(5,1,1,'SN:816511616XX',1);
 
 --
 -- estructura de tm_noticia 
@@ -633,8 +619,35 @@ PRIMARY KEY (id_regla)
 
 INSERT INTO tm_regla_envio (asunto, unidad, seccion, usuario, tipo_usuario)
 VALUES  ('Nuevo Evento', '1,2,4', '1,2,4', '1,2,4', '1,2,4'),
+        ('Agregar Permisos',"5", null,null, null),
         ('Evento Cerrado', null, null, '4', '1');
 
+--
+-- estructura de tm_permisos
+--
+CREATE TABLE tm_permisos(
+  id_permiso INT  NOT NULL auto_increment,
+  permiso VARCHAR(150) UNIQUE,
+  unidad VARCHAR(150),
+  seccion VARCHAR(150),
+  usuario VARCHAR(150),
+  tipo_usuario VARCHAR(50),
+PRIMARY KEY (id_permiso)
+);
+
+INSERT INTO tm_permisos(permiso,unidad,seccion,usuario,tipo_usuario) VALUES
+('Crear Nuevo Evento','','3','',''),
+('Agregar Permisos','5','','','3'),
+('Derivar','5','','','3'),
+('Control Unidad','5','','','3'),
+('Control Noticia','5','','','3'),
+('Control Categoria','5','','','3'),
+('Control Motivos','5','','','3'),
+('Control password','5','','','3'),
+('Control passunidad','5','','','3'),
+('Control usuario','5','','','3'),
+('Cerrar Evento','1,2,4','1,2,4','4','1'),
+('Crear Usuario','1,2,4','1,2,4','1,2,4','1,2,4');
 --
 -- Indices de la tabla `tm_camb_asig`
 --
@@ -658,13 +671,6 @@ ALTER TABLE `tm_estado`
 --
 ALTER TABLE `tm_est_unidad`
   ADD PRIMARY KEY (`est_un_id`);
-
---
--- Indices de la tabla `tm_evento`
---
-ALTER TABLE `tm_evento`
-  ADD PRIMARY KEY (`ev_id`);
-
 --
 -- Indices de la tabla `tm_ev_cierre`
 --
@@ -676,13 +682,6 @@ ALTER TABLE `tm_ev_cierre`
 --
 ALTER TABLE `tm_ev_niv`
   ADD PRIMARY KEY (`ev_niv_id`);
-
---
--- Indices de la tabla `tm_asignado`
---
-ALTER TABLE `tm_asignado`
-  ADD PRIMARY KEY (`id_inter`);
-
 --
 -- Indices de la tabla `tm_usu_tipo`
 --
@@ -709,30 +708,24 @@ ALTER TABLE `tm_usuario`
 -- AUTO_INCREMENT de la tabla `tm_camb_asig`
 --
 ALTER TABLE `tm_camb_asig`
-  MODIFY `camb_asig_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
+  MODIFY `camb_asig_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `tm_categoria`
 --
 ALTER TABLE `tm_categoria`
-  MODIFY `cat_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `cat_id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT de la tabla `tm_estado`
 --
 ALTER TABLE `tm_estado`
-  MODIFY `est_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `est_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `tm_est_unidad`
 --
 ALTER TABLE `tm_est_unidad`
-  MODIFY `est_un_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
---
--- AUTO_INCREMENT de la tabla `tm_evento`
---
-ALTER TABLE `tm_evento`
-  MODIFY `ev_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=159;
+  MODIFY `est_un_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `tm_ev_cierre`
@@ -744,30 +737,24 @@ ALTER TABLE `tm_ev_cierre`
 -- AUTO_INCREMENT de la tabla `tm_ev_niv`
 --
 ALTER TABLE `tm_ev_niv`
-  MODIFY `ev_niv_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `ev_niv_id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT de la tabla `tm_asignado`
---
-ALTER TABLE `tm_asignado`
-  MODIFY `id_inter` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=330;
---
 -- AUTO_INCREMENT de la tabla `tm_usu_tipo`
 --
 ALTER TABLE `tm_usu_tipo`
-  MODIFY `usu_tipo_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `usu_tipo_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `tm_unidad`
 --
 ALTER TABLE `tm_unidad`
-  MODIFY `unid_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `unid_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `tm_usuario`
 --
 ALTER TABLE `tm_usuario`
-  MODIFY `usu_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `usu_id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

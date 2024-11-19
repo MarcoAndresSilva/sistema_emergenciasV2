@@ -10,7 +10,7 @@
 }
 
 .bg-illustration {
-    /* position: relative; */
+    display: flex;
     height: 100vh;
     width: 50vw;
     /* background: url("https://i.ibb.co/RhMZprS/jony-Image2-1.png") no-repeat center center scroll; */
@@ -23,6 +23,7 @@
             background: linear-gradient(to bottom, #FFAFBD, #C9FFBF); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
             
   }
+  
   .bg-illustration img {
     width: 350px;
     -webkit-user-select: none;

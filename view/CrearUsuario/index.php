@@ -1,7 +1,7 @@
 <?php
 require_once("../../config/conexion.php");
-
-if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_tipo"] == 2)) {
+require_once("../../models/Permisos.php");
+Permisos::redirigirSiNoAutorizado("Crear Usuario");
 ?>
 
 <!DOCTYPE html>
@@ -94,6 +94,15 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
                         <fieldset class="form-group">
                             <label class="form-label semibold" for="exampleInput">unidad</label>
                             <select id="usu_unidad" class="form-control" >
+                              <option value="">-------------</option>
+                            </select>
+                        </fieldset>
+                    </div>
+                    <div class="col-lg-5">
+                        <fieldset class="form-group">
+                            <label class="form-label semibold" for="exampleInput">seccion</label>
+                            <select disabled id="usu_seccion" class="form-control" >
+                              <option>-------------</option>
                             </select>
                         </fieldset>
                     </div>
@@ -109,14 +118,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
     
     </body>
         
-    <?php
-       require_once("../MainJs/js.php"); 
-       
-    }else{
-        header("Location:". Conectar::ruta () ."index.php");
-    }
-    
-    ?>
+    <?php require_once("../MainJs/js.php"); ?>
     <script type="text/javascript" src="./crearusuario.js"></script>
 
 </html>

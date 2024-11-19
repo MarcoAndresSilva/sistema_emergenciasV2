@@ -1,5 +1,9 @@
 <?php 
-require_once 'Usuario.php';
+require_once __DIR__.'/../models/Usuario.php';
+require_once __DIR__.'/../models/Correo.php';
+require_once __DIR__.'/../models/Evento.php';
+require_once __DIR__.'/../models/Formato.php';
+
 class Noticia extends Conectar {
 
   public function add_noticia(string $asunto, string $mensaje, string $url=null){
@@ -44,6 +48,12 @@ class Noticia extends Conectar {
     $ultima_noticia = $this->obtenerUltimoRegistro('tm_noticia',"noticia_id");
     $id_noticia_new = $ultima_noticia["noticia_id"];
     $envio_usuario = $this->enviar_noticia_grupal_por_lista_usuario($id_noticia_new,$lista_usuario);
+    $formato = $this->formato_noticia_correo_segun_asunto($agrsNoticia);
+    $correo = new Correo('', $formato->asunto, $formato->mensaje);
+    $correo->agregarEncabezado('Content-Type', 'text/html; charset=utf-8');
+    $correo->setGrupoDestinatario($lista_usuario);
+    $resultado_correo = $correo->enviar();
+
     if ($envio_usuario["status"] !== "success"){
       return [
         "status"=>"error",
@@ -57,7 +67,57 @@ class Noticia extends Conectar {
       "message"=>"Crear y enviar Terminado",
       "add_noticia"=>$add_noticia,
       "enviar_grupo"=>$envio_usuario,
+      "enviar_correo"=>$resultado_correo,
     ];
+  }
+  public function crear_y_enviar_noticia_para_derivados(array $argsNoticia){
+    $id_evento = $argsNoticia["id_evento"];
+    $formato = $this->formato_noticia_correo_segun_asunto($argsNoticia);
+    $usuario = new Usuario();
+    $lista_usuarios = $usuario->get_usuario_derivados_por_evento($id_evento);
+    if (empty($lista_usuarios)){
+      return "No hay usuarios asociados a este evento";
+    }
+    $correo = new Correo('', $formato->asunto, $formato->mensaje);
+    $correo->setGrupoDestinatario($lista_usuarios);
+    $correo->agregarEncabezado('Content-Type', 'text/html; charset=utf-8');
+    $resultado_correo = $correo->enviar();
+    return $resultado_correo;
+  }
+
+  private function formato_noticia_correo_segun_asunto(array $argsNoticia) {
+    $formato = new Formato();
+    $evento = new Evento();
+    $asunto = $argsNoticia["asunto"];
+    if ($asunto === "Nuevo Evento"){
+      $id_evento = $evento->get_id_ultimo_evento();
+      $datos_evento = $evento->informacion_evento_completa($id_evento);
+      $formato->setCuerpoNuevoEvento($datos_evento);
+      return $formato;
+    }elseif( $asunto === "Evento Cerrado"){
+      $id_evento = $argsNoticia["id_evento"];
+      $datos_evento = $evento->get_evento_motivo_cierre($id_evento);
+      $formato->SetCuerpoCierreEvento($datos_evento);
+      return $formato;
+    }elseif ($asunto === "Derivado"){
+      $id_evento = $argsNoticia["id_evento"];
+      $datos_evento = $argsNoticia;
+      $formato->setCuerpoDerivadoAgregado($datos_evento);
+      return $formato;
+    }elseif ($asunto === "Detalle Evento"){
+      $id_evento = $argsNoticia["id_evento"];
+      $datos_evento = $argsNoticia;
+      $formato->setCuerpoActualizarEvento($datos_evento);
+      return $formato;
+    }elseif ($asunto === "Eliminar Derivado"){
+      $id_evento = $argsNoticia["id_evento"];
+      $datos_evento = $argsNoticia;
+      $formato->setCuerpoDerivadorEliminado($datos_evento);
+      return $formato;
+    }
+    $formato->setAsunto($asunto);
+    $formato->setMensaje($argsNoticia["mensaje"]);
+    return $formato;
   }
 
  public function enviar_noticia_grupal_por_lista_usuario(int $noticia, array $lista_usuario) {
@@ -139,7 +199,8 @@ class Noticia extends Conectar {
             FROM tm_noticia_usuario as ns
             JOIN tm_noticia as nti
             ON (nti.noticia_id=ns.noticia_id)
-            WHERE usu_id=:usuario_id;";
+    WHERE usu_id=:usuario_id
+    ORDER BY nti.noticia_id DESC";
     $params = [":usuario_id"=>$usuario_id];
     $result = $this->ejecutarConsulta($sql,$params);
     if ($result){

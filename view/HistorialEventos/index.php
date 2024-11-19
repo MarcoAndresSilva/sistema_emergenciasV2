@@ -1,6 +1,9 @@
 <?php
 require_once("../../config/conexion.php");
-if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_tipo"] == 2)) {
+
+require_once("../../models/Permisos.php");
+Permisos::redirigirSiNoAutorizado();
+
 ?>
 
 <!DOCTYPE html>
@@ -19,6 +22,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
     <!-- Agrega el script de DataTables -->
     <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script src="./ver_documentos.js"></script>
     <title>Sistema Emergencia</title>
 </head>
 
@@ -97,14 +101,8 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 
 require_once("../MainJs/js.php");
 ?>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdCMoRAl_-ARUflpa4Jn_qUoOpdXlxQEg&libraries=places"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdCMoRAl_-ARUflpa4Jn_qUoOpdXlxQEg&libraries=places&v=3.55"></script>
 </body>
 
 <script type="text/javascript" src="./historialeventos.js"></script>
 </html>
-
-<?php
-} else {
-    header("location:" . Conectar::ruta() . "index.php");
-}
-?>

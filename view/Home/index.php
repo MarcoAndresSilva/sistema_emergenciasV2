@@ -1,10 +1,8 @@
 <?php
 require_once("../../config/conexion.php");
-
-if (isset($_SESSION["usu_id"])) {
-	
+require_once("../../models/Permisos.php");
+Permisos::redirigirSiNoAutorizado();
 ?>
-
 <!DOCTYPE html>
 <?php require_once("../MainHead/head.php"); ?>
 <html>
@@ -161,14 +159,4 @@ if (isset($_SESSION["usu_id"])) {
 <?php require_once("../MainJs/js.php"); ?>
 <script type="text/javascript" src="home.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-
-<?php
-
-}else{
-	header("location:".Conectar::ruta()."index.php");
-}
-?>
-
-
 </html>

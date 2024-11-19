@@ -1,3 +1,4 @@
+<?php require_once("../../models/Permisos.php"); ?>
 <header class="site-header">
 	<div class="container-fluid container-fluid-header">
 		
@@ -30,7 +31,7 @@
 							<a class="dropdown-item" href="../Perfil"><span
 										  class="font-icon glyphicon glyphicon-cog"></span>Editar Perfil</a>
 							<?php 
-								if ($_SESSION["usu_tipo"] == 2){
+								if (Permisos::isPermited("Crear Usuario")) {
 							?> 
 							<a class="dropdown-item" href="../CrearUsuario/index.php"><span
 							class="font-icon glyphicon glyphicon-plus"></span>Crear Usuario</a>

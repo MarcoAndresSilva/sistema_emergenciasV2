@@ -12,6 +12,9 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+     <!-- Agrega el script de DataTables -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
     <title>Sistema Emergencia</title>
 </head>
 
@@ -53,6 +56,7 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
                             <th style="width:10%">Nivel Peligro</th>
                             <th style="width:10%">Estado</th>
                             <th style="width:15%">Hora Apertura</th>
+                            <th style="width:5%">Cambiar Nivel de Peligro</th>
                             <th style="width:5%">Derivar Evento</th>
                             <th style="width:5%">Chat del Evento</th>
                             
@@ -88,12 +92,16 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
 
     <?php require_once("../MainFooter/footer.php"); ?>
 
-    <?php
+<?php
+
+require_once('modalNivelPeligro.php');
 require_once('modalDerivar.php');
 require_once("../MainJs/js.php");
 ?>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdCMoRAl_-ARUflpa4Jn_qUoOpdXlxQEg&libraries=places"></script>
-</body>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAdCMoRAl_-ARUflpa4Jn_qUoOpdXlxQEg&libraries=places&v=3.55"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script type="text/javascript" src="./nivelpeligro.js"></script>
 <script type="text/javascript" src="./derivar.js"></script>
 <script type="text/javascript" src="./evento.js"></script>
 <?php
@@ -132,6 +140,7 @@ if (isset($_GET['id_evento'])) {
         });
     }
 </script>
+</body>
 </html>
 
 <?php

@@ -1,13 +1,3 @@
-$(document).ready(function() {
-
-  // Obtener el elemento <a> por su ID
-  var enlace = document.querySelector('.NuevoEvento');
-  // Añadir una clase al enlace
-  enlace.classList.add('selected');
-});
-
-
-
 var map, marker;
 var melipilla = {lat: -33.68546006255509, long: -71.21451520290904};
 var currentLat = melipilla.lat;
@@ -109,29 +99,6 @@ function resetMapToDefault() {
   $('#address').val('');
 }
 
-function initMap() {
-  var defaultLocation = { lat: currentLat, lng: currentLng };
-  map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 17,
-    center: defaultLocation
-  });
-
-  marker = new google.maps.Marker({
-    position: defaultLocation,
-    map: map,
-    title: 'Arrastrar',
-    draggable: true
-  });
-
-  google.maps.event.addListener(marker, 'dragend', function(event) {
-    currentLat = event.latLng.lat();
-    currentLng = event.latLng.lng();
-    $('#ev_latitud').val(currentLat);
-    $('#ev_longitud').val(currentLng);
-    $('#address').val(updateAddressFromLatLng(currentLat, currentLng));
-  });
-}
-
 function geocodeAddress(address) {
   var geocoder = new google.maps.Geocoder();
   geocoder.geocode({ 'address': address }, function(results, status) {
@@ -205,20 +172,51 @@ function initAutocomplete() {
   });
 }
 
+function esPlusCode(codigo) {
+  const patron = /^[A-Z0-9]{4}\+[A-Z0-9]{2,}$/i;
+  return patron.test(codigo);
+}
+
 function updateAddressFromLatLng(lat, lng) {
   var geocoder = new google.maps.Geocoder();
   var latLng = new google.maps.LatLng(lat, lng);
-  var address = '';
 
   geocoder.geocode({ 'latLng': latLng }, function(results, status) {
     if (status === google.maps.GeocoderStatus.OK && results[0]) {
-      address = results[0].formatted_address;
-      $('#address').val(address);
+      const address = procesarResultados(results, 0);
+      if (address) {
+        $('#address').val(address);
+      } else {
+        console.error('No se pudo encontrar una dirección válida.');
+      }
     } else {
       console.error('Geocoding falló debido a: ' + status);
     }
   });
-  return address;
+}
+
+function procesarResultados(results, index) {
+  if (index < results.length) {
+    const addressComponents = results[index].address_components;
+
+    // Suponiendo que:
+    // - El número de la calle es el primer componente
+    // - El nombre de la calle es el segundo componente
+
+    const numeroCalle = addressComponents[0] ? addressComponents[0].long_name : '';
+    const nombreCalle = addressComponents[1] ? addressComponents[1].long_name : '';
+
+    const address = [nombreCalle, numeroCalle].filter(Boolean).join(', ');
+
+    if (esPlusCode(numeroCalle) || esPlusCode(nombreCalle)) {
+      return procesarResultados(results, index + 1);
+    } else {
+      return address;
+    }
+  } else {
+    console.error('No se encontraron direcciones válidas después de un Plus Code');
+    return null; // O retorna un valor por defecto si no se encuentran direcciones válidas
+  }
 }
 
 function cargarCategorias() {

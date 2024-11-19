@@ -1,6 +1,8 @@
 <?php
 require_once("../config/conexion.php");
 require_once("../models/Unidad.php");
+require_once("../models/Permisos.php");
+Permisos::redirigirSiNoAutorizado();
 
 $unidad = new Unidad();
 if (isset($_GET["unidad"])) {
@@ -107,10 +109,8 @@ if (isset($_GET["op"])) {
    case 'add_unidad':
         $unid_nom = $_POST["unid_nom"];
         $unid_est = $_POST["unid_est"];
-        $responsable_rut = $_POST["responsable_rut"];
-        $reemplazante_rut = $_POST["reemplazante_rut"];
 
-        $resultado = $unidad->add_unidad($unid_nom, $unid_est, $responsable_rut, $reemplazante_rut);
+        $resultado = $unidad->add_unidad($unid_nom, $unid_est);
 
         // Verificar el resultado y construir la respuesta JSON en base al status y message
         if (!empty($resultado)) {
@@ -169,10 +169,8 @@ if (isset($_GET["op"])) {
         $unid_id = $_POST["unid_id"];
         $unid_nom = $_POST["unid_nom"];
         $unid_est = $_POST["unid_est"];
-        $responsable_rut = $_POST["responsable_rut"];
-        $reemplazante_rut = $_POST["reemplazante_rut"];
 
-        $resultado = $unidad->update_unidad($unid_id, $unid_nom, $unid_est, $responsable_rut, $reemplazante_rut);
+        $resultado = $unidad->update_unidad($unid_id, $unid_nom, $unid_est);
 
         // Verificar el resultado y construir la respuesta JSON en base al status y message
         if (!empty($resultado)) {

@@ -1,6 +1,7 @@
 <?php
 require_once("../../config/conexion.php");
-if (isset($_SESSION["usu_id"])) {
+require_once("../../models/Permisos.php");
+Permisos::redirigirSiNoAutorizado();
 ?>
 
 <!DOCTYPE html>
@@ -52,15 +53,7 @@ if (isset($_SESSION["usu_id"])) {
         <?php require_once("../MainFooter/footer.php"); ?>
 
 </body>
-        
-    <?php
-       require_once("../MainJs/js.php"); 
-       
-    }else{
-        header("Location:". Conectar::ruta () ."index.php");
-    }
-    
-    ?>
+<?php require_once("../MainJs/js.php"); ?>
  
 
 </html>

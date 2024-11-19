@@ -157,6 +157,7 @@ function initializeDataTable() {
         }
 
         const dataTable = $('table').DataTable({
+      language: { url: "../registrosLog/spanishDatatable.json"},
       responsive: true
         });
 
@@ -199,7 +200,7 @@ function createTable(users) {
 function createTableHeader() {
     const thead = document.createElement('thead');
     const headerRow = document.createElement('tr');
-    const headers = ['ID', 'Nombre', 'Apellido', 'Tipo', 'Unidad' ,'Teléfono','Estado' ,'Correo', 'Usuario', 'Acciones'];
+    const headers = ['ID', 'Nombre', 'Apellido', 'Tipo', 'Unidad' ,'Seccion','Teléfono','Estado' ,'Correo', 'Usuario', 'Acciones'];
 
     headers.forEach(headerText => {
         const th = document.createElement('th');
@@ -221,8 +222,9 @@ function createTableBody(users) {
         row.appendChild(createTableCell(user.usu_id));
         row.appendChild(createTableCell(user.Nombre));
         row.appendChild(createTableCell(user.Apellido));
-        row.appendChild(createTypeCell(user.id_tipo,user.usu_id));
+        row.appendChild(createTableCell(user.Tipo));
         row.appendChild(createTableCell(user.Unidad));
+        row.appendChild(createTableCell(user.Seccion));
         row.appendChild(createTableCell(user.Telefono));
         row.appendChild(createStatusBadge(user.estado));
         row.appendChild(createTableCell(user.Correo));
@@ -383,7 +385,7 @@ function createSelect(id, selectedValue) {
     let selectHTML = `<div class="form-floating">
 <select class="form-select" id="${id}" aria-label="Floating label select example">`;
     tiposDeUsuarios.forEach(optionData => {
-        selectHTML += `<option value="${optionData.usu_tipo_id}" ${selectedValue == optionData.usu_tipo_id ? 'selected' : ''}>${optionData.usu_tipo_nom}</option>`;
+        selectHTML += `<option value="${optionData.usu_tipo_id}" ${selectedValue === optionData.usu_tipo_nom ? 'selected' : ''}>${optionData.usu_tipo_nom}</option>`;
     });
     selectHTML += `</select>
 <label for="${id}">Tipo</label>
@@ -428,7 +430,7 @@ function createSelectUnidad(nombreUnidad) {
             text: unidad.unid_nom
         }));
 
-        let selectHTML = `<div class="form-floating">
+        let selectHTML = `<div class="form-floating mb-3">
 <select class="form-select" id="usu_unidad" aria-label="Floating label select example">`;
         options.forEach(opt => {
             selectHTML += `<option value="${opt.value}" ${nombreUnidad === opt.text ? 'selected' : ''}>${opt.text}</option>`;
@@ -493,18 +495,21 @@ function editUser(userId) {
     const apellido = userRow.querySelector('td:nth-child(3)').textContent;
     const correo = userRow.querySelector('td:nth-child(8)').textContent;
     const unidad = userRow.querySelector('td:nth-child(5)').textContent;
-    const telefono = userRow.querySelector('td:nth-child(6)').textContent;
+    const seccion = userRow.querySelector('td:nth-child(6)').textContent;
+    const telefono = userRow.querySelector('td:nth-child(7)').textContent;
     const usuario = userRow.querySelector('td:nth-child(9)').textContent;
-    const tipo = userRow.querySelector('td:nth-child(4) select').value;
+    const tipo = userRow.querySelector('td:nth-child(4)').textContent;
 
-    // Mostrar el SweetAlert con el formulario de edición
     Swal.fire({
         title: 'Editar Usuario',
         html: `
             ${createInput('Nombre', 'usu_nom', 'text', 'Nombre', nombre)}
             ${createInput('Apellido', 'usu_ape', 'text', 'Apellido', apellido)}
             ${createInput('Correo', 'usu_correo', 'email', 'Correo', correo)}
-            ${createSelectUnidad(unidad)}
+            ${createSelectUnidad(unidad)} 
+            <div class="form-floating mb-3" id="seccion-select-container">
+                ${createSelectSeccion([],seccion)}
+            </div>
             ${createInput('Teléfono', 'usu_telefono', 'text', 'Teléfono', telefono)}
             ${createInput('Usuario', 'usu_name', 'text', 'Usuario', usuario)}
             ${createSelect('usu_tipo', tipo)}
@@ -517,13 +522,15 @@ function editUser(userId) {
             const usu_correo = document.getElementById('usu_correo').value;
             const usu_telefono = document.getElementById('usu_telefono').value;
             const usu_unidad = document.getElementById('usu_unidad').value;
+            const usu_seccion = document.getElementById('usu_seccion').value;
             const usu_name = document.getElementById('usu_name').value;
             const usu_tipo = document.getElementById('usu_tipo').value;
-            return { usu_nom, usu_ape, usu_correo, usu_telefono, usu_unidad, usu_name, usu_tipo };
+
+            return { usu_nom, usu_ape, usu_correo, usu_telefono, usu_unidad, usu_seccion, usu_name, usu_tipo };
         }
     }).then((result) => {
         if (result.isConfirmed) {
-            const { usu_nom, usu_ape, usu_correo, usu_telefono, usu_name, usu_tipo, usu_unidad} = result.value;
+            const { usu_nom, usu_ape, usu_correo, usu_telefono, usu_seccion, usu_name, usu_tipo, usu_unidad} = result.value;
             fetchData('update_usuario', {
                 usu_id: userId,
                 usu_nom,
@@ -531,11 +538,11 @@ function editUser(userId) {
                 usu_correo,
                 usu_unidad,
                 usu_telefono,
+                usu_seccion,
                 usu_name,
                 usu_tipo
             }).then(data => {
                 if (data.status === 'success') {
-                    // Actualizar la tabla o volver a cargar los usuarios
                     FnOpetenerUsuarios();
                 }
             }).catch(error => {
@@ -543,6 +550,94 @@ function editUser(userId) {
             });
         }
     });
+
+    // Cargar las secciones correspondientes a la unidad actual al iniciar
+    fetchSeccionesPorUnidad(unidad,seccion);
+
+    // Añadir evento para cambiar las secciones cuando cambie la unidad
+    document.getElementById('usu_unidad').addEventListener('change', function () {
+        const nuevaUnidadSeleccionada = this.value;
+        fetchSeccionesPorUnidad(nuevaUnidadSeleccionada); // Cargar secciones dinámicamente
+    });
+}
+function fetchSeccionesPorUnidad(unidadSeleccionada, seccionActual = '') {
+    let unidadId;
+
+    // Verificamos si `unidadSeleccionada` es un número (unid_id) o un string (unid_nom)
+    if (isNaN(unidadSeleccionada)) {
+        // Si es un string, buscamos el `unid_id` correspondiente en `selectedUnidad`
+        const unidadEncontrada = selectedUnidad.find(unidad => unidad.unid_nom === unidadSeleccionada);
+        if (unidadEncontrada) {
+            unidadId = unidadEncontrada.unid_id;
+        } else {
+            console.error('Unidad no encontrada en selectedUnidad');
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se encontró la unidad seleccionada. Contacta al administrador.',
+                confirmButtonText: 'Aceptar'
+            });
+            return;
+        }
+    } else {
+        // Si ya es un número, lo asignamos directamente
+        unidadId = unidadSeleccionada;
+    }
+
+    console.log('Unidad ID seleccionada:', unidadId);
+
+    // Crear un objeto FormData para enviar los datos como un formulario
+    const formData = new FormData();
+    formData.append('unidad', unidadId);
+
+    // Hacer la petición para obtener las secciones correspondientes
+    fetch(`/controller/seccion.php?op=get_secciones`, {
+        method: 'POST',
+        body: formData // Enviar los datos como FormData
+    })
+    .then(response => response.json())
+    .then(secciones => {
+        if (secciones.length > 0) {
+            // Si hay secciones, pasamos también la sección actual para preseleccionarla
+            const seccionSelect = createSelectSeccion(secciones, seccionActual);
+            document.getElementById('seccion-select-container').innerHTML = seccionSelect;
+        } else {
+            // Si no hay secciones, mostramos una alerta con SweetAlert
+            Swal.fire({
+                icon: 'warning',
+                title: 'Advertencia',
+                text: 'No hay secciones disponibles para esta unidad. Contacta al administrador para agregar nuevas secciones.',
+                confirmButtonText: 'Aceptar'
+            });
+
+            // Limpiamos el select de secciones
+            document.getElementById('seccion-select-container').innerHTML = createSelectSeccion([], seccionActual);
+        }
+    })
+    .catch(error => {
+        console.error('Error al cargar las secciones:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Hubo un problema al cargar las secciones. Inténtalo de nuevo más tarde.',
+            confirmButtonText: 'Aceptar'
+        });
+    });
+}
+function createSelectSeccion(secciones = [], seccionSeleccionada = '') {
+    let selectHTML = `<select id="usu_seccion" class=" form-select" name="usu_seccion">`;
+
+    selectHTML += '<option value="" selected >Seleccione una sección</option>';
+
+    secciones.forEach(seccion => {
+        const selected = (seccion.sec_id === seccionSeleccionada || seccion.sec_nombre === seccionSeleccionada) ? 'selected' : '';
+        selectHTML += `<option value="${seccion.sec_id}" ${selected}>${seccion.sec_nombre} - ${seccion.sec_detalle}</option>`;
+    });
+
+    // Cerrar el select
+    selectHTML += '</select><label for="usu_seccion">Sección</label>';
+
+    return selectHTML;
 }
 function handleTypeChange(userId, newType) {
     fetchData('update_usuario_tipo', { usu_id: userId, usu_tipo: newType })

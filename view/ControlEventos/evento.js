@@ -32,9 +32,15 @@ function cargarTablaGeneral() {
             { "data": "nivel_peligro" },
             { "data": "estado" },
             { "data": "fecha_apertura" },
+            { "data": "ver_niv_peligro" },
             { "data": "ver_derivar" },
             { "data": "ver_detalle" }
+
         ],
+        language: {
+                url: "../registrosLog/spanishDatatable.json"
+        },
+        destroy: true, // Permite volver a inicializar la tabla si ya ha sido creada,
         "createdRow": function(row, data, dataIndex) {
             $("td", row).eq(0).attr("id", "id_evento_celda");
         },
@@ -57,7 +63,6 @@ function ver(ev_id) {
     window.open(`../EmergenciaDetalle?ID=${ev_id}`, '_blank');
     
 }
-var id_evento = $(this).data('ev-id');
 //////////btn derivar//////////// 
 $(document).on("click", "#btnPanelDerivar", function(e) {
     console.log('Button Derivar clicked');
@@ -65,9 +70,21 @@ $(document).on("click", "#btnPanelDerivar", function(e) {
     id_evento = $(this).data('ev-id');
     mostrarIdEvento(id_evento);
     consultarCategoria(id_evento);
-    consultarNivelPeligro(id_evento);
-    consultarUnidadDisponible(id_evento);
+    seccionesAsignadasEvento(id_evento); 
+    cargarsecciones(id_evento); 
 });
+
+
+
+//////////btn peligro//////////// 
+$(document).on("click", "#btnPanelPeligro", function(e) {
+    console.log('Button Nivel Peligro clicked');
+    mostrarModal('#modalNivelPeligro');
+   id_evento = $(this).data('ev_id');
+    console.log(id_evento);
+    mostrarIdEventoNivelPeligro(id_evento);
+    consultarCategoriaNivelPeligro(id_evento);
+    });
 
 
 function mostrarModal(modalId) {
@@ -79,6 +96,7 @@ function mostrarModal(modalId) {
         console.error('Modal not found: ' + modalId);
     }
 }
+
 //////////////////////////////////////////////// Abrir mapa////////////////////////////////////////////////////////////
 
 let lat;
