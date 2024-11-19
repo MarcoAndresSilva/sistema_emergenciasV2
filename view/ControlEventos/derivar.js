@@ -1,17 +1,17 @@
-// Función para obtener el id del evento y mostrarlo en el label
+// Mostrar el ID del evento en el modal
 function mostrarIdEvento(ev_id) {
     $('#derivar_ev_id').text(ev_id);
 }
 
-// Función para mostrar el cat_nom en el label
+// Mostrar el nombre de la categoría
 function consultarCategoria(ev_id) {
-    $.post("../../controller/categoria.php?op=get_cat_nom_by_ev_id", { ev_id: ev_id }, function(data, status) {
+    $.post("../../controller/categoria.php?op=get_cat_nom_by_ev_id", { ev_id: ev_id }, function(data) {
         try {
-            var jsonData = JSON.parse(data);
+            const jsonData = JSON.parse(data);
             if (jsonData && jsonData.cat_nom) {
-                $('#derivar_cat_nombre').text(jsonData.cat_nom); // Usar .text() para establecer el contenido del div
+                $('#derivar_cat_nombre').text(jsonData.cat_nom);
             } else {
-                console.log("No se encontró el cat_nom correspondiente para el evento con ID: " + ev_id);
+                console.log("No se encontró el cat_nom para el evento con ID: " + ev_id);
             }
         } catch (error) {
             console.log("Error al analizar la respuesta JSON:", error);
@@ -19,242 +19,170 @@ function consultarCategoria(ev_id) {
     });
 }
 
-// Función para cargar dinámicamente las secciones en el select
-function cargarSecciones() {
-    $.ajax({
-        url: '../../controller/seccion.php?op=lista_secciones_con_unidad',
-        method: 'POST',
-        dataType: 'json',
-        success: function(data) {
-            // Limpiamos el select antes de rellenarlo
-            $('#multipleSelect').empty();
+// Función para cargar solo las unidades asignadas en el evento
+function seccionesAsignadasEvento(ev_id) {
+    $.post("../../controller/emergenciaDetalle.php?op=mostrar", { ev_id: ev_id }, function(data) {
+        data = JSON.parse(data);
+        
+        // Aquí extraemos solo las unidades y las mostramos, ignorando el resto
+        const listaParticipantes = $("#listaParticipantes");
+        listaParticipantes.empty();
 
-            // Recorremos el array JSON y añadimos las opciones agrupadas por unidad
-            $.each(data, function(index, unidad) {
-                // Crear un optgroup para cada unidad
-                var optgroup = $('<optgroup>', {
-                    label: unidad.unidad // El nombre de la unidad como título del grupo
-                });
+        if (data.unidades && data.unidades.length > 0) {
+            data.unidades.forEach(function(unidad) {
+                listaParticipantes.append(`<li class="list-group-item">${unidad}</li>`);
+            });
+            seccionesAsignadas = data.unidades.map(u => u.sec_id); // Guardamos los IDs asignados en la variable global
+        } else {
+            listaParticipantes.append(`<li class="list-group-item">No hay unidades asignadas</li>`);
+            seccionesAsignadas = [];
+        }
+    });
+}
 
+let seccionesIniciales = [];
+
+function cargarsecciones(ev_id) {
+    fetch('../../controller/seccion.php?op=lista_secciones_con_unidad', { method: 'POST' })
+        .then(response => response.json())
+        .then(data => {
+            const tablaSeccionesBody = $('#tablaSecciones tbody');
+            tablaSeccionesBody.empty();
+
+            data.forEach(unidad => {
                 if (unidad.secciones.length > 0) {
-                    // Si la unidad tiene secciones, añadimos cada sección al optgroup
-                    $.each(unidad.secciones, function(i, seccion) {
-                        optgroup.append(
-                            $('<option>', {
-                                value: seccion.sec_id,
-                                text: seccion.sec_nombre
-                            })
-                        );
+                    unidad.secciones.forEach(seccion => {
+                        // Determinar el estado como texto
+                        const estadoTexto = Number(seccion.sec_est) === 0 ? 'Ocupado' : 'Disponible';
+
+                        // Definir el botón de acción dependiendo del estado
+                        const botonAccion = Number(seccion.sec_est) === 0
+                            ? `<button class="btn btn-danger btn-sm btnEliminar" data-sec-id="${seccion.sec_id}" data-ev-id="${ev_id}">Eliminar</button>`
+                            : `<button class="btn btn-success btn-sm btnAgregar" data-sec-id="${seccion.sec_id}" data-ev-id="${ev_id}">Agregar</button>`;
+
+                        // Agregar fila a la tabla
+                        const row = `
+                            <tr>
+                                <td>${unidad.unidad}</td>
+                                <td>${seccion.sec_nombre}</td>
+                                <td>${seccion.sec_detalle}</td>
+                                <td>${estadoTexto}</td> <!-- Aquí usamos estadoTexto -->
+                                <td>${botonAccion}</td>
+                            </tr>
+                        `;
+                        tablaSeccionesBody.append(row);
                     });
                 } else {
-                    // Si no tiene secciones, añadimos un "opción vacía"
-                    optgroup.append(
-                        $('<option>', {
-                            text: 'Esta unidad no tiene secciones',
-                            disabled: true
-                        })
-                    );
-                }
-
-                // Añadimos el optgroup al select
-                $('#multipleSelect').append(optgroup);
-            });
-
-            // Inicializar Select2 después de añadir las opciones
-            $('#multipleSelect').select2({
-                placeholder: 'Selecciona las secciones',
-                allowClear: true,
-                width: '100%' // Ajustar el ancho a 100% si es necesario
-            });
-        },
-        error: function(error) {
-            console.error("Error al cargar las secciones: ", error);
-        }
-    });
-}
-
-function consultarNivelPeligro(id_evento) {
-    
-    //Realiza la recopilación y añade las unidades al select
-    $.post("../../controller/nivelPeligro.php?op=get_nivel_peligro",function(data,status){
-        // Limpiar el contenido actual del select
-        $('#niv_id').empty();
-        
-        $('#niv_id').html(data);
-    });
-    
-    // Obtener unidades asignadas al evento
-    $.post("../../controller/evento.php?op=get_evento_id", { ev_id: id_evento }, function(asignadas, status) {
-        
-        // Marcar como seleccionado el nivel de peligro del evento
-        if (typeof asignadas[0]['ev_niv'] !== 'undefined') {
-            
-            //Obtener el id del nivel de peligro que esta en el evento
-            var nivelPeligroEvento = asignadas[0]['ev_niv'];
-            
-            // Seleccionar el nivel de peligro en el select
-            $('#niv_id').val(nivelPeligroEvento);
-
-        }        
-    }, 'json');
-}
-
-//Funcion para consultar las unidades disponibles y mostrarlas en los check
-function consultarUnidadDisponible(id_evento) {
-    var unid_est = 1;// Obtén el ID del evento
-    var est_id = 1;
-    // Limpiar el contenido actual del div
-    $('#unidadOptions').empty();
-    $.post("../../controller/unidad.php?unidad=listar", {est_id: est_id },function(data,status){
-
-        // Agregar opciones al div
-        for (var i = 0; i < data.length; i++) {
-
-            var option = '<div class="form-check">' +
-                '<input class="form-check-input" type="checkbox" name="unidad" id="unidad_' + data[i].unid_id + '" value="' + data[i].unid_id + '">' +
-                '<label class="form-check-label" for="unidad_' + data[i].unid_id + '">' + data[i].unid_nom + '</label>' +
-                '</div>';
-
-            $('#unidadOptions').append(option);
-        }
-        //Obtener unidades asignadas al evento
-        $.post("../../controller/eventoUnidad.php?op=get_datos_eventoUnidad", {ev_id: id_evento }, function(asignadas,status){
-            // Verificar si asignadas es un array antes de usar forEach
-            if (Array.isArray(asignadas)) {
-                asignadas.forEach(unidad => {
-                    var unidadID = unidad['unid_id'];
-                    $('#unidad_' + unidadID).prop('checked', true);
-                });
-            } else {
-                console.log("La respuesta recibida no es un array: ", asignadas);
-            }
-        }, 'json');
-        
-    }, 'json');
-}
-
-$(document).on("click", ".btnActualizarTodos", function() {
-    console.log('Button actualizar clicked');
-    ActualizarTodo(id_evento);
-});
-
-
-
-function ActualizarTodo(id_evento){
-    console.log("actualizar todod clicked");
-    mostrarIdEvento(id_evento);
-    //Variables
-    var errorActualizar = 0;
-    var unid_ids = []; 
-    var unid_antiguas = [];
-    var str_antiguo = "";
-    var str_nuevo = "";
-    var error = 0;
-    
-    // Actualiza la unidad asignadas primero
-    var ev_id = id_evento;
-    
-    // Esto devuelve un array con las IDs seleccionadas
-    var unid_ids = []; 
-    $('#unidadOptions input:checked').each(function ( ) {
-        unid_ids.push($(this).val());
-        });
-        //Generación de Array de unidades ya asignadas al evento (antiguo)
-        $.post("../../controller/eventoUnidad.php?op=get_datos_eventoUnidad", {ev_id :ev_id}, function(data,status){
-            if (data.error){
-                console.log("No hay unidades antiguas");
-                str_antiguo = "No hay unidades asignadas";
-            }else {
-                // datos = JSON.parse(data); 
-                unid_antiguas = data.map(function(item) {
-                return item.unid_id;
-                });
-                
-                str_antiguo = unid_antiguas.join(',');
-                
-                //recorrer array antiguo y asignando cada valor a     antigua_unid_id
-                unid_antiguas.forEach(unid_id => {
-                    
-                    //Borrar cada valor en la tabla relacionada al ev_id
-                    $.post("../../controller/eventoUnidad.php?op=delete_unidad", {ev_id :ev_id, unid_id :unid_id}, function(data,status){
-                        console.log("Array delete unidades asignadas");
-                        console.log(data);
-                        if (data == 0) {
-                            error ++;
-                        }
-                    });
-                    
-                });
-            }
-            
-            str_nuevo = unid_ids.join(',');
-            if(str_nuevo == ""){
-                str_nuevo = "No hay unidades";
-            }
-            //Fecha y Hora
-            var ev_final = new Date();
-            var año = ev_final.getFullYear();
-            var mes = ev_final.getMonth() + 1; // Mes en JavaScript es 0-indexado, así que suma 1
-            var dia = ev_final.getDate();
-            var horas = ev_final.getHours();
-            var minutos = ev_final.getMinutes();
-            var segundos = ev_final.getSeconds();
-            // Formatear la fecha y hora como desees
-            var fechaFormateada = año + '-' + mes + '-' + dia + ' ' + horas + ':' + minutos + ':' + segundos;
-            var fec_cambio = fechaFormateada;
-            
-            $.post("../../controller/eventoUnidad.php?op=reporte_actualizacion", {ev_id :ev_id, str_antiguo :str_antiguo, str_nuevo :str_nuevo,fec_cambio :fec_cambio}, function(data,status){
-                if(data == 0){
-                    console.log("Error en insert reporte_actualizacion");
-                    error ++;
+                    // Mostrar mensaje cuando no hay secciones
+                    const row = `
+                        <tr>
+                            <td>${unidad.unidad}</td>
+                            <td colspan="4">Esta unidad no tiene secciones</td>
+                        </tr>
+                    `;
+                    tablaSeccionesBody.append(row);
                 }
             });
-            
-            //recorrer array nuevo y asignando cada valor a     unid_id
-            unid_ids.forEach(unid_id => {
-                $.post("../../controller/eventoUnidad.php?op=insert_asignacion_unidades", { ev_id: ev_id, unid_id: unid_id }, function(data,status){
-                    if (data == 0) {
-                        error ++;
-                    }
-                });
-                
+
+            // Inicializar DataTables con configuraciones específicas
+            $('#tablaSecciones').DataTable({
+                pageLength: 5,
+                language: {
+                    url: "../registrosLog/spanishDatatable.json"
+                },
+                destroy: true
             });
 
-        },'json' );
-        if(error > 0){
-            console.log("Error: Unidades no actualizadas");
-            errorActualizar += 1;
-        }
-        
-        // Esto devuelve Id del Nivel de Peligro seleccionado
-        var ev_niv = $('#niv_id').val();
-        
-        //Actualizar NivelPeligro
-        //Respuesta de la Consulta del nivel de peligro del evento
-        var RespuestaNivelPeligro = $.post("../../controller/evento.php?op=update_nivelpeligro_evento", { ev_id: ev_id, ev_niv: ev_niv });
-        
-        //Validacion de respuestas y alertas
-        $.when(RespuestaNivelPeligro).done(function ( data2) {
-            
-            if (data2[0] == 1) {
-                console.log("Actualizacion del nivel de peligro exitosa");
-            } else {
-                console.log("Nivel de peligro no realizada");
-                errorActualizar += 1;
-            }
+            // Añadir los eventos para los botones dinámicos de eliminar y agregar
+            $('.btnEliminar').on('click', function(event) {
+                event.preventDefault();
+                const sec_id = $(this).data('sec-id');
+                const ev_id = $(this ).data('ev-id');
+                eliminarderivado(sec_id, ev_id);
+            });
 
-            if(errorActualizar === 0){
-                $('#id_evento').val('');
-                $('#niv_id').val(0);
-                $('#unidadOptions input:checked').prop('checked',false);
-                swal("Actualizado ","Evento actualizado correctamente","success");
-            }else{
-                swal("Error: Al actualizar el Evento","Error en la funcion Unidades o Nivel de Peligro","error");
-            }
-            window.location.reload();
+            $('.btnAgregar').on('click', function(event) {
+                event.preventDefault();
+                const sec_id = $(this).data('sec-id');
+                const ev_id = $(this ).data('ev-id');
+
+                agregarderivado(sec_id, ev_id);
+            });
+        })
+        .catch(error => console.error('Error al cargar las secciones:', error));
+}
+
+
+// Función para eliminar derivado
+async function eliminarderivado(id_seccion, ev_id) {
+    try {
+        let formData = new FormData();
+        formData.append('ev_id', ev_id);
+        formData.append('sec_id', id_seccion);
+
+        let response = await fetch('../../controller/derivar.php?op=delete_derivado', {
+            method: 'POST',
+            body: formData
         });
 
-        // window.location.reload();
-        
+        let resultado = await response.json();
+
+        if (resultado.status === "success") {
+            Swal.fire({
+                title: 'Sección eliminada',
+                text: resultado.message,
+                icon: 'success',
+                confirmButtonText: 'Aceptar',
+                willClose: () => {
+                    $('#modalDerivar').modal('hide'); // Cerrar el modal
+                }
+            });
+        } else {
+            Swal.fire({
+                title: 'Advertencia',
+                text: resultado.message,
+                icon: 'warning',
+                confirmButtonText: 'Aceptar'
+            });
+        }
+    } catch (error) {
+        console.error("Error al eliminar derivado:", error);
     }
-        
+}
+
+// Función para agregar derivado
+async function agregarderivado(id_seccion, ev_id) {
+    try {
+        let formData = new FormData();
+        formData.append('ev_id', ev_id);
+        formData.append('sec_id', id_seccion);
+
+        let response = await fetch('../../controller/derivar.php?op=agregar_derivado', {
+            method: 'POST',
+            body: formData
+        });
+
+        let resultado = await response.json();
+
+        if (resultado.status === "success") {
+            Swal.fire({
+                title: 'Sección añadida',
+                text: resultado.message,
+                icon: 'success',
+                confirmButtonText: 'Aceptar',
+                willClose: () => {
+                    $('#modalDerivar').modal('hide'); // Cerrar el modal
+                }
+            });
+        } else {
+            Swal.fire({
+                title: 'Advertencia',
+                text: resultado.message,
+                icon: 'warning',
+                confirmButtonText: 'Aceptar'
+            });
+        }
+    } catch (error) {
+        console.error("Error al agregar derivado:", error);
+    }
+}
