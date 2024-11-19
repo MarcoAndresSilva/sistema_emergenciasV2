@@ -63,7 +63,6 @@ function ver(ev_id) {
     window.open(`../EmergenciaDetalle?ID=${ev_id}`, '_blank');
     
 }
-var id_evento = $(this).data('ev-id');
 //////////btn derivar//////////// 
 $(document).on("click", "#btnPanelDerivar", function(e) {
     console.log('Button Derivar clicked');
@@ -71,9 +70,8 @@ $(document).on("click", "#btnPanelDerivar", function(e) {
     id_evento = $(this).data('ev-id');
     mostrarIdEvento(id_evento);
     consultarCategoria(id_evento);
-    consultarNivelPeligro(id_evento);
-    consultarUnidadDisponible(id_evento);
-    cargarSecciones();
+    seccionesAsignadasEvento(id_evento); 
+    cargarsecciones(id_evento); 
 });
 
 

@@ -95,7 +95,6 @@ if (isset($_GET["op"])) {
             $ev_desc = "Se ha delega la unidad: " . $unidad_nom;
             $seccion->seccion_disponible($id_seccion);
             $evento->insert_emergencia_detalle($_POST['ev_id'], $usu_id, $ev_desc);
-
             $ags_noticia = [
               "asunto" => "Eliminar Derivado",
               "mensaje" => $ev_desc,
@@ -106,12 +105,13 @@ if (isset($_GET["op"])) {
 
             $noticia->crear_y_enviar_noticia_para_derivados($ags_noticia);
 
-            $resutado = ["status"=>"success","message"=>"se eliminado"];
+            $resultado = ["status"=>"success","message"=>"se eliminado"];
+
             } else {
-             $resutado = ["status"=>"warning","message"=>"no se pudo hacer el cambio"];
+             $resultado = ["status"=>"warning","message"=>"no se pudo hacer el cambio"];
             }
             echo json_encode($resultado);
-            $registroLog->add_log_registro($_SESSION['usu_id'],$_GET['op'],"Eliminar unidad:{$_POST['unid_id']} de evento id {$_POST['ev_id']}");
+            $registroLog->add_log_registro($_SESSION['usu_id'],$_GET['op'],"Eliminar unidad:{$_POST['sec_id']} de evento id {$_POST['ev_id']}");
             break;
 
 

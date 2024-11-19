@@ -47,15 +47,9 @@ class EventoUnidad extends Conectar {
             if ($consulta->rowCount() > 0) {
                 return true;
             } else {
-                ?>
-                <script>console.log("No se eliminaron filas intermedias tm_asignado")</script>
-                <?php
                 return 0;
             }
         } catch (Exception $e) {
-            ?> 
-            <script>console.log("Error catch     delete_unidad")</script>
-            <?php
             throw $e;
         }
     }
