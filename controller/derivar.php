@@ -54,8 +54,12 @@ if (isset($_GET["op"])) {
               "usuario"=>$_SESSION['usu_nom'],
               "unidad"=>$unidad_nom,
             ];
-            $noticia->crear_y_enviar_noticia_para_derivados($ags_noticia);
-             $resultado = ["status"=>"success","message"=>"se agrego la seccion"];
+             try {
+               $correo_resultado = $noticia->crear_y_enviar_noticia_para_derivados($ags_noticia);
+             } catch (Exception $e) {
+               $correo_resultado = $e->getMessage();
+             }
+             $resultado = ["status"=>"success","message"=>"se agrego la seccion","correo"=>$correo_resultado];
             }
             echo json_encode($resultado);
             $registroLog->add_log_registro($_SESSION['usu_id'],$_POST['op'],"evento id:{$_POST['ev_id']} unid:{unid_id}");
@@ -104,11 +108,14 @@ if (isset($_GET["op"])) {
               "unidad"=>$unidad_nom,
             ];
 
-            $noticia->crear_y_enviar_noticia_para_derivados($ags_noticia);
-
-            $resutado = ["status"=>"success","message"=>"se eliminado"];
+            try {
+                $correoResultado = $noticia->crear_y_enviar_noticia_para_derivados($ags_noticia);
+            } catch (Exception $e) {
+                $correoResultado = $e->getMessage();
+            }
+            $resultado = ["status"=>"success","message"=>"se eliminado","correo"=>$correoResultado];
             } else {
-             $resutado = ["status"=>"warning","message"=>"no se pudo hacer el cambio"];
+             $resultado = ["status"=>"warning","message"=>"no se pudo hacer el cambio"];
             }
             echo json_encode($resultado);
             $registroLog->add_log_registro($_SESSION['usu_id'],$_GET['op'],"Eliminar unidad:{$_POST['unid_id']} de evento id {$_POST['ev_id']}");
