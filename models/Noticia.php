@@ -75,6 +75,9 @@ class Noticia extends Conectar {
     $formato = $this->formato_noticia_correo_segun_asunto($argsNoticia);
     $usuario = new Usuario();
     $lista_usuarios = $usuario->get_usuario_derivados_por_evento($id_evento);
+    if (empty($lista_usuarios)){
+      return "No hay usuarios asociados a este evento";
+    }
     $correo = new Correo('', $formato->asunto, $formato->mensaje);
     $correo->setGrupoDestinatario($lista_usuarios);
     $correo->agregarEncabezado('Content-Type', 'text/html; charset=utf-8');
