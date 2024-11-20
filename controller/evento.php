@@ -203,7 +203,7 @@ if (isset($_GET["op"])) {
                   // Botones para derivar y ver detalles
                   $evento['ver_niv_peligro'] = "<button id='btnPanelPeligro' data-ev-id='" . $row['ev_id'] . "'><i class='fa-solid fa-exclamation-triangle'></i></button>";
                   $evento['ver_derivar'] = "<button id='btnPanelDerivar' data-ev-id='" . $row['ev_id'] . "'><i class='fa-solid fa-up-right-from-square'></i></button>";
-                  $evento['ver_detalle'] = "<button id='btnDetalleEmergencia' data-ev-id='" . $row['ev_id'] . "'><i class='fa-regular fa-comments'></i></button>";
+                  $evento['ver_detalle'] = "<a id='btnDetalleEmergencia' href='../EmergenciaDetalle/?ID=".$row['ev_id']."'><i class='fa-regular fa-comments'></i></a>";
       
                   $eventos[] = $evento;
                 }
