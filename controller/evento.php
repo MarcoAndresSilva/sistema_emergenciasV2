@@ -748,6 +748,37 @@ if (isset($_GET["op"])) {
         ]);
         break;
 
+        case 'informacion_evento_completo':
+            header('Content-Type: application/json');
+              $id_evento = isset($_POST['id_evento']) ? $_POST['id_evento'] : null;
+              if (empty($id_evento)){
+                $respuesta = [
+                  "status"=>"error",
+                  "message"=>"id_evento no encontrados",
+                ];
+                echo json_encode($respuesta);
+                break;
+              }
+            $datosEvento = $evento->get_evento_id($id_evento);
+            $secciones_asignadas = $seccion->get_secciones_evento($id_evento);
+            foreach ($secciones_asignadas as $seccion){
+              $id_secciones_asignadas[] = $seccion['id'];
+            }
+            if (is_array($datosEvento) == true and count($datosEvento) > 0){
+                $respuesta = [
+                  "status"=>"success",
+                  "message"=>"Se obtienen los datos del evento $id_evento",
+                  "evento"=>$datosEvento,
+                  "secciones_asignadas"=>["secciones"=>$secciones_asignadas,"id_secciones_asignadas"=>$id_secciones_asignadas],
+                ];
+            }else{
+              $respuesta = [
+                "status"=>"error",
+                "message"=>"No se obtienen los datos del evento $id_evento",
+              ];
+            }
+            echo json_encode($respuesta);
+        break;
 
     }
 
