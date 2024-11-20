@@ -52,17 +52,8 @@ function cargarTablaGeneral() {
             $('.peligro_comun').addClass('label label-pill label-default');
         }
     });
-    $('#tabla-control').on('click', '#btnDetalleEmergencia', function() {
-        ev_id = $(this).data('ev-id');
-        ver(ev_id);
-    });
 }
 
-function ver(ev_id) {
-    // Abrir una nueva pestaña con la ruta especificada
-    window.open(`../EmergenciaDetalle?ID=${ev_id}`, '_blank');
-    
-}
 //////////btn derivar//////////// 
 $(document).on("click", "#btnPanelDerivar", function(e) {
     console.log('Button Derivar clicked');
