@@ -46,7 +46,14 @@ function cargarsecciones(ev_id) {
     fetch('../../controller/seccion.php?op=lista_secciones_con_unidad', { method: 'POST' })
         .then(response => response.json())
         .then(data => {
-            const tablaSeccionesBody = $('#tablaSecciones tbody');
+            const tablaSecciones = $('#tablaSecciones');
+
+            // Destruir DataTable si ya está inicializado
+            if ($.fn.DataTable.isDataTable('#tablaSecciones')) {
+                tablaSecciones.DataTable().clear().destroy();
+            }
+
+            const tablaSeccionesBody = tablaSecciones.find('tbody');
             tablaSeccionesBody.empty();
 
             data.forEach(unidad => {
@@ -57,8 +64,8 @@ function cargarsecciones(ev_id) {
 
                         // Definir el botón de acción dependiendo del estado
                         const botonAccion = Number(seccion.sec_est) === 0
-                            ? `<button class="btn btn-danger btn-sm btnEliminar" data-sec-id="${seccion.sec_id}" data-ev-id="${ev_id}">Eliminar</button>`
-                            : `<button class="btn btn-success btn-sm btnAgregar" data-sec-id="${seccion.sec_id}" data-ev-id="${ev_id}">Agregar</button>`;
+                            ? `<button type="button" class="btn btn-danger btn-sm btnEliminar" data-sec-id="${seccion.sec_id}" data-ev-id="${ev_id}">Eliminar</button>`
+                            : `<button type="button" class="btn btn-success btn-sm btnAgregar" data-sec-id="${seccion.sec_id}" data-ev-id="${ev_id}">Agregar</button>`;
 
                         // Agregar fila a la tabla
                         const row = `
@@ -84,8 +91,8 @@ function cargarsecciones(ev_id) {
                 }
             });
 
-            // Inicializar DataTables con configuraciones específicas
-            $('#tablaSecciones').DataTable({
+            // Inicializar DataTables con configuraciones específicas después de actualizar
+            tablaSecciones.DataTable({
                 pageLength: 5,
                 language: {
                     url: "../registrosLog/spanishDatatable.json"
@@ -97,22 +104,19 @@ function cargarsecciones(ev_id) {
             $('.btnEliminar').on('click', function(event) {
                 event.preventDefault();
                 const sec_id = $(this).data('sec-id');
-                const ev_id = $(this ).data('ev-id');
+                const ev_id = $(this).data('ev-id');
                 eliminarderivado(sec_id, ev_id);
             });
 
             $('.btnAgregar').on('click', function(event) {
                 event.preventDefault();
                 const sec_id = $(this).data('sec-id');
-                const ev_id = $(this ).data('ev-id');
-
+                const ev_id = $(this).data('ev-id');
                 agregarderivado(sec_id, ev_id);
             });
         })
         .catch(error => console.error('Error al cargar las secciones:', error));
 }
-
-
 // Función para eliminar derivado
 async function eliminarderivado(id_seccion, ev_id) {
     try {
@@ -134,7 +138,10 @@ async function eliminarderivado(id_seccion, ev_id) {
                 icon: 'success',
                 confirmButtonText: 'Aceptar',
                 willClose: () => {
-                    $('#modalDerivar').modal('hide'); // Cerrar el modal
+                    cargarsecciones(ev_id); // Volver a cargar la tabla del modal después de aceptar
+                    if (typeof cargarTablaGeneral === "function") {
+                        cargarTablaGeneral(); // Llamar a la función cargarTablaGeneral si existe
+                    }
                 }
             });
         } else {
@@ -171,7 +178,10 @@ async function agregarderivado(id_seccion, ev_id) {
                 icon: 'success',
                 confirmButtonText: 'Aceptar',
                 willClose: () => {
-                    $('#modalDerivar').modal('hide'); // Cerrar el modal
+                    cargarsecciones(ev_id); // Volver a cargar la tabla del modal después de aceptar
+                    if (typeof cargarTablaGeneral === "function") {
+                        cargarTablaGeneral(); // Llamar a la función cargarTablaGeneral si existe
+                    }
                 }
             });
         } else {
