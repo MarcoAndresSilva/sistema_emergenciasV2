@@ -45,7 +45,7 @@ if (isset($_GET["op"])) {
              $usu_id = $_SESSION["usu_id"];
              $seccion_data = $seccion->get_seccion($id_seccion);
              $seccion_nombre_unidad = $seccion_data['sec_unidad_nom'] . "-" . $seccion_data['sec_nombre'];
-             $ev_desc = "Se deriva a seccion: " . $seccion_nombre_unidad;
+             $ev_desc = "<span class='alert alert-success'>Se ha derivado la unidad: $seccion_nombre_unidad</span>";
             $evento->insert_emergencia_detalle($_POST["ev_id"], $usu_id, $ev_desc);
             $ags_noticia = [
               "asunto" => "Derivado",
@@ -96,7 +96,7 @@ if (isset($_GET["op"])) {
             $id_seccion = $_POST['sec_id'];
             $seccion_data = $seccion->get_seccion($id_seccion);
             $seccion_nombre_unidad = $seccion_data['sec_nombre'] . " - " . $seccion_data['sec_unidad_nom'];
-            $ev_desc = "Se ha delega la seccion : " . $seccion_nombre_unidad;
+            $ev_desc = "<span class='alert alert-danger'>Se ha delegado la unidad: $seccion_nombre_unidad</span>";
             $seccion->seccion_disponible($id_seccion);
             $evento->insert_emergencia_detalle($_POST['ev_id'], $usu_id, $ev_desc);
             $ags_noticia = [
