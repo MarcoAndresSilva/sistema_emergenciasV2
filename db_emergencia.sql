@@ -366,7 +366,7 @@ CREATE TABLE IF NOT EXISTS `tm_seccion` (
   `sec_unidad` int(11) NOT NULL,
   `sec_nombre` varchar(150) NOT NULL,
   `sec_detalle` varchar(250) NOT NULL,
-  `sec_est` varchar(250) DEFAULT 1,
+  `sec_est` int(2) DEFAULT 1,
   PRIMARY KEY (`sec_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
