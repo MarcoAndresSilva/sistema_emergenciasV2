@@ -317,21 +317,16 @@ class Evento extends Conectar {
 
     public function get_evento_id($ev_id) {
         try {
-            $conectar = parent::conexion();
-            parent::set_names();
-            $sql = "SELECT * FROM tm_evento where ev_id = '". $ev_id ."' ";
-            $sql = $conectar->prepare($sql);
-            $sql->execute();
-            $resultado = $sql->fetchAll();
+            $sql = "SELECT * FROM tm_evento where ev_id = :ev_id ";
+            $params = [':ev_id' => $ev_id];
+            $resultado = $this->ejecutarConsulta($sql, $params, false);
             
             if (is_array($resultado) && count($resultado) > 0) {
                 return $resultado;
             } else {
-                ?> <script>console.log("No se encontraron Eventos")</script><?php
-                return 0;
+                return [$ev_id];
             }
         } catch (Exception $e) {
-            ?> <script>console.log("Error catch     get_evento_id")</script> <?php
             throw $e;
         }
 
