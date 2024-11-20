@@ -177,11 +177,20 @@ class Seccion extends Conectar {
     return $secciones;
   }
   public function get_secciones_evento($id_evento){
-    $sql = "SELECT * FROM tm_asignado as asig
+    $sql = "SELECT sec.sec_id as 'id',
+                  sec.sec_nombre as 'nombre',
+                  sec.sec_detalle as 'detalle',
+                  sec.sec_est as 'estado',
+                  if(sec.sec_est=1,'Disponible','Ocupado') as 'estado_seccion',
+                  sec.sec_unidad as 'unidad_id',
+                  uni.unid_nom as 'unidad'
+            FROM tm_asignado as asig
             INNER JOIN tm_seccion as sec
             ON (sec.sec_id = asig.sec_id)
             INNER JOIN tm_evento as ev
             ON (ev.ev_id = asig.ev_id)
+            INNER JOIN tm_unidad as uni
+            ON (uni.unid_id = sec.sec_unidad)
             WHERE ev.ev_id = :id_evento";
     $params = [':id_evento' => $id_evento];
     $resultado = $this->ejecutarConsulta($sql, $params);
@@ -192,7 +201,7 @@ class Seccion extends Conectar {
   public function update_disponible_todos_de_evento_cerrado($id_evento){
       $secciones = $this->get_secciones_evento($id_evento);
       foreach ($secciones as $seccion){
-        $this->seccion_disponible($seccion['sec_id']);
+        $this->seccion_disponible($seccion['id']);
       }
   }
   public function seccion_estado($id_seccion){
