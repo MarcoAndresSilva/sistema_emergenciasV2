@@ -41,7 +41,7 @@
                                     <div class="datos-participantes">
                                         <div class="col-lg-2 box-item mt-2 secciones-box">
                                             <fieldset class="form-group">
-                                                <ul id="listaParticipantes" class="list-group">
+                                                <ul id="listaParticipantesderivar" class="list-group">
                                                     <li class="list-group-item"></li>
                                                 </ul>
                                             </fieldset>

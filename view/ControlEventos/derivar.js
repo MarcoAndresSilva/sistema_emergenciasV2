@@ -28,7 +28,7 @@ function seccionesAsignadasEvento(id_evento) {
                 data = JSON.parse(data);
             }
 
-            const listaParticipantes = $("#listaParticipantes");
+            const listaParticipantes = $("#listaParticipantesderivar");
             listaParticipantes.empty();
 
             // Verificar si la respuesta tiene éxito y tiene las secciones asignadas
@@ -68,7 +68,7 @@ function seccionesAsignadasEvento(id_evento) {
     }).fail(function(jqXHR, textStatus, errorThrown) {
         // Manejar el fallo de la solicitud AJAX
         console.error("Error en la solicitud AJAX:", textStatus, errorThrown);
-        $("#listaParticipantes").empty().append(`
+        $("#listaParticipantesderivar").empty().append(`
             <div class="alert alert-info d-flex align-items-center" role="alert">
                 <i class="bi bi-info-circle-fill me-2"></i>
                 <span>No hay secciones asignadas a este evento</span>
