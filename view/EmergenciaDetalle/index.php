@@ -115,6 +115,13 @@ Permisos::redirigirSiNoAutorizado();
 
                 <div class="row">
                     <div class="col-lg-12">
+              <div class="form-check">
+                 <input type="checkbox" class="form-check-input" id="value_privado">
+                <label class="form-check-label" for="exampleCheck1">
+                  <i class="fa fa-lock"></i>
+                  <span>Privado</span>
+                </label>
+               </div>
                         <fieldset class="form-group">
                             <label class="form-label semibold" for="ev_desc">Descripción</label>
                             <div class="summernote-theme-1">

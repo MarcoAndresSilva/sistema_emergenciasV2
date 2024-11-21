@@ -588,15 +588,12 @@ class Evento extends Conectar {
         }
     }
 
-    public function listar_eventosdetalle_por_evento($ev_id) {
-    $msgprivado ="<span class='badge bg-info text-dark'> mensaje privado</span>";
+    public function chat_con_mensage_oculto($ev_id) {
+        $msgprivado ="<span class='alert alert-secondary'> Mensaje Privado Necesitas permisos para verlo</span>";
         try {
-            $conectar = parent::conexion();
-            parent::set_names();
-            
             $sql = "SELECT 
                 tm_emergencia_detalle.emergencia_id,
-                IF (tm_emergencia_detalle.privado = 0, tm_emergencia_detalle.ev_desc, ?) as 'ev_desc',
+                IF (tm_emergencia_detalle.privado = 0, tm_emergencia_detalle.ev_desc, :msg_privado) as 'ev_desc',
                 tm_emergencia_detalle.ev_inicio,
                 tm_usuario.usu_nom,
                 tm_usuario.usu_ape,
@@ -608,14 +605,33 @@ class Evento extends Conectar {
             INNER JOIN tm_usuario on tm_emergencia_detalle.usu_id = tm_usuario.usu_id
             LEFT JOIN tm_unidad ON tm_usuario.usu_unidad = tm_unidad.unid_id -- Unimos con la tabla de unidades
             WHERE
-                tm_emergencia_detalle.ev_id = ?";
-            
-            $sql = $conectar->prepare($sql);
-            $sql->bindValue(1, $msgprivado);
-            $sql->bindValue(2, $ev_id);
-            $sql->execute();
-            
-            $resultado = $sql->fetchAll();
+                tm_emergencia_detalle.ev_id = :ev_id";
+            $params = [":ev_id" => $ev_id, ":msg_privado" => $msgprivado];
+            $resultado = $this->ejecutarConsulta($sql, $params);
+            return $resultado;
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+    public function chat_con_mensage_visible($ev_id) {
+        try {
+            $sql = "SELECT 
+                tm_emergencia_detalle.emergencia_id,
+                tm_emergencia_detalle.ev_desc as 'ev_desc',
+                tm_emergencia_detalle.ev_inicio,
+                tm_usuario.usu_nom,
+                tm_usuario.usu_ape,
+                tm_usuario.usu_tipo,
+                tm_usuario.usu_unidad, -- Incluimos la unidad del usuario
+                tm_unidad.unid_nom -- Agregamos el nombre de la unidad
+            FROM 
+                tm_emergencia_detalle
+            INNER JOIN tm_usuario on tm_emergencia_detalle.usu_id = tm_usuario.usu_id
+            LEFT JOIN tm_unidad ON tm_usuario.usu_unidad = tm_unidad.unid_id -- Unimos con la tabla de unidades
+            WHERE
+                tm_emergencia_detalle.ev_id = :ev_id";
+           $params = [":ev_id" => $ev_id];
+            $resultado = $this->ejecutarConsulta($sql, $params);
             return $resultado;
         } catch (Exception $e) {
             throw $e;

@@ -93,13 +93,15 @@ $(document).on("click", "#btnEnviar", function () {
     var ev_id = getUrlParameter("ID");
     var usu_id = $("#user_idx").val();
     var ev_desc = $("#ev_desc").val();
+    var check_privado = $("#value_privado").is(':checked');
+    var privado = check_privado ? 1 : 0;
   
     if ($("#ev_desc").summernote("isEmpty")) {
       swal("Advertencia!", "Ingresa una descripción", "warning");
     } else {
       $.post(
         "../../controller/emergenciaDetalle.php?op=insertdetalle",
-        { ev_id: ev_id, usu_id: usu_id, ev_desc: ev_desc },
+        { ev_id: ev_id, usu_id: usu_id, ev_desc: ev_desc , privado: privado },
         function () {
           listarDetalle(ev_id);
           swal("Correcto!", "Resgistro actualizado correctamente", "success");

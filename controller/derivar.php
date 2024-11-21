@@ -52,7 +52,7 @@ if (isset($_GET["op"])) {
               "mensaje" => $ev_desc,
               "id_evento"=>$_POST['ev_id'],
               "usuario"=>$_SESSION['usu_nom'],
-              "unidad"=>$unidad_nom,
+              "unidad"=>$seccion_nombre_unidad,
             ];
              try {
                $correo_resultado = $noticia->crear_y_enviar_noticia_para_derivados($ags_noticia);
@@ -104,7 +104,7 @@ if (isset($_GET["op"])) {
               "mensaje" => $ev_desc,
               "id_evento"=>$_POST['ev_id'],
               "usuario"=>$_SESSION['usu_nom'],
-              "unidad"=>$unidad_nom,
+              "unidad"=>$seccion_nombre_unidad,
             ];
 
             try {

@@ -23,7 +23,12 @@ if (isset($_GET["op"])) {
 
         case "listar_detalle_emergencias":
             if (isset($_POST["ev_id"])) {
-                $datos = $evento->listar_eventosdetalle_por_evento($_POST["ev_id"]);
+                $id_evento = $_POST["ev_id"];
+                 if (Permisos::isPermited("Mensajes Privados")){
+                      $datos = $evento->chat_con_mensage_visible($id_evento);
+                 }else{
+                      $datos = $evento->chat_con_mensage_oculto($id_evento);
+                 }
                 foreach ($datos as $row) {
                     ?>
                     <article class="activity-line-item box-typical">
