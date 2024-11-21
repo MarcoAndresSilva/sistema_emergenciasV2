@@ -69,6 +69,42 @@
 }
 
 
+.
+/*Modals styles*/
+#distribucion-espacios-datos{
+  display: flex;
+  justify-content: space-around;
+
+}
+
+#distribucion-espacios-datos .card{
+  width: 45%;
+}
+#listaParticipantes{
+    width: 100%;
+    flex-direction: row;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+#tablaSecciones_wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.select-info{
+  visibility: hidden;
+}
+
+.dataTables_length{
+  visibility:hidden;
+}
+
+.secciones-box{
+  width: 100%;
+}
 .datos-row {
     display: flex;
     flex-direction: row;
@@ -108,6 +144,21 @@ display: flex;
     text-align: left;
     
 }
+#tablaSecciones_wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.select-info{
+  visibility: hidden;
+}
+
+.dataTables_length{
+  visibility:hidden;
+}
+
+
 
 /* Mapa  */
 #modal-mapa{
