@@ -83,19 +83,19 @@ class Permisos extends Conectar{
     $filtro = [
       "tipo_usuario" => [
         "id_name" =>"usu_tipo",
-        "value"=> $list_regla["tipo_usuario"],
+        "value"=> isset($list_regla["tipo_usuario"]) ? $list_regla["tipo_usuario"] : null,
       ],
       "usuario" =>[
         "id_name" =>"usu_id",
-        "value"=> $list_regla["usuario"],
+        "value"=> isset($list_regla["usuario"]) ? $list_regla["usuario"] : null,
       ],
       "seccion" =>[
         "id_name" =>"usu_seccion",
-        "value"=> $list_regla["seccion"],
+        "value"=> isset($list_regla["seccion"]) ? $list_regla["seccion"] : null,
       ],
       "unidad" =>[
         "id_name" =>"usu_unidad",
-        "value"=> $list_regla["unidad"],
+        "value"=> isset($list_regla["unidad"]) ? $list_regla["unidad"] : null,
       ]
     ];
 
