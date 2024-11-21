@@ -132,12 +132,13 @@ Permisos::redirigirSiNoAutorizado();
                     <div class="col-lg-12">
                         <button type="button" id="btnEnviar" class="btn btn-rounded btn-inline btn-primary">Enviar</button>
                     </div>
-
-                    <div class="col-lg-12">
-                        
-                        <button id='btnPanelCerrar' type='button' class='btn btn-rounded btn-danger ladda-button modal-btn'> <i class='fa-solid fa-square-xmark'></i> Cerrar Evento</button>
-                    </div>
-                   
+    <?php
+            if (Permisos::isPermited("Cerrar Evento")){
+               echo '<div class="col-lg-12">';
+               echo " <button id='btnPanelCerrar' type='button' class='btn btn-rounded btn-danger ladda-button modal-btn'> <i class='fa-solid fa-square-xmark'></i> Cerrar Evento</button>";
+               echo '</div>';
+            }
+    ?>
                 </div>
 
             </div>
