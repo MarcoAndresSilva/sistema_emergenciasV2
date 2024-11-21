@@ -130,8 +130,8 @@ $(document).on("click", "#btnPanelDerivar", function(e) {
     mostrarModal('#modalDerivar');
     mostrarIdEvento(id_evento);
     consultarCategoria(id_evento);
-    consultarNivelPeligro(id_evento);
-    consultarUnidadDisponible(id_evento);
+    seccionesAsignadasEvento(id_evento); 
+    cargarsecciones(id_evento); 
 });
 
 var id_evento = getUrlParameter('ID');
@@ -143,7 +143,6 @@ $(document).on("click", "#btnPanelCerrar", function(e) {
     $('#ev_id_cierre').text(id_evento);
     consultarCategoriaCierre(id_evento);
 });
-
 
 // Función para obtener y mostrar la categoría de cierre del evento
 function consultarCategoriaCierre(ev_id) {
