@@ -262,7 +262,7 @@ public function usuarios_a_enviar_segun_regla(string $asunto) {
         "value"=> isset($list_regla["usuario"]) ? $list_regla["usuario"] : null,
       ],
       "seccion" =>[
-        "id_name" =>"usu_id",
+        "id_name" =>"usu_seccion",
         "value"=> isset($list_regla["seccion"]) ? $list_regla["seccion"] : null,
       ],
       "unidad" =>[
