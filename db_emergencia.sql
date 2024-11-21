@@ -647,6 +647,7 @@ INSERT INTO tm_permisos(permiso,unidad,seccion,usuario,tipo_usuario) VALUES
 ('Control passunidad','5','','','3'),
 ('Control usuario','5','','','3'),
 ('Cerrar Evento','1,2,4','1,2,4','4','1'),
+('Mensajes Privados','1,2,4','1,2,4','4','1'),
 ('Crear Usuario','1,2,4','1,2,4','1,2,4','1,2,4');
 --
 -- Indices de la tabla `tm_camb_asig`
