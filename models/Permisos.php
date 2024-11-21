@@ -46,13 +46,17 @@ class Permisos extends Conectar{
 
   public function verificarPermiso($permiso){
     $usuario = $_SESSION["usu_id"];
-    $permisos = $this->usuarios_permitidos($permiso);
-    if(count($permisos) > 0){
-      foreach ($permisos as $permiso){
-        if($permiso["usu_id"] == $usuario){
-          return true;
+    try {
+        $permisos = $this->usuarios_permitidos($permiso);
+        if(count($permisos) > 0){
+          foreach ($permisos as $permiso){
+            if($permiso["usu_id"] == $usuario){
+              return true;
+            }
         }
       }
+    } catch (Exception $e) {
+        return false;
     }
     return false;
   }
