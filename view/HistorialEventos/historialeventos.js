@@ -78,8 +78,8 @@ function consultarEventoMostarMapa(ev_id) {
         
         var eventos = JSON.parse(data);
 
-        lat = eventos[0]['ev_latitud'];
-        long = eventos[0]['ev_longitud'];
+        lat = eventos['ev_latitud'];
+        long = eventos['ev_longitud'];
 
         mostrarMapa(lat,long);
     });
