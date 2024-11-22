@@ -8,6 +8,10 @@ $(document).ready(function() {
     cargarTablaGeneral();
 });
 
+function recargar(ev_id) {
+   cargarTablaGeneral();
+}
+
 function cargarTablaGeneral() {
     $('#tabla-control').DataTable({
         "pageLength": 10,

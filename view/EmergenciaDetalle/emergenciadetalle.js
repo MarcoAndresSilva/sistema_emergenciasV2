@@ -42,6 +42,9 @@ var getUrlParameter = function getUrlParameter(sParam) {
     }
 };
 
+function recargar(ev_id) {
+   listarDetalle(ev_id);
+}
 function listarDetalle(ev_id) {
     // Mostrar los detalles del evento
     $.post("../../controller/emergenciaDetalle.php?op=listar_detalle_emergencias", {ev_id: ev_id}, function(data) {

@@ -173,9 +173,7 @@ async function eliminarderivado(id_seccion, ev_id) {
                 willClose: () => {
                     cargarsecciones(ev_id);
                     seccionesAsignadasEvento(ev_id); 
-                    if (typeof cargarTablaGeneral === "function") {
-                        cargarTablaGeneral();
-                    }
+                    recargar(ev_id);
                 }
             });
         } else {
@@ -214,9 +212,7 @@ async function agregarderivado(id_seccion, ev_id) {
                 willClose: () => {
                     cargarsecciones(ev_id);
                     seccionesAsignadasEvento(ev_id);
-                    if (typeof cargarTablaGeneral === "function") {
-                        cargarTablaGeneral();
-                    }
+                    recargar(ev_id);
                 }
             });
         } else {
