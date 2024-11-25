@@ -779,4 +779,27 @@ class Evento extends Conectar {
     }
     return $respuesta;
   }
+
+  public function get_imagenes_detalle(int $evento_id): array{
+    $sql = "SELECT ev_desc as 'descripcion' FROM tm_emergencia_detalle WHERE ev_id = :evento_id";
+    $params = [":evento_id"=>$evento_id];
+    $resultados = $this->ejecutarConsulta($sql, $params);
+    $imagenesBase64 = [];
+    if (is_array($resultados) && count($resultados) > 0) {
+        foreach ($resultados as $resultado) {
+            if (isset($resultado['descripcion'])) {
+                $imagenBase64 = $this->capturarImagenBase64($resultado['descripcion']);
+                if ($imagenBase64 !== null) {
+                    $imagenesBase64[] = $imagenBase64;
+                }
+            }
+        }
+    }
+    return $imagenesBase64;
+  }
+  private function capturarImagenBase64(string $texto): ?string {
+    $patron = '/<img[^>]*src="data:image\/[a-zA-Z]+;base64,([^"]*)"/';
+    preg_match($patron, $texto, $coincidencias);
+    return isset($coincidencias[1]) ? trim($coincidencias[1]) : null;
+  }
 }
