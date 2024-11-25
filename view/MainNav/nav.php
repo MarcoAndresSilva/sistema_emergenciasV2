@@ -19,6 +19,12 @@ $menu_items = [
         "className" => "HistorialEventos",
         "permiso_requerido" => null
     ],
+     [
+        "nombre"=> "Informe De Evento",
+        "url" => "../GenerarPdf/",
+        "className"=> "GenerarPdf",
+        "permiso_requerido"=> null,
+    ],
     [
         "nombre" => "Control De Evento",
         "url" => "../ControlEventos/",
