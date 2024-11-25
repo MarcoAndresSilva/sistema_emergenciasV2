@@ -761,8 +761,11 @@ if (isset($_GET["op"])) {
               }
             $datosEvento = $evento->get_evento_id($id_evento);
             $secciones_asignadas = $seccion->get_secciones_evento($id_evento);
-            foreach ($secciones_asignadas as $seccion){
-              $id_secciones_asignadas[] = $seccion['id'];
+            $id_secciones_asignadas = [];
+            if (is_array($secciones_asignadas) == true and count($secciones_asignadas) > 0){
+              foreach ($secciones_asignadas as $seccion){
+                $id_secciones_asignadas[] = $seccion['id'];
+              }
             }
             if (is_array($datosEvento) == true and count($datosEvento) > 0){
                 $respuesta = [
