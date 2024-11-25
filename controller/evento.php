@@ -11,8 +11,10 @@ require_once("../models/Noticia.php");
 require_once("../models/Seccion.php");
 require_once("../models/Permisos.php");
 Permisos::redirigirSiNoAutorizado();
+require_once("../models/Usuario.php");
 
 
+$usuario = new Usuario();
 $seccion = new Seccion();
 $evento = new Evento();
 $categoria = new Categoria();
@@ -761,6 +763,7 @@ if (isset($_GET["op"])) {
               }
             $datosEvento = $evento->get_evento_id($id_evento);
             $secciones_asignadas = $seccion->get_secciones_evento($id_evento);
+            $usuario_creador = $usuario->get_info_usuario($datosEvento['usu_id']);
             $id_secciones_asignadas = [];
             if (is_array($secciones_asignadas) == true and count($secciones_asignadas) > 0){
               foreach ($secciones_asignadas as $seccion){
@@ -772,6 +775,7 @@ if (isset($_GET["op"])) {
                   "status"=>"success",
                   "message"=>"Se obtienen los datos del evento $id_evento",
                   "evento"=>$datosEvento,
+                  "creador"=>$usuario_creador['result'],
                   "secciones_asignadas"=>["secciones"=>$secciones_asignadas,"id_secciones_asignadas"=>$id_secciones_asignadas],
                 ];
             }else{
