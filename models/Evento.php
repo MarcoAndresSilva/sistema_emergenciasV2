@@ -317,7 +317,32 @@ class Evento extends Conectar {
 
     public function get_evento_id($ev_id) {
         try {
-            $sql = "SELECT * FROM tm_evento where ev_id = :ev_id ";
+                $sql = "SELECT
+                e.ev_id as 'ev_id',
+                e.ev_direc as 'ev_direc',
+                e.ev_img as 'ev_img',
+                e.ev_latitud as 'ev_latitud',
+                e.ev_longitud as 'ev_longitud',
+                e.ev_desc as 'ev_desc',
+                e.ev_inicio as 'ev_inicio',
+                e.ev_final as 'ev_final',
+                e.ev_est as 'ev_est',
+                c.cat_id as 'cat_id',
+                c.cat_nom as 'cat_nom',
+                e.ev_niv as 'ev_niv',
+                n.ev_niv_nom as 'niv_nom',
+                u.usu_id as 'usu_id',
+                u.usu_nom as 'usu_nombre',
+                u.usu_correo as 'usu_correo',
+                u.usu_ape as 'usu_ape'
+                FROM tm_evento as e
+                inner JOIN tm_usuario as u
+                 on (u.usu_id = e.usu_id)
+                inner join tm_categoria as c
+                on (c.cat_id = e.cat_id)
+                inner join tm_ev_niv as n
+                on (n.ev_niv_id = e.ev_niv)
+                where ev_id = :ev_id ";
             $params = [':ev_id' => $ev_id];
             $resultado = $this->ejecutarConsulta($sql, $params, false);
             
@@ -753,5 +778,28 @@ class Evento extends Conectar {
       ];
     }
     return $respuesta;
+  }
+
+  public function get_imagenes_detalle(int $evento_id): array{
+    $sql = "SELECT ev_desc as 'descripcion' FROM tm_emergencia_detalle WHERE ev_id = :evento_id";
+    $params = [":evento_id"=>$evento_id];
+    $resultados = $this->ejecutarConsulta($sql, $params);
+    $imagenesBase64 = [];
+    if (is_array($resultados) && count($resultados) > 0) {
+        foreach ($resultados as $resultado) {
+            if (isset($resultado['descripcion'])) {
+                $imagenBase64 = $this->capturarImagenBase64($resultado['descripcion']);
+                if ($imagenBase64 !== null) {
+                    $imagenesBase64[] = $imagenBase64;
+                }
+            }
+        }
+    }
+    return $imagenesBase64;
+  }
+  private function capturarImagenBase64(string $texto): ?string {
+    $patron = '/<img[^>]*src="data:image\/[a-zA-Z]+;base64,([^"]*)"/';
+    preg_match($patron, $texto, $coincidencias);
+    return isset($coincidencias[1]) ? trim($coincidencias[1]) : null;
   }
 }
