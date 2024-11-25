@@ -193,7 +193,6 @@ menuLinks.forEach(function(link) {
     linkHref = linkHref.replace(/\/view\//g, '/').replace(/\/{2,}/g, '/'); // Reemplaza '/view/' y '//' con '/'
 
     // Depuración: ver las rutas actuales
-    console.log([linkHref, currentPage]);
 
     // Verificar si el href coincide con la ruta actual
     if (linkHref === currentPage) {
