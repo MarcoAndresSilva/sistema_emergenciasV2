@@ -648,8 +648,9 @@ if (isset($_GET["op"])) {
             echo $datos;
         break;
 
-        case "get_datos_categoria_eventos_ultimos_30_dias":
-            $fecha_inicio = date('Y-m-d', strtotime('-30 days')); // Fecha de inicio hace 30 días
+        case "get_datos_categoria_eventos_ultimos_dias":
+            $dias = isset($_GET['dias']) ? $_GET['dias'] : 30;
+            $fecha_inicio = date('Y-m-d', strtotime('-'.$dias.' days'));
             $datos = $evento->datos_categorias_eventos($fecha_inicio);
             echo json_encode($datos);
         break;
