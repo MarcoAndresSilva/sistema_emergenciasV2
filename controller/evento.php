@@ -314,14 +314,14 @@ if (isset($_GET["op"])) {
                     }
                     
                     //Llama a la funcion get_datos_eventounidad para obtener los nombres de las unidades asignadas
-                    $datos_asignaciones = $eventounidad->get_datos_eventoUnidad($row['ev_id']);
+                    $datos_asignaciones = $seccion->get_secciones_evento($row['ev_id']);
                     // $datos_asignaciones = [[1,1],[2,2]];
                     if (is_array($datos_asignaciones) && count($datos_asignaciones) > 0) { 
                         $recorrido .= "<td>";
                         $contar = 0;
                         foreach($datos_asignaciones as $row_asignaciones){
-                            $unid_id = $row_asignaciones['unid_id'];
-                            $datos_unidad = $unidad->get_datos_unidad($unid_id);
+                            $seccion_id = $row_asignaciones['id'];
+                            $datos_unidad = $unidad->get_seccion_unidad($seccion_id);
                             foreach ($datos_unidad as $row_unidad ) {
                                 if ($contar == 0){
                                     $recorrido .= $row_unidad['unid_nom'];
