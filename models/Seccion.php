@@ -200,8 +200,10 @@ class Seccion extends Conectar {
   }
   public function update_disponible_todos_de_evento_cerrado($id_evento){
       $secciones = $this->get_secciones_evento($id_evento);
-      foreach ($secciones as $seccion){
-        $this->seccion_disponible($seccion['id']);
+      if (is_array($secciones) && count($secciones) > 0){
+         foreach ($secciones as $seccion){
+           $this->seccion_disponible($seccion['id']);
+         }
       }
   }
   public function seccion_estado($id_seccion){
