@@ -154,21 +154,36 @@ class Evento extends Conectar {
         }
     }
 
-    public function get_eventos_por_rango_sin_cantidad($fecha_actual, $fecha_desde_mes_anterior) {
+    public function get_eventos_estadisticas_por_fecha(string $fecha_actual, string $fecha_desde_mes_anterior):array {
         try {
-            $conectar = parent::conexion();
-            parent::set_names();
-            $sql = "SELECT DATE(ev_inicio) as fecha, ev_est FROM tm_evento tme 
-            inner join tm_categoria tmc on tmc.cat_id=tme.cat_id 
-            inner join tm_ev_niv ten on tme.ev_niv=ten.ev_niv_id 
-            inner join tm_estado te on te.est_id=tme.ev_est 
-            WHERE ev_inicio BETWEEN :fecha_inicio AND :fecha_fin ORDER BY ev_inicio";
-            $sql = $conectar->prepare($sql);
-            $sql->bindValue(':fecha_inicio', $fecha_desde_mes_anterior, PDO::PARAM_STR);
-            $sql->bindValue(':fecha_fin', $fecha_actual, PDO::PARAM_STR);
-            $sql->execute();
-            $resultado = $sql->fetchAll();
-            return $resultado;
+              // Usamos COALESCE para asegurar que los resultados sean 0 si no hay eventos
+        $sql = "SELECT
+                    COALESCE(COUNT(CASE WHEN ev_est = 1 THEN 1 END), 0) AS eventos_abiertos,
+                    COALESCE(COUNT(CASE WHEN ev_est = 2 THEN 1 END), 0) AS eventos_cerrados,
+                    COALESCE(COUNT(CASE WHEN ev_est = 3 THEN 1 END), 0) AS eventos_controlados,
+                    COALESCE(COUNT(CASE WHEN ev_est NOT IN (1, 2, 3) THEN 1 END), 0) AS eventos_ext,
+                    COALESCE(COUNT(*), 0) AS cantidad_total
+                FROM tm_evento tme
+                INNER JOIN tm_categoria tmc ON tmc.cat_id = tme.cat_id
+                INNER JOIN tm_ev_niv ten ON tme.ev_niv = ten.ev_niv_id
+                INNER JOIN tm_estado te ON te.est_id = tme.ev_est
+                WHERE ev_inicio BETWEEN :fecha_inicio AND :fecha_fin";
+            $params = [':fecha_inicio'=> $fecha_desde_mes_anterior,
+                    ':fecha_fin'=> $fecha_actual];
+            $resultado = $this->ejecutarConsulta($sql,$params, false);
+            if ($resultado['cantidad_total'] != 0 && isset($resultado['cantidad_total'])) {
+                $porcentaje_abiertas = round(($resultado['eventos_abiertos'] / $resultado['cantidad_total']) * 100, 2);
+                $porcentaje_cerradas = round(($resultado['eventos_cerrados'] / $resultado['cantidad_total']) * 100, 2);
+            } else {
+                $porcentaje_abiertas = 0;
+                $porcentaje_cerradas = 0;
+            }
+
+            // Retornamos el resultado de la consulta con los cálculos
+            return array_merge($resultado, [
+                'porcentaje_abiertas' => $porcentaje_abiertas,
+                'porcentaje_cerradas' => $porcentaje_cerradas
+            ]);
         } catch (Exception $e) {
             throw $e;
         }
