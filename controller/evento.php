@@ -231,7 +231,7 @@ if (isset($_GET["op"])) {
               // Obtener las asignaciones
               $datos_asignaciones = $eventounidad->get_datos_eventoUnidad($row['ev_id']);
               $asignacion = [];
-              if (is_array($datos_asignaciones) && count($datos_asignaciones) > 0) {
+              if (is_array($datos_asignaciones["data"]) && count($datos_asignaciones["data"]) > 0) {
                   foreach ($datos_asignaciones["data"] as $row_asignaciones) {
                       $unid_id = $row_asignaciones['sec_id'];
                       $datos_unidad = $unidad->get_seccion_unidad($unid_id);
