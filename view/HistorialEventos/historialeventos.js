@@ -26,7 +26,8 @@ function cargarTablaGeneral() {
             { "data": "nivel_peligro" },
             { "data": "estado" },
             { "data": "fecha_apertura" },
-            { "data": "ver_documentos" }
+            { "data": "ver_documentos" },
+            { "data": "ver_informe" }
         ],
           language: {
                 url: "../registrosLog/spanishDatatable.json"

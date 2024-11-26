@@ -65,6 +65,7 @@ Permisos::redirigirSiNoAutorizado();
                             <th style="width:10%">Estado</th>
                             <th style="width:15%">Fecha Apertura</th>
                             <th style="width:5%">Ver Documentación</th>
+                            <th style="width:5%">Ver Informe</th>
                         </tr>
                     </thead>
                     <tbody id="datos-criticos">

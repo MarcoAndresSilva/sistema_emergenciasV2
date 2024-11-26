@@ -275,6 +275,7 @@ if (isset($_GET["op"])) {
           
                     // Botón para ver documentos
                     $evento['ver_documentos'] = "<button class='btnDocumentos' data-ev-id='" . $row['ev_id'] . "'><i class='fa-regular fa-folder-open'></i></button>";
+                    $evento['ver_informe'] = "<a class='btn' href='../GenerarPdf/?id_evento=" . $row['ev_id'] . "'><i class='fa fa-file'> </a>";
                     $eventos[] = $evento;
                 }
                 
