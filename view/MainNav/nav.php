@@ -110,27 +110,42 @@ $menu_items = [
 
 function render_menu($items) {
     foreach ($items as $item) {
-        // Verificar permisos si es necesario
-        if (is_null($item['permiso_requerido']) || Permisos::isPermited($item['permiso_requerido'])) {
-            // Si el elemento tiene un submenú, agregar el toggle y el contenedor colapsable
-            if (isset($item['submenu']) && !empty($item['submenu'])) {
-                echo '<a class="'.$item["className"].'"  href="' . $item['url'] . '" data-toggle="collapse-personal" role="button" aria-controls="' . substr($item['url'], 1) . '">';
-                echo '<span class="glyphicon glyphicon-th"></span>';
-                echo '<span class="lbl">' . $item['nombre'] . '</span>';
-                echo '</a>';
-                echo '<div class="collapse-personal" id="' . substr($item['url'], 1) . '">';
-                echo '<div class="card card-body" style="padding-left: 5px; border: none">';
-                // Renderizar el submenú
-                render_menu($item['submenu']);
-                echo '</div></div>';
-            } else {
-                // Si no tiene submenú, renderizar un solo enlace
-                echo '<li class="blue-dirty" ">';
-                echo '<a class ="'.$item['className'].'" href="'.$item['url'].'">';
-                echo '<span class="glyphicon glyphicon-th"></span>';
-                echo '<span class="lbl">' . $item['nombre'] . '</span>';
-                echo '</a></li>';
+        $permisoPermitido = is_null($item['permiso_requerido']) || Permisos::isPermited($item['permiso_requerido']);
+        $submenuVisible = isset($item['submenu']) && !empty($item['submenu']);
+        if ($submenuVisible) {
+            $anySubmenuPermissionValid = false;
+
+            foreach ($item['submenu'] as $subitem) {
+                if (is_null($subitem['permiso_requerido']) || Permisos::isPermited($subitem['permiso_requerido'])) {
+                    $anySubmenuPermissionValid = true;
+                    break;
+                }
             }
+            // Si ninguno de los elementos del submenú tiene permiso, ocultar el submenú
+            if (!$anySubmenuPermissionValid) {
+                $submenuVisible = false;
+                $permisoPermitido = false;
+            }
+        }
+
+        if ($permisoPermitido && $submenuVisible) {
+            echo '<a class="'.$item["className"].'" href="' . $item['url'] . '" data-toggle="collapse-personal" role="button" aria-controls="' . substr($item['url'], 1) . '">';
+            echo '<span class="glyphicon glyphicon-menu-down"></span>';
+            echo '<span class="glyphicon" style="margin-left: 5px;"></span>';
+            echo '<span class="lbl">' . $item['nombre'] . '</span>';
+            echo '</a>';
+            echo '<div class="collapse-personal" id="' . substr($item['url'], 1) . '">';
+            echo '<div class="card card-body" style="padding-left: 5px; border: none">';
+            // Renderizar el submenú si es visible
+            render_menu($item['submenu']);
+            echo '</div></div>';
+        }
+        elseif ($permisoPermitido && !$submenuVisible) {
+            echo '<li class="blue-dirty">';
+            echo '<a class ="'.$item['className'].'" href="'.$item['url'].'">';
+            echo '<span class="glyphicon glyphicon-th"></span>';
+            echo '<span class="lbl">' . $item['nombre'] . '</span>';
+            echo '</a></li>';
         }
     }
 }
