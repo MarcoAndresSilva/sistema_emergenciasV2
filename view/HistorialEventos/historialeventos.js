@@ -52,21 +52,9 @@ function cargarTablaGeneral() {
 let lat;
 let long;
 $(document).on('click', '.btnDireccionarMapa', function() {
-    // Encuentra la fila correspondiente
-    var $tr = $(this).closest('tr');
-    
-    // Obtén la instancia de DataTables
-    var table = $('#tabla-historial').DataTable();
-    
-    // Usa DataTables para obtener los datos de la fila
-    var data = table.row($tr).data();
-    
-    // Obtén el ev_id desde los datos de la fila
-    var ev_id = data.ev_id;
-
-    // Desplegar mapa para direccionar al lugar
+    evento_id = $('#tabla-historial').DataTable().row($(this).closest('tr')).data().ev_id;
+    consultarEventoMostarMapa(evento_id);
     toggleMapa();
-    consultarEventoMostarMapa(ev_id);
 });
 
 function toggleMapa() {   
