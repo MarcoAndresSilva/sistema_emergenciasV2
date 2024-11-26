@@ -74,7 +74,7 @@
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(46, 46, 46, 0.5); /* Sombra para un efecto de profundidad */
-    z-index: 9999; /* Asegura que el modal esté sobre otros elementos */
+    z-index: 100; /* Asegura que el modal esté sobre otros elementos */
     color: black;
     text-align-last: center;
 }
