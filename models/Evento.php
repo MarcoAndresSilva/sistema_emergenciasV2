@@ -91,42 +91,31 @@ class Evento extends Conectar {
         }
     }
 
-    public function get_cantidad_eventos_por_nivel($ev_niv_array, $fecha_actual, $fecha_mes_anterior) {
+    public function get_cantidad_eventos_por_nivel($fecha_actual, $fecha_mes_anterior) {
         try {
-            $conectar = parent::conexion();
-    
-            // Construir la condición para los niveles de emergencia
-            $ev_niv_condition = implode(',', $ev_niv_array);
-    
-            // Consulta SQL para obtener la cantidad de eventos por nivel
-            $sql = "SELECT ev_niv, COUNT(*) AS cantidad FROM tm_evento WHERE ev_niv IN ($ev_niv_condition) AND ev_inicio BETWEEN :fecha_inicio AND :fecha_fin GROUP BY ev_niv";
-    
-            $sql = $conectar->prepare($sql);
-            $sql->bindParam(':fecha_inicio', $fecha_mes_anterior, PDO::PARAM_STR);
-            $sql->bindParam(':fecha_fin', $fecha_actual, PDO::PARAM_STR);
-            $sql->execute();
-            $resultados = $sql->fetchAll(PDO::FETCH_ASSOC);
-    
-            // Inicializar el array de datos
-            $datos = array(
-                'total' => 0,
-                'porcentaje' => 0
-            );
-    
-            // Procesar los resultados
-            foreach ($resultados as $resultado) {
-                $nivel = $resultado['ev_niv'];
-                $cantidad = $resultado['cantidad'];
-    
-                // Sumar la cantidad total
-                $datos['total'] += $cantidad;
-    
-                // Asignar la cantidad al nivel correspondiente en el array de datos
-                $datos["cantidad$nivel"] = $cantidad;
-            }
-    
-            // Devolver los datos
-            return $datos;
+           $sql = 'SELECT
+                        n.ev_niv_id AS "id",
+                        n.ev_niv_nom as "nombre",
+                        COUNT(e.ev_niv) AS cantidad
+                    FROM tm_ev_niv as n
+                    LEFT JOIN tm_evento AS e
+                ON(e.ev_niv = n.ev_niv_id)
+                AND e.ev_inicio between :fecha_inicio and  :fecha_fin
+                GROUP BY n.ev_niv_id, n.ev_niv_nom
+                order by n.ev_niv_id;
+                 ';
+
+            $params = [':fecha_inicio'=> $fecha_mes_anterior ,':fecha_fin'=> $fecha_actual];
+            $resultados = $this->ejecutarConsulta($sql, $params);
+
+           foreach ($resultados as $key => $value) {
+               $resultado[$value['nombre']] = [
+                   'cantidad' => $value['cantidad'],
+                   'id' => $value['id']
+               ];
+           }
+           return $resultado;
+
         } catch (Exception $e) {
             throw $e;
         }

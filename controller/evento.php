@@ -538,31 +538,11 @@ if (isset($_GET["op"])) {
         break;
 
         case "cantidad-segun-nivel-peligro":
-            // Variables
-            $totalCriticosMedios = 0;
-            $totalBajasComunes = 0;
 
-            // Obtener la fecha actual
             $fecha_actual = date('Y-m-d', strtotime('+1 day'));
-
-            // Restar un mes a la fecha actual
             $fecha_mes_anterior = date('Y-m-d', strtotime('-1 month -1 day', strtotime($fecha_actual)));
 
-            // Obtener la cantidad de eventos críticos y medios
-            $datosCriticos = $evento->get_cantidad_eventos_por_nivel([1, 2], $fecha_actual, $fecha_mes_anterior);
-            $totalCriticosMedios = $datosCriticos['total'];
-
-            // Obtener la cantidad de eventos bajas y comunes
-            $datosBajasComunes = $evento->get_cantidad_eventos_por_nivel([3, 0], $fecha_actual, $fecha_mes_anterior);
-            $totalBajasComunes = $datosBajasComunes['total'];
-
-            // Crear un array con los resultados
-            $resultado = array(
-                'totalCriticosMedios' => $totalCriticosMedios,
-                'totalBajasComunes' => $totalBajasComunes
-            );
-
-            // Devolver los resultados como JSON
+            $resultado = $evento->get_cantidad_eventos_por_nivel($fecha_actual, $fecha_mes_anterior);
             echo json_encode($resultado);
         break;
 

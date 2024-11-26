@@ -81,16 +81,19 @@ $.post("../../controller/evento.php?op=cantidad-segun-nivel-peligro", function(r
       // Parsear la respuesta JSON
       var data = JSON.parse(respuesta);
 
+      totalCriticosMedios = data.Critico.cantidad + data.Medio.cantidad;
+      totalBajasComunes = data.Bajo.cantidad + data.General.cantidad;
       // Asignar los valores a los recuadros
-      $('#number-eventos-criticos-medios').html(data.totalCriticosMedios);
-      $('#number-eventos-bajas-comunes').html(data.totalBajasComunes);
+      $('#number-eventos-criticos-medios').html(totalCriticosMedios);
+      $('#number-eventos-bajas-comunes').html(totalBajasComunes);
 
       // Calcular el porcentaje de emergencias críticas y medias
-      var porcentajeCriticosMedios = (data.totalCriticosMedios / (data.totalCriticosMedios + data.totalBajasComunes)) * 100;
+
+      var porcentajeCriticosMedios = (totalCriticosMedios / (totalCriticosMedios + totalBajasComunes)) * 100;
       $('#porcentaje-criticos-medios').html(porcentajeCriticosMedios.toFixed(0) + "%");
 
       // Calcular el porcentaje de emergencias bajas y comunes
-      var porcentajeBajasComunes = (data.totalBajasComunes / (data.totalCriticosMedios + data.totalBajasComunes)) * 100;
+      var porcentajeBajasComunes = (totalBajasComunes / (totalCriticosMedios + totalBajasComunes)) * 100;
       $('#porcentaje-bajas-comunes').html(porcentajeBajasComunes.toFixed(0) + "%");
   } else {
       console.error("Error al obtener los datos del servidor.");
