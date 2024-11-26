@@ -67,13 +67,10 @@ $(document).ready(function () {
   /////////////RECUADROS INFO/////////////////7
   $.post("../../controller/evento.php?op=cantidad-eventos",function(respuesta,status){
 
-    // Parsear la respuesta JSON
-    var data = JSON.parse(respuesta);
-    // Asignar los valores a los recuadros
-    $('#number-open').html(data.eventos_abiertos);
-    $('#number-close').html(data.eventos_cerrados);
-    $('#porcentaje-emer-open').html(data.porcentaje_abiertas + "%");
-    $('#porcentaje-emer-close').html(data.porcentaje_cerradas + "%");
+    $('#number-open').html(respuesta.eventos_abiertos);
+    $('#number-close').html(respuesta.eventos_cerrados);
+    $('#porcentaje-emer-open').html(respuesta.porcentaje_abiertas + "%");
+    $('#porcentaje-emer-close').html(respuesta.porcentaje_cerradas + "%");
   
   });
 
