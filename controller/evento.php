@@ -547,21 +547,15 @@ if (isset($_GET["op"])) {
         break;
 
         case "get_eventos":
-
-
-            $where = $_POST['where'];
-
             $html = "";
             $critico = "";
             $medio = "";
             $bajo = "";
             $comun = "";
             $array2 = [];
-            
-            // $datos = $evento->get_evento_where($where);
+
             $datos = $evento->get_evento();
             if (is_array($datos) == true and count($datos) > 0) {
-                
                 //Datos para Tabla comun variable = $html
                 //Recorre los resultados que entrego la funcion get_evento_nivel(1)
                 foreach ($datos as $row) {
