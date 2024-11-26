@@ -496,69 +496,24 @@ if (isset($_GET["op"])) {
                 echo "Error: Usuario no encontrado"; // Mensaje de error detallado si no se encuentra el usuario
             }
         break;
-
-
         case "cantidad-eventos":
-            
-            $eventos_abiertos = 0;
-            $eventos_cerrados = 0;
-            $eventos_controlados = 0;
-            $eventos_ext = 0;
-            $cantidad_total = 0;
-            $porcentaje_abiertas = 0.0;
-            $porcentaje_cerradas = 0.0;
-            $datos_var= [];
-            
-            //Obtener la fecha actual
-            $fecha_actual = date('Y-m-d', strtotime('+1 day'));
+         $fecha_actual = date('Y-m-d', strtotime('+1 day'));
+         $fecha_mes_anterior = date('Y-m-d', strtotime('-1 month -1 day', strtotime($fecha_actual)));
 
-            // Restar un mes a la fecha actual
-            $fecha_mes_anterior = date('Y-m-d', strtotime('-1 month -1 day',strtotime($fecha_actual)));
-            
-            // Obtener datos de eventos por día
-            $datos = $evento->get_eventos_por_rango_sin_cantidad($fecha_actual , $fecha_mes_anterior);
+         $datos = $evento->get_eventos_estadisticas_por_fecha($fecha_actual, $fecha_mes_anterior);
 
-            // $datos = $evento->get_evento();
+         $respuesta = array(
+             'eventos_abiertos' => isset($datos['eventos_abiertos']) ? $datos['eventos_abiertos'] : 0,
+             'eventos_cerrados' => isset($datos['eventos_cerrados']) ? $datos['eventos_cerrados'] : 0,
+             'eventos_controlados' => isset($datos['eventos_controlados']) ? $datos['eventos_controlados'] : 0,
+             'eventos_ext' => isset($datos['eventos_ext']) ? $datos['eventos_ext'] : 0,
+             'porcentaje_abiertas' => isset($datos['porcentaje_abiertas']) ? $datos['porcentaje_abiertas'] : 0,
+             'porcentaje_cerradas' => isset($datos['porcentaje_cerradas']) ? $datos['porcentaje_cerradas'] : 0,
+         );
 
-            if (is_array($datos) && count($datos) > 0){
-                foreach ($datos as $row) {
-                    if($row['ev_est'] === 1){
-                        $eventos_abiertos ++;
-                    }else if ($row['ev_est'] === 2){
-                        $eventos_cerrados ++;
-                    }else if ($row['ev_est'] === 3) {
-                        $eventos_controlados ++;
-                    }else {
-                        $eventos_ext ++;
-                    }
-                    $datos_var = $datos;
-                }
-            }
-            $cantidad_total += $eventos_abiertos + $eventos_cerrados;
-            if($cantidad_total != 0){
-                if($eventos_abiertos != 0){
-                    $porcentaje_abiertas +=  round(($eventos_abiertos / $cantidad_total )* 100);
-                }
-                if($eventos_cerrados != 0){
-                    $porcentaje_cerradas += round(($eventos_cerrados / $cantidad_total )*100);
-                }
-            }else{
-                $porcentaje_unidades_disponibles = 0;
-                $porcentaje_unidades_no_disponibles = 0;
-            }
-            
-            $respuesta = array(
-                'eventos_abiertos' => $eventos_abiertos,
-                'eventos_cerrados' => $eventos_cerrados,
-                'eventos_controlados' => $eventos_controlados,
-                'eventos_ext' => $eventos_ext,
-                'porcentaje_abiertas' => $porcentaje_abiertas,
-                'porcentaje_cerradas' => $porcentaje_cerradas,
-                'datos_var' => $datos_var
-            );
-            echo json_encode($respuesta);
-        break;          
-
+         header('Content-Type: application/json');
+         echo json_encode($respuesta);
+        break;
         case "evento-grafico-dashboard":
 
             //Obtener la fecha actual
