@@ -435,14 +435,15 @@ if (isset($_GET["op"])) {
         break;
 
         case "update_nivelpeligro_evento":
-
-            $datos = $evento->update_nivelpeligro_evento($_POST['ev_id'],
-            $_POST['ev_niv']);
-                if ($datos == true) {
-                echo 1;
-            } else {
-                echo 0;
+            $id_evento = isset($_POST['id_evento']) ? $_POST['id_evento'] : null;
+            $id_nivel = isset($_POST['id_nivel']) ? $_POST['id_nivel'] : null;
+            header('Content-Type: application/json');
+            if (empty($id_evento) || empty($id_nivel)) {
+                echo json_encode(['status' => 'warning', 'message' => 'Faltan datos obligatorios.']);
+                break;
             }
+            $datos = $evento->update_nivelpeligro_evento($id_evento, $id_nivel);
+            echo json_encode($datos);
         break;
 
         case "get_evento_id":
