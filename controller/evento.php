@@ -443,6 +443,12 @@ if (isset($_GET["op"])) {
                 break;
             }
             $datos = $evento->update_nivelpeligro_evento($id_evento, $id_nivel);
+            if ($datos["status"] === "success") {
+              $datosNivel = $NivelPeligro->get_nivel_por_id($id_nivel);
+              $ev_niv_nombre = $datosNivel[0]['ev_niv_nom'];
+              $mensaje = "<span class='alert alert-warning'>Se ha Cambiado el nivel de peligro del evento a: $ev_niv_nombre</span>";
+              $evento->insert_emergencia_detalle($id_evento, $_SESSION["usu_id"], $mensaje);
+            }
             echo json_encode($datos);
         break;
 
