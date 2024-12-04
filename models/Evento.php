@@ -737,11 +737,12 @@ class Evento extends Conectar {
     function get_evento_motivo_cierre($ev_id){
     $sql = "SELECT
                cie.ev_id as 'id_evento',
-               usr.usu_nom as 'usu_nom',
-               usr.usu_ape as 'usu_ape',
-               usr.usu_name as 'usu_name',
+               usr.usu_nom as 'nombre',
+               usr.usu_ape as 'apellido',
+               usr.usu_name as 'username',
                mov.motivo as 'motivo',
                cie.detalle as 'detalle',
+               cie.adjunto as 'adjunto',
                DATE_FORMAT(ev.ev_final, '%d/%m/%Y - hrs %H:%i' )as 'fecha_cierre'
          FROM tm_ev_cierre as cie
          JOIN tm_usuario as usr
