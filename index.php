@@ -6,6 +6,10 @@
 //  Jefe de proyecto: Cristian Esteban Suazo Olguin 
 
 require_once("config/conexion.php");
+if (isset($_SESSION["usu_id"]) and isset($_SESSION["usu_nom"])) {
+    header("Location:" . Conectar::ruta() . "view/Home/");
+}
+
 if (isset($_POST["enviar"]) and $_POST["enviar"] == "si") {
     require_once("models/Usuario.php");
     $usuario = new Usuario();
