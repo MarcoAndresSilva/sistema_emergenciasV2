@@ -702,6 +702,7 @@ if (isset($_GET["op"])) {
                 $id_secciones_asignadas[] = $seccion['id'];
               }
             }
+            $secciones_asignadas = empty($secciones_asignadas) ? [] : $secciones_asignadas;
             if (is_array($datosEvento) == true and count($datosEvento) > 0){
                 $respuesta = [
                   "status"=>"success",
