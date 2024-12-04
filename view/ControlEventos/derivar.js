@@ -117,9 +117,12 @@ function cargarsecciones(ev_id) {
                 } else {
                     // Mostrar mensaje cuando no hay secciones
                     const row = `
-                        <tr>
+                        <tr class="table-danger">
                             <td>${unidad.unidad}</td>
-                            <td colspan="4">Esta unidad no tiene secciones</td>
+                            <td><i class="fa fa-exclamation-triangle"></i> esta unidad</td>
+                            <td>no tiene</td>
+                            <td>secciones</td>
+                            <td>asignadas</td>
                         </tr>
                     `;
                     tablaSeccionesBody.append(row);
