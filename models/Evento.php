@@ -294,29 +294,24 @@ class Evento extends Conectar {
         
 	}
     
-    public function update_nivelpeligro_evento($ev_id, $ev_niv) {
+    public function update_nivelpeligro_evento(int $ev_id, int $nivel_nuevo):array {
 		try {
-			$conectar = parent::conexion();
-			parent::set_names();
-			$sql = "UPDATE tm_evento SET  ev_niv=:ev_niv WHERE ev_id = " . $ev_id . " ";
-			$consulta = $conectar->prepare($sql);
-
-            $consulta->bindParam(':ev_niv',$ev_niv);
-
-            $consulta->execute();
+			$sql = "UPDATE tm_evento SET  ev_niv=:ev_niv WHERE ev_id = :ev_id ";
+      $params = [':ev_id' => $ev_id, ':ev_niv' => $nivel_nuevo];
+      $datosEvento = $this->get_evento_id($ev_id);
+      if ($datosEvento['ev_niv'] == $nivel_nuevo) {
+          return ["status" => "info", "message" => "El nivel de peligro ya es el mismo."];
+      }
+      $consulta = $this->ejecutarAccion($sql, $params);
 			
-			if ($consulta->rowCount() > 0) {
-                return true;
-            } else {
-                ?> <script>console.log("No se logro actualizar la asignacion del evento")</script><?php
-                return 0;
-            }
-        } catch (Exception $e) {
-			?> 
-            <script>console.log("Error catch     update_asignacion_evento")</script>
-            <?php
-            throw $e;
-        }
+			if ($consulta) {
+          return ["status" => "success", "message" => "Nivel de peligro actualizado exitosamente."];
+      } else {
+          return ["status" => "warning", "message" => "No se logro actualizar el nivel de peligro del evento."];
+      }
+    } catch (Exception $e) {
+       throw $e;
+    }
 	}
 
     public function get_evento_id($ev_id) {
