@@ -703,12 +703,14 @@ if (isset($_GET["op"])) {
               }
             }
             $secciones_asignadas = empty($secciones_asignadas) ? [] : $secciones_asignadas;
+            $datosCierreEvento = $evento->get_evento_motivo_cierre($id_evento);
             if (is_array($datosEvento) == true and count($datosEvento) > 0){
                 $respuesta = [
                   "status"=>"success",
                   "message"=>"Se obtienen los datos del evento $id_evento",
                   "evento"=>$datosEvento,
                   "creador"=>$usuario_creador['result'],
+                  "Cierre"=>empty($datosCierreEvento) ? [] : $datosCierreEvento,
                   "secciones_asignadas"=>["secciones"=>$secciones_asignadas,"id_secciones_asignadas"=>$id_secciones_asignadas],
                 ];
             }else{
