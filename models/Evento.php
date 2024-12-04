@@ -4,8 +4,6 @@ class Evento extends Conectar {
 
     public function get_evento() {
         try {
-            $conectar = parent::conexion();
-            parent::set_names();
             $sql = 'SELECT
                         us.usu_name as "ev_nom", us.usu_ape as "ev_ape",
                         tme.ev_direc as "ev_direc",
@@ -34,20 +32,13 @@ class Evento extends Conectar {
                     ORDER BY
                         ev_id
                     DESC;';
-            $sql = $conectar->prepare($sql);
-            $sql->execute();
-            $resultado = $sql->fetchAll();
-            
+            $resultado = $this->ejecutarConsulta($sql);
             if (is_array($resultado) && count($resultado) > 0) {
                 return $resultado;
             } else {
-                ?> <script>console.log("No se encontraron Eventos")</script><?php
                 return [];
             }
         } catch (Exception $e) {
-            ?> 
-            <script>console.log("Error catch     get_evento")</script>
-            <?php
              return [];
         }
 
@@ -55,23 +46,20 @@ class Evento extends Conectar {
 
     public function get_evento_nivel($ev_niv) {
         try {
-            $conectar = parent::conexion();
-            parent::set_names();
-            $sql = "SELECT * FROM tm_evento tme inner join tm_categoria tmc on tmc.cat_id=tme.cat_id inner join tm_ev_niv ten on tme.ev_niv=ten.ev_niv_id inner join tm_estado te on te.est_id=tme.ev_est where tme.ev_niv= ". $ev_niv ."  ";
-            $sql = $conectar->prepare($sql);
-            $sql->execute();
-            $resultado = $sql->fetchAll();
+            $sql = "SELECT * FROM tm_evento tme
+              inner join tm_categoria tmc on tmc.cat_id=tme.cat_id
+              inner join tm_ev_niv ten on tme.ev_niv=ten.ev_niv_id
+              inner join tm_estado te on te.est_id=tme.ev_est
+              where tme.ev_niv= :ev_niv";
+            $params = [':ev_niv' => $ev_niv];
+            $resultado = $this->ejecutarConsulta($sql, $params);
 
             if (is_array($resultado) && count($resultado) > 0) {
                 return $resultado;
             } else {
-                ?> <script>console.log("No se encontraron Eventos")</><?php
-                return 0;
+                return [];
             }
         } catch (Exception $e) {
-            ?> 
-            <script>console.log("Error catch     get_evento_nivel")</script>
-            <?php
             throw $e;
         }
 
@@ -79,12 +67,8 @@ class Evento extends Conectar {
 
     public function get_eventos_por_dia() {
         try {
-            $conectar = parent::conexion();
-            parent::set_names();
             $sql = "SELECT DAY(ev_inicio) as dia, COUNT(*) as cantidad FROM tm_evento GROUP BY DAY(ev_inicio)";
-            $sql = $conectar->prepare($sql);
-            $sql->execute();
-            $resultado = $sql->fetchAll();
+            $resultado = $this->ejecutarConsulta($sql);
             return $resultado;
         } catch (Exception $e) {
             throw $e;
