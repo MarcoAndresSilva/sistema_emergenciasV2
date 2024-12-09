@@ -100,7 +100,7 @@ if (isset($_GET["op"])) {
             $id_ultimo_evento = $last_evento["ev_id"];
             $args = [
               "asunto" => "Nuevo Evento",
-              "mensaje" => "Evento sin derivar",
+              "mensaje" => $ev_desc,
               "url" => "../ControlEventos/index.php?id_evento=$id_ultimo_evento",
             ];
             $noticia->crear_noticia_y_enviar_grupo_usuario($args);
