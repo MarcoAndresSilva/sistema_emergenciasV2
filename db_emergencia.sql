@@ -582,12 +582,12 @@ INSERT INTO `tm_emergencia_detalle`(`emergencia_id`,`ev_id`,`usu_id`,`ev_desc`,`
 
 CREATE TABLE tm_noticia(
 `noticia_id` INT NOT NULL auto_increment,
-`asunto` VARCHAR(50) NOT NULL,
-`mensaje` VARCHAR(150) NOT NULL,
+`asunto` MEDIUMTEXT NOT NULL,
+`mensaje` MEDIUMTEXT NOT NULL,
 `url` VARCHAR(250),
 `fecha` DATETIME DEFAULT CURRENT_TIMESTAMP,
 PRIMARY KEY (`noticia_id`)
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 --
 -- estructura de tm_noticia_usuario
 --
