@@ -87,7 +87,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 const notifElement = document.createElement("a");
                 notifElement.className = "dropdown-item font-weight-bold";
                 notifElement.href = notif.url;
-                notifElement.innerHTML = `<i class="fa fa-info-circle" aria-hidden="true"></i> ${notif.mensaje}`;
+                notifElement.innerHTML = `
+                   <div class="d-flex align-items-center mb-1">
+                       <i class="fa fa-info-circle me-2 text-primary" aria-hidden="true"></i>
+                       <span class="fw-bold text-dark">${notif.asunto}</span>
+                   </div>
+                   <div class="text-muted small">${notif.mensaje}</div>
+                `;
                 notifElement.addEventListener("click", () => markAsRead(index));
                 notificationListElement.appendChild(notifElement);
             } else if (notif.leido && notif.fecha_leido) {
