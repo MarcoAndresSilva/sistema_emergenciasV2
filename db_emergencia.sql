@@ -183,7 +183,7 @@ INSERT INTO `tm_est_unidad` (`est_un_id`, `est_un_nom`) VALUES
 CREATE TABLE `tm_evento` (
   `ev_id` int(11) NOT NULL AUTO_INCREMENT,
   `usu_id` int(11) NOT NULL,
-  `ev_desc` varchar(50) NOT NULL,
+  `ev_desc` MEDIUMTEXT NOT NULL,
   `ev_est` int(11) NOT NULL,
   `ev_inicio` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `ev_final` datetime DEFAULT NULL,
