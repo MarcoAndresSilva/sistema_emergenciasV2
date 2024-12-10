@@ -444,6 +444,43 @@ public function update_usuario_tipo($usu_id, $usu_tipo){
     $result = $this->ejecutarConsulta($sql,$params);
     return $result;
   }
+  public function get_eventos_derivado_por_usuario(int $usuario){
+    $sql = "SELECT
+              u.usu_nom AS usuario_nombre,
+              un.unid_nom AS unidad_nombre,
+              s.sec_nombre AS seccion_nombre,
+              e.ev_id AS evento_id,
+              e.ev_desc AS evento_descripcion,
+              e.ev_direc AS evento_direccion,
+              e.ev_latitud AS evento_latitud,
+              e.ev_longitud AS evento_longitud,
+              c.cat_nom AS categoria_nombre,
+              n.ev_niv_id AS nivel_id,
+              n.ev_niv_nom AS nivel_nombre,
+              creador.usu_nom AS creador_nombre,
+              creador.usu_ape AS creador_apellido,
+              creador.usu_correo AS creador_correo
+            FROM tm_usuario AS u
+            JOIN tm_unidad AS un
+              ON un.unid_id = u.usu_unidad
+            JOIN tm_seccion AS s
+              ON s.sec_id = u.usu_seccion
+            JOIN tm_asignado AS a
+              ON a.sec_id = s.sec_id
+            JOIN tm_evento AS e
+              ON e.ev_id = a.ev_id
+            LEFT JOIN tm_usuario AS creador
+              ON creador.usu_id = e.usu_id
+            JOIN tm_categoria AS c
+              ON c.cat_id = e.cat_id
+            JOIN tm_ev_niv AS n
+              ON n.ev_niv_id = e.ev_niv
+            WHERE u.usu_id = :usuario
+            ORDER BY `evento_id` ASC";
+    $params = [":usuario" => $usuario];
+    $resultado = $this->ejecutarConsulta($sql, $params);
+    return $resultado;
+}
 
 }
 ?>
