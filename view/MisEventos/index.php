@@ -7,7 +7,6 @@ Permisos::redirigirSiNoAutorizado();
 <!DOCTYPE html>
 <html>
 	<?php require_once("../MainHead/head.php") ?>
-<link rel="stylesheet" href="estilopersonal.css">
 <title>Sistema Emergencia</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css">
   <script defer src="https://cdn.datatables.net/1.13.6/js/dataTables.js"></script>
