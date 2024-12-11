@@ -64,8 +64,8 @@ function renderNivel(nivelId, nivelNombre) {
 // Renderizar acciones
 function renderAcciones(eventoId) {
     return `
-        <a href="../EmergenciaDetalle/?ID=${eventoId}" class="btn btn-primary btn-sm">Ver Chat</a>
-        <a href="../GenerarPdf/?id_evento=${eventoId}" class="btn btn-secondary btn-sm">Ver Documento</a>
+        <a href="../EmergenciaDetalle/?ID=${eventoId}" class="btn btn-primary btn-sm"><i class='fa-regular fa-comments'></i> Ver Chat</a>
+        <a href="../GenerarPdf/?id_evento=${eventoId}" class="btn btn-secondary btn-sm"><i class='fa-regular fa-file'></i> Informe</a>
     `;
 }
 
