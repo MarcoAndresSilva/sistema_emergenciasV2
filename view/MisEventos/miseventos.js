@@ -26,6 +26,13 @@ function inicializarDataTables(data) {
                 }
             },
             {
+                data: 'evento_estado',
+                title: 'Estado',
+                render: function (data, type, row) {
+                    return renderEstado(row.evento_estado);
+                }
+            },
+            {
                 data: 'evento_id',
                 title: 'Acciones',
                 render: function (data, type, row) {
@@ -61,6 +68,24 @@ function renderNivel(nivelId, nivelNombre) {
     }
 
     return span.outerHTML;
+}
+
+// Renderizar el estado con estilos dinámicos según el ID
+function renderEstado(eventoEstado) {
+    const estados = {
+        0: { class: 'secondary', icon: 'fa-question-circle', texto: 'General' },
+        1: { class: 'success', icon: 'fa-hourglass-half', texto: 'En Proceso' },
+        2: { class: 'danger', icon: 'fa-check-circle', texto: 'Finalizado' },
+        3: { class: 'info', icon: 'fa-exclamation-circle', texto: 'Bajo' },
+    };
+
+    const estado = estados[eventoEstado] || estados[0];
+
+    return `
+        <span class="badge bg-${estado.class}">
+            <i class="fa-solid ${estado.icon}"></i> ${estado.texto}
+        </span>
+    `;
 }
 
 // Renderizar acciones

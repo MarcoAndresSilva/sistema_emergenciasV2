@@ -454,6 +454,7 @@ public function update_usuario_tipo($usu_id, $usu_tipo){
               e.ev_direc AS evento_direccion,
               e.ev_latitud AS evento_latitud,
               e.ev_longitud AS evento_longitud,
+              e.ev_est AS evento_estado,
               c.cat_nom AS categoria_nombre,
               n.ev_niv_id AS nivel_id,
               n.ev_niv_nom AS nivel_nombre,
