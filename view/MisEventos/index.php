@@ -27,7 +27,7 @@ Permisos::redirigirSiNoAutorizado();
     <?php require_once("../MainNav/nav.php"); ?>
 
     <div class="page-content">
-        <div class="container-fluid">
+    <div class="container-fluid bg-white">
 			<header class="section-header">
 				<div class="tbl">
 					<div class="tbl-row">
@@ -42,7 +42,6 @@ Permisos::redirigirSiNoAutorizado();
 				</div>
 			</header>
 
-			<h5 class="m-t-lg with-border">Informaci&oacute;n de Unidades</h5>
       <div id="informacion_evento" class="row justify-content-center">
           <div class="spinner-border text-primary mt-5" role="status">
             <span class="sr-only">Cargando...</span>
