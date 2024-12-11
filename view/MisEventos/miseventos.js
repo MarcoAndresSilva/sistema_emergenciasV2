@@ -6,8 +6,10 @@ async function getEventos() {
 
 // Inicializar DataTables con datos dinámicos
 function inicializarDataTables(data) {
+    const responsive = window.innerWidth > 768;
     $('#tabla_eventos').DataTable({
         data: data,
+        responsive: responsive,
         columns: [
             { data: 'evento_id', title: 'ID Evento' },
             { data: 'categoria_nombre', title: 'Categoría' },
