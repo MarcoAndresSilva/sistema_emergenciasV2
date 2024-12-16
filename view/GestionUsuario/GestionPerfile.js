@@ -274,9 +274,7 @@ function createTypeCell(id_tipo, userId) {
     return cell;
 }
 
-function createActionButtons(userId, status) {
-    const cell = document.createElement('td');
-
+function createEditButton(userId) {
     const editButton = document.createElement('button');
     editButton.className = 'btn btn-primary btn-sm mr-2';
     editButton.dataset.userId = userId;
@@ -292,6 +290,10 @@ function createActionButtons(userId, status) {
     editButton.appendChild(editIcon);
     editButton.appendChild(editButtonText);
 
+    return editButton;
+}
+
+function createChangePasswordButton(userId) {
     const changedPasswordButton = document.createElement('button');
     changedPasswordButton.className = 'btn btn-info btn-sm mr-2';
     changedPasswordButton.dataset.userId = userId;
@@ -302,11 +304,15 @@ function createActionButtons(userId, status) {
 
     const passwordButtonText = document.createElement('span');
     passwordButtonText.className = 'button-text d-none d-md-inline-block'; // Oculta en dispositivos móviles
-    passwordButtonText.textContent = 'contraseña';
+    passwordButtonText.textContent = 'Contraseña';
 
     changedPasswordButton.appendChild(passwordIcon);
     changedPasswordButton.appendChild(passwordButtonText);
 
+    return changedPasswordButton;
+}
+
+function createToggleStatusButton(userId, status) {
     const actionButton = document.createElement('button');
     actionButton.className = `btn btn-sm ${status === 0 ? 'btn-secondary' : 'btn-danger'}`;
     actionButton.dataset.userId = userId;
@@ -323,11 +329,7 @@ function createActionButtons(userId, status) {
     actionButton.appendChild(actionIcon);
     actionButton.appendChild(actionButtonText);
 
-    cell.appendChild(changedPasswordButton);
-    cell.appendChild(editButton);
-    cell.appendChild(actionButton);
-
-    return cell;
+    return actionButton;
 }
 
 function toggleUserStatus(userId, currentStatus) {
