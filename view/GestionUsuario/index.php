@@ -44,7 +44,7 @@ Permisos::redirigirSiNoAutorizado();
 					</div>
 				</header>
 				<h5 class="m-t-lg with-border">Informaci&oacute;n de Instituciones de Emergencias</h5>
-				<div class="container">
+				<div class="bg-white px-4 py-5">
 				    <h2>Información del Usuario</h2>
 				    <a href="../CrearUsuario/" class="btn btn-success">Crear usuario</a>
 				    <div id="userInfo" class="row justify-content-center">
