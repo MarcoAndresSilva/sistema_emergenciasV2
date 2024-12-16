@@ -34,10 +34,11 @@ Permisos::redirigirSiNoAutorizado();
 				<div class="tbl">
 					<div class="tbl-row">
 						<div class="tbl-cell">
-							<h3>Instituciones de Emergencias</h3>
+							<h3>Gestion de Usuarios</h3>
 							<ol class="breadcrumb breadcrumb-simple">
-								<li><a href="#">Registro</a></li>
-								<li class="active">Instituciones</li>
+								<li><a href="../Home">Home</a></li>
+								<li >Gestion de usuarios</li>
+								<li class="active">Gestionar usuario</li>
 							</ol>
               </div>
 						</div>
