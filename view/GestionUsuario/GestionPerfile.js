@@ -156,9 +156,14 @@ function initializeDataTable() {
             $('table').DataTable().destroy();
         }
 
+        const responsive = window.innerWidth <= 1879;
+
         const dataTable = $('table').DataTable({
       language: { url: "../registrosLog/spanishDatatable.json"},
-      responsive: true
+      responsive: responsive,
+      columnDefs: [
+        { targets: [0, 1,2], className: 'all' },
+      ]
         });
 
         const userInfo = document.getElementById('userInfo');
