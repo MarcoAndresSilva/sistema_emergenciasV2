@@ -239,7 +239,11 @@ function createTableBody(users) {
 
 function createTableCell(content) {
     const cell = document.createElement('td');
-    cell.textContent = content;
+    if (content instanceof Node) {
+        cell.appendChild(content);
+    } else {
+        cell.textContent = content;
+    }
     return cell;
 }
 
