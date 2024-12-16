@@ -34,17 +34,18 @@ Permisos::redirigirSiNoAutorizado();
 				<div class="tbl">
 					<div class="tbl-row">
 						<div class="tbl-cell">
-							<h3>Instituciones de Emergencias</h3>
+							<h3>Gestion de Usuarios</h3>
 							<ol class="breadcrumb breadcrumb-simple">
-								<li><a href="#">Registro</a></li>
-								<li class="active">Instituciones</li>
+								<li><a href="../Home">Home</a></li>
+								<li >Gestion de usuarios</li>
+								<li class="active">Gestionar usuario</li>
 							</ol>
               </div>
 						</div>
 					</div>
 				</header>
 				<h5 class="m-t-lg with-border">Informaci&oacute;n de Instituciones de Emergencias</h5>
-				<div class="container">
+				<div class="bg-white px-4 py-5">
 				    <h2>Información del Usuario</h2>
 				    <a href="../CrearUsuario/" class="btn btn-success">Crear usuario</a>
 				    <div id="userInfo" class="row justify-content-center">

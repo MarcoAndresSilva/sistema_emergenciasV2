@@ -156,9 +156,14 @@ function initializeDataTable() {
             $('table').DataTable().destroy();
         }
 
+        const responsive = window.innerWidth <= 1920;
+
         const dataTable = $('table').DataTable({
       language: { url: "../registrosLog/spanishDatatable.json"},
-      responsive: true
+      responsive: responsive,
+      columnDefs: [
+        { targets: [0, 1,2], className: 'all' },
+      ]
         });
 
         const userInfo = document.getElementById('userInfo');
@@ -182,7 +187,7 @@ function initializeDataTable() {
         const filterEstado = document.getElementById('filterEstado');
         filterEstado.addEventListener('change', function () {
             const val = this.value;
-            dataTable.column(6).search(val ? `^${val}$` : '', true, false).draw();
+            dataTable.column(7).search(val ? `^${val}$` : '', true, false).draw();
         });
     }, 0);
 }
@@ -200,7 +205,7 @@ function createTable(users) {
 function createTableHeader() {
     const thead = document.createElement('thead');
     const headerRow = document.createElement('tr');
-    const headers = ['ID', 'Nombre', 'Apellido', 'Tipo', 'Unidad' ,'Seccion','Teléfono','Estado' ,'Correo', 'Usuario', 'Acciones'];
+    const headers = ['ID', 'Nombre', 'Apellido', 'Tipo', 'Unidad' ,'Seccion','Teléfono','Estado' ,'Correo', 'Usuario', 'Cambiar Contraseña', 'Editar usuario', 'Cambiar estado'];
 
     headers.forEach(headerText => {
         const th = document.createElement('th');
@@ -229,7 +234,10 @@ function createTableBody(users) {
         row.appendChild(createStatusBadge(user.estado));
         row.appendChild(createTableCell(user.Correo));
         row.appendChild(createTableCell(user.Usuario));
-        row.appendChild(createActionButtons(user.usu_id, user.estado));
+
+        row.appendChild(createTableCell(createChangePasswordButton(user.usu_id)) || createTableCell(''));
+        row.appendChild(createTableCell(createEditButton(user.usu_id)) || createTableCell(''));
+        row.appendChild(createTableCell(createToggleStatusButton(user.usu_id, user.estado)) || createTableCell(''));
 
         tbody.appendChild(row);
     });
@@ -239,7 +247,11 @@ function createTableBody(users) {
 
 function createTableCell(content) {
     const cell = document.createElement('td');
-    cell.textContent = content;
+    if (content instanceof Node) {
+        cell.appendChild(content);
+    } else {
+        cell.textContent = content;
+    }
     return cell;
 }
 
@@ -270,9 +282,14 @@ function createTypeCell(id_tipo, userId) {
     return cell;
 }
 
-function createActionButtons(userId, status) {
-    const cell = document.createElement('td');
+function createSpanTextButton(text) {
+    const span = document.createElement('span');
+    span.className = 'button-text d-none d-md-inline-block'; // Oculta en dispositivos móviles
+    span.textContent = text;
+    return span;
+}
 
+function createEditButton(userId) {
     const editButton = document.createElement('button');
     editButton.className = 'btn btn-primary btn-sm mr-2';
     editButton.dataset.userId = userId;
@@ -281,13 +298,13 @@ function createActionButtons(userId, status) {
     editIcon.className = 'fas fa-edit';
     editIcon.style.marginRight = '5px'; // Espacio adicional entre el icono y el texto
 
-    const editButtonText = document.createElement('span');
-    editButtonText.className = 'button-text d-none d-md-inline-block'; // Oculta en dispositivos móviles
-    editButtonText.textContent = 'Editar';
-
     editButton.appendChild(editIcon);
-    editButton.appendChild(editButtonText);
+    editButton.appendChild(createSpanTextButton('Editar'));
 
+    return editButton;
+}
+
+function createChangePasswordButton(userId) {
     const changedPasswordButton = document.createElement('button');
     changedPasswordButton.className = 'btn btn-info btn-sm mr-2';
     changedPasswordButton.dataset.userId = userId;
@@ -296,13 +313,13 @@ function createActionButtons(userId, status) {
     passwordIcon.className = 'fas fa-key';
     passwordIcon.style.marginRight = '5px'; // Espacio adicional entre el icono y el texto
 
-    const passwordButtonText = document.createElement('span');
-    passwordButtonText.className = 'button-text d-none d-md-inline-block'; // Oculta en dispositivos móviles
-    passwordButtonText.textContent = 'contraseña';
-
     changedPasswordButton.appendChild(passwordIcon);
-    changedPasswordButton.appendChild(passwordButtonText);
+    changedPasswordButton.appendChild(createSpanTextButton('Cambiar Contraseña'));
 
+    return changedPasswordButton;
+}
+
+function createToggleStatusButton(userId, status) {
     const actionButton = document.createElement('button');
     actionButton.className = `btn btn-sm ${status === 0 ? 'btn-secondary' : 'btn-danger'}`;
     actionButton.dataset.userId = userId;
@@ -312,18 +329,10 @@ function createActionButtons(userId, status) {
     actionIcon.className = 'fas fa-power-off';
     actionIcon.style.marginRight = '5px'; // Espacio adicional entre el icono y el texto
 
-    const actionButtonText = document.createElement('span');
-    actionButtonText.className = 'button-text d-none d-md-inline-block'; // Oculta en dispositivos móviles
-    actionButtonText.textContent = status === 0 ? 'Activar' : 'Desactivar';
-
     actionButton.appendChild(actionIcon);
-    actionButton.appendChild(actionButtonText);
+    actionButton.appendChild(createSpanTextButton(status === 0 ? 'Activar' : 'Desactivar'));
 
-    cell.appendChild(changedPasswordButton);
-    cell.appendChild(editButton);
-    cell.appendChild(actionButton);
-
-    return cell;
+    return actionButton;
 }
 
 function toggleUserStatus(userId, currentStatus) {
