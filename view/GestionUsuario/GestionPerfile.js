@@ -182,7 +182,7 @@ function initializeDataTable() {
         const filterEstado = document.getElementById('filterEstado');
         filterEstado.addEventListener('change', function () {
             const val = this.value;
-            dataTable.column(6).search(val ? `^${val}$` : '', true, false).draw();
+            dataTable.column(7).search(val ? `^${val}$` : '', true, false).draw();
         });
     }, 0);
 }
