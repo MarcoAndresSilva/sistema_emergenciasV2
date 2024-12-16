@@ -156,7 +156,7 @@ function initializeDataTable() {
             $('table').DataTable().destroy();
         }
 
-        const responsive = window.innerWidth <= 1879;
+        const responsive = window.innerWidth <= 1920;
 
         const dataTable = $('table').DataTable({
       language: { url: "../registrosLog/spanishDatatable.json"},
