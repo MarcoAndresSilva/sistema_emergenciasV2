@@ -200,7 +200,7 @@ function createTable(users) {
 function createTableHeader() {
     const thead = document.createElement('thead');
     const headerRow = document.createElement('tr');
-    const headers = ['ID', 'Nombre', 'Apellido', 'Tipo', 'Unidad' ,'Seccion','Teléfono','Estado' ,'Correo', 'Usuario', 'Acciones'];
+    const headers = ['ID', 'Nombre', 'Apellido', 'Tipo', 'Unidad' ,'Seccion','Teléfono','Estado' ,'Correo', 'Usuario', 'Cambiar Contraseña', 'Editar usuario', 'Cambiar estado'];
 
     headers.forEach(headerText => {
         const th = document.createElement('th');
@@ -229,7 +229,10 @@ function createTableBody(users) {
         row.appendChild(createStatusBadge(user.estado));
         row.appendChild(createTableCell(user.Correo));
         row.appendChild(createTableCell(user.Usuario));
-        row.appendChild(createActionButtons(user.usu_id, user.estado));
+
+        row.appendChild(createTableCell(createChangePasswordButton(user.usu_id)) || createTableCell(''));
+        row.appendChild(createTableCell(createEditButton(user.usu_id)) || createTableCell(''));
+        row.appendChild(createTableCell(createToggleStatusButton(user.usu_id, user.estado)) || createTableCell(''));
 
         tbody.appendChild(row);
     });
