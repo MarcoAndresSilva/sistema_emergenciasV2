@@ -274,6 +274,13 @@ function createTypeCell(id_tipo, userId) {
     return cell;
 }
 
+function createSpanTextButton(text) {
+    const span = document.createElement('span');
+    span.className = 'button-text d-none d-md-inline-block'; // Oculta en dispositivos móviles
+    span.textContent = text;
+    return span;
+}
+
 function createEditButton(userId) {
     const editButton = document.createElement('button');
     editButton.className = 'btn btn-primary btn-sm mr-2';
@@ -283,12 +290,8 @@ function createEditButton(userId) {
     editIcon.className = 'fas fa-edit';
     editIcon.style.marginRight = '5px'; // Espacio adicional entre el icono y el texto
 
-    const editButtonText = document.createElement('span');
-    editButtonText.className = 'button-text d-none d-md-inline-block'; // Oculta en dispositivos móviles
-    editButtonText.textContent = 'Editar';
-
     editButton.appendChild(editIcon);
-    editButton.appendChild(editButtonText);
+    editButton.appendChild(createSpanTextButton('Editar'));
 
     return editButton;
 }
@@ -302,12 +305,8 @@ function createChangePasswordButton(userId) {
     passwordIcon.className = 'fas fa-key';
     passwordIcon.style.marginRight = '5px'; // Espacio adicional entre el icono y el texto
 
-    const passwordButtonText = document.createElement('span');
-    passwordButtonText.className = 'button-text d-none d-md-inline-block'; // Oculta en dispositivos móviles
-    passwordButtonText.textContent = 'Contraseña';
-
     changedPasswordButton.appendChild(passwordIcon);
-    changedPasswordButton.appendChild(passwordButtonText);
+    changedPasswordButton.appendChild(createSpanTextButton('Cambiar Contraseña'));
 
     return changedPasswordButton;
 }
@@ -322,12 +321,8 @@ function createToggleStatusButton(userId, status) {
     actionIcon.className = 'fas fa-power-off';
     actionIcon.style.marginRight = '5px'; // Espacio adicional entre el icono y el texto
 
-    const actionButtonText = document.createElement('span');
-    actionButtonText.className = 'button-text d-none d-md-inline-block'; // Oculta en dispositivos móviles
-    actionButtonText.textContent = status === 0 ? 'Activar' : 'Desactivar';
-
     actionButton.appendChild(actionIcon);
-    actionButton.appendChild(actionButtonText);
+    actionButton.appendChild(createSpanTextButton(status === 0 ? 'Activar' : 'Desactivar'));
 
     return actionButton;
 }
