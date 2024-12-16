@@ -493,11 +493,11 @@ function editUser(userId) {
     const userRow = document.querySelector(`tr[data-user-id="${userId}"]`);
     const nombre = userRow.querySelector('td:nth-child(2)').textContent;
     const apellido = userRow.querySelector('td:nth-child(3)').textContent;
-    const correo = userRow.querySelector('td:nth-child(8)').textContent;
+    const correo = userRow.querySelector('td:nth-child(9)').textContent;
     const unidad = userRow.querySelector('td:nth-child(5)').textContent;
     const seccion = userRow.querySelector('td:nth-child(6)').textContent;
     const telefono = userRow.querySelector('td:nth-child(7)').textContent;
-    const usuario = userRow.querySelector('td:nth-child(9)').textContent;
+    const usuario = userRow.querySelector('td:nth-child(10)').textContent;
     const tipo = userRow.querySelector('td:nth-child(4)').textContent;
 
     Swal.fire({
