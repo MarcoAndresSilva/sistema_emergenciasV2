@@ -105,7 +105,7 @@ $('.btnCrearRuta').off('click').on('click',function(){
     }).then((result) => {
         if (result.isConfirmed) {
             // Si el usuario acepta, intenta obtener la ubicación
-            obtenerUbicacion();
+            obtenerUbicacion(alternativeUrl);
         } else {
             // Si el usuario decide no dar permisos, usa la URL alternativa
             window.open(alternativeUrl, '_blank');
@@ -113,7 +113,7 @@ $('.btnCrearRuta').off('click').on('click',function(){
     });
 });
 
-function obtenerUbicacion() {
+function obtenerUbicacion(alternativeUrl = '') {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
                 
