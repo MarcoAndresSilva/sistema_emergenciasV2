@@ -63,18 +63,16 @@ $(document).on("click", "#btnPanelDerivar", function(e) {
     cargarsecciones(id_evento); 
 });
 
-
-
-//////////btn peligro//////////// 
+// Al hacer clic en el botón del panel de peligro, cargamos los datos
 $(document).on("click", "#btnPanelPeligro", function(e) {
     console.log('Button Nivel Peligro clicked');
     mostrarModal('#modalNivelPeligro');
-   id_evento = $(this).data('ev_id');
-    console.log(id_evento);
-    mostrarIdEventoNivelPeligro(id_evento);
-    consultarCategoriaNivelPeligro(id_evento);
-    });
-
+    const id_evento_peligro = $(this).data('ev-id');
+    console.log(id_evento_peligro);
+    mostrarIdEventoNivelPeligro(id_evento_peligro);
+    consultarCategoriaNivelPeligro(id_evento_peligro);
+    cargarDatosNivelPeligro(id_evento_peligro);
+});
 
 function mostrarModal(modalId) {
     var modal = $(modalId);
