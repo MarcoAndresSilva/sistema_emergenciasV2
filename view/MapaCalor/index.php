@@ -63,8 +63,8 @@ Permisos::redirigirSiNoAutorizado();
 </div>
   <div id="map"></div>
 <div class="row bg-white">
-<div id="summaryTableContainer" class="col-6 table-responsive"></div>
-<div id="tableContainerFull" class="col-6 table-responsive"></div>
+  <div id="tableContainerFull" class="col-12 col-sm-6 order-0 order-sm-1 table-responsive"></div>
+  <div id="summaryTableContainer" class="col-12 col-sm-6 order-1 order-sm-0 table-responsive"></div>
 </div>
   <!-- Controles de filtro por categoría -->
 
