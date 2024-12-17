@@ -118,7 +118,8 @@ const columnConfig = {
   unid_id: 'ID',
   unid_nom: 'Nombre',
   unid_est: 'Estado',
-  acciones: 'Acciones'
+  editar: 'editar',
+  eliminar: 'eliminar'
 };
 
 // Transformaciones para ciertas columnas
@@ -270,18 +271,19 @@ function createTable(data) {
     row.id = `unidad_${item.unid_id}`;
     headers.forEach(key => {
       const cell = document.createElement('td');
-      if (key === 'acciones') {
+      if (key === 'editar') {
         const editButton = document.createElement('button');
         editButton.className = 'btn btn-primary btn-sm';
         editButton.textContent = 'Editar';
         editButton.onclick = () => editItem(item.unid_id);
+        cell.appendChild(editButton);
+      } else if (key === 'eliminar') {
 
         const deleteButton = document.createElement('button');
         deleteButton.className = 'btn btn-danger btn-sm ml-2';
         deleteButton.textContent = 'Eliminar';
         deleteButton.onclick = () => deleteItem(item.unid_id);
 
-        cell.appendChild(editButton);
         cell.appendChild(deleteButton);
       } else {
         cell.textContent = transformValue(key, item[key]);
