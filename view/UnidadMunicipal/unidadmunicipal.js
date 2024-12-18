@@ -1,18 +1,12 @@
 function fetchData(op, postData, sendAsJson = false) {
     // URL del controlador
     const url = '../../controller/unidad.php';
-
-    // Construir la URL con los parámetros GET
     const params = new URLSearchParams({
         op: op,
     });
-
-    // Agregar los parámetros GET a la URL del controlador
     const fetchUrl = `${url}?${params}`;
 
-    // Convertir el objeto postData a formato x-www-form-urlencoded o JSON
-    let formData;
-    let contentType;
+    let formData, contentType;
     if (sendAsJson) {
         formData = JSON.stringify(postData);
         contentType = 'application/json';
@@ -43,9 +37,7 @@ function fetchData(op, postData, sendAsJson = false) {
     // Realizar la solicitud FETCH
     return fetch(fetchUrl, requestOptions)
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Error en la solicitud.');
-            }
+            if (!response.ok) throw new Error('Error en la solicitud.');
             return response.json(); // Convertir la respuesta a formato JSON
         })
         .then(data => {
@@ -54,11 +46,11 @@ function fetchData(op, postData, sendAsJson = false) {
 
             // Mostrar un mensaje de alerta según el estado de la respuesta
             if (data.status === 'success') {
-                Swal.fire('Éxito', data.message, 'Exito');
+                Swal.fire('Éxito', data.message, 'success');
             } else if(data.status === 'error'){
                 Swal.fire('Error', data.message, 'error');
             }else if(data.status === 'warning'){
-                Swal.fire('Cuidado', data.message, 'Cuidado');
+                Swal.fire('Cuidado', data.message, 'warning');
             }else if(data.status === 'info'){
                 Swal.fire('Informacion', data.message, 'info');
             }
@@ -96,43 +88,12 @@ function FnOpetenerUnidad() {
     }
   })
   .catch(error => {
-    console.error('Error al obtener la información de los usuarios:', error);
+    console.error('Error al obtener la información:', error);
   });
 }
-function renderTable(unidad) {
+function renderTable(data) {
   const unidadInfo = document.getElementById('unidadInfo');
   unidadInfo.innerHTML = '';
-
-    const filterContainer = document.createElement('div');
-    filterContainer.className = 'mb-3';
-    filterContainer.innerHTML = `
-    `;
-    unidadInfo.appendChild(filterContainer);
-
-    const table = createTable(unidad);
-    unidadInfo.appendChild(table);
-
-}
-// Mapeo de nombres de columnas y transformaciones
-const columnConfig = {
-  unid_id: 'ID',
-  unid_nom: 'Nombre',
-  unid_est: 'Estado',
-  acciones: 'Acciones'
-};
-
-// Transformaciones para ciertas columnas
-const transformValue = (key, value) => {
-  switch (key) {
-    case 'unid_est':
-      return transformStatus(value);
-    case 'responsable_rut':
-    case 'reemplazante_rut':
-      return formatRUT(value);
-    default:
-      return value;
-  }
-};
 
 // Función para transformar el estado
 const transformStatus = (status) => {
@@ -143,59 +104,76 @@ const transformStatus = (status) => {
   };
   return statuses[status] || 'Desconocido';
 };
+    const tableContainer = document.createElement('div');
+    tableContainer.className = 'table-responsive';
 
-// Función para calcular el DV del RUT
-const calculateDV = (rut) => {
-  let suma = 0;
-  let multiplicador = 2;
+    const table = document.createElement('table');
+    table.className = 'table table-striped table-bordered';
+    table.id = 'unidadTable';
 
-  for (let i = rut.toString().length - 1; i >= 0; i--) {
-    suma += rut.toString().charAt(i) * multiplicador;
-    multiplicador = multiplicador < 7 ? multiplicador + 1 : 2;
-  }
+    unidadInfo.appendChild(tableContainer);
+    tableContainer.appendChild(table);
 
-  const dv = 11 - (suma % 11);
-  return dv === 11 ? '0' : dv === 10 ? 'K' : dv.toString();
-};
+    // Inicialización de DataTable
 
-// Función para formatear el RUT con puntos y guion
-const formatRUT = (rut) => {
-  const dv = calculateDV(rut);
-  const rutStr = rut.toString();
-  let formattedRUT = '';
+    $(table).DataTable({
+        data: data,
+        columns: [
+            { data: 'unid_id', title: 'ID' },
+            { data: 'unid_nom', title: 'Nombre' },
+            { data: 'unid_est', title: 'Estado', render: transformStatus },
+            {
+                data: null,
+                title: 'editar',
+                render: function (data) {
+                    return `
+                        <button class="btn btn-primary btn-sm edit-btn" data-id="${data.unid_id}">Editar</button>
+                    `;
+                }
+            },
+            {
+                data: null,
+                title: 'eliminar',
+                render: function (data) {
+                    return `
+                        <button class="btn btn-danger btn-sm ml-2 delete-btn" data-id="${data.unid_id}">Eliminar</button>
+                    `;
+                }
+            }
+        ],
+        language: {
+            url: '../registrosLog/spanishDatatable.json'
+        }
+    });
 
-  for (let i = rutStr.length - 1, j = 1; i >= 0; i--, j++) {
-    formattedRUT = rutStr.charAt(i) + formattedRUT;
-    if (j % 3 === 0 && i > 0) {
-      formattedRUT = '.' + formattedRUT;
-    }
-  }
 
-  return `${formattedRUT}-${dv}`;
-};
+    $(table).on('click', '.edit-btn', function () {
+        const id = $(this).data('id');
+        editItem(id);
+    });
 
-// Funciones para editar y eliminar
+    $(table).on('click', '.delete-btn', function () {
+        const id = $(this).data('id');
+        deleteItem(id);
+    });
+}
+
+
 const editItem = (id) => {
-  // Obtener la fila correspondiente a la unidad
-  const row = document.getElementById(`unidad_${id}`);
-  const cells = row.getElementsByTagName('td');
 
-  // Mostrar la alerta de SweetAlert2 para editar
   Swal.fire({
     title: 'Editar Unidad',
     html:
-      `<input id="editUnidNom" class="swal2-input" value="${cells[1].textContent}" placeholder="Nombre" required>` +
-      `<select id="editUnidEst" class="swal2-input">
-         <option value="1" ${cells[2].textContent === 'En servicio' ? 'selected' : ''}>En servicio</option>
-         <option value="2" ${cells[2].textContent === 'En proceso' ? 'selected' : ''}>En proceso</option>
-         <option value="3" ${cells[2].textContent === 'Sin servicio' ? 'selected' : ''}>Sin servicio</option>
-       </select>`,
+      `<input id="editUnidNom" class="swal2-input" value="" placeholder="Nombre" required>
+      <select id="editUnidEst" class="swal2-input">
+         <option value="1">En servicio</option>
+         <option value="2">En proceso</option>
+         <option value="3">Sin servicio</option>
+      </select>`,
     focusConfirm: false,
     preConfirm: () => {
       const nombre = document.getElementById('editUnidNom').value;
       const estado = document.getElementById('editUnidEst').value;
-
-      // Validar los datos si es necesario antes de enviar
       if (!nombre || !estado) {
         Swal.showValidationMessage('Todos los campos son obligatorios');
         return false;
@@ -207,22 +185,19 @@ const editItem = (id) => {
         unid_est: estado,
       };
 
-      // Realizar la solicitud para actualizar los datos
       return fetchData('update_unidad', postData)
-        .then(data => {
-          if (data.status !== 'success') {
-            throw new Error(data.message || 'Error al actualizar la unidad');
-          } 
-          return FnOpetenerUnidad();
+       .then(data => {
+         if (data.status === 'success') {
+            return FnOpetenerUnidad();
+          } else {
+          throw new Error(data.message || 'Error al actualizar');
+        }
         })
-        .catch(error => {
-          Swal.fire('Error', error.message || 'Error al actualizar la unidad', 'error');
-        });
-    }
+        .catch(error => Swal.fire('Error', error.message || 'Error al actualizar', 'error'));
+      }
   }).then((result) => {
     if (result.isConfirmed) {
       Swal.fire('¡Actualizado!', 'La unidad ha sido actualizada correctamente', 'success');
-      // Aquí podrías actualizar la fila de la tabla si lo deseas
     }
   });
 };
@@ -242,68 +217,12 @@ const deleteItem = (id) => {
       fetchData('delete_unidad', { unid_id: id })
         .then(data => {
           if (data.status === 'success') {
-            // Actualizar la tabla o realizar alguna acción adicional
-            document.getElementById(`unidad_${id}`).remove();
+            $('#unidadTable').DataTable().ajax.reload();
           }
         });
     }
   });
 };
-
-function createTable(data) {
-  const table = document.createElement('table');
-  table.className = 'table table-striped';
-
-  // Crear el encabezado de la tabla
-  const headers = Object.keys(columnConfig);
-  const headerRow = document.createElement('tr');
-  headers.forEach(headerKey => {
-    const header = document.createElement('th');
-    header.textContent = columnConfig[headerKey];
-    headerRow.appendChild(header);
-  });
-  table.appendChild(headerRow);
-
-  // Crear filas con los datos de las unidades
-  data.forEach(item => {
-    let row = document.createElement('tr');
-    row.id = `unidad_${item.unid_id}`;
-    headers.forEach(key => {
-      const cell = document.createElement('td');
-      if (key === 'acciones') {
-        const editButton = document.createElement('button');
-        editButton.className = 'btn btn-primary btn-sm';
-        editButton.textContent = 'Editar';
-        editButton.onclick = () => editItem(item.unid_id);
-
-        const deleteButton = document.createElement('button');
-        deleteButton.className = 'btn btn-danger btn-sm ml-2';
-        deleteButton.textContent = 'Eliminar';
-        deleteButton.onclick = () => deleteItem(item.unid_id);
-
-        cell.appendChild(editButton);
-        cell.appendChild(deleteButton);
-      } else {
-        cell.textContent = transformValue(key, item[key]);
-      }
-      row.appendChild(cell);
-    });
-    table.appendChild(row);
-  });
-
-  return table;
-}
-// Función para limpiar el formato del Rut (elimina puntos, guión y dígito verificador)
-
-function limpiarRut(rut) {
-  // Eliminar puntos y guion
-  rut = rut.replace(/[.-]/g, '');
-
-  // Eliminar dígito verificador al final (si existe)
-  rut = rut.replace(/\d{1,1}$/, '');
-
-  return rut;
-}
 
 function fn_agregar_unidad() {
   Swal.fire({
@@ -320,7 +239,6 @@ function fn_agregar_unidad() {
       const nombre = document.getElementById('addUnidNom').value;
       const estado = document.getElementById('addUnidEst').value;
 
-      // Validar los datos si es necesario antes de enviar
       if (!nombre || !estado ) {
         Swal.showValidationMessage('Todos los campos son obligatorios');
         return false;
@@ -331,22 +249,19 @@ function fn_agregar_unidad() {
         unid_est: estado,
       };
 
-      // Realizar la solicitud para agregar la nueva unidad
       return fetchData('add_unidad', postData)
         .then(data => {
-          if (data.status !== 'success') {
-            throw new Error(data.message || 'Error al agregar la unidad');
+          if (data.status === 'success') {
+            return FnOpetenerUnidad();
+          } else {
+             throw new Error(data.message || 'Error al agregar');
           }
-          return FnOpetenerUnidad(); // Actualizar la tabla después de agregar
         })
-        .catch(error => {
-          Swal.fire('Error', error.message || 'Error al agregar la unidad', 'error');
-        });
+        .catch(error => Swal.fire('Error', error.message || 'Error al agregar', 'error'));
     }
   }).then((result) => {
     if (result.isConfirmed) {
       Swal.fire('¡Agregada!', 'La unidad ha sido agregada correctamente', 'success');
-      // Aquí podrías realizar alguna acción adicional si lo deseas
     }
   });
 }
