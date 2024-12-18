@@ -225,8 +225,7 @@ const deleteItem = (id) => {
       fetchData('delete_unidad', { unid_id: id })
         .then(data => {
           if (data.status === 'success') {
-            // Actualizar la tabla o realizar alguna acción adicional
-            document.getElementById(`unidad_${id}`).remove();
+            $('#unidadTable').DataTable().ajax.reload();
           }
         });
     }
