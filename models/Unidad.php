@@ -62,8 +62,8 @@ class Unidad extends Conectar
             return ['status' => 'warning', 'message' => 'Todos los campos son obligatorios.'];
         }
 
-        $sql = "UPDATE tm_unidad SET 
-                    unid_nom = :unid_nom, 
+        $sql = "UPDATE tm_unidad SET
+                    unid_nom = :unid_nom,
                     unid_est = :unid_est
                 WHERE unid_id = :unid_id";
         $params = [
