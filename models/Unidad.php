@@ -56,7 +56,7 @@ class Unidad extends Conectar
     }
 
     // update_unidad según id
-    public function update_unidad($unid_id, $unid_nom, $unid_est)
+    public function update_unidad(int $unid_id, string $unid_nom, int $unid_est): array
     {
         if (empty($unid_id) || empty($unid_nom) || empty($unid_est)) {
             return ['status' => 'warning', 'message' => 'Todos los campos son obligatorios.'];
