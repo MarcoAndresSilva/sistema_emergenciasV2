@@ -168,26 +168,20 @@ const transformStatus = (status) => {
 
 
 const editItem = (id) => {
-  // Obtener la fila correspondiente a la unidad
-  const row = document.getElementById(`unidad_${id}`);
-  const cells = row.getElementsByTagName('td');
 
-  // Mostrar la alerta de SweetAlert2 para editar
   Swal.fire({
     title: 'Editar Unidad',
     html:
-      `<input id="editUnidNom" class="swal2-input" value="${cells[1].textContent}" placeholder="Nombre" required>` +
-      `<select id="editUnidEst" class="swal2-input">
-         <option value="1" ${cells[2].textContent === 'En servicio' ? 'selected' : ''}>En servicio</option>
-         <option value="2" ${cells[2].textContent === 'En proceso' ? 'selected' : ''}>En proceso</option>
-         <option value="3" ${cells[2].textContent === 'Sin servicio' ? 'selected' : ''}>Sin servicio</option>
-       </select>`,
+      `<input id="editUnidNom" class="swal2-input" value="" placeholder="Nombre" required>
+      <select id="editUnidEst" class="swal2-input">
+         <option value="1">En servicio</option>
+         <option value="2">En proceso</option>
+         <option value="3">Sin servicio</option>
+      </select>`,
     focusConfirm: false,
     preConfirm: () => {
       const nombre = document.getElementById('editUnidNom').value;
       const estado = document.getElementById('editUnidEst').value;
-
-      // Validar los datos si es necesario antes de enviar
       if (!nombre || !estado) {
         Swal.showValidationMessage('Todos los campos son obligatorios');
         return false;
@@ -199,22 +193,19 @@ const editItem = (id) => {
         unid_est: estado,
       };
 
-      // Realizar la solicitud para actualizar los datos
       return fetchData('update_unidad', postData)
-        .then(data => {
-          if (data.status !== 'success') {
-            throw new Error(data.message || 'Error al actualizar la unidad');
-          } 
-          return FnOpetenerUnidad();
+       .then(data => {
+         if (data.status === 'success') {
+            return FnOpetenerUnidad();
+          } else {
+          throw new Error(data.message || 'Error al actualizar');
+        }
         })
-        .catch(error => {
-          Swal.fire('Error', error.message || 'Error al actualizar la unidad', 'error');
-        });
-    }
+        .catch(error => Swal.fire('Error', error.message || 'Error al actualizar', 'error'));
+      }
   }).then((result) => {
     if (result.isConfirmed) {
       Swal.fire('¡Actualizado!', 'La unidad ha sido actualizada correctamente', 'success');
-      // Aquí podrías actualizar la fila de la tabla si lo deseas
     }
   });
 };
