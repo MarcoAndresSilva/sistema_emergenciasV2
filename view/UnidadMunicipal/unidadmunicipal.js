@@ -141,9 +141,6 @@ const transformStatus = (status) => {
                 }
             }
         ],
-        columnDefs: [
-            { targets: [0], visible: false } // Ocultar ID
-        ],
         language: {
             url: '../registrosLog/spanishDatatable.json'
         }
