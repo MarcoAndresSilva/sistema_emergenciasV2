@@ -51,11 +51,11 @@ function fetchData(op, postData, sendAsJson = false) {
 
             // Mostrar un mensaje de alerta según el estado de la respuesta
             if (data.status === 'success') {
-                Swal.fire('Éxito', data.message, 'Exito');
+                Swal.fire('Éxito', data.message, 'success');
             } else if(data.status === 'error'){
                 Swal.fire('Error', data.message, 'error');
             }else if(data.status === 'warning'){
-                Swal.fire('Cuidado', data.message, 'Cuidado');
+                Swal.fire('Cuidado', data.message, 'warning');
             }else if(data.status === 'info'){
                 Swal.fire('Informacion', data.message, 'info');
             }
