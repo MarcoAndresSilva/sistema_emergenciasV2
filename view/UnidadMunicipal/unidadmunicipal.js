@@ -96,41 +96,9 @@ function FnOpetenerUnidad() {
     console.error('Error al obtener la información de los usuarios:', error);
   });
 }
-function renderTable(unidad) {
+function renderTable(data) {
   const unidadInfo = document.getElementById('unidadInfo');
   unidadInfo.innerHTML = '';
-
-    const filterContainer = document.createElement('div');
-    filterContainer.className = 'mb-3';
-    filterContainer.innerHTML = `
-    `;
-    unidadInfo.appendChild(filterContainer);
-
-    const table = createTable(unidad);
-    unidadInfo.appendChild(table);
-
-}
-// Mapeo de nombres de columnas y transformaciones
-const columnConfig = {
-  unid_id: 'ID',
-  unid_nom: 'Nombre',
-  unid_est: 'Estado',
-  editar: 'editar',
-  eliminar: 'eliminar'
-};
-
-// Transformaciones para ciertas columnas
-const transformValue = (key, value) => {
-  switch (key) {
-    case 'unid_est':
-      return transformStatus(value);
-    case 'responsable_rut':
-    case 'reemplazante_rut':
-      return formatRUT(value);
-    default:
-      return value;
-  }
-};
 
 // Función para transformar el estado
 const transformStatus = (status) => {
@@ -141,38 +109,64 @@ const transformStatus = (status) => {
   };
   return statuses[status] || 'Desconocido';
 };
+    const tableContainer = document.createElement('div');
+    tableContainer.className = 'table-responsive';
 
-// Función para calcular el DV del RUT
-const calculateDV = (rut) => {
-  let suma = 0;
-  let multiplicador = 2;
+    const table = document.createElement('table');
+    table.className = 'table table-striped table-bordered';
+    table.id = 'unidadTable';
 
-  for (let i = rut.toString().length - 1; i >= 0; i--) {
-    suma += rut.toString().charAt(i) * multiplicador;
-    multiplicador = multiplicador < 7 ? multiplicador + 1 : 2;
-  }
+    unidadInfo.appendChild(tableContainer);
+    tableContainer.appendChild(table);
 
-  const dv = 11 - (suma % 11);
-  return dv === 11 ? '0' : dv === 10 ? 'K' : dv.toString();
-};
+    // Inicialización de DataTable
 
-// Función para formatear el RUT con puntos y guion
-const formatRUT = (rut) => {
-  const dv = calculateDV(rut);
-  const rutStr = rut.toString();
-  let formattedRUT = '';
+    $(table).DataTable({
+        data: data,
+        columns: [
+            { data: 'unid_id', title: 'ID' },
+            { data: 'unid_nom', title: 'Nombre' },
+            { data: 'unid_est', title: 'Estado', render: transformStatus },
+            {
+                data: null,
+                title: 'editar',
+                render: function (data) {
+                    return `
+                        <button class="btn btn-primary btn-sm edit-btn" data-id="${data.unid_id}">Editar</button>
+                    `;
+                }
+            },
+            {
+                data: null,
+                title: 'eliminar',
+                render: function (data) {
+                    return `
+                        <button class="btn btn-danger btn-sm ml-2 delete-btn" data-id="${data.unid_id}">Eliminar</button>
+                    `;
+                }
+            }
+        ],
+        columnDefs: [
+            { targets: [0], visible: false } // Ocultar ID
+        ],
+        language: {
+            url: '../registrosLog/spanishDatatable.json'
+        }
+    });
 
-  for (let i = rutStr.length - 1, j = 1; i >= 0; i--, j++) {
-    formattedRUT = rutStr.charAt(i) + formattedRUT;
-    if (j % 3 === 0 && i > 0) {
-      formattedRUT = '.' + formattedRUT;
-    }
-  }
 
-  return `${formattedRUT}-${dv}`;
-};
+    $(table).on('click', '.edit-btn', function () {
+        const id = $(this).data('id');
+        editItem(id);
+    });
 
-// Funciones para editar y eliminar
+    $(table).on('click', '.delete-btn', function () {
+        const id = $(this).data('id');
+        deleteItem(id);
+    });
+}
+
+
 const editItem = (id) => {
   // Obtener la fila correspondiente a la unidad
   const row = document.getElementById(`unidad_${id}`);
