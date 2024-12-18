@@ -1,16 +1,11 @@
 function fetchData(op, postData, sendAsJson = false) {
     // URL del controlador
     const url = '../../controller/unidad.php';
-
-    // Construir la URL con los parámetros GET
     const params = new URLSearchParams({
         op: op,
     });
-
-    // Agregar los parámetros GET a la URL del controlador
     const fetchUrl = `${url}?${params}`;
 
-    // Convertir el objeto postData a formato x-www-form-urlencoded o JSON
     let formData, contentType;
     if (sendAsJson) {
         formData = JSON.stringify(postData);
@@ -247,7 +242,6 @@ function fn_agregar_unidad() {
       const nombre = document.getElementById('addUnidNom').value;
       const estado = document.getElementById('addUnidEst').value;
 
-      // Validar los datos si es necesario antes de enviar
       if (!nombre || !estado ) {
         Swal.showValidationMessage('Todos los campos son obligatorios');
         return false;
@@ -258,7 +252,6 @@ function fn_agregar_unidad() {
         unid_est: estado,
       };
 
-      // Realizar la solicitud para agregar la nueva unidad
       return fetchData('add_unidad', postData)
         .then(data => {
           if (data.status === 'success') {
@@ -272,7 +265,6 @@ function fn_agregar_unidad() {
   }).then((result) => {
     if (result.isConfirmed) {
       Swal.fire('¡Agregada!', 'La unidad ha sido agregada correctamente', 'success');
-      // Aquí podrías realizar alguna acción adicional si lo deseas
     }
   });
 }
