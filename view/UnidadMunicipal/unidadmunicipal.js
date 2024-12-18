@@ -42,9 +42,7 @@ function fetchData(op, postData, sendAsJson = false) {
     // Realizar la solicitud FETCH
     return fetch(fetchUrl, requestOptions)
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Error en la solicitud.');
-            }
+            if (!response.ok) throw new Error('Error en la solicitud.');
             return response.json(); // Convertir la respuesta a formato JSON
         })
         .then(data => {
