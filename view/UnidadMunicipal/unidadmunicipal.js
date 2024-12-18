@@ -93,7 +93,7 @@ function FnOpetenerUnidad() {
     }
   })
   .catch(error => {
-    console.error('Error al obtener la información de los usuarios:', error);
+    console.error('Error al obtener la información:', error);
   });
 }
 function renderTable(data) {
