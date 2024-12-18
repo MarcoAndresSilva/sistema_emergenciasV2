@@ -54,8 +54,8 @@ final class TestFormato extends TestCase
     public function testSetMensajeCierreEvento(): void{
         $formato = new Formato();
         $datos_evento = [
-            'usu_nom' => "Nelson",
-            'usu_ape' => "Navarro",
+            'nombre' => "Nelson",
+            'apellido' => "Navarro",
             'detalle' => 'el incendio no quemo nada importante',
             'motivo' => 'Se controla el incendio',
             'fecha_cierre' => '10-25-2333',
