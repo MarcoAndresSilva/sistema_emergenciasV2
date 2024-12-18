@@ -11,8 +11,7 @@ function fetchData(op, postData, sendAsJson = false) {
     const fetchUrl = `${url}?${params}`;
 
     // Convertir el objeto postData a formato x-www-form-urlencoded o JSON
-    let formData;
-    let contentType;
+    let formData, contentType;
     if (sendAsJson) {
         formData = JSON.stringify(postData);
         contentType = 'application/json';
