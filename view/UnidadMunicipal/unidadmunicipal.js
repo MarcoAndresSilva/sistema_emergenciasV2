@@ -261,14 +261,13 @@ function fn_agregar_unidad() {
       // Realizar la solicitud para agregar la nueva unidad
       return fetchData('add_unidad', postData)
         .then(data => {
-          if (data.status !== 'success') {
-            throw new Error(data.message || 'Error al agregar la unidad');
+          if (data.status === 'success') {
+            return FnOpetenerUnidad();
+          } else {
+             throw new Error(data.message || 'Error al agregar');
           }
-          return FnOpetenerUnidad(); // Actualizar la tabla después de agregar
         })
-        .catch(error => {
-          Swal.fire('Error', error.message || 'Error al agregar la unidad', 'error');
-        });
+        .catch(error => Swal.fire('Error', error.message || 'Error al agregar', 'error'));
     }
   }).then((result) => {
     if (result.isConfirmed) {
