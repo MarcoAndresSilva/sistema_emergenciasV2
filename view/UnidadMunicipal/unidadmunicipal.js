@@ -232,51 +232,6 @@ const deleteItem = (id) => {
   });
 };
 
-function createTable(data) {
-  const table = document.createElement('table');
-  table.className = 'table table-striped';
-
-  // Crear el encabezado de la tabla
-  const headers = Object.keys(columnConfig);
-  const headerRow = document.createElement('tr');
-  headers.forEach(headerKey => {
-    const header = document.createElement('th');
-    header.textContent = columnConfig[headerKey];
-    headerRow.appendChild(header);
-  });
-  table.appendChild(headerRow);
-
-  // Crear filas con los datos de las unidades
-  data.forEach(item => {
-    let row = document.createElement('tr');
-    row.id = `unidad_${item.unid_id}`;
-    headers.forEach(key => {
-      const cell = document.createElement('td');
-      if (key === 'editar') {
-        const editButton = document.createElement('button');
-        editButton.className = 'btn btn-primary btn-sm';
-        editButton.textContent = 'Editar';
-        editButton.onclick = () => editItem(item.unid_id);
-        cell.appendChild(editButton);
-      } else if (key === 'eliminar') {
-
-        const deleteButton = document.createElement('button');
-        deleteButton.className = 'btn btn-danger btn-sm ml-2';
-        deleteButton.textContent = 'Eliminar';
-        deleteButton.onclick = () => deleteItem(item.unid_id);
-
-        cell.appendChild(deleteButton);
-      } else {
-        cell.textContent = transformValue(key, item[key]);
-      }
-      row.appendChild(cell);
-    });
-    table.appendChild(row);
-  });
-
-  return table;
-}
-// Función para limpiar el formato del Rut (elimina puntos, guión y dígito verificador)
 
 function limpiarRut(rut) {
   // Eliminar puntos y guion
