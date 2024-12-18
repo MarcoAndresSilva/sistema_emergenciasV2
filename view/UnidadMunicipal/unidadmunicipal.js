@@ -232,17 +232,6 @@ const deleteItem = (id) => {
   });
 };
 
-
-function limpiarRut(rut) {
-  // Eliminar puntos y guion
-  rut = rut.replace(/[.-]/g, '');
-
-  // Eliminar dígito verificador al final (si existe)
-  rut = rut.replace(/\d{1,1}$/, '');
-
-  return rut;
-}
-
 function fn_agregar_unidad() {
   Swal.fire({
     title: 'Agregar Nueva Unidad',
