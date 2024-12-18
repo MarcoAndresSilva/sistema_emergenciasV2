@@ -64,7 +64,7 @@ class Unidad extends Conectar
 
         $sql = "UPDATE tm_unidad SET 
                     unid_nom = :unid_nom, 
-                    unid_est = :unid_est, 
+                    unid_est = :unid_est
                 WHERE unid_id = :unid_id";
         $params = [
             ':unid_id' => $unid_id,
