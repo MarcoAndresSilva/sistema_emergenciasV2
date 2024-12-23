@@ -45,17 +45,41 @@
     height: 100%;
 }
 
+.datos-evento{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content:space-between;
+    align-items:center;
+    text-align:center;
+}
+
+.datos-evento .card{
+    width: 250px;
+}
+
 #lblEstado span,
 #lblFechaCrea,
 #lblNomUsuario{
     font-size: 1rem;
 }
 
+.lista{
+    display: flex;
+    justify-content:center;
+    flex-wrap:wrap;
+}
+
+.lista .card{
+    width: 40%;
+    margin: 5px 30px;
+    padding: 0 20px;
+    text-align: center;
+}
 
 #btnPanelDerivar{
     border: none;
     color: #00A8FF;
-    font-size: 1.5rem;
+    font-size: 2.5rem;
     background-color: transparent;
 }
  
@@ -63,99 +87,96 @@
     text-align: center;
 }
 
-
 #lblEstado{
     background: transparent;
 }
 
-
-.
-/*Modals styles*/
-#distribucion-espacios-datos{
-  display: flex;
-  justify-content: space-around;
-
+@media screen and (max-width: 550px) {
+    .datos-evento{
+      justify-content:center;
+    }
+    .lista .card{
+      width: 100%; 
+    }
 }
 
-#distribucion-espacios-datos .card{
-  width: 45%;
+/*Modals styles Derivar*/
+.modal-dialog:not(.modal-sm):not(.modal-lg) {
+    width: 50vw;
 }
-#listaParticipantes{
-    width: 100%;
-    flex-direction: row;
+.modal-content {
+  max-width:100%;
+    width: 100%vw;
+}
+#distribucion-box{
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-}
-
-#tablaSecciones_wrapper{
-    display: flex;
+    max-width: 100%;
     flex-direction: column;
     justify-content: space-around;
+    align-items: center;
 }
-
-.select-info{
-  visibility: hidden;
-}
-
-.dataTables_length{
-  visibility:hidden;
-}
-
-.secciones-box{
+#distribucion-espacios-datos-derivar{
+  display: flex;
+  justify-content: space-between;
   width: 100%;
 }
-.datos-row {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+
+#distribucion-espacios-datos-derivar .card{
+  width: 45%;
+}
+#distribucion-espacios-select{
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+#distribucion-espacios-select .card{
+  width: 100%;
+}
+#content-list{
+  display: flex;
+}
+#listaParticipantesderivar{
+  display: flex;
+}
+#distribucion-espacios-tabla{
+  width: 100%;
+  overflow-x:auto;
+}
+#distribucion-espacios-tabla .card{
+  width: 100%;
 }
 
-.datos-evento{
-    display: flex;
-    width: 50%;
-    /* flex-wrap: wrap; */
-   
+#distribucion-espacios-tabla .card .card-body{
+  width: 100%;
+  display: flex;
+  flex-direction:column;
+  overflow-x:auto;
 }
-
-.datos-evento .col-lg-2{
-    width: 25%;
-       
-}
-
 .datos-participantes{
-    display: flex;
-   width: 25%;
-   justify-content: center;
+  max-width:100%;
 }
-
-.datos-rederivar{
-display: flex;
-   width: 15%;
-   justify-content: center;
+.datos-participantes .form-group{
+  max-width:100%;
 }
-
-.datos-participantes .col-lg-2,
-.datos-rederivar .col-lg-2{
-    width: 90%;
-}
-
-.descripcion-row div{
-    text-align: left;
-    
-}
-#tablaSecciones_wrapper{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-}
-
-.select-info{
-  visibility: hidden;
-}
-
 .dataTables_length{
-  visibility:hidden;
+  display: none;
+}
+#tablaSecciones{
+  width: 100%;
+  max-width: 100%;
+  text-align: center;
+}
+
+@media screen and (max-width: 1400px) {
+    .modal-dialog:not(.modal-sm):not(.modal-lg) {
+    width: 70vw;
+    }
+}
+
+@media screen and (max-width: 1054px) {
+    .modal-dialog:not(.modal-sm):not(.modal-lg) {
+        width: 96vw;
+    }
 }
 
 
