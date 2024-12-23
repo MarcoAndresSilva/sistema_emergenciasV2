@@ -37,8 +37,8 @@ Permisos::redirigirSiNoAutorizado();
                         <div class="tbl-cell">
                             <h3>Mapa</h3>
                             <ol class="breadcrumb breadcrumb-simple">
-                                <li><a href="#">Mapa</a></li>
-                                <li class="active">Mapa</li>
+                                <li><a href="../Home/">Inicio</a></li>
+                                <li class="active">Mapa de calor</li>
                             </ol>
                         </div>
                     </div>

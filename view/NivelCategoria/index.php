@@ -39,8 +39,9 @@ Permisos::redirigirSiNoAutorizado();
 						<div class="tbl-cell">
 							<h3>Categoría de Emergencias</h3>
 							<ol class="breadcrumb breadcrumb-simple">
-								<li><a href="#">Categorias</a></li>
-								<li class="active">Administración de categorias</li>
+							  <li><a href="../Home/">Inicio</a></li>
+                <li class="active">Administración</li>
+                <li class="active">Nivel categoria</li>
 							</ol>
 						</div>
 					</div>
