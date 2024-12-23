@@ -22,17 +22,19 @@ function cargarTablaGeneral() {
             { "data": "ev_id" },
             { "data": "categoria" },
             { "data": "direccion" },
-            { "data": "asignacion" },
+            { "data": "asignacion", "render": function(data, type, row) {
+                return data.split(" - ").join("<br>");
+            }},
             { "data": "nivel_peligro" },
             { "data": "estado" },
             { "data": "fecha_apertura" },
             { "data": "ver_documentos" },
             { "data": "ver_informe" }
         ],
-          language: {
-                url: "../registrosLog/spanishDatatable.json"
-            },
-          destroy: true, // Permite volver a inicializar la tabla si ya ha sido creada
+        "language": {
+            url: "../registrosLog/spanishDatatable.json"
+        },
+        "destroy": true, // Permite volver a inicializar la tabla si ya ha sido creada
         "drawCallback": function(settings) {
             // Aquí aplicas nuevamente los estilos o cambios de color que necesitas
             $('.peligro_critico').addClass('label label-pill label-primary');
@@ -42,7 +44,6 @@ function cargarTablaGeneral() {
         }
     });
 
-         // Asegúrate de que el evento de clic esté delegado correctamente
     $('#tabla-historial').on('click', '.btnDocumentos', function() {     
         var ev_id = $(this).data('ev-id');
         cargar_documentos(ev_id);
