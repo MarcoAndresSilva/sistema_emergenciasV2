@@ -42,8 +42,8 @@ Permisos::redirigirSiNoAutorizado();
                         <div class="tbl-cell">
                             <h3>Historial de las Emergencias</h3>
                             <ol class="breadcrumb breadcrumb-simple">
-                                <li><a href="#">Emergencias</a></li>
-                                <li class="active">Detalle de las Emergencias</li>
+                                <li><a href="../Home/">Inicio</a></li>
+                                <li class="active">Historial de eventos</li>
                             </ol>
                         </div>
                     </div>

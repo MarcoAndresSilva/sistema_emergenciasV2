@@ -30,8 +30,8 @@ if (isset($_SESSION["usu_id"])) {
                         <div class="tbl-cell">
                             <h3>Nuevo Evento</h3>
                             <ol class="breadcrumb breadcrumb-simple">
-                                <li><a href="#">Home</a></li>
-                                <li class="active">Nuevo Evento</li>
+                                <li><a href="../Home/">Inicio</a></li>
+                                <li class="active">Nuevo evento</li>
                             </ol>
                         </div>
                     </div>
@@ -81,7 +81,7 @@ if (isset($_SESSION["usu_id"])) {
                     <div class="group-emergencia-data">
                         <div class="col-lg-5 col-cat">
                             <fieldset class="form-group">
-                                <label class="form-label semibold" for="exampleInput">Seleccione Categoría</label>
+                                <label class="form-label semibold" for="exampleInput">Seleccione categoría</label>
                                 <select id="cat_id" class="form-control"></select>
                             </fieldset>
                         </div>
@@ -103,7 +103,7 @@ if (isset($_SESSION["usu_id"])) {
                     <div class="group-ident">
                         <div class="col-lg-5">
                             <fieldset class="form-group group-dir">
-                                <label class="form-label semibold" for="exampleInput">Ingresar dirección o Marque en el mapa</label>
+                                <label class="form-label semibold" for="exampleInput">Ingresar dirección o marque en el mapa</label>
                                 <input type="text" class="form-control" id="address" placeholder="Dirección">
                             </fieldset>
                             <div class="form-check">

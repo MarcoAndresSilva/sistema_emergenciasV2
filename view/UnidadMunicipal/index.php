@@ -34,8 +34,9 @@ Permisos::redirigirSiNoAutorizado();
 						<div class="tbl-cell">
 							<h3>Unidades Municipales</h3>
 							<ol class="breadcrumb breadcrumb-simple">
-								<li><a href="#">Registro</a></li>
-								<li class="active">Unidades</li>
+								<li><a href="../Home/">Inicio</a></li>
+								<li class="active">Administración</li>
+	              <li class="active">Unidades municipales</li>
 							</ol>
 						</div>
 					</div>

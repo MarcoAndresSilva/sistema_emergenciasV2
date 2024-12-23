@@ -32,6 +32,20 @@ Permisos::redirigirSiNoAutorizado();
 
     <div class="page-content">
         <div class="container-fluid">
+            	<header class="section-header">
+                <div class="tbl">
+                  <div class="tbl-row">
+                    <div class="tbl-cell">
+                      <h3>Gestion Reglas Noticia</h3>
+                      <ol class="breadcrumb breadcrumb-simple">
+                        <li><a href="../Home/">Inicio</a></li>
+                        <li class="active">Administración</li>
+                        <li class="active">Gestion reglas de noticias</li>
+                      </ol>
+                    </div>
+                  </div>
+                </div>
+              </header>
             <div class="box-typical box-typical-padding table-responsive-sm" id="tabla-password">
                     <div class="input-group rounded">
                     </div> <!-- .input-group -->

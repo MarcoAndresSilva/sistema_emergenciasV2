@@ -26,7 +26,9 @@ function cargarTablaGeneral() {
             { "data": "ev_id" },
             { "data": "categoria" },
             { "data": "direccion" },
-            { "data": "asignacion" },
+            { "data": "asignacion", "render": function(data, type, row) {
+                return data.split(" - ").join("<br>");
+            }},
             { "data": "nivel_peligro" },
             { "data": "estado" },
             { "data": "fecha_apertura" },

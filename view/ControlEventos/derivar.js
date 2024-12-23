@@ -129,26 +129,29 @@ function cargarsecciones(ev_id) {
                 }
             });
 
-            tablaSecciones.DataTable({
+           tablaSecciones.DataTable({
                 pageLength: 5,
                 language: {
                     url: "../registrosLog/spanishDatatable.json"
                 },
-                destroy: true
-            });
+                destroy: true,
+                // responsive: true, // Habilita la responsividad en la tabla
+                drawCallback: function() {
+                    // Reasignar eventos después de que la tabla sea redibujada
+                    $('.btnEliminar').off('click').on('click', function(event) {
+                        event.preventDefault();
+                        const sec_id = $(this).data('sec-id');
+                        const ev_id = $(this).data('ev-id');
+                        eliminarderivado(sec_id, ev_id);
+                    });
 
-            $('.btnEliminar').on('click', function(event) {
-                event.preventDefault();
-                const sec_id = $(this).data('sec-id');
-                const ev_id = $(this).data('ev-id');
-                eliminarderivado(sec_id, ev_id);
-            });
-
-            $('.btnAgregar').on('click', function(event) {
-                event.preventDefault();
-                const sec_id = $(this).data('sec-id');
-                const ev_id = $(this).data('ev-id');
-                agregarderivado(sec_id, ev_id);
+                    $('.btnAgregar').off('click').on('click', function(event) {
+                        event.preventDefault();
+                        const sec_id = $(this).data('sec-id');
+                        const ev_id = $(this).data('ev-id');
+                        agregarderivado(sec_id, ev_id);
+                    });
+                }
             });
         })
         .catch(error => console.error('Error al cargar las secciones:', error));
