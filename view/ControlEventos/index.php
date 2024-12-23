@@ -35,8 +35,8 @@ Permisos::redirigirSiNoAutorizado("derivar");
                         <div class="tbl-cell">
                             <h3>Eventos</h3>
                             <ol class="breadcrumb breadcrumb-simple">
-                                <li><a href="#">Eventos</a></li>
-                                <li class="active">En proceso</li>
+                                <li><a href="../Home/">Inicio</a></li>
+                                <li class="active">Control de eventos</li>
                             </ol>
                         </div>
                     </div>
