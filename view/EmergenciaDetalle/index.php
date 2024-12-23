@@ -24,7 +24,7 @@ Permisos::redirigirSiNoAutorizado();
 
     <?php require_once("../MainNav/nav.php"); ?>
 
-    <div class="page-content">
+    <main class="page-content">
         <div class="container-fluid">
             <header class="section-header">
                 <div class="tbl">
@@ -32,86 +32,86 @@ Permisos::redirigirSiNoAutorizado();
                         <div class="tbl-cell">
                             <h3>Detalle Eventos Emergencias</h3>
                             <ol class="breadcrumb breadcrumb-simple">
-                                <li><a href="../HistorialEventos">Historial Eventos</a></li>
-                                <li class="active">Detalle de las Emergencias</li>
+                                <li><a href="../Home/">Inicio</a></li>
+                                <li class="active">Detalle de las emergencias</li>
                             </ol>
                         </div>
                     </div>
                 </div>
             </header>
 
-            <div class="row datos-row">
-                <h3 class="m-t-lg" id="lblNomIdTicket"></h3>
-
-                <div class="datos-evento">
-                    <div class="col-lg-2 box-item mt-4">
-                        <fieldset class="form-group">
-                        <label class="form-label semibold" for="lblEstado">Estado del evento:</label>
-                        <div class="label label-pill" id="lblEstado"></div>      
-                        </fieldset>
+            <div class="datos-evento">
+                <div class="card">
+                    <div class="card-body"> 
+                        <label class="form-label semibold" for="lblNomIdTicket">Evento ID:</label>
+                        <div id="lblNomIdTicket"></div>
                     </div>
-                    <div class="col-lg-2 box-item mt-4">
-                        <fieldset class="form-group">
+                </div>
+                <div class="card">
+                    <div class="card-body"> 
+                        <label class="form-label semibold" for="cat_nom">Categoria:</label>
+                        <div id="cat_nom"></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body"> 
+                        <label class="form-label semibold" for="ev_direc">Dirección:</label>
+                        <div id="ev_direc"></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body"> 
+                        <label class="form-label semibold" for="lblEstado">Estado del evento:</label>
+                        <div class="label label-pill" id="lblEstado"></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
                         <label class="form-label semibold" for="lblNomUsuario">Evento creado por:</label>
                         <div class="label label-pill label-primary" id="lblNomUsuario"></div>
-                        </fieldset>
                     </div>
-                    <div class="col-lg-2 box-item mt-4">
-                        <fieldset class="form-group">
+                </div>
+                <div class="card">
+                    <div class="card-body"> 
                         <label class="form-label semibold" for="lblFechaCrea">Fecha de creación:</label>
                         <div class="label label-pill label-warning" id="lblFechaCrea"></div>
-                        </fieldset>
-                    </div>
-                </div>
-                <div class="datos-participantes">
-                    <div class="col-lg-2 box-item mt-4">
-                        <fieldset class="form-group">
-                        <label class="form-label semibold" for="listaParticipantes">Lista de Participantes:</label>
-                        <ul id="listaParticipantes" class="list-group">
-                            <li class="list-group-item"></li>
-                        </ul>
-                        </fieldset>
-                    </div>
-                </div>
-
-                <div class="datos-rederivar">
-                    <div class="col-lg-2 box-item mt-4">
-                            <fieldset class="form-group">
-                            <label class="form-label semibold" for="btnPanelDerivar">Rederivar:</label>
-                            <button id='btnPanelDerivar'><i class='fa-solid fa-up-right-from-square'></i></button>
-                            </fieldset>
                     </div>
                 </div>
             </div>   
-            <div class="row descripcion-row">
-                <div class="col-lg-2 box-item mt-4">
-                    <fieldset class="form-group">
-                        <label class="form-label semibold" for="cat_nom">Categoria</label>
-                        <input type="text" class="form-control" id="cat_nom" name="cat_nom" readonly>
-                    </fieldset>
-                </div>
 
-                <div class="col-lg-3 box-item mt-4">
-                    <fieldset class="form-group">
-                    <label class="form-label semibold" for="ev_direc">Dirección</label>
-                        <input type="text" class="form-control" id="ev_direc" name="ev_direc" readonly>
-                    </fieldset>
+            <div class="card">
+                <div class="card-body"> 
+                    <label class="form-label semibold" for="tic_descripUsu">Descripción del evento</label>
+                    <div class="summernote-theme-1">
+                        <textarea class="tic_descripUsu" name="tic_descripUsu" id="tic_descripUsu"></textarea>
+                    </div>
                 </div>
+            </div>
 
-                <div class="col-lg-12 box-item">
-                    <fieldset class="form-group">
-                        <label class="form-label semibold" for="tic_descripUsu">Descripción del evento</label>
-                            <div class="summernote-theme-1">
-                                <textarea class="tic_descripUsu" name="tic_descripUsu" id="tic_descripUsu"></textarea>
-                            </div>
-                    </fieldset>
+            <div class="card">
+                <div class="lista">
+                    <div class="card">
+                        <div class="card-body"> 
+                            <label class="form-label semibold" for="listaParticipantes">Lista de participantes:</label>
+                            <ul id="listaParticipantes" class="list-group">
+                                <li class="list-group-item"></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <label class="form-label semibold" for="btnPanelDerivar">Rederivar:</label>
+                            <button id='btnPanelDerivar'><i class='fa-solid fa-up-right-from-square'></i></button>
+                        </div>
+                    </div>
                 </div>
-			</div>
+            </div>
+
 
             <section class="activity-line" id="lblDetalle"></section>
 
             <div class="box-typical box-typical-padding" id="pnlDetalle">
-                <p class="fw-bold">Actualizar estado de la Emergencia</p>
+                <p class="fw-bold">Actualizar estado de la emergencia</p>
 
                 <div class="row">
                     <div class="col-lg-12">
@@ -144,7 +144,7 @@ Permisos::redirigirSiNoAutorizado();
             </div>
 
 		</div>
-    </div>
+    </main>
 
 <!--.page-content-->
 
