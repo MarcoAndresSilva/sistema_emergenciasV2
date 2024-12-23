@@ -55,12 +55,12 @@ function listarDetalle(ev_id) {
     $.post("../../controller/emergenciaDetalle.php?op=mostrar", {ev_id: ev_id}, function(data) {
         data = JSON.parse(data);
         console.log(data);
-        $("#lblNomIdTicket").html("Trazabilidad Evento Emergencia N° ID: " + data.ev_id);
+        $("#lblNomIdTicket").html(data.ev_id);
         $('#lblEstado').html(data.ev_est);
         $('#lblNomUsuario').html(data.usu_nom + ' ' + data.usu_ape);
         $('#lblFechaCrea').html(data.ev_inicio);
-        $("#cat_nom").val(data.cat_nom);
-        $("#ev_direc").val(data.ev_direc);
+        $("#cat_nom").html(data.cat_nom);
+        $("#ev_direc").html(data.ev_direc);
         $("#tic_descripUsu").summernote("code", data.ev_desc);
 
         // Mostrar las unidades asignadas en la lista de participantes
