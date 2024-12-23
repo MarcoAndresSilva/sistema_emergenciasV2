@@ -11,8 +11,8 @@
                 <link rel="stylesheet" href="./estilopersonaleventos.css">
                 
                 <form>
-                    <div id="distribucion-box">
-                        <div id="distribucion-espacios-datos">      
+                    <div id="distribucion-box-nivel">
+                        <div id="distribucion-espacios-datos-nivel">      
                             <div class="card">
                                 <div class="card-body"> 
                                     <h6 class="card-subtitle mb-2 text-muted">ID</h6>
