@@ -2,6 +2,7 @@ $(document).ready(function() {
     cargarTablaGeneral();
 });
 
+
 function cargarTablaGeneral() {
     $('#tabla-historial').DataTable({
         "pageLength": 10,
@@ -21,10 +22,26 @@ function cargarTablaGeneral() {
         "columns": [
             { "data": "ev_id" },
             { "data": "categoria" },
-            { "data": "direccion" },
-            { "data": "asignacion", "render": function(data, type, row) {
-                return data.split(" - ").join("<br>");
-            }},
+            { 
+                "data": "direccion",
+                "render": function(data, type, row) {
+                    // Extraemos el texto limpio, eliminando cualquier botón duplicado
+                    const direccionTexto = data.replace(/<button.*<\/button>/g, '').trim();
+
+                    return `<div class="direccion-flex">
+                                <span class="direccion-texto">${direccionTexto}</span>
+                                <button class="btn btn-primary btn-sm btnDireccionarMapa">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                </button>
+                            </div>`;
+                }
+            },
+            { 
+                "data": "asignacion",
+                "render": function(data, type, row) {
+                    return data.split(" - ").join("<br>");
+                }
+            },
             { "data": "nivel_peligro" },
             { "data": "estado" },
             { "data": "fecha_apertura" },
@@ -35,8 +52,10 @@ function cargarTablaGeneral() {
             url: "../registrosLog/spanishDatatable.json"
         },
         "destroy": true, // Permite volver a inicializar la tabla si ya ha sido creada
+        "createdRow": function(row, data, dataIndex) {
+            $("td", row).eq(2).addClass("direccion-columna"); // Aplica clase específica a la columna
+        },
         "drawCallback": function(settings) {
-            // Aquí aplicas nuevamente los estilos o cambios de color que necesitas
             $('.peligro_critico').addClass('label label-pill label-primary');
             $('.peligro_medio').addClass('label label-pill label-warning');
             $('.peligro_bajo').addClass('label label-pill label-success');
@@ -44,12 +63,12 @@ function cargarTablaGeneral() {
         }
     });
 
-    $('#tabla-historial').on('click', '.btnDocumentos', function() {     
+    $('#tabla-historial').on('click', '.btnDireccionarMapa', function() {     
         var ev_id = $(this).data('ev-id');
-        cargar_documentos(ev_id);
+        cargar_direccion(ev_id);
     });
 }
-/////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////
 let lat;
 let long;
 $(document).on('click', '.btnDireccionarMapa', function() {

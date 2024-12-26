@@ -59,13 +59,13 @@ Permisos::redirigirSiNoAutorizado();
                         <tr>
                             <th style="width:5%">ID</th>
                             <th style="width:10%">Categor&iacute;a</th>
-                            <th style="width:10%">Direcci&oacute;n</th>
-                            <th style="width:25%">Asignaci&oacute;n</th>
-                            <th style="width:10%">Nivel Peligro</th>
-                            <th style="width:10%">Estado</th>
-                            <th style="width:15%">Fecha Apertura</th>
-                            <th style="width:5%">Ver Documentación</th>
-                            <th style="width:5%">Ver Informe</th>
+                            <th style="width:15%">Direcci&oacute;n</th>
+                            <th style="width:5%">Asignaci&oacute;n</th>
+                            <th style="width:5%">Criticidad</th>
+                            <th style="width:5%">Estado</th>
+                            <th style="width:5%">Fecha y hora</th>
+                            <th style="width:5%">Doc</th>
+                            <th style="width:5%">Informe</th>
                         </tr>
                     </thead>
                     <tbody id="datos-criticos">

@@ -52,14 +52,14 @@ Permisos::redirigirSiNoAutorizado("derivar");
                         <tr>
                             <th style="width:5%">ID</th>
                             <th style="width:9.5%">Categor&iacute;a</th>
-                            <th style="width:9.5%">Direcci&oacute;n</th>
-                            <th style="width:20%">Asignaci&oacute;n</th>
-                            <th style="width:10%">Nivel Peligro</th>
-                            <th style="width:10%">Estado</th>
-                            <th style="width:15%">Hora Apertura</th>
-                            <th style="width:5%">Cambiar Nivel de Peligro</th>
-                            <th style="width:5%">Derivar Evento</th>
-                            <th style="width:5%">Chat del Evento</th>
+                            <th style="width:15%">Direcci&oacute;n</th>
+                            <th style="width:10%">Asignaci&oacute;n</th>
+                            <th style="width:5%">Nivel peligro</th>
+                            <th style="width:5%">Estado</th>
+                            <th style="width:5%">Fecha y hora</th>
+                            <th style="width:5%">Crtiticidad</th>
+                            <th style="width:5%">Derivar</th>
+                            <th style="width:5%">Chat</th>
                             
                         </tr>
                     </thead>
