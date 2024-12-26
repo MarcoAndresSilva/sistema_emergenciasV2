@@ -25,6 +25,12 @@ if (isset($_GET["op"])) {
                 echo $html;
             }
         break;
+    case "get_categoria":
+            $datos = $categoria->get_categoria();
+            if (is_array($datos) == true and count($datos) > 0) {
+                echo json_encode($datos);
+            }
+        break;
         case "get_categoria_gestion_motivo":
             if(isset($_POST['mov_id'])) {
                 $mov_id = $_POST['mov_id'];
