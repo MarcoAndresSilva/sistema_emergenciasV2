@@ -239,10 +239,34 @@ function procesarResultados(results, index) {
 }
 
 function cargarCategorias() {
-  $.get("../../controller/categoria.php?op=combo", function(data) {
-    $('#cat_id').html(data);
+  $.get("../../controller/categoria.php?op=get_categoria", function(data) {
+    try {
+      const categorias = JSON.parse(data); // Parsear el JSON recibido
+      const $select = $('#cat_id');
+      $select.empty(); // Limpiar el select antes de agregar nuevas opciones
+
+      if (categorias.length > 0) {
+        // Crear opciones dinámicamente
+        categorias.forEach(categoria => {
+          const option = document.createElement('option');
+          option.value = categoria.cat_id; // Establecer el valor del <option>
+          option.textContent = categoria.cat_nom; // Texto visible
+          option.setAttribute('data-nivel', categoria.nivel); // Nivel de peligro como atributo data-nivel
+          $select.append(option);
+        });
+      } else {
+        // Manejar caso donde no hay categorías
+        const option = document.createElement('option');
+        option.value = '';
+        option.textContent = 'No hay categorías disponibles';
+        $select.append(option);
+      }
+    } catch (error) {
+      console.error("Error al procesar las categorías:", error);
+      swal("Error al cargar categorías", "No se pudo procesar la respuesta del servidor.", "error");
+    }
   }).fail(function(jqXHR, textStatus, errorThrown) {
-    console.error("Error en la solicitud de categorías: ", textStatus, errorThrown);
+    console.error("Error en la solicitud de categorías:", textStatus, errorThrown);
     swal("Error al cargar categorías", "No se pudo cargar la lista de categorías.", "error");
   });
 }
