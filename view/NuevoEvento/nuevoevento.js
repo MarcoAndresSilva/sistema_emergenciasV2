@@ -69,22 +69,41 @@ function initMap() {
 
 function obtenerUbicacionUsuario() {
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(position) {
-      var pos = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-      };
-      map.setCenter(pos);
-      marker.setPosition(pos);
-      currentLat = pos.lat;
-      currentLng = pos.lng;
-      $('#ev_latitud').val(currentLat);
-      $('#ev_longitud').val(currentLng);
+    navigator.geolocation.getCurrentPosition(
+      function(position) {
+        var pos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        };
+        map.setCenter(pos);
+        marker.setPosition(pos);
+        currentLat = pos.lat;
+        currentLng = pos.lng;
+        $('#ev_latitud').val(currentLat);
+        $('#ev_longitud').val(currentLng);
 
-      actualizarDireccion(currentLat, currentLng);
-    });
+        actualizarDireccion(currentLat, currentLng);
+      },
+      function(error) {
+        // Manejo de errores
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            swal("Advertencia", "Necesitas permitir el acceso al GPS para usar esta función.", "warning");
+            break;
+          case error.POSITION_UNAVAILABLE:
+            swal("Advertencia", "La información de ubicación no está disponible.", "warning");
+            break;
+          case error.TIMEOUT:
+            swal("Advertencia", "El tiempo de espera para obtener la ubicación ha expirado.", "warning");
+            break;
+          default:
+            swal("Error", "Error desconocido al obtener la ubicación.", "error");
+            break;
+        }
+      }
+    );
   } else {
-    alert('Geolocalización no soportada por tu navegador.');
+    swal("Error", "Geolocalización no soportada por tu navegador.", "error");
   }
 }
 
