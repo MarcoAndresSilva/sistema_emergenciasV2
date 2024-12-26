@@ -6,6 +6,8 @@ function recargar(ev_id) {
    cargarTablaGeneral();
 }
 
+
+
 function cargarTablaGeneral() {
     $('#tabla-control').DataTable({
         "pageLength": 10,
@@ -25,27 +27,41 @@ function cargarTablaGeneral() {
         "columns": [
             { "data": "ev_id" },
             { "data": "categoria" },
-            { "data": "direccion" },
-            { "data": "asignacion", "render": function(data, type, row) {
-                return data.split(" - ").join("<br>");
-            }},
+            { 
+                "data": "direccion", 
+                "render": function(data, type, row) {
+                    // Extraemos el texto limpio, eliminando el botón si está en el dato original
+                    const direccionTexto = data.replace(/<button.*<\/button>/g, '').trim();
+
+                    return `<div class="direccion-flex">
+                                <span class="direccion-texto">${direccionTexto}</span>
+                                <button class="btn btn-primary btn-sm btnDireccionarMapa">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                </button>
+                            </div>`;
+                }
+            },
+            { 
+                "data": "asignacion", 
+                "render": function(data, type, row) {
+                    return data.split(" - ").join("<br>");
+                }
+            },
             { "data": "nivel_peligro" },
             { "data": "estado" },
             { "data": "fecha_apertura" },
             { "data": "ver_niv_peligro" },
             { "data": "ver_derivar" },
             { "data": "ver_detalle" }
-
         ],
-        language: {
-                url: "../registrosLog/spanishDatatable.json"
+        "language": {
+            url: "../registrosLog/spanishDatatable.json"
         },
-        destroy: true, // Permite volver a inicializar la tabla si ya ha sido creada,
+        "destroy": true,
         "createdRow": function(row, data, dataIndex) {
-            $("td", row).eq(0).attr("id", "id_evento_celda");
+            $("td", row).eq(2).addClass("direccion-columna"); // Añadimos una clase específica a la columna
         },
         "drawCallback": function(settings) {
-            // Aquí aplicas nuevamente los estilos o cambios de color que necesitas
             $('.peligro_critico').addClass('label label-pill label-primary');
             $('.peligro_medio').addClass('label label-pill label-warning');
             $('.peligro_bajo').addClass('label label-pill label-success');
@@ -53,6 +69,8 @@ function cargarTablaGeneral() {
         }
     });
 }
+
+
 
 //////////btn derivar//////////// 
 $(document).on("click", "#btnPanelDerivar", function(e) {

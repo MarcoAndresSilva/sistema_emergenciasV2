@@ -28,6 +28,33 @@
     gap: 10px; /* Espacio entre los elementos */
 }
 
+/* Contenedor principal de la columna dirección */
+#tabla-control .direccion-columna {
+    padding: 8px;
+    vertical-align: middle; /* Alinea verticalmente el contenido */
+}
+
+/* Flexbox para alinear texto y botón */
+#tabla-control .direccion-flex {
+    display: flex;
+    align-items: center; /* Alinea verticalmente en el centro */
+    justify-content: space-between; /* Espacia el texto y el botón */
+    gap: 10px; /* Espacio entre texto y botón */
+}
+
+/* Estilo para el texto dentro de dirección */
+#tabla-control .direccion-texto {
+    flex: 1; /* El texto ocupa el espacio restante */
+    white-space: nowrap; /* Evita el salto de línea */
+    overflow: hidden; /* Evita el desbordamiento de texto */
+    text-overflow: ellipsis; /* Muestra puntos suspensivos si hay desbordamiento */
+}
+
+/* Estilo para el botón */
+#tabla-control .btnDireccionarMapa {
+    flex-shrink: 0; /* Evita que el botón se reduzca */
+}
+
 .tabla-basica {
     width: 100%;
     border-collapse: collapse;
@@ -101,8 +128,8 @@ table.dataTable thead>tr>th.sorting_asc, table.dataTable thead>tr>th.sorting_des
     height: 60vh;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(46, 46, 46, 0.5); /* Sombra para un efecto de profundidad */
-    z-index: 100; /* Asegura que el modal esté sobre otros elementos */
+    box-shadow: 0 0 10px rgba(46, 46, 46, 0.5);
+    z-index: 100; 
     color: black;
     text-align-last: center;
 }
@@ -253,60 +280,3 @@ table.dataTable thead>tr>th.sorting_asc, table.dataTable thead>tr>th.sorting_des
     font-size: 1.3rem;
 }
 
-/*Estilos chat*/
-/**#listaParticipantes{*/
-/*    width: 100%;*/
-/*    flex-direction: row;*/
-/*    display: flex;*/
-/*    flex-wrap: wrap;*/
-/*    justify-content: space-around;*/
-/*}*/
-/**/
-/*#tablaSecciones_wrapper{*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    justify-content: space-around;*/
-/*}*/
-/**/
-/*.select-info{*/
-/*  visibility: hidden;*/
-/*}*/
-/**/
-/*.dataTables_length{*/
-/*  visibility:hidden;*/
-/*}*/
-/**/
-/*.secciones-box{*/
-/*  width: 100%;*/
-/*}*/
-/**/
-/*.select2-container--open {*/
-/*    z-index: 99999999999999;*/
-/*}*/
-/**/
-/*.select2-results__option--highlighted {*/
-/*    color: blue !important;*/
-/*}*/
-/**/
-/*.select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {*/
-/*    background-color: #5897fb;*/
-/*    color: aqua;*/
-/*}*/
-/**/
-/*.select2-container--default .select2-selection--multiple .select2-selection__choice {*/
-/*    background-color: #007bff;*/
-/*    border: 1px solid #aaa;*/
-/*    border-radius: 4px;*/
-/*    box-sizing: border-box;*/
-/*    display: inline-block;*/
-/*    margin-left: 5px;*/
-/*    margin-top: 4px;*/
-/*    padding: 0;*/
-/*    padding-left: 27px;*/
-/*    position: relative;*/
-/*    max-width: 100%;*/
-/*    overflow: hidden;*/
-/*    text-overflow: ellipsis;*/
-/*    vertical-align: bottom;*/
-/*    white-space: nowrap;*/
-/*}*/
