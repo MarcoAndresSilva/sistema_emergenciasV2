@@ -363,104 +363,73 @@ async function add_evento() {
     title: 'Guardando...',
     html: 'Por favor, espera mientras procesamos tu solicitud.',
     allowOutsideClick: false,
-    didOpen: () => {
-      Swal.showLoading();
-    }
+    didOpen: () => Swal.showLoading()
   });
 
-  let ev_latitud = $('#ev_latitud').val();
-  let ev_longitud = $('#ev_longitud').val();
+  const $latitud = $('#ev_latitud').val();
+  const $longitud = $('#ev_longitud').val();
+  const $descripcion = $('#descripcion').val();
+  const $cat_id = $('#cat_id').val();
+  const $nivel_peligro = $('#cat_id').find(':selected').data('nivel');
+  const $address = $('#address').val();
+  const valorUbicacion = $("input[name='ubicacion']:checked").val();
 
-  var ev_desc = $('#descripcion').val();
-  var ev_est = 1;
-
-  var ev_inicio = new Date();
-  var anio = ev_inicio.getFullYear();
-  var mes = ev_inicio.getMonth() + 1;
-  var dia = ev_inicio.getDate();
-  var horas = ev_inicio.getHours();
-  var minutos = ev_inicio.getMinutes();
-  var segundos = ev_inicio.getSeconds();
-  var fechaFormateada = anio + '-' + mes + '-' + dia + ' ' + horas + ':' + minutos + ':' + segundos;
-  ev_inicio = fechaFormateada;
-
-  var cat_id = $('#cat_id').val();
-  var ev_direc = $('#address').val();
-  var valorUbicacion = $("input[name='ubicacion']:checked").val();
+  const ev_inicio = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  let ev_direc = $address;
+  let ev_latitud = $latitud;
+  let ev_longitud = $longitud;
 
   if (valorUbicacion === 'permitir' || valorUbicacion === 'permitirActual') {
-    if ($('#address').val() === "") {
+    if (!ev_direc) {
       try {
         ev_direc = await obtenerDireccionDesdeCoordenadas(ev_latitud, ev_longitud);
-      } catch (error) {
+      } catch {
         ev_direc = "Sin dirección";
       }
     }
   } else if (valorUbicacion === 'no') {
     ev_latitud = "null";
     ev_longitud = "null";
-    ev_direc = $('#address').val();
   }
 
-  var ev_telefono = $('#telefono').val();
-  if (ev_telefono === "") {
-    ev_telefono = "-";
-  }
-
-  // Crear FormData para incluir todos los datos y archivos
-  var formData = new FormData();
-  formData.append('ev_desc', ev_desc);
-  formData.append('ev_est', ev_est);
+  const formData = new FormData();
+  formData.append('ev_desc', $descripcion);
+  formData.append('ev_est', 1);
   formData.append('ev_inicio', ev_inicio);
   formData.append('ev_direc', ev_direc);
-  formData.append('cat_id', cat_id);
-  formData.append('ev_niv', 1);
+  formData.append('cat_id', $cat_id);
+  formData.append('ev_niv', $nivel_peligro);
   formData.append('ev_latitud', ev_latitud);
   formData.append('ev_longitud', ev_longitud);
-  formData.append('ev_telefono', ev_telefono);
 
-  // Agregar la imagen si existe
-  var files = $('#imagen')[0].files[0];
-  if (files) {
-    formData.append('imagen', files);
+  const file = document.getElementById('imagen')?.files[0];
+  if (file) {
+    formData.append('imagen', file);
   }
 
-  $.ajax({
-    url: "../../controller/evento.php?op=add_evento",
-    type: "POST",
-    data: formData,
-    processData: false, // No procesar los datos
-    contentType: false, // No establecer contentType
-    success: function(response) {
+  try {
+    const response = await fetch("../../controller/evento.php?op=add_evento", {
+      method: "POST",
+      body: formData
+    });
 
-      let data;
-      try {
-        data = typeof response === 'string' ? JSON.parse(response) : response;
-      } catch (e) {
-        console.error('Error al parsear JSON:', e);
-        swal("Error", "Respuesta del servidor no es un JSON válido", "error");
-        return;
-      }
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
+    const data = await response.json();
 
       enableSubmit();
       Swal.close();
       if (data.status === 'success') {
-        swal("Éxito", data.message, "success")
-          formulario = document.getElementById("event_form");
-          formulario.reset();
-      } else if (data.status === 'error') {
-        swal("Error", data.message, "error");
+        Swal.fire("Éxito", data.message, "success");
+        document.getElementById("event_form").reset();
       } else {
-        swal("Error", "Respuesta del servidor no contiene el campo 'status'", "error");
-      }
-    },
-    error: function(jqXHR, textStatus, errorThrown) {
-      console.error("Error en la solicitud de agregar evento: ", textStatus, errorThrown);
-      swal("Error al agregar evento", "No se pudo agregar el evento.", "error");
-      Swal.close();
+        Swal.fire("Error", data.message || "Error desconocido", "error");
     }
-  });
+  } catch (error) {
+    console.error("Error en la solicitud:", error);
+    Swal.fire("Error", "No se pudo agregar el evento.", "error");
+    enableSubmit();
+  }
 }
 
 function disableSubmit() {
