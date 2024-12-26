@@ -23,7 +23,32 @@
     flex-wrap: wrap; /* Permite que los elementos bajen a la siguiente línea si es necesario */
     gap: 10px; /* Espacio entre los elementos */
 }
+/* Contenedor principal de la columna dirección */
+#tabla-historial .direccion-columna {
+    padding: 8px;
+    vertical-align: middle; /* Alinea verticalmente el contenido */
+}
 
+/* Flexbox para alinear texto y botón */
+#tabla-historial .direccion-flex {
+    display: flex;
+    align-items: center; /* Alinea verticalmente en el centro */
+    justify-content: space-between; /* Espacia el texto y el botón */
+    gap: 10px; /* Espacio entre texto y botón */
+}
+
+/* Estilo para el texto dentro de dirección */
+#tabla-historial .direccion-texto {
+    flex: 1; /* El texto ocupa el espacio restante */
+    white-space: nowrap; /* Evita el salto de línea */
+    overflow: hidden; /* Evita el desbordamiento de texto */
+    text-overflow: ellipsis; /* Muestra puntos suspensivos si hay desbordamiento */
+}
+
+/* Estilo para el botón */
+#tabla-historial .btnDireccionarMapa {
+    flex-shrink: 0; /* Evita que el botón se reduzca */
+}
 .estructura-tablas{
     width: 100%;
     display: grid;
