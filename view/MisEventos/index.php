@@ -13,8 +13,9 @@ Permisos::redirigirSiNoAutorizado();
   <script defer src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.js"></script>
   <script defer src="https://cdn.datatables.net/responsive/2.0.3/js/dataTables.responsive.min.js"></script>
   <script defer src="https://cdn.datatables.net/responsive/2.0.3/js/responsive.dataTables.min.js"></script>
-<script defer src="../../public/js/sweetaler2v11-11-0.js"></script>
-<script defer type="text/javascript" src="miseventos.js"></script>
+  <script defer src="../../public/js/sweetaler2v11-11-0.js"></script>
+  <script defer type="text/javascript" src="miseventos.js"></script>
+  <link rel="stylesheet" href="miseventos.css">
 </head>
 
 <body class="with-side-menu">
@@ -33,9 +34,9 @@ Permisos::redirigirSiNoAutorizado();
 						<div class="tbl-cell">
 							<h3>Mis Eventos</h3>
 							<ol class="breadcrumb breadcrumb-simple">
-								<li><a href="#">Home</a></li>
-								<li class="active">Mis Eventos</li>
-							</ol>
+                  <li><a href="../Home/">Inicio</a></li>
+                  <li class="active">Mis eventos</li>
+              </ol>
 						</div>
 					</div>
 				</div>

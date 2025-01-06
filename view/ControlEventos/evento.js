@@ -25,34 +25,35 @@ function cargarTablaGeneral() {
         },
         "order": [[0, "desc"]],
         "columns": [
-            { "data": "ev_id" },
-            { "data": "categoria" },
-            { 
-                "data": "direccion", 
-                "render": function(data, type, row) {
-                    // Extraemos el texto limpio, eliminando el botón si está en el dato original
-                    const direccionTexto = data.replace(/<button.*<\/button>/g, '').trim();
+          { "data": "ev_id" },
+          
+          { "data": "direccion", 
+              "render": function(data, type, row) {
+                  // Extraemos el texto limpio, eliminando el botón si está en el dato original
+                  const direccionTexto = data.replace(/<button.*<\/button>/g, '').trim();
 
-                    return `<div class="direccion-flex">
-                                <span class="direccion-texto">${direccionTexto}</span>
-                                <button class="btn btn-primary btn-sm btnDireccionarMapa">
-                                    <i class="fa-solid fa-location-dot"></i>
-                                </button>
-                            </div>`;
-                }
-            },
-            { 
-                "data": "asignacion", 
-                "render": function(data, type, row) {
-                    return data.split(" - ").join("<br>");
-                }
-            },
-            { "data": "nivel_peligro" },
-            { "data": "estado" },
-            { "data": "fecha_apertura" },
-            { "data": "ver_niv_peligro" },
-            { "data": "ver_derivar" },
-            { "data": "ver_detalle" }
+                  return `<div class="direccion-flex">
+                              <span class="direccion-texto">${direccionTexto}</span>
+                              <button class="btn btn-primary btn-sm btnDireccionarMapa">
+                                  <i class="fa-solid fa-location-dot"></i>
+                              </button>
+                          </div>`;
+              }
+          },
+          { "data": "categoria" },
+          
+          { 
+              "data": "asignacion", 
+              "render": function(data, type, row) {
+                  return data.split(" - ").join("<br>");
+              }
+          },
+          { "data": "nivel_peligro" },
+          { "data": "estado" },
+          { "data": "fecha_apertura" },
+          { "data": "ver_niv_peligro" },
+          { "data": "ver_derivar" },
+          { "data": "ver_detalle" }
         ],
         "language": {
             url: "../registrosLog/spanishDatatable.json"

@@ -51,8 +51,8 @@ Permisos::redirigirSiNoAutorizado("derivar");
                     <thead>
                         <tr>
                             <th style="width:5%">ID</th>
-                            <th style="width:9.5%">Categor&iacute;a</th>
                             <th style="width:15%">Direcci&oacute;n</th>
+                            <th style="width:9.5%">Categor&iacute;a</th>
                             <th style="width:10%">Asignaci&oacute;n</th>
                             <th style="width:5%">Nivel peligro</th>
                             <th style="width:5%">Estado</th>

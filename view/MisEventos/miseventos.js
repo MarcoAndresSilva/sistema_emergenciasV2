@@ -11,11 +11,11 @@ function inicializarDataTables(data) {
         data: data,
         responsive: responsive,
         columns: [
-            { data: 'evento_id', title: 'ID Evento' },
+            { data: 'evento_id', title: 'ID' },
             { data: 'categoria_nombre', title: 'Categoría' },
-            { data: 'creador_nombre', title: 'Creador (Nombre)' },
-            { data: 'creador_apellido', title: 'Creador (Apellido)' },
-            { data: 'creador_correo', title: 'Correo del Creador' },
+            { data: 'creador_nombre', title: 'Nombre' },
+            { data: 'creador_apellido', title: 'Apellido' },
+            { data: 'creador_correo', title: 'Correo' },
             { data: 'evento_direccion', title: 'Dirección' },
             { data: 'evento_descripcion', title: 'Descripción' },
             {
