@@ -6,11 +6,19 @@
 //  Jefe de proyecto: Cristian Esteban Suazo Olguin 
 
 require_once("config/conexion.php");
+if (isset($_SESSION["usu_id"]) and isset($_SESSION["usu_nom"])) {
+    header("Location:" . Conectar::ruta() . "view/Home/");
+}
+
 if (isset($_POST["enviar"]) and $_POST["enviar"] == "si") {
     require_once("models/Usuario.php");
     $usuario = new Usuario();
     $username = isset($_POST["usu_name"]) ? $_POST["usu_name"] : null;
     $password = isset($_POST["usu_pass"]) ? $_POST["usu_pass"] : null;
+
+    if (!empty($username)) {
+        setcookie('usu_name', htmlspecialchars($username, ENT_QUOTES), time() + 60, "/", "", isset($_SERVER["HTTPS"]), true); // Secure y HttpOnly
+    }
 
     $resultado = $usuario->login($username, $password);
 
@@ -23,6 +31,7 @@ if (isset($_POST["enviar"]) and $_POST["enviar"] == "si") {
             header("Location:" . Conectar::ruta() . "index.php?m=datoincorecto");
             exit();
         case 'home':
+            setcookie('usu_name', '', time() - 3600, "/", "", isset($_SERVER["HTTPS"]), true);
             header("Location:" . Conectar::ruta() . "view/Home/");
             exit();
     }
@@ -72,7 +81,7 @@ if (isset($_POST["enviar"]) and $_POST["enviar"] == "si") {
                         if (isset($_GET["m"])) {
                             $messages = [
                                 "datoincorecto" => "El Usuario y/o Contraseña son incorrectos",
-                                "camposvacios" => "Los campos están vacíos"
+                                "camposvacios" => "No puede estar vacío ninguno de los campos",
                             ];
 
                             $messageKey = $_GET["m"];
@@ -95,7 +104,9 @@ if (isset($_POST["enviar"]) and $_POST["enviar"] == "si") {
                         ?>
 
                         <div class="form-group">
-                            <input type="text" id="usu_name" name="usu_name" class="form-control" placeholder="Usuario" />
+                <input type="text" id="usu_name" name="usu_name" class="form-control" placeholder="Usuario"
+                value="<?php echo isset($_COOKIE['usu_name']) ? htmlspecialchars($_COOKIE['usu_name'], ENT_QUOTES) : ''; ?>"
+                />
                         </div>
                         <div class="form-group">
                             <input type="password" id="usu_pass" name="usu_pass" class="form-control"

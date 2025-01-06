@@ -43,16 +43,16 @@ if (isset($_GET["op"])) {
             if ($datos == true) {
              $seccion->seccion_ocupado($id_seccion);
              $usu_id = $_SESSION["usu_id"];
-            $unidad_data = $unidad->get_seccion_unidad($id_seccion);
-            $unidad_nom = $unidad_data[0]['unid_nom'];
-            $ev_desc = "Se deriva a unidad: " . $unidad_nom;
+             $seccion_data = $seccion->get_seccion($id_seccion);
+             $seccion_nombre_unidad = $seccion_data['sec_unidad_nom'] . "-" . $seccion_data['sec_nombre'];
+             $ev_desc = "<span class='alert alert-success'>Se ha derivado la unidad: $seccion_nombre_unidad</span>";
             $evento->insert_emergencia_detalle($_POST["ev_id"], $usu_id, $ev_desc);
             $ags_noticia = [
               "asunto" => "Derivado",
               "mensaje" => $ev_desc,
               "id_evento"=>$_POST['ev_id'],
               "usuario"=>$_SESSION['usu_nom'],
-              "unidad"=>$unidad_nom,
+              "unidad"=>$seccion_nombre_unidad,
             ];
              try {
                $correo_resultado = $noticia->crear_y_enviar_noticia_para_derivados($ags_noticia);
@@ -94,9 +94,9 @@ if (isset($_GET["op"])) {
             if ($datos == true){
             $usu_id = $_SESSION["usu_id"];
             $id_seccion = $_POST['sec_id'];
-            $unidad_data = $unidad->get_seccion_unidad($id_seccion);
-            $unidad_nom = $unidad_data[0]['unid_nom'];
-            $ev_desc = "Se ha delega la unidad: " . $unidad_nom;
+            $seccion_data = $seccion->get_seccion($id_seccion);
+            $seccion_nombre_unidad = $seccion_data['sec_nombre'] . " - " . $seccion_data['sec_unidad_nom'];
+            $ev_desc = "<span class='alert alert-danger'>Se ha delegado la unidad: $seccion_nombre_unidad</span>";
             $seccion->seccion_disponible($id_seccion);
             $evento->insert_emergencia_detalle($_POST['ev_id'], $usu_id, $ev_desc);
             $ags_noticia = [
@@ -104,7 +104,7 @@ if (isset($_GET["op"])) {
               "mensaje" => $ev_desc,
               "id_evento"=>$_POST['ev_id'],
               "usuario"=>$_SESSION['usu_nom'],
-              "unidad"=>$unidad_nom,
+              "unidad"=>$seccion_nombre_unidad,
             ];
 
             try {

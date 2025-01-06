@@ -31,7 +31,7 @@ $(document).ready(function () {
   });
   
   //en el host en el host emergencias.melipilla.cl/eventos.php;
-  let url = '../../controller/evento.php?op=get_datos_categoria_eventos_ultimos_30_dias';
+  let url = '../../controller/evento.php?op=get_datos_categoria_eventos_ultimos_dias&dias=30';
   fetch(url)
       .then(response => response.json())
       .then(datos => mostrar(datos))
@@ -67,13 +67,10 @@ $(document).ready(function () {
   /////////////RECUADROS INFO/////////////////7
   $.post("../../controller/evento.php?op=cantidad-eventos",function(respuesta,status){
 
-    // Parsear la respuesta JSON
-    var data = JSON.parse(respuesta);
-    // Asignar los valores a los recuadros
-    $('#number-open').html(data.eventos_abiertos);
-    $('#number-close').html(data.eventos_cerrados);
-    $('#porcentaje-emer-open').html(data.porcentaje_abiertas + "%");
-    $('#porcentaje-emer-close').html(data.porcentaje_cerradas + "%");
+    $('#number-open').html(respuesta.eventos_abiertos);
+    $('#number-close').html(respuesta.eventos_cerrados);
+    $('#porcentaje-emer-open').html(respuesta.porcentaje_abiertas + "%");
+    $('#porcentaje-emer-close').html(respuesta.porcentaje_cerradas + "%");
   
   });
 
@@ -84,16 +81,19 @@ $.post("../../controller/evento.php?op=cantidad-segun-nivel-peligro", function(r
       // Parsear la respuesta JSON
       var data = JSON.parse(respuesta);
 
+      totalCriticosMedios = data.Critico.cantidad + data.Medio.cantidad;
+      totalBajasComunes = data.Bajo.cantidad + data.General.cantidad;
       // Asignar los valores a los recuadros
-      $('#number-eventos-criticos-medios').html(data.totalCriticosMedios);
-      $('#number-eventos-bajas-comunes').html(data.totalBajasComunes);
+      $('#number-eventos-criticos-medios').html(totalCriticosMedios);
+      $('#number-eventos-bajas-comunes').html(totalBajasComunes);
 
       // Calcular el porcentaje de emergencias críticas y medias
-      var porcentajeCriticosMedios = (data.totalCriticosMedios / (data.totalCriticosMedios + data.totalBajasComunes)) * 100;
+
+      var porcentajeCriticosMedios = (totalCriticosMedios / (totalCriticosMedios + totalBajasComunes)) * 100;
       $('#porcentaje-criticos-medios').html(porcentajeCriticosMedios.toFixed(0) + "%");
 
       // Calcular el porcentaje de emergencias bajas y comunes
-      var porcentajeBajasComunes = (data.totalBajasComunes / (data.totalCriticosMedios + data.totalBajasComunes)) * 100;
+      var porcentajeBajasComunes = (totalBajasComunes / (totalCriticosMedios + totalBajasComunes)) * 100;
       $('#porcentaje-bajas-comunes').html(porcentajeBajasComunes.toFixed(0) + "%");
   } else {
       console.error("Error al obtener los datos del servidor.");

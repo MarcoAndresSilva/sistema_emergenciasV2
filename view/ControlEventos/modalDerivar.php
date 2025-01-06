@@ -1,3 +1,12 @@
+<!-- Dependencias CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css"> 
+<!-- Agrega las librerías de DataTables -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="./estilopersonaleventos.css">
+<!-- Agrega el script de DataTables -->
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
 
 <div class="modal fade" id="modalDerivar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
@@ -7,20 +16,12 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <!-- Dependencias CSS -->
-                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css"> 
-                <!-- Agrega las librerías de DataTables -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
-                <link rel="stylesheet" href="./estilopersonaleventos.css">
-               <!-- Agrega el script de DataTables -->
-                <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-                <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+                
 
                 <form>
                     <div id="distribucion-box">
 
-                        <div id="distribucion-espacios-datos">      
+                        <div id="distribucion-espacios-datos-derivar">      
                             <div class="card">
                                 <div class="card-body"> 
                                     <h6 class="card-subtitle mb-2 text-muted">ID</h6>
@@ -34,14 +35,14 @@
                                 </div>
                             </div> 
                         </div>        
-                        <div id="distribucion-espacios">
+                        <div id="distribucion-espacios-select">
                             <div class="card">
                                 <div class="card-body"> 
                                     <h6 class="card-subtitle mb-2 text-muted">SECCIONES ASIGNADAS</h6>
                                     <div class="datos-participantes">
                                         <div class="col-lg-2 box-item mt-2 secciones-box">
-                                            <fieldset class="form-group">
-                                                <ul id="listaParticipantes" class="list-group">
+                                            <fieldset class="form-group" id="content-list">
+                                                <ul id="listaParticipantesderivar" class="list-group">
                                                     <li class="list-group-item"></li>
                                                 </ul>
                                             </fieldset>
@@ -50,34 +51,31 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="distribucion-espacios">
+                        <div id="distribucion-espacios-tabla">
                             <div class="card">
                                 <div class="card-body"> 
                                     <h6 class="card-subtitle mb-2 text-muted">SECCIONES DISPONIBLES PARA ASIGNAR</h6>
                                     <div class="datos-participantes">
-                                        <div class="col-lg-2 box-item mt-4">
-                                            <fieldset class="form-group">
-                                               <table id="tablaSecciones" class="table table-bordered">
-                                                  <thead>
-                                                      <tr>
-                                                          <th>Unidad</th>
-                                                          <th>Sección</th>
-                                                          <th>Detalle</th>
-                                                          <th>Estado</th>
-                                                          <th>Acción</th>
-                                                      </tr>
-                                                  </thead>
-                                                  <tbody>
-                                                  <!-- Aquí se insertarán las filas de datos -->
-                                                  </tbody>
-                                                </table>
-                                            </fieldset>
-                                        </div>
+                                        <fieldset class="form-group">
+                                            <table id="tablaSecciones" class="table table-bordered">
+                                              <thead>
+                                                  <tr>
+                                                      <th>Unidad</th>
+                                                      <th>Sección</th>
+                                                      <th>Detalle</th>
+                                                      <th>Estado</th>
+                                                      <th>Acción</th>
+                                                  </tr>
+                                              </thead>
+                                              <tbody>
+                                              <!-- Aquí se insertarán las filas de datos -->
+                                              </tbody>
+                                            </table>
+                                        </fieldset>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </form>
             </div>

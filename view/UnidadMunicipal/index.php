@@ -11,6 +11,10 @@ Permisos::redirigirSiNoAutorizado();
 <title>Sistema Emergencia</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4/bootstrap-4.css">
 <script defer src="../../public/js/sweetaler2v11-11-0.js"></script>
+<script defer src="https://cdn.datatables.net/1.13.6/js/dataTables.js"></script>
+<script defer src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.js"></script>
+<script defer src="https://cdn.datatables.net/responsive/2.0.3/js/dataTables.responsive.min.js"></script>
+<script defer src="https://cdn.datatables.net/responsive/2.0.3/js/responsive.dataTables.min.js"></script>
 <script defer type="text/javascript" src="unidadmunicipal.js"></script>
 </head>
 
@@ -30,8 +34,9 @@ Permisos::redirigirSiNoAutorizado();
 						<div class="tbl-cell">
 							<h3>Unidades Municipales</h3>
 							<ol class="breadcrumb breadcrumb-simple">
-								<li><a href="#">Registro</a></li>
-								<li class="active">Unidades</li>
+								<li><a href="../Home/">Inicio</a></li>
+								<li class="active">Administración</li>
+	              <li class="active">Unidades municipales</li>
 							</ol>
 						</div>
 					</div>

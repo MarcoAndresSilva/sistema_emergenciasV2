@@ -35,8 +35,9 @@ Permisos::redirigirSiNoAutorizado();
 						<div class="tbl-cell">
 							<h3>Instituciones de Emergencias</h3>
 							<ol class="breadcrumb breadcrumb-simple">
-								<li><a href="#">Registro</a></li>
-								<li class="active">Instituciones</li>
+								<li><a href="../Home/">Inicio</a></li>
+                <li class="active">Administración</li>
+                <li class="active">Gestion de motivos de cierre</li>
 							</ol>
 						</div>
 					</div>

@@ -1,6 +1,7 @@
 <?php
 require_once("../../config/conexion.php");
-if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_tipo"] == 2)) {
+require_once("../../models/Permisos.php");
+Permisos::redirigirSiNoAutorizado("derivar");
 ?>
 
 <!DOCTYPE html>
@@ -34,8 +35,8 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
                         <div class="tbl-cell">
                             <h3>Eventos</h3>
                             <ol class="breadcrumb breadcrumb-simple">
-                                <li><a href="#">Eventos</a></li>
-                                <li class="active">En proceso</li>
+                                <li><a href="../Home/">Inicio</a></li>
+                                <li class="active">Control de eventos</li>
                             </ol>
                         </div>
                     </div>
@@ -50,15 +51,15 @@ if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_
                     <thead>
                         <tr>
                             <th style="width:5%">ID</th>
+                            <th style="width:15%">Direcci&oacute;n</th>
                             <th style="width:9.5%">Categor&iacute;a</th>
-                            <th style="width:9.5%">Direcci&oacute;n</th>
-                            <th style="width:20%">Asignaci&oacute;n</th>
-                            <th style="width:10%">Nivel Peligro</th>
-                            <th style="width:10%">Estado</th>
-                            <th style="width:15%">Hora Apertura</th>
-                            <th style="width:5%">Cambiar Nivel de Peligro</th>
-                            <th style="width:5%">Derivar Evento</th>
-                            <th style="width:5%">Chat del Evento</th>
+                            <th style="width:10%">Asignaci&oacute;n</th>
+                            <th style="width:5%">Nivel peligro</th>
+                            <th style="width:5%">Estado</th>
+                            <th style="width:5%">Fecha y hora</th>
+                            <th style="width:5%">Crtiticidad</th>
+                            <th style="width:5%">Derivar</th>
+                            <th style="width:5%">Chat</th>
                             
                         </tr>
                     </thead>
@@ -102,8 +103,8 @@ require_once("../MainJs/js.php");
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script type="text/javascript" src="./nivelpeligro.js"></script>
-<script type="text/javascript" src="./derivar.js"></script>
 <script type="text/javascript" src="./evento.js"></script>
+<script type="text/javascript" src="./derivar.js"></script>
 <?php
 if (isset($_GET['id_evento'])) {
     $id_eventos = explode(',', $_GET['id_evento']);
@@ -142,9 +143,3 @@ if (isset($_GET['id_evento'])) {
 </script>
 </body>
 </html>
-
-<?php
-} else {
-    header("location:" . Conectar::ruta() . "index.php");
-}
-?>

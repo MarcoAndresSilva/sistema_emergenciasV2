@@ -56,15 +56,15 @@ class Unidad extends Conectar
     }
 
     // update_unidad según id
-    public function update_unidad($unid_id, $unid_nom, $unid_est)
+    public function update_unidad(int $unid_id, string $unid_nom, int $unid_est): array
     {
         if (empty($unid_id) || empty($unid_nom) || empty($unid_est)) {
             return ['status' => 'warning', 'message' => 'Todos los campos son obligatorios.'];
         }
 
-        $sql = "UPDATE tm_unidad SET 
-                    unid_nom = :unid_nom, 
-                    unid_est = :unid_est, 
+        $sql = "UPDATE tm_unidad SET
+                    unid_nom = :unid_nom,
+                    unid_est = :unid_est
                 WHERE unid_id = :unid_id";
         $params = [
             ':unid_id' => $unid_id,

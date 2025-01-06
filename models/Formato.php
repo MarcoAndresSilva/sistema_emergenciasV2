@@ -129,7 +129,7 @@ class Formato {
     // WARNING: este formato de correo puede ser detectado como spam por algunos proveedores de correo
     $motivo = $datos_evento["motivo"];
     $detalle = $datos_evento["detalle"];
-    $usuario = $datos_evento['usu_nom']. " " . $datos_evento['usu_ape'];
+    $usuario = $datos_evento['nombre']. " " . $datos_evento['apellido'];
     $id_evento = $datos_evento['id_evento'];
     $fecha_cierre = $datos_evento["fecha_cierre"];
 

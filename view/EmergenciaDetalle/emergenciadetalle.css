@@ -3,46 +3,16 @@
     padding: 0%;
 }
 
-.estructura-tablas{
-    width: 100%;
-    display: grid;
-}
-
-.tabla-basica {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-}
-
-.tabla-basica th, .tabla-basica td {
-    border: 1px solid #c0c0c0;
-    padding: 8px;
-    text-align: left;
-}
-
-.tabla-basica th {
-    background-color: #ececec00;
-}
-
-.peligro_critico {
-    background-color: #f64747d6;
-}
-.peligro_medio{
-    background-color: #fbeb41d6;
-}
-.peligro_bajo {
-    background-color: #bbf63cd6;
-}
-.peligro_comun {
-    background-color: #7a7a7ad6;
-}
-.ovalo_peligro {
+.datos-evento{
     display: flex;
-    justify-content: center;
-    border-radius: 15%;
-    padding: 5%;
-    width: 100%;
-    height: 100%;
+    flex-wrap: wrap;
+    justify-content:space-between;
+    align-items:center;
+    text-align:center;
+}
+
+.datos-evento .card{
+    width: 250px;
 }
 
 #lblEstado span,
@@ -51,11 +21,23 @@
     font-size: 1rem;
 }
 
+.lista{
+    display: flex;
+    justify-content:center;
+    flex-wrap:wrap;
+}
+
+.lista .card{
+    width: 40%;
+    margin: 5px 30px;
+    padding: 0 20px;
+    text-align: center;
+}
 
 #btnPanelDerivar{
     border: none;
     color: #00A8FF;
-    font-size: 1.5rem;
+    font-size: 2.5rem;
     background-color: transparent;
 }
  
@@ -63,51 +45,99 @@
     text-align: center;
 }
 
-
 #lblEstado{
     background: transparent;
 }
 
+@media screen and (max-width: 550px) {
+    .datos-evento{
+      justify-content:center;
+    }
+    .lista .card{
+      width: 100%; 
+    }
+}
 
-.datos-row {
+/*Modals styles Derivar*/
+.modal-dialog:not(.modal-sm):not(.modal-lg) {
+    width: 50vw;
+}
+.modal-content {
+  max-width:100%;
+    width: 100%vw;
+}
+#distribucion-box{
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    max-width: 100%;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+#distribucion-espacios-datos-derivar{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 
-.datos-evento{
-    display: flex;
-    width: 50%;
-    /* flex-wrap: wrap; */
-   
+#distribucion-espacios-datos-derivar .card{
+  width: 45%;
+}
+#distribucion-espacios-select{
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+#distribucion-espacios-select .card{
+  width: 100%;
+}
+#content-list{
+  display: flex;
+}
+#listaParticipantesderivar{
+  display: flex;
+}
+#distribucion-espacios-tabla{
+  width: 100%;
+  overflow-x:auto;
+}
+#distribucion-espacios-tabla .card{
+  width: 100%;
 }
 
-.datos-evento .col-lg-2{
-    width: 25%;
-       
+#distribucion-espacios-tabla .card .card-body{
+  width: 100%;
+  display: flex;
+  flex-direction:column;
+  overflow-x:auto;
 }
-
 .datos-participantes{
-    display: flex;
-   width: 25%;
-   justify-content: center;
+  max-width:100%;
+}
+.datos-participantes .form-group{
+  max-width:100%;
+}
+.dataTables_length{
+  display: none;
+}
+#tablaSecciones{
+  width: 100%;
+  max-width: 100%;
+  text-align: center;
 }
 
-.datos-rederivar{
-display: flex;
-   width: 15%;
-   justify-content: center;
+@media screen and (max-width: 1400px) {
+    .modal-dialog:not(.modal-sm):not(.modal-lg) {
+    width: 70vw;
+    }
 }
 
-.datos-participantes .col-lg-2,
-.datos-rederivar .col-lg-2{
-    width: 90%;
+@media screen and (max-width: 1054px) {
+    .modal-dialog:not(.modal-sm):not(.modal-lg) {
+        width: 96vw;
+    }
 }
 
-.descripcion-row div{
-    text-align: left;
-    
-}
+
 
 /* Mapa  */
 #modal-mapa{

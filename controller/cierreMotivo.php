@@ -8,8 +8,6 @@ Permisos::redirigirSiNoAutorizado();
 
 $model = new CierreMotivo();
 
-if (isset($_SESSION["usu_id"]) && ($_SESSION["usu_tipo"] == 1 || $_SESSION["usu_tipo"] == 2)) {
-
 if (isset($_GET["op"])) {
     switch ($_GET["op"]) {
         case 'add_cierre_motivo':
@@ -60,5 +58,4 @@ if (isset($_GET["op"])) {
             echo json_encode(['error' => 'Operación no reconocida']);
             break;
     }
-}
 }

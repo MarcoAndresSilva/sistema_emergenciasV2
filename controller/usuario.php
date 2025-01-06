@@ -177,5 +177,10 @@ if (isset($_GET["op"])) {
             $data = $usuario->update_usuario_tipo($usu_id,$usu_tipo);
             echo json_encode($data);
         break;
+        case "mis_eventos":
+            $usuario_id = $_SESSION['usu_id'];
+            $data = $usuario->get_eventos_derivado_por_usuario($usuario_id);
+            echo json_encode($data);
+        break;
     }
 }

@@ -15,7 +15,45 @@
 #tabla-control tbody tr td span.label{
   font-size:1.1rem;
 }
+#tabla-control .label {
+    display: inline-block; /* Cada elemento ocupa su propio espacio */
+    margin-bottom: 5px; /* Espaciado entre elementos verticalmente */
+    margin-right: 5px; /* Espaciado entre elementos horizontalmente */
+    padding: 5px 10px; /* Mantén el padding para el estilo visual */
+    border-radius: 4px; /* Opcional: redondear las esquinas */
+}
+#tabla-control .asignacion {
+    display: flex; /* Alinea elementos en línea por defecto */
+    flex-wrap: wrap; /* Permite que los elementos bajen a la siguiente línea si es necesario */
+    gap: 10px; /* Espacio entre los elementos */
+}
 
+/* Contenedor principal de la columna dirección */
+#tabla-control .direccion-columna {
+    padding: 8px;
+    vertical-align: middle; /* Alinea verticalmente el contenido */
+}
+
+/* Flexbox para alinear texto y botón */
+#tabla-control .direccion-flex {
+    display: flex;
+    align-items: center; /* Alinea verticalmente en el centro */
+    justify-content: space-between; /* Espacia el texto y el botón */
+    gap: 10px; /* Espacio entre texto y botón */
+}
+
+/* Estilo para el texto dentro de dirección */
+#tabla-control .direccion-texto {
+    flex: 1; /* El texto ocupa el espacio restante */
+    white-space: nowrap; /* Evita el salto de línea */
+    overflow: hidden; /* Evita el desbordamiento de texto */
+    text-overflow: ellipsis; /* Muestra puntos suspensivos si hay desbordamiento */
+}
+
+/* Estilo para el botón */
+#tabla-control .btnDireccionarMapa {
+    flex-shrink: 0; /* Evita que el botón se reduzca */
+}
 
 .tabla-basica {
     width: 100%;
@@ -31,6 +69,20 @@
 
 .tabla-basica th {
     background-color: #ececec00;
+}
+
+table.dataTable thead .sorting:after, table.dataTable thead .sorting_asc:after, table.dataTable thead .sorting_desc:after, table.dataTable thead .sorting_asc_disabled:after, table.dataTable thead .sorting_desc_disabled:after {
+    position: absolute;
+    bottom: 8px;
+    right: 20px;
+    display: block;
+    font-family: 'Glyphicons Halflings';
+    opacity: 0.5;
+    display: flex
+;
+}
+table.dataTable thead>tr>th.sorting_asc, table.dataTable thead>tr>th.sorting_desc, table.dataTable thead>tr>th.sorting, table.dataTable thead>tr>td.sorting_asc, table.dataTable thead>tr>td.sorting_desc, table.dataTable thead>tr>td.sorting {
+    padding-right: 60px;
 }
 
 .peligro_critico {
@@ -63,7 +115,6 @@
     background-color: transparent;
 }
 
-
 /* Mapa  */
 #modal-mapa{
     display: none;
@@ -77,11 +128,12 @@
     height: 60vh;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(46, 46, 46, 0.5); /* Sombra para un efecto de profundidad */
-    z-index: 9999; /* Asegura que el modal esté sobre otros elementos */
+    box-shadow: 0 0 10px rgba(46, 46, 46, 0.5);
+    z-index: 100; 
     color: black;
     text-align-last: center;
 }
+
 #map {
     width: 100%;
     height: 90%;
@@ -104,69 +156,127 @@
     text-decoration: none;
 }
 
-/*Modals styles*/
-#distribucion-espacios-datos{
-  display: flex;
-  justify-content: space-around;
-
+/*Modals styles Derivar*/
+.modal-dialog:not(.modal-sm):not(.modal-lg) {
+    width: 50vw;
 }
-
-#distribucion-espacios-datos .card{
-  width: 45%;
+.modal-content {
+  max-width:100%;
+    width: 100%vw;
 }
-#listaParticipantes{
-    width: 100%;
-    flex-direction: row;
+#distribucion-box{
     display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-}
-
-#tablaSecciones_wrapper{
-    display: flex;
+    max-width: 100%;
     flex-direction: column;
     justify-content: space-around;
+    align-items: center;
 }
-
-.select-info{
-  visibility: hidden;
-}
-
-.dataTables_length{
-  visibility:hidden;
-}
-
-.secciones-box{
+#distribucion-espacios-datos-derivar{
+  display: flex;
+  justify-content: space-between;
   width: 100%;
 }
 
-.select2-container--open {
-    z-index: 99999999999999;
+#distribucion-espacios-datos-derivar .card{
+  width: 45%;
+}
+#distribucion-espacios-select{
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
+}
+#distribucion-espacios-select .card{
+  width: 100%;
+}
+#content-list{
+  display: flex;
+}
+#listaParticipantesderivar{
+  display: flex;
+}
+#distribucion-espacios-tabla{
+  width: 100%;
+  overflow-x:auto;
+}
+#distribucion-espacios-tabla .card{
+  width: 100%;
 }
 
-.select2-results__option--highlighted {
-    color: blue !important;
+#distribucion-espacios-tabla .card .card-body{
+  width: 100%;
+  display: flex;
+  flex-direction:column;
+  overflow-x:auto;
+}
+.datos-participantes{
+  max-width:100%;
+}
+.datos-participantes .form-group{
+  max-width:100%;
+}
+.dataTables_length{
+  display: none;
+}
+#tablaSecciones{
+  width: 100%;
+  max-width: 100%;
+  text-align: center;
 }
 
-.select2-container--default .select2-results__option--highlighted.select2-results__option--selectable {
-    background-color: #5897fb;
-    color: aqua;
+@media screen and (max-width: 1400px) {
+    .modal-dialog:not(.modal-sm):not(.modal-lg) {
+    width: 70vw;
+    }
 }
 
-.select2-container--default .select2-selection--multiple .select2-selection__choice {
-    background-color: #007bff;
-    border: 1px solid #aaa;
-    border-radius: 4px;
-    box-sizing: border-box;
-    display: inline-block;
-    margin-left: 5px;
-    margin-top: 4px;
-    padding: 0;
-    padding-left: 27px;
-    position: relative;
+@media screen and (max-width: 1054px) {
+    .modal-dialog:not(.modal-sm):not(.modal-lg) {
+        width: 96vw;
+    }
+}
+
+/*Modals styles Nivel*/
+#distribucion-box-nivel{
+    display: flex;
     max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    vertical-align: bottom;
-    white-space: nowrap;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+} 
+#distribucion-espacios-datos-nivel{
+  display: flex;
+  justify-content: space-around;
+  width: 100%;
 }
+#distribucion-espacios-datos-nivel .card{
+  width: 45%;
+}
+#distribucion-espacios-nivel{
+  display: flex;
+  justify-content:space-around;
+  width: 100%;
+}
+#niv_id {
+    overflow-y: auto;
+    position: relative;
+}
+#distribucion-espacios-nivel .card{
+  width: 95%;
+}
+.card-boton-nivel{
+  display: flex;
+  justify-content: center;
+  align-items:center;
+  width: 100%;
+}
+.box-selection{
+  width: 50%;
+}
+.btnActualizarNivelPeligro{
+  width: 90%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-around;
+    font-size: 1.3rem;
+}
+

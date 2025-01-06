@@ -37,18 +37,21 @@ class Noticia extends Conectar {
    * @return array Un array con el estado y mensaje del proceso, junto con los resultados de las operaciones.
    */
   public function crear_noticia_y_enviar_grupo_usuario(array $agrsNoticia){
-    $asunto = $agrsNoticia["asunto"];
+    $formato = $this->formato_noticia_correo_segun_asunto($agrsNoticia);
+    $asunto = $formato->asunto;
+    // WARNING: los emojis pueden causar errores al guardar en base de datos
+    $asunto = str_replace("🚨", " ", $asunto);
+    $asunto = str_replace("📎", " ", $asunto);
     $mensaje = $agrsNoticia["mensaje"];
     $url = $agrsNoticia["url"];
     $add_noticia = $this->add_noticia($asunto,$mensaje,$url);
     if ($add_noticia["status"] !== "success"){
       return ["status"=>"error", "message"=>"Error al agregar", "add_noticia"=>$add_noticia];
     }
-    $lista_usuario = $this->usuarios_a_enviar_segun_regla($asunto);
+    $lista_usuario = $this->usuarios_a_enviar_segun_regla($agrsNoticia["asunto"]);
     $ultima_noticia = $this->obtenerUltimoRegistro('tm_noticia',"noticia_id");
     $id_noticia_new = $ultima_noticia["noticia_id"];
     $envio_usuario = $this->enviar_noticia_grupal_por_lista_usuario($id_noticia_new,$lista_usuario);
-    $formato = $this->formato_noticia_correo_segun_asunto($agrsNoticia);
     $correo = new Correo('', $formato->asunto, $formato->mensaje);
     $correo->agregarEncabezado('Content-Type', 'text/html; charset=utf-8');
     $correo->setGrupoDestinatario($lista_usuario);
@@ -255,19 +258,19 @@ public function usuarios_a_enviar_segun_regla(string $asunto) {
     $filtro = [
       "tipo_usuario" => [
         "id_name" =>"usu_tipo",
-        "value"=> $list_regla["tipo_usuario"],
+        "value"=> isset($list_regla["tipo_usuario"]) ? $list_regla["tipo_usuario"] : null,
       ],
       "usuario" =>[
         "id_name" =>"usu_id",
-        "value"=> $list_regla["usuario"],
+        "value"=> isset($list_regla["usuario"]) ? $list_regla["usuario"] : null,
       ],
       "seccion" =>[
-        "id_name" =>"usu_id",
-        "value"=> $list_regla["seccion"],
+        "id_name" =>"usu_seccion",
+        "value"=> isset($list_regla["seccion"]) ? $list_regla["seccion"] : null,
       ],
       "unidad" =>[
         "id_name" =>"usu_unidad",
-        "value"=> $list_regla["unidad"],
+        "value"=> isset($list_regla["unidad"]) ? $list_regla["unidad"] : null,
       ]
     ];
 

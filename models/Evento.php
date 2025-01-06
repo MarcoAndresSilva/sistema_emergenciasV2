@@ -4,20 +4,18 @@ class Evento extends Conectar {
 
     public function get_evento() {
         try {
-            $conectar = parent::conexion();
-            parent::set_names();
             $sql = 'SELECT
                         us.usu_name as "ev_nom", us.usu_ape as "ev_ape",
                         tme.ev_direc as "ev_direc",
                         tmc.cat_nom as "cat_nom",
                         tme.ev_desc as "ev_desc",
-                        tme.ev_inicio as "ev_inicio",
+                        DATE_FORMAT(tme.ev_inicio, "%d/%m/%Y %H:%i:%s") as "ev_inicio",
                         tmc.cat_id as "cat_id",
                         tme.ev_direc as "ev_direc",
                         tme.ev_id as "ev_id",
                         ten.ev_niv_id as "ev_niv_id",
                         tme.ev_est as "ev_est",
-                        tme.ev_final as "ev_final",
+                        DATE_FORMAT(tme.ev_final, "%d/%m/%Y %H:%i:%s") as "ev_final",
                         tme.ev_latitud as "ev_latitud",
                         tme.ev_longitud as "ev_longitud"
                     FROM
@@ -34,20 +32,13 @@ class Evento extends Conectar {
                     ORDER BY
                         ev_id
                     DESC;';
-            $sql = $conectar->prepare($sql);
-            $sql->execute();
-            $resultado = $sql->fetchAll();
-            
+            $resultado = $this->ejecutarConsulta($sql);
             if (is_array($resultado) && count($resultado) > 0) {
                 return $resultado;
             } else {
-                ?> <script>console.log("No se encontraron Eventos")</script><?php
                 return [];
             }
         } catch (Exception $e) {
-            ?> 
-            <script>console.log("Error catch     get_evento")</script>
-            <?php
              return [];
         }
 
@@ -55,23 +46,20 @@ class Evento extends Conectar {
 
     public function get_evento_nivel($ev_niv) {
         try {
-            $conectar = parent::conexion();
-            parent::set_names();
-            $sql = "SELECT * FROM tm_evento tme inner join tm_categoria tmc on tmc.cat_id=tme.cat_id inner join tm_ev_niv ten on tme.ev_niv=ten.ev_niv_id inner join tm_estado te on te.est_id=tme.ev_est where tme.ev_niv= ". $ev_niv ."  ";
-            $sql = $conectar->prepare($sql);
-            $sql->execute();
-            $resultado = $sql->fetchAll();
+            $sql = "SELECT * FROM tm_evento tme
+              inner join tm_categoria tmc on tmc.cat_id=tme.cat_id
+              inner join tm_ev_niv ten on tme.ev_niv=ten.ev_niv_id
+              inner join tm_estado te on te.est_id=tme.ev_est
+              where tme.ev_niv= :ev_niv";
+            $params = [':ev_niv' => $ev_niv];
+            $resultado = $this->ejecutarConsulta($sql, $params);
 
             if (is_array($resultado) && count($resultado) > 0) {
                 return $resultado;
             } else {
-                ?> <script>console.log("No se encontraron Eventos")</><?php
-                return 0;
+                return [];
             }
         } catch (Exception $e) {
-            ?> 
-            <script>console.log("Error catch     get_evento_nivel")</script>
-            <?php
             throw $e;
         }
 
@@ -79,54 +67,39 @@ class Evento extends Conectar {
 
     public function get_eventos_por_dia() {
         try {
-            $conectar = parent::conexion();
-            parent::set_names();
             $sql = "SELECT DAY(ev_inicio) as dia, COUNT(*) as cantidad FROM tm_evento GROUP BY DAY(ev_inicio)";
-            $sql = $conectar->prepare($sql);
-            $sql->execute();
-            $resultado = $sql->fetchAll();
+            $resultado = $this->ejecutarConsulta($sql);
             return $resultado;
         } catch (Exception $e) {
             throw $e;
         }
     }
 
-    public function get_cantidad_eventos_por_nivel($ev_niv_array, $fecha_actual, $fecha_mes_anterior) {
+    public function get_cantidad_eventos_por_nivel($fecha_actual, $fecha_mes_anterior) {
         try {
-            $conectar = parent::conexion();
-    
-            // Construir la condición para los niveles de emergencia
-            $ev_niv_condition = implode(',', $ev_niv_array);
-    
-            // Consulta SQL para obtener la cantidad de eventos por nivel
-            $sql = "SELECT ev_niv, COUNT(*) AS cantidad FROM tm_evento WHERE ev_niv IN ($ev_niv_condition) AND ev_inicio BETWEEN :fecha_inicio AND :fecha_fin GROUP BY ev_niv";
-    
-            $sql = $conectar->prepare($sql);
-            $sql->bindParam(':fecha_inicio', $fecha_mes_anterior, PDO::PARAM_STR);
-            $sql->bindParam(':fecha_fin', $fecha_actual, PDO::PARAM_STR);
-            $sql->execute();
-            $resultados = $sql->fetchAll(PDO::FETCH_ASSOC);
-    
-            // Inicializar el array de datos
-            $datos = array(
-                'total' => 0,
-                'porcentaje' => 0
-            );
-    
-            // Procesar los resultados
-            foreach ($resultados as $resultado) {
-                $nivel = $resultado['ev_niv'];
-                $cantidad = $resultado['cantidad'];
-    
-                // Sumar la cantidad total
-                $datos['total'] += $cantidad;
-    
-                // Asignar la cantidad al nivel correspondiente en el array de datos
-                $datos["cantidad$nivel"] = $cantidad;
-            }
-    
-            // Devolver los datos
-            return $datos;
+           $sql = 'SELECT
+                        n.ev_niv_id AS "id",
+                        n.ev_niv_nom as "nombre",
+                        COUNT(e.ev_niv) AS cantidad
+                    FROM tm_ev_niv as n
+                    LEFT JOIN tm_evento AS e
+                ON(e.ev_niv = n.ev_niv_id)
+                AND e.ev_inicio between :fecha_inicio and  :fecha_fin
+                GROUP BY n.ev_niv_id, n.ev_niv_nom
+                order by n.ev_niv_id;
+                 ';
+
+            $params = [':fecha_inicio'=> $fecha_mes_anterior ,':fecha_fin'=> $fecha_actual];
+            $resultados = $this->ejecutarConsulta($sql, $params);
+
+           foreach ($resultados as $key => $value) {
+               $resultado[$value['nombre']] = [
+                   'cantidad' => $value['cantidad'],
+                   'id' => $value['id']
+               ];
+           }
+           return $resultado;
+
         } catch (Exception $e) {
             throw $e;
         }
@@ -154,21 +127,36 @@ class Evento extends Conectar {
         }
     }
 
-    public function get_eventos_por_rango_sin_cantidad($fecha_actual, $fecha_desde_mes_anterior) {
+    public function get_eventos_estadisticas_por_fecha(string $fecha_actual, string $fecha_desde_mes_anterior):array {
         try {
-            $conectar = parent::conexion();
-            parent::set_names();
-            $sql = "SELECT DATE(ev_inicio) as fecha, ev_est FROM tm_evento tme 
-            inner join tm_categoria tmc on tmc.cat_id=tme.cat_id 
-            inner join tm_ev_niv ten on tme.ev_niv=ten.ev_niv_id 
-            inner join tm_estado te on te.est_id=tme.ev_est 
-            WHERE ev_inicio BETWEEN :fecha_inicio AND :fecha_fin ORDER BY ev_inicio";
-            $sql = $conectar->prepare($sql);
-            $sql->bindValue(':fecha_inicio', $fecha_desde_mes_anterior, PDO::PARAM_STR);
-            $sql->bindValue(':fecha_fin', $fecha_actual, PDO::PARAM_STR);
-            $sql->execute();
-            $resultado = $sql->fetchAll();
-            return $resultado;
+              // Usamos COALESCE para asegurar que los resultados sean 0 si no hay eventos
+        $sql = "SELECT
+                    COALESCE(COUNT(CASE WHEN ev_est = 1 THEN 1 END), 0) AS eventos_abiertos,
+                    COALESCE(COUNT(CASE WHEN ev_est = 2 THEN 1 END), 0) AS eventos_cerrados,
+                    COALESCE(COUNT(CASE WHEN ev_est = 3 THEN 1 END), 0) AS eventos_controlados,
+                    COALESCE(COUNT(CASE WHEN ev_est NOT IN (1, 2, 3) THEN 1 END), 0) AS eventos_ext,
+                    COALESCE(COUNT(*), 0) AS cantidad_total
+                FROM tm_evento tme
+                INNER JOIN tm_categoria tmc ON tmc.cat_id = tme.cat_id
+                INNER JOIN tm_ev_niv ten ON tme.ev_niv = ten.ev_niv_id
+                INNER JOIN tm_estado te ON te.est_id = tme.ev_est
+                WHERE ev_inicio BETWEEN :fecha_inicio AND :fecha_fin";
+            $params = [':fecha_inicio'=> $fecha_desde_mes_anterior,
+                    ':fecha_fin'=> $fecha_actual];
+            $resultado = $this->ejecutarConsulta($sql,$params, false);
+            if ($resultado['cantidad_total'] != 0 && isset($resultado['cantidad_total'])) {
+                $porcentaje_abiertas = round(($resultado['eventos_abiertos'] / $resultado['cantidad_total']) * 100, 2);
+                $porcentaje_cerradas = round(($resultado['eventos_cerrados'] / $resultado['cantidad_total']) * 100, 2);
+            } else {
+                $porcentaje_abiertas = 0;
+                $porcentaje_cerradas = 0;
+            }
+
+            // Retornamos el resultado de la consulta con los cálculos
+            return array_merge($resultado, [
+                'porcentaje_abiertas' => $porcentaje_abiertas,
+                'porcentaje_cerradas' => $porcentaje_cerradas
+            ]);
         } catch (Exception $e) {
             throw $e;
         }
@@ -290,48 +278,63 @@ class Evento extends Conectar {
         
 	}
     
-    public function update_nivelpeligro_evento($ev_id, $ev_niv) {
+    public function update_nivelpeligro_evento(int $ev_id, int $nivel_nuevo):array {
 		try {
-			$conectar = parent::conexion();
-			parent::set_names();
-			$sql = "UPDATE tm_evento SET  ev_niv=:ev_niv WHERE ev_id = " . $ev_id . " ";
-			$consulta = $conectar->prepare($sql);
-
-            $consulta->bindParam(':ev_niv',$ev_niv);
-
-            $consulta->execute();
+			$sql = "UPDATE tm_evento SET  ev_niv=:ev_niv WHERE ev_id = :ev_id ";
+      $params = [':ev_id' => $ev_id, ':ev_niv' => $nivel_nuevo];
+      $datosEvento = $this->get_evento_id($ev_id);
+      if ($datosEvento['ev_niv'] == $nivel_nuevo) {
+          return ["status" => "info", "message" => "El nivel de peligro ya es el mismo."];
+      }
+      $consulta = $this->ejecutarAccion($sql, $params);
 			
-			if ($consulta->rowCount() > 0) {
-                return true;
-            } else {
-                ?> <script>console.log("No se logro actualizar la asignacion del evento")</script><?php
-                return 0;
-            }
-        } catch (Exception $e) {
-			?> 
-            <script>console.log("Error catch     update_asignacion_evento")</script>
-            <?php
-            throw $e;
-        }
+			if ($consulta) {
+          return ["status" => "success", "message" => "Nivel de peligro actualizado exitosamente."];
+      } else {
+          return ["status" => "warning", "message" => "No se logro actualizar el nivel de peligro del evento."];
+      }
+    } catch (Exception $e) {
+       throw $e;
+    }
 	}
 
     public function get_evento_id($ev_id) {
         try {
-            $conectar = parent::conexion();
-            parent::set_names();
-            $sql = "SELECT * FROM tm_evento where ev_id = '". $ev_id ."' ";
-            $sql = $conectar->prepare($sql);
-            $sql->execute();
-            $resultado = $sql->fetchAll();
+                $sql = "SELECT
+                e.ev_id as 'ev_id',
+                e.ev_direc as 'ev_direc',
+                e.ev_img as 'ev_img',
+                e.ev_latitud as 'ev_latitud',
+                e.ev_longitud as 'ev_longitud',
+                e.ev_desc as 'ev_desc',
+                DATE_FORMAT(e.ev_inicio, '%d/%m/%Y %H:%i:%s') as 'ev_inicio',
+                DATE_FORMAT(e.ev_final , '%d/%m/%Y %H:%i:%s') as 'ev_final',
+                e.ev_est as 'ev_est',
+                c.cat_id as 'cat_id',
+                c.cat_nom as 'cat_nom',
+                e.ev_niv as 'ev_niv',
+                n.ev_niv_nom as 'niv_nom',
+                u.usu_id as 'usu_id',
+                u.usu_nom as 'usu_nombre',
+                u.usu_correo as 'usu_correo',
+                u.usu_ape as 'usu_ape'
+                FROM tm_evento as e
+                inner JOIN tm_usuario as u
+                 on (u.usu_id = e.usu_id)
+                inner join tm_categoria as c
+                on (c.cat_id = e.cat_id)
+                inner join tm_ev_niv as n
+                on (n.ev_niv_id = e.ev_niv)
+                where ev_id = :ev_id ";
+            $params = [':ev_id' => $ev_id];
+            $resultado = $this->ejecutarConsulta($sql, $params, false);
             
             if (is_array($resultado) && count($resultado) > 0) {
                 return $resultado;
             } else {
-                ?> <script>console.log("No se encontraron Eventos")</script><?php
-                return 0;
+                return [$ev_id];
             }
         } catch (Exception $e) {
-            ?> <script>console.log("Error catch     get_evento_id")</script> <?php
             throw $e;
         }
 
@@ -593,15 +596,12 @@ class Evento extends Conectar {
         }
     }
 
-    public function listar_eventosdetalle_por_evento($ev_id) {
-    $msgprivado ="<span class='badge bg-info text-dark'> mensaje privado</span>";
+    public function chat_con_mensage_oculto($ev_id) {
+        $msgprivado ="<span class='alert alert-secondary'> Mensaje Privado Necesitas permisos para verlo</span>";
         try {
-            $conectar = parent::conexion();
-            parent::set_names();
-            
             $sql = "SELECT 
                 tm_emergencia_detalle.emergencia_id,
-                IF (tm_emergencia_detalle.privado = 0, tm_emergencia_detalle.ev_desc, ?) as 'ev_desc',
+                IF (tm_emergencia_detalle.privado = 0, tm_emergencia_detalle.ev_desc, :msg_privado) as 'ev_desc',
                 tm_emergencia_detalle.ev_inicio,
                 tm_usuario.usu_nom,
                 tm_usuario.usu_ape,
@@ -613,14 +613,33 @@ class Evento extends Conectar {
             INNER JOIN tm_usuario on tm_emergencia_detalle.usu_id = tm_usuario.usu_id
             LEFT JOIN tm_unidad ON tm_usuario.usu_unidad = tm_unidad.unid_id -- Unimos con la tabla de unidades
             WHERE
-                tm_emergencia_detalle.ev_id = ?";
-            
-            $sql = $conectar->prepare($sql);
-            $sql->bindValue(1, $msgprivado);
-            $sql->bindValue(2, $ev_id);
-            $sql->execute();
-            
-            $resultado = $sql->fetchAll();
+                tm_emergencia_detalle.ev_id = :ev_id";
+            $params = [":ev_id" => $ev_id, ":msg_privado" => $msgprivado];
+            $resultado = $this->ejecutarConsulta($sql, $params);
+            return $resultado;
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+    public function chat_con_mensage_visible($ev_id) {
+        try {
+            $sql = "SELECT 
+                tm_emergencia_detalle.emergencia_id,
+                tm_emergencia_detalle.ev_desc as 'ev_desc',
+                tm_emergencia_detalle.ev_inicio,
+                tm_usuario.usu_nom,
+                tm_usuario.usu_ape,
+                tm_usuario.usu_tipo,
+                tm_usuario.usu_unidad, -- Incluimos la unidad del usuario
+                tm_unidad.unid_nom -- Agregamos el nombre de la unidad
+            FROM 
+                tm_emergencia_detalle
+            INNER JOIN tm_usuario on tm_emergencia_detalle.usu_id = tm_usuario.usu_id
+            LEFT JOIN tm_unidad ON tm_usuario.usu_unidad = tm_unidad.unid_id -- Unimos con la tabla de unidades
+            WHERE
+                tm_emergencia_detalle.ev_id = :ev_id";
+           $params = [":ev_id" => $ev_id];
+            $resultado = $this->ejecutarConsulta($sql, $params);
             return $resultado;
         } catch (Exception $e) {
             throw $e;
@@ -702,11 +721,12 @@ class Evento extends Conectar {
     function get_evento_motivo_cierre($ev_id){
     $sql = "SELECT
                cie.ev_id as 'id_evento',
-               usr.usu_nom as 'usu_nom',
-               usr.usu_ape as 'usu_ape',
-               usr.usu_name as 'usu_name',
+               usr.usu_nom as 'nombre',
+               usr.usu_ape as 'apellido',
+               usr.usu_name as 'username',
                mov.motivo as 'motivo',
                cie.detalle as 'detalle',
+               cie.adjunto as 'adjunto',
                DATE_FORMAT(ev.ev_final, '%d/%m/%Y - hrs %H:%i' )as 'fecha_cierre'
          FROM tm_ev_cierre as cie
          JOIN tm_usuario as usr
@@ -742,5 +762,28 @@ class Evento extends Conectar {
       ];
     }
     return $respuesta;
+  }
+
+  public function get_imagenes_detalle(int $evento_id): array{
+    $sql = "SELECT ev_desc as 'descripcion' FROM tm_emergencia_detalle WHERE ev_id = :evento_id";
+    $params = [":evento_id"=>$evento_id];
+    $resultados = $this->ejecutarConsulta($sql, $params);
+    $imagenesBase64 = [];
+    if (is_array($resultados) && count($resultados) > 0) {
+        foreach ($resultados as $resultado) {
+            if (isset($resultado['descripcion'])) {
+                $imagenBase64 = $this->capturarImagenBase64($resultado['descripcion']);
+                if ($imagenBase64 !== null) {
+                    $imagenesBase64[] = $imagenBase64;
+                }
+            }
+        }
+    }
+    return $imagenesBase64;
+  }
+  private function capturarImagenBase64(string $texto): ?string {
+    $patron = '/<img[^>]*src="data:image\/[a-zA-Z]+;base64,([^"]*)"/';
+    preg_match($patron, $texto, $coincidencias);
+    return isset($coincidencias[1]) ? trim($coincidencias[1]) : null;
   }
 }

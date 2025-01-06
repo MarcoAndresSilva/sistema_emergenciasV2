@@ -183,7 +183,7 @@ INSERT INTO `tm_est_unidad` (`est_un_id`, `est_un_nom`) VALUES
 CREATE TABLE `tm_evento` (
   `ev_id` int(11) NOT NULL AUTO_INCREMENT,
   `usu_id` int(11) NOT NULL,
-  `ev_desc` varchar(50) NOT NULL,
+  `ev_desc` MEDIUMTEXT NOT NULL,
   `ev_est` int(11) NOT NULL,
   `ev_inicio` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `ev_final` datetime DEFAULT NULL,
@@ -366,7 +366,7 @@ CREATE TABLE IF NOT EXISTS `tm_seccion` (
   `sec_unidad` int(11) NOT NULL,
   `sec_nombre` varchar(150) NOT NULL,
   `sec_detalle` varchar(250) NOT NULL,
-  `sec_est` varchar(250) DEFAULT 1,
+  `sec_est` int(2) DEFAULT 1,
   PRIMARY KEY (`sec_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
@@ -582,12 +582,12 @@ INSERT INTO `tm_emergencia_detalle`(`emergencia_id`,`ev_id`,`usu_id`,`ev_desc`,`
 
 CREATE TABLE tm_noticia(
 `noticia_id` INT NOT NULL auto_increment,
-`asunto` VARCHAR(50) NOT NULL,
-`mensaje` VARCHAR(150) NOT NULL,
+`asunto` MEDIUMTEXT NOT NULL,
+`mensaje` MEDIUMTEXT NOT NULL,
 `url` VARCHAR(250),
 `fecha` DATETIME DEFAULT CURRENT_TIMESTAMP,
 PRIMARY KEY (`noticia_id`)
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 --
 -- estructura de tm_noticia_usuario
 --
@@ -647,6 +647,7 @@ INSERT INTO tm_permisos(permiso,unidad,seccion,usuario,tipo_usuario) VALUES
 ('Control passunidad','5','','','3'),
 ('Control usuario','5','','','3'),
 ('Cerrar Evento','1,2,4','1,2,4','4','1'),
+('Mensajes Privados','1,2,4','1,2,4','4','1'),
 ('Crear Usuario','1,2,4','1,2,4','1,2,4','1,2,4');
 --
 -- Indices de la tabla `tm_camb_asig`

@@ -7,53 +7,70 @@
 #btnCargarArchivo{
     width: 40%;
 }
-
 #event_form{
-    /* display: grid;
-    grid-template-rows: auto auto; /* Dos filas, una para Información Personal y otra para Emergencia e Identificación 
-    grid-template-columns: 1fr;  Una sola columna para ocupar todo el ancho 
-    gap: 20px; Espacio entre los grupos */
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
     gap: 30px;
 }
-
-.group-info-personal{
-    grid-row: 1;
+#subtitle{
+  border-bottom: 1px solid #ccc;
+  font-size: 15px;
+  font-weight: 500;
 }
-.group-info-personal .col-lg-5{
-    width: 20%;
+.data-user{
+  margin:0 auto;
 }
-.group-info-personal .col-lg-5:last-child{
-    width: 30%;
+.data-user .col-lg-6{
+  width:25%;
+   flex-wrap: wrap;
 }
-
+.group-emergencia-data{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    margin: 0 auto;
+    text-align: center;
+    justify-content:space-between;
+}
+.group-emergencia-data .col-lg-5{
+  width: 30%;
+}
+.group-emergencia-data .col-cat{
+  width: 20%;
+}
+.group-emergencia-data .col-img{
+  width: 38%;
+}
+.group-emergencia-data .col-des{
+  width: 40%;
+}
+#cat_id,
+#imagen{
+  text-align:center;
+}
 .group-ident{
     display: flex;
     flex-direction: column;
     justify-content: center;
-    width: 45%;
-}
-.group-emergencia{
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.group-emergencia .col-lg-5{
-    width: 45%;
-}
-.group-emergencia:last-child{
-    width: 90%;
-    margin: 0 auto;
-}
-
-
-.group-ident .col-lg-5{
+    max-width:90%;
     width: 100%;
 }
-
-
+.group-ident .col-lg-5{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.group-dir{
+    width:100%;
+}
+#address{
+  width: 90%;
+}
+.form-check{
+    display: flex;
+    align-items:center;
+}
 #btnGuardar{
     margin-top: 2rem;
     text-align: center;
@@ -64,26 +81,19 @@
 }
 
 @media screen and (max-width: 800px) {
-    #event_form{
-        /* flex-direction: column; */
+    .data-user .col-lg-6 {
+        width: 100%;  
     }
-    .group-info-personal .col-lg-5{
-        width: 90%;
-    }
-    .group-info-personal .col-lg-5:last-child{
-        width: 90%;
-    }
-
-    .group-emergencia{
+    .group-emergencia-data{
         display: flex;
     }
     
-    .group-emergencia .col-lg-5{
+    .group-emergencia-data .col-lg-5{
         width: 90%;
     }
     
     .group-ident,
-    .group-emergencia{
+    .group-emergencia-data-data{
         width: 90%;
     }
     

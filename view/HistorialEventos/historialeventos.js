@@ -2,6 +2,7 @@ $(document).ready(function() {
     cargarTablaGeneral();
 });
 
+
 function cargarTablaGeneral() {
     $('#tabla-historial').DataTable({
         "pageLength": 10,
@@ -17,23 +18,44 @@ function cargarTablaGeneral() {
             "type": "POST",
             "dataSrc": "" 
         },
-        "order": [[6, "desc"]],
+        "order": [[0, "desc"]],
         "columns": [
             { "data": "ev_id" },
             { "data": "categoria" },
-            { "data": "direccion" },
-            { "data": "asignacion" },
+            { 
+                "data": "direccion",
+                "render": function(data, type, row) {
+                    // Extraemos el texto limpio, eliminando cualquier botón duplicado
+                    const direccionTexto = data.replace(/<button.*<\/button>/g, '').trim();
+
+                    return `<div class="direccion-flex">
+                                <span class="direccion-texto">${direccionTexto}</span>
+                                <button class="btn btn-primary btn-sm btnDireccionarMapa">
+                                    <i class="fa-solid fa-location-dot"></i>
+                                </button>
+                            </div>`;
+                }
+            },
+            { 
+                "data": "asignacion",
+                "render": function(data, type, row) {
+                    return data.split(" - ").join("<br>");
+                }
+            },
             { "data": "nivel_peligro" },
             { "data": "estado" },
             { "data": "fecha_apertura" },
-            { "data": "ver_documentos" }
+            { "data": "ver_documentos" },
+            { "data": "ver_informe" }
         ],
-          language: {
-                url: "../registrosLog/spanishDatatable.json"
-            },
-          destroy: true, // Permite volver a inicializar la tabla si ya ha sido creada
+        "language": {
+            url: "../registrosLog/spanishDatatable.json"
+        },
+        "destroy": true, // Permite volver a inicializar la tabla si ya ha sido creada
+        "createdRow": function(row, data, dataIndex) {
+            $("td", row).eq(2).addClass("direccion-columna"); // Aplica clase específica a la columna
+        },
         "drawCallback": function(settings) {
-            // Aquí aplicas nuevamente los estilos o cambios de color que necesitas
             $('.peligro_critico').addClass('label label-pill label-primary');
             $('.peligro_medio').addClass('label label-pill label-warning');
             $('.peligro_bajo').addClass('label label-pill label-success');
@@ -41,31 +63,18 @@ function cargarTablaGeneral() {
         }
     });
 
-         // Asegúrate de que el evento de clic esté delegado correctamente
-    $('#tabla-historial').on('click', '.btnDocumentos', function() {     
+    $('#tabla-historial').on('click', '.btnDireccionarMapa', function() {     
         var ev_id = $(this).data('ev-id');
-        cargar_documentos(ev_id);
+        cargar_direccion(ev_id);
     });
 }
-/////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////
 let lat;
 let long;
 $(document).on('click', '.btnDireccionarMapa', function() {
-    // Encuentra la fila correspondiente
-    var $tr = $(this).closest('tr');
-    
-    // Obtén la instancia de DataTables
-    var table = $('#tabla-historial').DataTable();
-    
-    // Usa DataTables para obtener los datos de la fila
-    var data = table.row($tr).data();
-    
-    // Obtén el ev_id desde los datos de la fila
-    var ev_id = data.ev_id;
-
-    // Desplegar mapa para direccionar al lugar
+    evento_id = $('#tabla-historial').DataTable().row($(this).closest('tr')).data().ev_id;
+    consultarEventoMostarMapa(evento_id);
     toggleMapa();
-    consultarEventoMostarMapa(ev_id);
 });
 
 function toggleMapa() {   
@@ -78,70 +87,85 @@ function consultarEventoMostarMapa(ev_id) {
         
         var eventos = JSON.parse(data);
 
-        lat = eventos[0]['ev_latitud'];
-        long = eventos[0]['ev_longitud'];
+        lat = eventos['ev_latitud'];
+        long = eventos['ev_longitud'];
 
         mostrarMapa(lat,long);
     });
 }
 
-var LocationUserOrigin;
-
 function mostrarMapa(lat,long) {
+    const eventLocation = { lat, lng: long };
 
     var map = new google.maps.Map(document.getElementById('map'), {
+        center: eventLocation,
         zoom: 17 // Nivel de zoom
     });
 
     //Activación y ejecución de la obtencion de coordenadas del usuario
+    new google.maps.Marker({
+        position: eventLocation,
+        map: map,
+        title: 'Ubicación del evento'
+    });
+}
+
+$('.btnCrearRuta').off('click').on('click',function(){
+
+    const alternativeUrl = `https://www.google.com/maps/dir//${lat},${long}`;
+
+    // Muestra un mensaje explicativo sobre por qué necesitas la ubicación
+    Swal.fire({
+        icon: 'info',
+        title: 'Permiso de ubicación requerido',
+        text: 'Necesitamos tu ubicación para mostrar la ruta más precisa hacia el evento. Si no deseas compartir tu ubicación, podemos mostrarte la ruta general.',
+        showCancelButton: true,
+        confirmButtonText: 'Dar permisos',
+        cancelButtonText: 'Continuar sin permisos'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Si el usuario acepta, intenta obtener la ubicación
+            obtenerUbicacion(alternativeUrl);
+        } else {
+            // Si el usuario decide no dar permisos, usa la URL alternativa
+            window.open(alternativeUrl, '_blank');
+        }
+    });
+});
+
+function obtenerUbicacion(alternativeUrl = '') {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
                 
-            var userLocation = {
-                lat: lat,
-                lng: long
-            };
-            LocationUserOrigin = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            };
-            //Marcador que ingresa el usuario
-            marker = new google.maps.Marker({
-                position: userLocation, // Coordenadas del marcador
-                map: map,
-                title: 'ArrastrarEmergencia'
-            });
-            map.setCenter(userLocation);
+            const userLat = position.coords.latitude;
+            const userLng = position.coords.longitude;
 
-        }, function(error) {        
-            // Manejo de errores
-            switch (error.code) {
-                case error.PERMISSION_DENIED:
-                    console.error("El usuario denegó la solicitud de geolocalización.");
-                    break;
-                case error.POSITION_UNAVAILABLE:
-                    console.error("La información de ubicación no está disponible.");
-                    break;
-                case error.TIMEOUT:
-                    console.error("Se agotó el tiempo de espera para la solicitud de geolocalización.");
-                    break;
-                    default:
-                        console.error("Error desconocido al intentar obtener la ubicación.");
-            }
-            swal("Error de Geolocalización!","No se logro optener la ubicación", "error");
+            // Crea la URL con la ubicación del usuario
+            const dynamicUrl = `https://www.google.com/maps/dir/${userLat},${userLng}/${lat},${long}`;
+            window.open(dynamicUrl, '_blank');
+        }, function () {
+            // Si el usuario no permite la ubicación, usa la URL alternativa
+            Swal.fire({
+                icon: 'warning',
+                title: 'Ubicación no disponible',
+                text: 'No se pudo acceder a tu ubicación. Mostrando la ruta general.',
+                confirmButtonText: 'Entendido'
+            }).then(() => {
+                window.open(alternativeUrl, '_blank');
+            });
         });
     } else {
-        console.error('Error: El navegador no soporta geolocalización.');
+        Swal.fire({
+            icon: 'error',
+            title: 'Geolocalización no soportada',
+            text: 'Tu navegador no admite la función de geolocalización.',
+            confirmButtonText: 'Entendido'
+        }).then(() => {
+            window.open(alternativeUrl, '_blank');
+        });
     }
 }
 
-//Btn Crear ruta)
-$('.btnCrearRuta').off('click').on('click',function(){
-    
-    // Redirecciona a google maps
-    window.location.href = "https://www.google.com/maps/dir/" + LocationUserOrigin.lat + "," + LocationUserOrigin.lng + "/" + lat + "," + long  ;
-
-});
 
 $('.CerrarModalMap').off('click').on('click',function(){
     

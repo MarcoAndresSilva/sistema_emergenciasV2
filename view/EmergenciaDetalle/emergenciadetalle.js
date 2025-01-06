@@ -42,6 +42,9 @@ var getUrlParameter = function getUrlParameter(sParam) {
     }
 };
 
+function recargar(ev_id) {
+   listarDetalle(ev_id);
+}
 function listarDetalle(ev_id) {
     // Mostrar los detalles del evento
     $.post("../../controller/emergenciaDetalle.php?op=listar_detalle_emergencias", {ev_id: ev_id}, function(data) {
@@ -52,12 +55,12 @@ function listarDetalle(ev_id) {
     $.post("../../controller/emergenciaDetalle.php?op=mostrar", {ev_id: ev_id}, function(data) {
         data = JSON.parse(data);
         console.log(data);
-        $("#lblNomIdTicket").html("Trazabilidad Evento Emergencia N° ID: " + data.ev_id);
+        $("#lblNomIdTicket").html(data.ev_id);
         $('#lblEstado').html(data.ev_est);
         $('#lblNomUsuario').html(data.usu_nom + ' ' + data.usu_ape);
         $('#lblFechaCrea').html(data.ev_inicio);
-        $("#cat_nom").val(data.cat_nom);
-        $("#ev_direc").val(data.ev_direc);
+        $("#cat_nom").html(data.cat_nom);
+        $("#ev_direc").html(data.ev_direc);
         $("#tic_descripUsu").summernote("code", data.ev_desc);
 
         // Mostrar las unidades asignadas en la lista de participantes
@@ -93,13 +96,15 @@ $(document).on("click", "#btnEnviar", function () {
     var ev_id = getUrlParameter("ID");
     var usu_id = $("#user_idx").val();
     var ev_desc = $("#ev_desc").val();
+    var check_privado = $("#value_privado").is(':checked');
+    var privado = check_privado ? 1 : 0;
   
     if ($("#ev_desc").summernote("isEmpty")) {
       swal("Advertencia!", "Ingresa una descripción", "warning");
     } else {
       $.post(
         "../../controller/emergenciaDetalle.php?op=insertdetalle",
-        { ev_id: ev_id, usu_id: usu_id, ev_desc: ev_desc },
+        { ev_id: ev_id, usu_id: usu_id, ev_desc: ev_desc , privado: privado },
         function () {
           listarDetalle(ev_id);
           swal("Correcto!", "Resgistro actualizado correctamente", "success");
@@ -128,8 +133,8 @@ $(document).on("click", "#btnPanelDerivar", function(e) {
     mostrarModal('#modalDerivar');
     mostrarIdEvento(id_evento);
     consultarCategoria(id_evento);
-    consultarNivelPeligro(id_evento);
-    consultarUnidadDisponible(id_evento);
+    seccionesAsignadasEvento(id_evento); 
+    cargarsecciones(id_evento); 
 });
 
 var id_evento = getUrlParameter('ID');
@@ -141,7 +146,6 @@ $(document).on("click", "#btnPanelCerrar", function(e) {
     $('#ev_id_cierre').text(id_evento);
     consultarCategoriaCierre(id_evento);
 });
-
 
 // Función para obtener y mostrar la categoría de cierre del evento
 function consultarCategoriaCierre(ev_id) {

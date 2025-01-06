@@ -11,8 +11,10 @@ require_once("../models/Noticia.php");
 require_once("../models/Seccion.php");
 require_once("../models/Permisos.php");
 Permisos::redirigirSiNoAutorizado();
+require_once("../models/Usuario.php");
 
 
+$usuario = new Usuario();
 $seccion = new Seccion();
 $evento = new Evento();
 $categoria = new Categoria();
@@ -98,7 +100,7 @@ if (isset($_GET["op"])) {
             $id_ultimo_evento = $last_evento["ev_id"];
             $args = [
               "asunto" => "Nuevo Evento",
-              "mensaje" => "Evento sin derivar",
+              "mensaje" => $ev_desc,
               "url" => "../ControlEventos/index.php?id_evento=$id_ultimo_evento",
             ];
             $noticia->crear_noticia_y_enviar_grupo_usuario($args);
@@ -203,7 +205,7 @@ if (isset($_GET["op"])) {
                   // Botones para derivar y ver detalles
                   $evento['ver_niv_peligro'] = "<button id='btnPanelPeligro' data-ev-id='" . $row['ev_id'] . "'><i class='fa-solid fa-exclamation-triangle'></i></button>";
                   $evento['ver_derivar'] = "<button id='btnPanelDerivar' data-ev-id='" . $row['ev_id'] . "'><i class='fa-solid fa-up-right-from-square'></i></button>";
-                  $evento['ver_detalle'] = "<button id='btnDetalleEmergencia' data-ev-id='" . $row['ev_id'] . "'><i class='fa-regular fa-comments'></i></button>";
+                  $evento['ver_detalle'] = "<a id='btnDetalleEmergencia' href='../EmergenciaDetalle/?ID=".$row['ev_id']."'><i class='fa-regular fa-comments'></i></a>";
       
                   $eventos[] = $evento;
                 }
@@ -229,7 +231,7 @@ if (isset($_GET["op"])) {
               // Obtener las asignaciones
               $datos_asignaciones = $eventounidad->get_datos_eventoUnidad($row['ev_id']);
               $asignacion = [];
-              if (is_array($datos_asignaciones) && count($datos_asignaciones) > 0) {
+              if (is_array($datos_asignaciones["data"]) && count($datos_asignaciones["data"]) > 0) {
                   foreach ($datos_asignaciones["data"] as $row_asignaciones) {
                       $unid_id = $row_asignaciones['sec_id'];
                       $datos_unidad = $unidad->get_seccion_unidad($unid_id);
@@ -273,6 +275,7 @@ if (isset($_GET["op"])) {
           
                     // Botón para ver documentos
                     $evento['ver_documentos'] = "<button class='btnDocumentos' data-ev-id='" . $row['ev_id'] . "'><i class='fa-regular fa-folder-open'></i></button>";
+                    $evento['ver_informe'] = "<a class='btn' href='../GenerarPdf/?id_evento=" . $row['ev_id'] . "'><i class='fa fa-file'> </a>";
                     $eventos[] = $evento;
                 }
                 
@@ -311,14 +314,14 @@ if (isset($_GET["op"])) {
                     }
                     
                     //Llama a la funcion get_datos_eventounidad para obtener los nombres de las unidades asignadas
-                    $datos_asignaciones = $eventounidad->get_datos_eventoUnidad($row['ev_id']);
+                    $datos_asignaciones = $seccion->get_secciones_evento($row['ev_id']);
                     // $datos_asignaciones = [[1,1],[2,2]];
                     if (is_array($datos_asignaciones) && count($datos_asignaciones) > 0) { 
                         $recorrido .= "<td>";
                         $contar = 0;
                         foreach($datos_asignaciones as $row_asignaciones){
-                            $unid_id = $row_asignaciones['unid_id'];
-                            $datos_unidad = $unidad->get_datos_unidad($unid_id);
+                            $seccion_id = $row_asignaciones['id'];
+                            $datos_unidad = $unidad->get_seccion_unidad($seccion_id);
                             foreach ($datos_unidad as $row_unidad ) {
                                 if ($contar == 0){
                                     $recorrido .= $row_unidad['unid_nom'];
@@ -432,14 +435,21 @@ if (isset($_GET["op"])) {
         break;
 
         case "update_nivelpeligro_evento":
-
-            $datos = $evento->update_nivelpeligro_evento($_POST['ev_id'],
-            $_POST['ev_niv']);
-                if ($datos == true) {
-                echo 1;
-            } else {
-                echo 0;
+            $id_evento = isset($_POST['id_evento']) ? $_POST['id_evento'] : null;
+            $id_nivel = isset($_POST['id_nivel']) ? $_POST['id_nivel'] : null;
+            header('Content-Type: application/json');
+            if (empty($id_evento) || empty($id_nivel)) {
+                echo json_encode(['status' => 'warning', 'message' => 'Faltan datos obligatorios.']);
+                break;
             }
+            $datos = $evento->update_nivelpeligro_evento($id_evento, $id_nivel);
+            if ($datos["status"] === "success") {
+              $datosNivel = $NivelPeligro->get_nivel_por_id($id_nivel);
+              $ev_niv_nombre = $datosNivel[0]['ev_niv_nom'];
+              $mensaje = "<span class='alert alert-warning'>Se ha Cambiado el nivel de peligro del evento a: $ev_niv_nombre</span>";
+              $evento->insert_emergencia_detalle($id_evento, $_SESSION["usu_id"], $mensaje);
+            }
+            echo json_encode($datos);
         break;
 
         case "get_evento_id":
@@ -493,69 +503,24 @@ if (isset($_GET["op"])) {
                 echo "Error: Usuario no encontrado"; // Mensaje de error detallado si no se encuentra el usuario
             }
         break;
-
-
         case "cantidad-eventos":
-            
-            $eventos_abiertos = 0;
-            $eventos_cerrados = 0;
-            $eventos_controlados = 0;
-            $eventos_ext = 0;
-            $cantidad_total = 0;
-            $porcentaje_abiertas = 0.0;
-            $porcentaje_cerradas = 0.0;
-            $datos_var= [];
-            
-            //Obtener la fecha actual
-            $fecha_actual = date('Y-m-d', strtotime('+1 day'));
+         $fecha_actual = date('Y-m-d', strtotime('+1 day'));
+         $fecha_mes_anterior = date('Y-m-d', strtotime('-1 month -1 day', strtotime($fecha_actual)));
 
-            // Restar un mes a la fecha actual
-            $fecha_mes_anterior = date('Y-m-d', strtotime('-1 month -1 day',strtotime($fecha_actual)));
-            
-            // Obtener datos de eventos por día
-            $datos = $evento->get_eventos_por_rango_sin_cantidad($fecha_actual , $fecha_mes_anterior);
+         $datos = $evento->get_eventos_estadisticas_por_fecha($fecha_actual, $fecha_mes_anterior);
 
-            // $datos = $evento->get_evento();
+         $respuesta = array(
+             'eventos_abiertos' => isset($datos['eventos_abiertos']) ? $datos['eventos_abiertos'] : 0,
+             'eventos_cerrados' => isset($datos['eventos_cerrados']) ? $datos['eventos_cerrados'] : 0,
+             'eventos_controlados' => isset($datos['eventos_controlados']) ? $datos['eventos_controlados'] : 0,
+             'eventos_ext' => isset($datos['eventos_ext']) ? $datos['eventos_ext'] : 0,
+             'porcentaje_abiertas' => isset($datos['porcentaje_abiertas']) ? $datos['porcentaje_abiertas'] : 0,
+             'porcentaje_cerradas' => isset($datos['porcentaje_cerradas']) ? $datos['porcentaje_cerradas'] : 0,
+         );
 
-            if (is_array($datos) && count($datos) > 0){
-                foreach ($datos as $row) {
-                    if($row['ev_est'] === 1){
-                        $eventos_abiertos ++;
-                    }else if ($row['ev_est'] === 2){
-                        $eventos_cerrados ++;
-                    }else if ($row['ev_est'] === 3) {
-                        $eventos_controlados ++;
-                    }else {
-                        $eventos_ext ++;
-                    }
-                    $datos_var = $datos;
-                }
-            }
-            $cantidad_total += $eventos_abiertos + $eventos_cerrados;
-            if($cantidad_total != 0){
-                if($eventos_abiertos != 0){
-                    $porcentaje_abiertas +=  round(($eventos_abiertos / $cantidad_total )* 100);
-                }
-                if($eventos_cerrados != 0){
-                    $porcentaje_cerradas += round(($eventos_cerrados / $cantidad_total )*100);
-                }
-            }else{
-                $porcentaje_unidades_disponibles = 0;
-                $porcentaje_unidades_no_disponibles = 0;
-            }
-            
-            $respuesta = array(
-                'eventos_abiertos' => $eventos_abiertos,
-                'eventos_cerrados' => $eventos_cerrados,
-                'eventos_controlados' => $eventos_controlados,
-                'eventos_ext' => $eventos_ext,
-                'porcentaje_abiertas' => $porcentaje_abiertas,
-                'porcentaje_cerradas' => $porcentaje_cerradas,
-                'datos_var' => $datos_var
-            );
-            echo json_encode($respuesta);
-        break;          
-
+         header('Content-Type: application/json');
+         echo json_encode($respuesta);
+        break;
         case "evento-grafico-dashboard":
 
             //Obtener la fecha actual
@@ -580,50 +545,24 @@ if (isset($_GET["op"])) {
         break;
 
         case "cantidad-segun-nivel-peligro":
-            // Variables
-            $totalCriticosMedios = 0;
-            $totalBajasComunes = 0;
 
-            // Obtener la fecha actual
             $fecha_actual = date('Y-m-d', strtotime('+1 day'));
-
-            // Restar un mes a la fecha actual
             $fecha_mes_anterior = date('Y-m-d', strtotime('-1 month -1 day', strtotime($fecha_actual)));
 
-            // Obtener la cantidad de eventos críticos y medios
-            $datosCriticos = $evento->get_cantidad_eventos_por_nivel([1, 2], $fecha_actual, $fecha_mes_anterior);
-            $totalCriticosMedios = $datosCriticos['total'];
-
-            // Obtener la cantidad de eventos bajas y comunes
-            $datosBajasComunes = $evento->get_cantidad_eventos_por_nivel([3, 0], $fecha_actual, $fecha_mes_anterior);
-            $totalBajasComunes = $datosBajasComunes['total'];
-
-            // Crear un array con los resultados
-            $resultado = array(
-                'totalCriticosMedios' => $totalCriticosMedios,
-                'totalBajasComunes' => $totalBajasComunes
-            );
-
-            // Devolver los resultados como JSON
+            $resultado = $evento->get_cantidad_eventos_por_nivel($fecha_actual, $fecha_mes_anterior);
             echo json_encode($resultado);
         break;
 
         case "get_eventos":
-
-
-            $where = $_POST['where'];
-
             $html = "";
             $critico = "";
             $medio = "";
             $bajo = "";
             $comun = "";
             $array2 = [];
-            
-            // $datos = $evento->get_evento_where($where);
+
             $datos = $evento->get_evento();
             if (is_array($datos) == true and count($datos) > 0) {
-                
                 //Datos para Tabla comun variable = $html
                 //Recorre los resultados que entrego la funcion get_evento_nivel(1)
                 foreach ($datos as $row) {
@@ -716,8 +655,9 @@ if (isset($_GET["op"])) {
             echo $datos;
         break;
 
-        case "get_datos_categoria_eventos_ultimos_30_dias":
-            $fecha_inicio = date('Y-m-d', strtotime('-30 days')); // Fecha de inicio hace 30 días
+        case "get_datos_categoria_eventos_ultimos_dias":
+            $dias = isset($_GET['dias']) ? $_GET['dias'] : 30;
+            $fecha_inicio = date('Y-m-d', strtotime('-'.$dias.' days'));
             $datos = $evento->datos_categorias_eventos($fecha_inicio);
             echo json_encode($datos);
         break;
@@ -748,6 +688,45 @@ if (isset($_GET["op"])) {
         ]);
         break;
 
+        case 'informacion_evento_completo':
+            header('Content-Type: application/json');
+              $id_evento = isset($_POST['id_evento']) ? $_POST['id_evento'] : null;
+              if (empty($id_evento)){
+                $respuesta = [
+                  "status"=>"error",
+                  "message"=>"id_evento no encontrados",
+                ];
+                echo json_encode($respuesta);
+                break;
+              }
+            $datosEvento = $evento->get_evento_id($id_evento);
+            $secciones_asignadas = $seccion->get_secciones_evento($id_evento);
+            $usuario_creador = $usuario->get_info_usuario($datosEvento['usu_id']);
+            $id_secciones_asignadas = [];
+            if (is_array($secciones_asignadas) == true and count($secciones_asignadas) > 0){
+              foreach ($secciones_asignadas as $seccion){
+                $id_secciones_asignadas[] = $seccion['id'];
+              }
+            }
+            $secciones_asignadas = empty($secciones_asignadas) ? [] : $secciones_asignadas;
+            $datosCierreEvento = $evento->get_evento_motivo_cierre($id_evento);
+            if (is_array($datosEvento) == true and count($datosEvento) > 0){
+                $respuesta = [
+                  "status"=>"success",
+                  "message"=>"Se obtienen los datos del evento $id_evento",
+                  "evento"=>$datosEvento,
+                  "creador"=>$usuario_creador['result'],
+                  "Cierre"=>empty($datosCierreEvento) ? [] : $datosCierreEvento,
+                  "secciones_asignadas"=>["secciones"=>$secciones_asignadas,"id_secciones_asignadas"=>$id_secciones_asignadas],
+                ];
+            }else{
+              $respuesta = [
+                "status"=>"error",
+                "message"=>"No se obtienen los datos del evento $id_evento",
+              ];
+            }
+            echo json_encode($respuesta);
+        break;
 
     }
 

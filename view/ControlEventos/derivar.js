@@ -20,33 +20,75 @@ function consultarCategoria(ev_id) {
 }
 
 // Función para cargar solo las unidades asignadas en el evento
-function seccionesAsignadasEvento(ev_id) {
-    $.post("../../controller/emergenciaDetalle.php?op=mostrar", { ev_id: ev_id }, function(data) {
-        data = JSON.parse(data);
-        
-        // Aquí extraemos solo las unidades y las mostramos, ignorando el resto
-        const listaParticipantes = $("#listaParticipantes");
-        listaParticipantes.empty();
+function seccionesAsignadasEvento(id_evento) {
+    $.post("../../controller/evento.php?op=informacion_evento_completo", { id_evento: id_evento }, function(data) {
+        try {
+            // Asegúrate de que `data` ya esté en formato JSON
+            if (typeof data === "string") {
+                data = JSON.parse(data);
+            }
 
-        if (data.unidades && data.unidades.length > 0) {
-            data.unidades.forEach(function(unidad) {
-                listaParticipantes.append(`<li class="list-group-item">${unidad}</li>`);
-            });
-            seccionesAsignadas = data.unidades.map(u => u.sec_id); // Guardamos los IDs asignados en la variable global
-        } else {
-            listaParticipantes.append(`<li class="list-group-item">No hay unidades asignadas</li>`);
-            seccionesAsignadas = [];
+            const listaParticipantes = $("#listaParticipantesderivar");
+            listaParticipantes.empty();
+
+            // Verificar si la respuesta tiene éxito y tiene las secciones asignadas
+            if (data.status === "success" && data.secciones_asignadas && data.secciones_asignadas.secciones) {
+                const secciones = data.secciones_asignadas.secciones;
+
+                if (secciones.length > 0) {
+                    // Iterar a través de las secciones asignadas y mostrarlas en la lista de participantes
+                    secciones.forEach(function(seccion) {
+                        listaParticipantes.append(`
+                            <div class="alert alert-primary d-flex align-items-center" role="alert">
+                                <i class="bi bi-exclamation-circle-fill me-2"></i>
+                                <span>${seccion.nombre}</span>
+                            </div>
+                        `);
+                    });
+
+                    // Guardar los IDs de las secciones asignadas en la variable global
+                    seccionesAsignadas = data.secciones_asignadas.id_secciones_asignadas;
+                } else {
+                    listaParticipantes.append(`<li class="list-group-item">No hay unidades asignadas</li>`);
+                    seccionesAsignadas = [];
+                }
+            } else {
+                console.error("No se obtuvieron las secciones asignadas o hubo un error en la solicitud.");
+                listaParticipantes.append(`
+                    <div class="alert alert-danger d-flex align-items-center" role="alert">
+                        <i class="bi bi-x-circle-fill me-2"></i>
+                        <span>No se pudo obtener la información del evento.</span>
+                    </div>
+                `);
+            }
+        } catch (error) {
+            console.error("Error al analizar la respuesta JSON:", error);
+            listaParticipantes.append(`<li class="list-group-item">Ocurrió un error al cargar las unidades</li>`);
         }
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        // Manejar el fallo de la solicitud AJAX
+        console.error("Error en la solicitud AJAX:", textStatus, errorThrown);
+        $("#listaParticipantesderivar").empty().append(`
+            <div class="alert alert-info d-flex align-items-center" role="alert">
+                <i class="bi bi-info-circle-fill me-2"></i>
+                <span>No hay secciones asignadas a este evento</span>
+            </div>
+        `);
     });
 }
-
-let seccionesIniciales = [];
 
 function cargarsecciones(ev_id) {
     fetch('../../controller/seccion.php?op=lista_secciones_con_unidad', { method: 'POST' })
         .then(response => response.json())
         .then(data => {
-            const tablaSeccionesBody = $('#tablaSecciones tbody');
+            const tablaSecciones = $('#tablaSecciones');
+
+            // Destruir DataTable si ya está inicializado
+            if ($.fn.DataTable.isDataTable('#tablaSecciones')) {
+                tablaSecciones.DataTable().clear().destroy();
+            }
+
+            const tablaSeccionesBody = tablaSecciones.find('tbody');
             tablaSeccionesBody.empty();
 
             data.forEach(unidad => {
@@ -57,8 +99,8 @@ function cargarsecciones(ev_id) {
 
                         // Definir el botón de acción dependiendo del estado
                         const botonAccion = Number(seccion.sec_est) === 0
-                            ? `<button class="btn btn-danger btn-sm btnEliminar" data-sec-id="${seccion.sec_id}" data-ev-id="${ev_id}">Eliminar</button>`
-                            : `<button class="btn btn-success btn-sm btnAgregar" data-sec-id="${seccion.sec_id}" data-ev-id="${ev_id}">Agregar</button>`;
+                            ? `<button type="button" class="btn btn-danger btn-sm btnEliminar" data-sec-id="${seccion.sec_id}" data-ev-id="${ev_id}">Eliminar</button>`
+                            : `<button type="button" class="btn btn-success btn-sm btnAgregar" data-sec-id="${seccion.sec_id}" data-ev-id="${ev_id}">Agregar</button>`;
 
                         // Agregar fila a la tabla
                         const row = `
@@ -75,44 +117,45 @@ function cargarsecciones(ev_id) {
                 } else {
                     // Mostrar mensaje cuando no hay secciones
                     const row = `
-                        <tr>
+                        <tr class="table-danger">
                             <td>${unidad.unidad}</td>
-                            <td colspan="4">Esta unidad no tiene secciones</td>
+                            <td><i class="fa fa-exclamation-triangle"></i> esta unidad</td>
+                            <td>no tiene</td>
+                            <td>secciones</td>
+                            <td>asignadas</td>
                         </tr>
                     `;
                     tablaSeccionesBody.append(row);
                 }
             });
 
-            // Inicializar DataTables con configuraciones específicas
-            $('#tablaSecciones').DataTable({
+           tablaSecciones.DataTable({
                 pageLength: 5,
                 language: {
                     url: "../registrosLog/spanishDatatable.json"
                 },
-                destroy: true
-            });
+                destroy: true,
+                // responsive: true, // Habilita la responsividad en la tabla
+                drawCallback: function() {
+                    // Reasignar eventos después de que la tabla sea redibujada
+                    $('.btnEliminar').off('click').on('click', function(event) {
+                        event.preventDefault();
+                        const sec_id = $(this).data('sec-id');
+                        const ev_id = $(this).data('ev-id');
+                        eliminarderivado(sec_id, ev_id);
+                    });
 
-            // Añadir los eventos para los botones dinámicos de eliminar y agregar
-            $('.btnEliminar').on('click', function(event) {
-                event.preventDefault();
-                const sec_id = $(this).data('sec-id');
-                const ev_id = $(this ).data('ev-id');
-                eliminarderivado(sec_id, ev_id);
-            });
-
-            $('.btnAgregar').on('click', function(event) {
-                event.preventDefault();
-                const sec_id = $(this).data('sec-id');
-                const ev_id = $(this ).data('ev-id');
-
-                agregarderivado(sec_id, ev_id);
+                    $('.btnAgregar').off('click').on('click', function(event) {
+                        event.preventDefault();
+                        const sec_id = $(this).data('sec-id');
+                        const ev_id = $(this).data('ev-id');
+                        agregarderivado(sec_id, ev_id);
+                    });
+                }
             });
         })
         .catch(error => console.error('Error al cargar las secciones:', error));
 }
-
-
 // Función para eliminar derivado
 async function eliminarderivado(id_seccion, ev_id) {
     try {
@@ -134,7 +177,9 @@ async function eliminarderivado(id_seccion, ev_id) {
                 icon: 'success',
                 confirmButtonText: 'Aceptar',
                 willClose: () => {
-                    $('#modalDerivar').modal('hide'); // Cerrar el modal
+                    cargarsecciones(ev_id);
+                    seccionesAsignadasEvento(ev_id); 
+                    recargar(ev_id);
                 }
             });
         } else {
@@ -171,7 +216,9 @@ async function agregarderivado(id_seccion, ev_id) {
                 icon: 'success',
                 confirmButtonText: 'Aceptar',
                 willClose: () => {
-                    $('#modalDerivar').modal('hide'); // Cerrar el modal
+                    cargarsecciones(ev_id);
+                    seccionesAsignadasEvento(ev_id);
+                    recargar(ev_id);
                 }
             });
         } else {
